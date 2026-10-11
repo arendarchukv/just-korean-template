@@ -61,21 +61,22 @@ blue by default and keep it as one token so it can be swapped.
 
 Brand scale (derived from #5C7EBE; adjust in OKLCH if needed):
 
-| token | hex | use |
-|---|---|---|
-| brand-50 | #F1F4FA | tinted backgrounds |
-| brand-100 | #E2E8F4 | |
-| brand-200 | #C5D1E8 | |
-| brand-300 | #9DB0D6 | brand text and accents on dark |
-| brand-400 | #7792C8 | |
-| brand-500 | #5C7EBE | **logo** |
-| brand-600 | #4A68A6 | |
+| token     | hex     | use                                     |
+| --------- | ------- | --------------------------------------- |
+| brand-50  | #F1F4FA | tinted backgrounds                      |
+| brand-100 | #E2E8F4 |                                         |
+| brand-200 | #C5D1E8 |                                         |
+| brand-300 | #9DB0D6 | brand text and accents on dark          |
+| brand-400 | #7792C8 |                                         |
+| brand-500 | #5C7EBE | **logo**                                |
+| brand-600 | #4A68A6 |                                         |
 | brand-700 | #3F5F9E | **buttons with white text** (passes AA) |
-| brand-800 | #334C7E | |
-| brand-900 | #2A3E66 | |
-| brand-950 | #1A2740 | |
+| brand-800 | #334C7E |                                         |
+| brand-900 | #2A3E66 |                                         |
+| brand-950 | #1A2740 |                                         |
 
 Rules:
+
 - White text never sits on brand-400/500. Use 700+. Check WCAG AA (4.5:1 body text).
 - Neutrals are cool greys. Light: background #FFFFFF, surface #F3F5F8,
   border #E3E8EF, text #1F2937, muted text #4B5563. Dark: background #0E1A2B,
@@ -130,6 +131,7 @@ The wordmark font is unknown: use Outfit 700 for now.
 ```
 
 Data decisions already made:
+
 - **No YouTube API at runtime or build.** Each video is a content entry keyed by
   its YouTube ID (`src/content/videos/<id>.md`): id, title (her own wording),
   series, order, level, tags, plus optional pdf/audio URLs, key expressions and
@@ -153,12 +155,15 @@ Data decisions already made:
 - Project lives directly in the repo root (no subfolder). Scaffolded with
   `npm create astro` (minimal) + `astro add tailwind svelte sitemap`.
 - Package manager: **npm**.
-- **Domain: TBD.** Will likely be bought via Cloudflare. Until then `site` in
-  `astro.config.mjs` comes from `SITE_URL` in `src/config.ts` (placeholder).
+- **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
+  `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
 - Footer / social links: empty placeholders in `src/config.ts` (contact will be a Tally form).
 - Korean UI strings are machine-drafted for design testing and marked
   `// TODO(ko-review)` — JiEun should review them before launch.
-- Theme toggle is plain inline JS, not a Svelte island (zero-JS default).
+- Theme toggle is a small vanilla script, not a Svelte island (zero-JS default).
+- Page bodies live in `src/views/`; `src/pages/` and `src/pages/ko/` hold thin route files.
+- `localized404()` in `astro.config.mjs` moves `ko/404/index.html` to `ko/404.html`
+  so Cloudflare serves it for missing `/ko/...` URLs.
 - Wrangler (Cloudflare CLI) is a devDependency: `npm run deploy` builds and uploads `dist/`.
 - Git commits: no co-author trailer. No remote yet.
 

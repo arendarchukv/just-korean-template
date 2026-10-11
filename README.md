@@ -1,43 +1,68 @@
-# Astro Starter Kit: Minimal
+# Just Korean
 
-```sh
-npm create astro@latest -- --template minimal
+Static learning companion site for the **Just Korean (그냥 한국어)** YouTube channel.
+The channel teaches, the site helps you learn.
+
+Project decisions and conventions: see [CLAUDE.md](CLAUDE.md).
+
+## Stack
+
+Astro 7 (static output) · Tailwind CSS v4 · Svelte 5 islands · TypeScript (strict) ·
+deployed to Cloudflare Workers static assets.
+
+## Requirements
+
+- Node.js 22.12 or newer (see `.nvmrc`)
+- npm
+
+## Commands
+
+| Command              | What it does                                         |
+| -------------------- | ---------------------------------------------------- |
+| `npm install`        | Install dependencies                                 |
+| `npm run dev`        | Dev server at `http://localhost:4321`                |
+| `npm run build`      | Build the static site into `dist/`                   |
+| `npm run preview`    | Serve the built site locally                         |
+| `npm run check`      | Type-check `.astro`, `.ts` and `.svelte` files       |
+| `npm run format`     | Format all files with Prettier                       |
+| `npm run cf:preview` | Build and serve via Wrangler, as on Cloudflare       |
+| `npm run deploy`     | Build and deploy to Cloudflare Workers (needs login) |
+
+## Project structure
+
+```
+public/            static files copied as-is (favicon.svg)
+src/
+  components/      Header, Footer, Logo, ThemeToggle, LanguageSwitcher
+  i18n/            ui.ts (UI dictionary, EN + KO) and utils.ts (helpers)
+  layouts/         BaseLayout.astro (head, SEO, hreflang, header, footer)
+  pages/           routes: English at /, Korean under /ko/
+  styles/          global.css (Tailwind import and design tokens)
+  views/           page bodies shared by the EN and KO routes
+  config.ts        site name and social links
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## i18n
 
-## 🚀 Project Structure
+English is the default locale (`/`), Korean is under `/ko/`. All UI strings live in
+`src/i18n/ui.ts`; missing Korean keys fall back to English. Korean strings marked
+`TODO(ko-review)` are drafts that still need review.
 
-Inside of your Astro project, you'll see the following folders and files:
+To add a page in both languages, create the body in `src/views/` and add thin route
+files in `src/pages/` and `src/pages/ko/`.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## Design tokens
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Defined in `src/styles/global.css`. The brand scale (`brand-50`…`brand-950`) is derived from
+`#5C7EBE` and can be swapped in one place. Components use only semantic tokens
+(`bg-bg`, `bg-surface`, `text-text`, `text-muted`, `border-border`, `text-brand`,
+`bg-brand-strong`, `bg-accent`…), which are redefined for the dark theme.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Deploy (Cloudflare)
 
-Any static assets, like images, can be placed in the `public/` directory.
+The domain is not decided yet: `site` in `astro.config.mjs` is a placeholder.
 
-## 🧞 Commands
+1. `npx wrangler login` (once)
+2. `npm run deploy`
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Large files (PDF, MP3) will be stored in Cloudflare R2 and linked by URL.

@@ -1,11 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
-// Accessibility checks against the built site (`npm run test:a11y` builds first).
+// Browser checks (accessibility, print) against the built site (`npm run test:browser` builds first).
 // Uses the locally installed Google Chrome, so no browser download is needed.
 const PORT = 4329;
 
 export default defineConfig({
-  testDir: 'tests/a11y',
+  testDir: 'tests',
   fullyParallel: true,
   reporter: [['list']],
   use: {

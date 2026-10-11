@@ -39,7 +39,7 @@ const bookHref = localizePath(lang, 'classes');
       <Logo wordmark />
     </a>
 
-    <nav aria-label={t('a11y.mainNav')} class="ml-6 hidden md:block">
+    <nav aria-label={t('a11y.mainNav')} class="ml-6 hidden md:block" data-print="hide">
       <ul class="flex items-center gap-1">
         {items.map((item) => (
           <li>
@@ -51,7 +51,7 @@ const bookHref = localizePath(lang, 'classes');
       </ul>
     </nav>
 
-    <div class="ml-auto flex items-center gap-1">
+    <div class="ml-auto flex items-center gap-1" data-print="hide">
       {showLanguageSwitch && <LanguageSwitcher lang={lang} />}
       <ThemeToggle lang={lang} />
       <a href={bookHref} class="btn btn-primary ml-2 hidden md:inline-flex">

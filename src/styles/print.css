@@ -1,0 +1,148 @@
+/*
+ * Print: the content only, dark ink on white paper. Whatever theme is on screen, printing uses
+ * this palette (high contrast, little ink). Mark non-printing UI with data-print="hide".
+ */
+
+@page {
+  margin: 16mm 16mm 18mm;
+}
+
+@media print {
+  :root,
+  [data-theme] {
+    color-scheme: light;
+
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --border: #c9cedb;
+    --text: #111111;
+    --muted: #3d4354;
+
+    --brand: #2a4a8a;
+    --brand-strong: #2a4a8a;
+    --brand-tint: #ffffff;
+    --teal: #1f5753;
+    --teal-tint: #ffffff;
+    --danger: #9b2c2c;
+    --danger-tint: #ffffff;
+    --key-mark: #1f5753;
+    --logo: #3f5f9e;
+    --logo-secondary: #2a3e66;
+    --selection: transparent;
+  }
+
+  html {
+    font-size: 10.5pt;
+  }
+
+  /* Site chrome, decoration, and buttons (they do nothing on paper; their fill would not print). */
+  [data-print='hide'],
+  .collage,
+  .shape,
+  .btn,
+  .icon-btn {
+    display: none !important;
+  }
+  /* Marks drawn with a background would print as empty gaps. */
+  .eyebrow::before,
+  .prose h2::before {
+    display: none;
+  }
+  /* Where a collage sat beside text, give the text the full width. */
+  :has(> .collage) {
+    grid-template-columns: 1fr !important;
+  }
+
+  header {
+    position: static;
+    border-bottom: 1px solid var(--border);
+    background: none;
+    backdrop-filter: none;
+  }
+  footer {
+    margin-top: 2rem;
+    border-top: 0;
+    background: none;
+  }
+  .container-page {
+    max-width: none;
+    padding-inline: 0;
+  }
+  .prose {
+    max-width: none;
+  }
+
+  /* Backgrounds are not printed by default: replace background-drawn marks... */
+  .link,
+  .prose a:not([class]) {
+    color: inherit;
+    padding-bottom: 0;
+    background: none;
+    text-decoration-color: currentColor;
+  }
+  .key-mark,
+  .prose mark {
+    background: none;
+    text-decoration: underline 2px var(--key-mark);
+    text-underline-offset: 0.2em;
+  }
+  .grid-paper,
+  .card,
+  .badge,
+  .quiz-option {
+    background: none;
+  }
+  .grid-paper {
+    border: 1px solid var(--border);
+  }
+
+  /* ...and force the few that carry meaning. */
+  .callout::before,
+  .prose blockquote::before,
+  .prose hr {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* On paper a link cannot be followed: show where it goes. */
+  .prose a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+
+  /* Closed explanations print opened. */
+  details::details-content {
+    content-visibility: visible;
+    display: block;
+  }
+  summary {
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Page breaks */
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+  .prose table,
+  .prose blockquote,
+  .prose pre,
+  .prose figure,
+  .prose details,
+  .pair,
+  .callout,
+  .card,
+  .quiz-option {
+    break-inside: avoid;
+  }
+  .prose .table-scroll {
+    overflow: visible;
+  }
+}

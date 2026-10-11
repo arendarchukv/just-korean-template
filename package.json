@@ -18,7 +18,7 @@
     "test": "vitest run",
     "check:dist": "node scripts/check-dist.mjs",
     "icons": "node scripts/generate-icons.ts",
-    "test:a11y": "npm run build && playwright test"
+    "test:browser": "npm run build && playwright test"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.3",

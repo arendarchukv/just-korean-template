@@ -36,4 +36,4 @@ Use <mark lang="ko">-아/어 봤자</mark> when the speaker is sure that trying 
 
 Formal writing rarely uses either pattern; in speech both are very common, and <span lang="ko">보나 마나</span> often closes a sentence on its own as <span lang="ko">보나 마나지</span>.
 
-[^1]: The same judgement appears in fixed phrases such as <span lang="ko">말하나 마나</span>.
+[^1]: The same judgement appears in fixed phrases such as <span lang="ko">말하나 마나</span>. Usage notes for both endings are in the [Standard Korean Language Dictionary](https://stdict.korean.go.kr).

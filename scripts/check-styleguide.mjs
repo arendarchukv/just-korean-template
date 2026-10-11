@@ -12,6 +12,10 @@ const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
 const dupes = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
 if (dupes.length) problems.push(`duplicate ids: ${dupes.join(', ')}`);
 
+// Shapes have clean edges: no pixel-displacement filters (they made contours and textures ragged).
+if (/<feDisplacementMap|<feTurbulence/.test(html))
+  problems.push('shapes use a displacement filter');
+
 // Quiz options: only a selected option is "pressed"; revealed results need screen-reader text.
 for (const [button] of html.matchAll(/<button[^>]*class="quiz-option"[\s\S]*?<\/button>/g)) {
   const state = /data-state="(\w+)"/.exec(button)?.[1];

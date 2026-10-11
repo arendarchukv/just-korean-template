@@ -103,8 +103,9 @@ Rule kept: white text never on brand-400/500 or teal-400/500.
 2. **Key expression mark:** teal hatch band behind the lower ~40% of the Korean text, like a
    pencil mark. Must keep text contrast (band is a light tint, text stays ink).
 3. **Section mark:** small cut-paper shape before section headings / eyebrows.
-4. **Shape library (5):** arch, blob, zigzag strip, grid square, scribble wave. Slightly
-   irregular hand-cut edges. Each is an SVG component with `tone` (brand / teal / indigo /
+4. **Shape library (5):** arch, blob, zigzag strip, grid square, scribble wave. Clean,
+   smooth edges; the hand-cut feel comes from slightly asymmetric geometry only (no
+   displacement filters: they made contours and textures look ragged). Each is an SVG component with `tone` (brand / teal / indigo /
    paper) and optional texture fill (hatch / grid / scribble / solid).
 5. **Example block:** faint 원고지 grid (~6% opacity) under example sentences.
 6. **Collage:** composition of 5–6 shapes with textures, used **only** in the home hero,

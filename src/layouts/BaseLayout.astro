@@ -1,5 +1,6 @@
 ---
 import '@fontsource-variable/outfit';
+import outfitLatinUrl from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 import '@/styles/global.css';
 
@@ -48,6 +49,8 @@ const ogLocale = lang === 'ko' ? 'ko_KR' : 'en_US';
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ThemeScript />
+    <!-- Preload the Latin UI font so text does not render in a fallback and then shift. -->
+    <link rel="preload" href={outfitLatinUrl} as="font" type="font/woff2" crossorigin />
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />

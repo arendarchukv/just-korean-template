@@ -48,6 +48,12 @@ if (hatched.length < 2) {
   problems.push(`current page has the nav-link hatch in ${hatched.length} of 2 menus`);
 }
 
+// --- Latin font is preloaded, so text does not render in a fallback and then shift ---
+const preloads = [...read('index.html').matchAll(/<link rel="preload"[^>]*>/g)].map(([tag]) => tag);
+if (!preloads.some((tag) => /as="font"/.test(tag) && /outfit-latin-wght-normal/.test(tag))) {
+  problems.push('Outfit latin font is not preloaded');
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

@@ -51,6 +51,15 @@ describe('signature.css', () => {
     expect(ruleBody(/\.link:hover/)).toMatch(/background-size:\s*100% 0\.2em/);
   });
 
+  it('does not animate the nav hatch size (it would replay when fonts swap and widths change)', () => {
+    expect(ruleBody(/\.nav-link/)).not.toMatch(/transition:[^;]*background-size/);
+  });
+
+  it('keeps callouts on clean paper: no tinted background', () => {
+    expect(ruleBody(/\.callout-tip/)).not.toMatch(/background-color/);
+    expect(ruleBody(/\.callout-attention/)).not.toMatch(/background-color/);
+  });
+
   it('has a link-style button variant', () => {
     expect(ruleBody(/\.btn-link/)).toMatch(/color:\s*var\(--brand\)/);
   });

@@ -177,7 +177,9 @@ Data decisions already made:
   that should not print with `data-print="hide"`; buttons, shapes and collages are hidden already.
 - Browser checks: `npm run test:browser` builds, then runs `tests/` with Playwright in the locally
   installed Chrome: axe (WCAG 2.1 A/AA) on every page in both themes, desktop and mobile; a
-  keyboard skip-link test; print rendering (`tests/print`); mobile menu and page transitions (`tests/ui`). Add new page templates to
+  keyboard skip-link test; print rendering (`tests/print`); mobile menu and page transitions (`tests/ui`); a performance budget on a
+  throttled phone (`tests/perf`: LCP < 2 s, CLS < 0.1, one render-blocking CSS < 25 KB brotli, no
+  external JS). Recheck real numbers with PageSpeed Insights after hosting. Add new page templates to
   `tests/a11y/pages.spec.ts`.
 - Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in

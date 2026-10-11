@@ -26,9 +26,8 @@ const en = {
 
   'lang.switchTo': 'Switch to English',
 
-  'theme.light': 'Theme: light',
-  'theme.dark': 'Theme: dark',
-  'theme.system': 'Theme: system',
+  'theme.toDark': 'Switch to dark theme',
+  'theme.toLight': 'Switch to light theme',
 
   'footer.youtube': 'YouTube',
   'footer.instagram': 'Instagram',
@@ -90,9 +89,8 @@ const ko: Partial<Record<UIKey, string>> = {
 
   'lang.switchTo': '한국어로 보기',
 
-  'theme.light': '테마: 라이트',
-  'theme.dark': '테마: 다크',
-  'theme.system': '테마: 시스템 설정',
+  'theme.toDark': '다크 모드로 전환',
+  'theme.toLight': '라이트 모드로 전환',
 
   'footer.youtube': '유튜브',
   'footer.instagram': '인스타그램',

@@ -55,6 +55,15 @@ for (const [page, prefix] of [
   }
 }
 
+// --- Theme toggle is a plain light/dark switch (no confusing "system" state) ---
+const home = read('index.html');
+if (/data-label-system|themePref|theme-icon-system/.test(home)) {
+  problems.push('theme toggle still has a "system" state');
+}
+if (!/data-label-to-dark="[^"]+"/.test(home) || !/data-label-to-light="[^"]+"/.test(home)) {
+  problems.push('theme toggle is missing its light/dark action labels');
+}
+
 // --- Current page is marked by the hatch in both desktop and mobile navigation ---
 const currentLinks = [...read('classes/index.html').matchAll(/<a[^>]*aria-current="page"[^>]*>/g)];
 const hatched = currentLinks.filter(([a]) => /class="[^"]*\bnav-link\b/.test(a));

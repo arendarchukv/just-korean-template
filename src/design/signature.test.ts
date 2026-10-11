@@ -44,6 +44,13 @@ describe('signature.css', () => {
     expect(bar).toMatch(/background-color:\s*var\(--callout-bar\)/);
   });
 
+  it('draws the link hover hatch below the text (in bottom padding), not over descenders', () => {
+    const link = ruleBody(/\.link/);
+    expect(link).toMatch(/padding-bottom:\s*0\.25em/);
+    expect(link).toMatch(/background-size:\s*0% 0\.2em/);
+    expect(ruleBody(/\.link:hover/)).toMatch(/background-size:\s*100% 0\.2em/);
+  });
+
   it('has a link-style button variant', () => {
     expect(ruleBody(/\.btn-link/)).toMatch(/color:\s*var\(--brand\)/);
   });

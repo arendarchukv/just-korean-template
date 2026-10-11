@@ -43,7 +43,8 @@
       center / contain no-repeat;
   }
 
-  /* Links: thin underline; on hover a teal pencil hatch slides in. */
+  /* Links: thin underline; on hover a teal pencil hatch slides in below the text
+     (bottom padding holds it, so it never covers descenders; inline padding keeps line height). */
   .link {
     color: var(--brand);
     text-decoration-line: underline;
@@ -52,14 +53,15 @@
     text-decoration-color: color-mix(in oklab, var(--brand) 45%, transparent);
     background-image: repeating-linear-gradient(-45deg, var(--teal) 0 1.5px, transparent 1.5px 4px);
     background-repeat: no-repeat;
+    padding-bottom: 0.25em;
     background-position: 0 100%;
-    background-size: 0% 0.4em;
+    background-size: 0% 0.2em;
     transition:
       background-size 180ms var(--ease-calm),
       text-decoration-color 180ms var(--ease-calm);
   }
   .link:hover {
-    background-size: 100% 0.4em;
+    background-size: 100% 0.2em;
     text-decoration-color: transparent;
   }
 

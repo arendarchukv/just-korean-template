@@ -1,109 +1,8 @@
 @import 'tailwindcss';
+@import './theme.css';
 
 /* Dark mode follows the resolved theme on <html data-theme>, set by the inline head script. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
-
-/* ---------------------------------------------------------------------------
- * Raw palette. Brand color is TBD: the scale is derived from the YouTube banner
- * blue #5C7EBE (brand-500). Swap this scale to rebrand. Components must not use
- * these directly — use the semantic tokens below.
- * ------------------------------------------------------------------------- */
-@theme {
-  --color-brand-50: #f1f4fa;
-  --color-brand-100: #e2e8f4;
-  --color-brand-200: #c5d1e8;
-  --color-brand-300: #9db0d6;
-  --color-brand-400: #7792c8;
-  --color-brand-500: #5c7ebe;
-  --color-brand-600: #4a68a6;
-  --color-brand-700: #3f5f9e;
-  --color-brand-800: #334c7e;
-  --color-brand-900: #2a3e66;
-  --color-brand-950: #1a2740;
-
-  --font-sans:
-    'Outfit Variable', 'Pretendard Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
-    'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-  --font-korean:
-    'Pretendard Variable', ui-sans-serif, system-ui, -apple-system, 'Apple SD Gothic Neo',
-    'Malgun Gothic', sans-serif;
-
-  --radius-control: 0.75rem; /* 12px: buttons, inputs */
-  --radius-card: 1.125rem; /* 18px: cards */
-
-  --spacing-touch: 2.75rem; /* 44px minimum touch target */
-}
-
-/* ---------------------------------------------------------------------------
- * Semantic tokens, redefined per theme. Exposed to Tailwind as bg-bg,
- * text-text, border-border, bg-brand-strong, etc.
- * ------------------------------------------------------------------------- */
-:root {
-  color-scheme: light;
-
-  --bg: #ffffff;
-  --surface: #f3f5f8;
-  --border: #e3e8ef;
-  --text: #1f2937;
-  --muted: #4b5563;
-
-  --brand: var(--color-brand-700); /* brand text and accents (AA on bg) */
-  --brand-strong: var(--color-brand-700); /* fills with white text */
-  --brand-strong-hover: var(--color-brand-800);
-  --brand-tint: var(--color-brand-50); /* tinted backgrounds */
-  --on-brand: #ffffff;
-  --logo: var(--color-brand-500);
-  --logo-secondary: var(--color-brand-700);
-
-  --accent: #c2552b; /* muted coral: key CTAs and "correct" states, sparingly */
-  --accent-hover: #a8461f;
-  --on-accent: #ffffff;
-
-  --focus: var(--color-brand-600);
-}
-
-[data-theme='dark'] {
-  color-scheme: dark;
-
-  --bg: #0e1a2b;
-  --surface: #16243a;
-  --border: #253852;
-  --text: #eaf2fd;
-  --muted: #9fb3cc;
-
-  --brand: var(--color-brand-300);
-  --brand-strong: var(--color-brand-700);
-  --brand-strong-hover: var(--color-brand-600);
-  --brand-tint: #1a2a44;
-  --on-brand: #ffffff;
-  --logo: var(--color-brand-300);
-  --logo-secondary: var(--color-brand-500);
-
-  --accent: #c2552b;
-  --accent-hover: #a8461f;
-  --on-accent: #ffffff;
-
-  --focus: var(--color-brand-300);
-}
-
-@theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-border: var(--border);
-  --color-text: var(--text);
-  --color-muted: var(--muted);
-  --color-brand: var(--brand);
-  --color-brand-strong: var(--brand-strong);
-  --color-brand-strong-hover: var(--brand-strong-hover);
-  --color-brand-tint: var(--brand-tint);
-  --color-on-brand: var(--on-brand);
-  --color-logo: var(--logo);
-  --color-logo-secondary: var(--logo-secondary);
-  --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-on-accent: var(--on-accent);
-  --color-focus: var(--focus);
-}
 
 @layer base {
   html {
@@ -126,8 +25,8 @@
   }
 
   ::selection {
-    background-color: var(--color-brand-200);
-    color: var(--color-brand-950);
+    background-color: var(--selection);
+    color: var(--text);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -160,14 +59,6 @@
   }
   .btn-primary:hover {
     background-color: var(--brand-strong-hover);
-  }
-
-  .btn-accent {
-    background-color: var(--accent);
-    color: var(--on-accent);
-  }
-  .btn-accent:hover {
-    background-color: var(--accent-hover);
   }
 
   .btn-ghost {

@@ -1,0 +1,146 @@
+/* Raw palette. Components never use these directly; swap a scale here to rebrand. */
+@theme {
+  --color-*: initial;
+
+  /* Brand: denim, from the logo #5C7EBE */
+  --color-brand-50: #f1f4fa;
+  --color-brand-100: #e2e8f4;
+  --color-brand-200: #c5d1e8;
+  --color-brand-300: #9db0d6;
+  --color-brand-400: #7792c8;
+  --color-brand-500: #5c7ebe;
+  --color-brand-600: #4a68a6;
+  --color-brand-700: #3f5f9e;
+  --color-brand-800: #334c7e;
+  --color-brand-900: #2a3e66;
+  --color-brand-950: #1a2740;
+
+  /* Teal: second color, from the channel intro #56A8A3 */
+  --color-teal-50: #eef7f6;
+  --color-teal-100: #d6edeb;
+  --color-teal-200: #aedad6;
+  --color-teal-300: #7fc6c0;
+  --color-teal-400: #56a8a3;
+  --color-teal-500: #3e8e89;
+  --color-teal-600: #337a76;
+  --color-teal-700: #2a6965;
+  --color-teal-800: #22524f;
+  --color-teal-900: #1a3e3c;
+  --color-teal-950: #102826;
+
+  --font-sans:
+    'Outfit Variable', 'Pretendard Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-korean:
+    'Pretendard Variable', ui-sans-serif, system-ui, -apple-system, 'Apple SD Gothic Neo',
+    'Malgun Gothic', sans-serif;
+
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+  --text-example: 1.375rem;
+  --text-example--line-height: 1.7;
+
+  --radius-control: 0.75rem;
+  --radius-card: 1.125rem;
+  --spacing-touch: 2.75rem;
+  --ease-calm: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Light: paper and ink. Also applies to nested [data-theme='light'] panels. */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #fbfbfd;
+  --surface: #eef0f8;
+  --border: #dee2ef;
+  --text: #1d2340;
+  --muted: #4a5170;
+
+  --brand: var(--color-brand-700);
+  --brand-strong: var(--color-brand-700);
+  --brand-strong-hover: var(--color-brand-800);
+  --brand-tint: var(--color-brand-50);
+  --on-brand: #ffffff;
+
+  --teal: var(--color-teal-700);
+  --teal-strong: var(--color-teal-700);
+  --teal-strong-hover: var(--color-teal-800);
+  --teal-tint: var(--color-teal-50);
+  --on-teal: #ffffff;
+
+  --danger: #b03a3a;
+  --danger-tint: #fbeded;
+
+  --focus: var(--color-teal-500);
+  --selection: var(--color-teal-100);
+  --logo: var(--color-brand-500);
+  --logo-secondary: var(--color-brand-700);
+
+  --shape-brand: var(--color-brand-400);
+  --shape-teal: var(--color-teal-400);
+  --shape-indigo: #2b3a7a;
+  --shape-paper: #e3e7f4;
+  --shape-ink: #1f2a5c;
+}
+
+/* Dark: deep indigo from the channel intro. */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #111733;
+  --surface: #1a2246;
+  --border: #2c3763;
+  --text: #e8edfb;
+  --muted: #a3adcf;
+
+  --brand: var(--color-brand-300);
+  --brand-strong: var(--color-brand-700);
+  --brand-strong-hover: var(--color-brand-600);
+  --brand-tint: #1f2a55;
+  --on-brand: #ffffff;
+
+  --teal: var(--color-teal-300);
+  --teal-strong: var(--color-teal-700);
+  --teal-strong-hover: var(--color-teal-600);
+  --teal-tint: #173a44;
+  --on-teal: #ffffff;
+
+  --danger: #e58a8a;
+  --danger-tint: #3a1f2a;
+
+  --focus: var(--color-teal-300);
+  --selection: var(--color-teal-800);
+  --logo: var(--color-brand-300);
+  --logo-secondary: var(--color-brand-500);
+
+  --shape-brand: var(--color-brand-600);
+  --shape-teal: var(--color-teal-600);
+  --shape-indigo: #3a4a8c;
+  --shape-paper: #222b55;
+  --shape-ink: #0b1029;
+}
+
+/* Semantic tokens as Tailwind colors: bg-surface, text-muted, border-border, ... */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-strong-hover: var(--brand-strong-hover);
+  --color-brand-tint: var(--brand-tint);
+  --color-on-brand: var(--on-brand);
+  --color-teal: var(--teal);
+  --color-teal-strong: var(--teal-strong);
+  --color-teal-strong-hover: var(--teal-strong-hover);
+  --color-teal-tint: var(--teal-tint);
+  --color-on-teal: var(--on-teal);
+  --color-danger: var(--danger);
+  --color-danger-tint: var(--danger-tint);
+  --color-focus: var(--focus);
+  --color-logo: var(--logo);
+  --color-logo-secondary: var(--logo-secondary);
+}

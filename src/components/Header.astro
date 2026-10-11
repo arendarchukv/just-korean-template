@@ -43,11 +43,7 @@ const bookHref = localizePath(lang, 'classes');
       <ul class="flex items-center gap-1">
         {items.map((item) => (
           <li>
-            <a
-              href={item.href}
-              aria-current={item.active ? 'page' : undefined}
-              class="inline-flex min-h-touch items-center rounded-control px-3 font-medium text-muted hover:bg-surface hover:text-text aria-[current=page]:text-brand"
-            >
+            <a href={item.href} aria-current={item.active ? 'page' : undefined} class="nav-link">
               {item.label}
             </a>
           </li>
@@ -99,7 +95,7 @@ const bookHref = localizePath(lang, 'classes');
                 <a
                   href={item.href}
                   aria-current={item.active ? 'page' : undefined}
-                  class="flex min-h-touch items-center rounded-control px-3 text-lg font-medium text-text hover:bg-surface aria-[current=page]:text-brand"
+                  class="flex min-h-touch items-center rounded-control px-3 text-lg font-medium text-text hover:bg-surface aria-[current=page]:text-teal"
                 >
                   {item.label}
                 </a>

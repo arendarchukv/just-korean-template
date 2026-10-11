@@ -78,14 +78,21 @@ Brand scale (derived from #5C7EBE; adjust in OKLCH if needed):
 Rules:
 
 - White text never sits on brand-400/500. Use 700+. Check WCAG AA (4.5:1 body text).
-- Neutrals are cool greys. Light: background #FFFFFF, surface #F3F5F8,
-  border #E3E8EF, text #1F2937, muted text #4B5563. Dark: background #0E1A2B,
-  surface #16243A, text #EAF2FD, muted text #9FB3CC.
-- At most one warm accent (muted coral, e.g. #C2552B, which passes AA with white),
-  used sparingly for key CTAs and "correct" quiz states.
+- Neutrals (paper and ink). Light: bg #FBFBFD, paper #EEF0F8, border #DEE2EF,
+  ink #1D2340, muted #4A5170. Dark (indigo): bg #111733, surface #1A2246,
+  border #2C3763, text #E8EDFB, muted #A3ADCF.
+- No warm accent: the system is fully cool. **Teal** (scale from #56A8A3, from the channel
+  intro) is the second color, used for learning moments (key-expression marks, "correct",
+  progress, focus ring). Muted red only for errors / "wrong". White text never on teal-400/500.
+- Design system "Paper & cut-outs": see `docs/superpowers/specs/2026-10-11-design-system-design.md`
+  and `/styleguide` (dev reference page, noindex). Signature details: hatch link underline,
+  key-expression hatch mark, 원고지 grid paper for examples, cut-paper shapes (collage only in
+  hero / 404 / empty states). Tokens: `src/styles/theme.css`; classes: `src/styles/signature.css`.
+- `npm test` checks every semantic text/background pair for WCAG AA in both themes.
 - Semantic tokens (`--color-bg`, `--color-surface`, `--color-text`, `--color-muted`,
-  `--color-border`, `--color-accent`, `--color-brand`) are redefined per theme.
-  Components use only semantic tokens, never raw hex.
+  `--color-border`, `--color-brand`, `--color-teal`, `--color-danger`, ...) are redefined
+  per theme. Components use only semantic tokens, never raw hex (the Tailwind default
+  palette is reset, so raw color utilities do not exist).
 - Radius: about 10–12px for controls, 16–20px for cards. Touch targets 44px or more.
 - Style: clean, calm, lots of white space. No gradient washes, no emoji in the UI,
   no "K-pop pink".
@@ -155,6 +162,7 @@ Data decisions already made:
 - Project lives directly in the repo root (no subfolder). Scaffolded with
   `npm create astro` (minimal) + `astro add tailwind svelte sitemap`.
 - Package manager: **npm**.
+- Tests: Vitest (`npm test`). `npm run check:styleguide` checks the built styleguide page.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
 - Footer / social links: empty placeholders in `src/config.ts` (contact will be a Tally form).

@@ -1,0 +1,88 @@
+---
+/**
+ * Decorative cut-paper shape in the spirit of the channel intro.
+ * Each instance gets its own ids so textures and filters never collide.
+ */
+export type ShapeName = 'arch' | 'blob' | 'zigzag' | 'grid' | 'wave';
+export type ShapeTone = 'brand' | 'teal' | 'indigo' | 'paper';
+export type ShapeTexture = 'solid' | 'hatch' | 'grid' | 'scribble';
+
+interface Props {
+  name: ShapeName;
+  tone?: ShapeTone;
+  texture?: ShapeTexture;
+  /** Slightly displaced, hand-cut edges. */
+  rough?: boolean;
+  class?: string;
+}
+
+const { name, tone = 'teal', texture = 'solid', rough = true, class: className } = Astro.props;
+
+const PATHS: Record<Exclude<ShapeName, 'wave'>, string> = {
+  arch: 'M14 96 L16 44 C17 18 35 5 52 6 C70 7 86 21 86 45 L88 95 L66 96 L65 47 C65 35 59 28 51 28 C42 29 36 36 36 48 L35 95 Z',
+  blob: 'M50 5 C66 3 82 9 91 23 C99 36 97 52 93 64 C88 80 76 93 57 96 C40 99 21 92 11 78 C2 65 3 47 8 34 C14 19 31 7 50 5 Z',
+  zigzag:
+    'M2 38 L14 22 L26 37 L38 21 L50 38 L62 22 L74 37 L86 21 L98 37 L98 63 L86 79 L74 62 L62 78 L50 62 L38 79 L26 62 L14 78 L2 62 Z',
+  grid: 'M8 11 L91 6 L95 89 L6 94 Z',
+};
+const WAVE = 'M4 58 C12 28 20 28 27 52 S41 78 49 52 S63 25 71 50 S87 76 96 42';
+
+const uid = `shape-${crypto.randomUUID().slice(0, 8)}`;
+const fill = `fill: var(--shape-${tone})`;
+const lineStyle = 'stroke: var(--shape-ink); stroke-opacity: 0.5';
+---
+
+<svg
+  viewBox="0 0 100 100"
+  class:list={['shape', className]}
+  aria-hidden="true"
+  focusable="false"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    {rough && (
+      <filter id={`${uid}-rough`} x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="7" />
+        <feDisplacementMap in="SourceGraphic" scale="2.5" />
+      </filter>
+    )}
+    {texture === 'hatch' && (
+      <pattern
+        id={`${uid}-tex`}
+        width="5"
+        height="5"
+        patternUnits="userSpaceOnUse"
+        patternTransform="rotate(45)"
+      >
+        <line x1="0" y1="0" x2="0" y2="5" style={lineStyle} stroke-width="1.4" />
+      </pattern>
+    )}
+    {texture === 'grid' && (
+      <pattern id={`${uid}-tex`} width="9" height="9" patternUnits="userSpaceOnUse">
+        <path d="M9 0H0V9" fill="none" style={lineStyle} stroke-width="1.1" />
+      </pattern>
+    )}
+    {texture === 'scribble' && (
+      <pattern id={`${uid}-tex`} width="16" height="9" patternUnits="userSpaceOnUse">
+        <path d="M0 4.5 Q4 0 8 4.5 T16 4.5" fill="none" style={lineStyle} stroke-width="1.2" />
+      </pattern>
+    )}
+  </defs>
+  <g filter={rough ? `url(#${uid}-rough)` : undefined}>
+    {name === 'wave' ? (
+      <path
+        d={WAVE}
+        fill="none"
+        style={`stroke: var(--shape-${tone})`}
+        stroke-width="7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    ) : (
+      <>
+        <path d={PATHS[name]} style={fill} />
+        {texture !== 'solid' && <path d={PATHS[name]} fill={`url(#${uid}-tex)`} />}
+      </>
+    )}
+  </g>
+</svg>

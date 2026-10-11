@@ -1,0 +1,57 @@
+---
+/** Cut-paper collage. Only for the home hero, 404 and empty states. Decorative. */
+import Shape from './Shape.astro';
+
+interface Props {
+  variant?: 'hero' | 'compact';
+  class?: string;
+}
+
+const { variant = 'hero', class: className } = Astro.props;
+---
+
+<div
+  class:list={[
+    'collage relative',
+    variant === 'hero' ? 'aspect-[5/4] w-full' : 'aspect-square w-full',
+    className,
+  ]}
+  aria-hidden="true"
+>
+  {variant === 'hero' ? (
+    <>
+      <Shape
+        name="grid"
+        tone="teal"
+        texture="grid"
+        class="absolute top-[6%] left-[2%] w-[44%] -rotate-6"
+      />
+      <Shape name="arch" tone="indigo" class="absolute top-0 right-[6%] w-[34%]" />
+      <Shape
+        name="blob"
+        tone="brand"
+        texture="hatch"
+        class="absolute top-[34%] left-[28%] w-[46%]"
+      />
+      <Shape
+        name="zigzag"
+        tone="paper"
+        texture="scribble"
+        class="absolute right-0 bottom-[8%] w-[42%] rotate-12"
+      />
+      <Shape name="wave" tone="brand" class="absolute bottom-[2%] left-0 w-[38%]" />
+      <Shape name="blob" tone="teal" class="absolute top-[22%] right-[34%] w-[11%]" />
+    </>
+  ) : (
+    <>
+      <Shape name="blob" tone="paper" texture="grid" class="absolute inset-[8%]" />
+      <Shape
+        name="arch"
+        tone="teal"
+        texture="hatch"
+        class="absolute top-[10%] right-[8%] w-[42%]"
+      />
+      <Shape name="wave" tone="brand" class="absolute bottom-[10%] left-[6%] w-[50%]" />
+    </>
+  )}
+</div>

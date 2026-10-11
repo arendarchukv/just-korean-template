@@ -1,0 +1,57 @@
+---
+import Logo from '@/components/Logo.astro';
+import Collage from '@/components/shapes/Collage.astro';
+import Shape, {
+  type ShapeName,
+  type ShapeTexture,
+  type ShapeTone,
+} from '@/components/shapes/Shape.astro';
+import SgSection from './SgSection.astro';
+
+const NAMES: ShapeName[] = ['arch', 'blob', 'zigzag', 'grid', 'wave'];
+const TEXTURES: ShapeTexture[] = ['solid', 'hatch', 'grid', 'scribble'];
+const TONES: ShapeTone[] = ['brand', 'teal', 'indigo', 'paper'];
+---
+
+<SgSection
+  id="shapes"
+  title="Shapes, collage and logo"
+  shape="wave"
+  lead="Drawn in the spirit of the channel intro. Collage only in the hero, 404 and empty states."
+>
+  <div class="grid grid-cols-5 gap-4">
+    {NAMES.map((name) => (
+      <div class="flex flex-col items-center gap-2">
+        <Shape
+          name={name}
+          tone="teal"
+          texture={name === 'grid' ? 'grid' : 'solid'}
+          class="w-full max-w-24"
+        />
+        <p class="text-xs text-muted">{name}</p>
+      </div>
+    ))}
+  </div>
+  <div class="mt-8 grid grid-cols-4 gap-4">
+    {TEXTURES.map((texture, i) => (
+      <div class="flex flex-col items-center gap-2">
+        <Shape name="blob" tone={TONES[i]!} texture={texture} class="w-full max-w-24" />
+        <p class="text-xs text-muted">
+          {TONES[i]} · {texture}
+        </p>
+      </div>
+    ))}
+  </div>
+  <div class="mt-10 grid items-center gap-8 md:grid-cols-[2fr_1fr]">
+    <Collage variant="hero" />
+    <Collage variant="compact" class="max-w-56" />
+  </div>
+  <div class="mt-10 flex flex-wrap items-center gap-8 text-3xl">
+    <Logo variant="a" wordmark title="Variant A" />
+    <Logo variant="b" wordmark title="Variant B" />
+    <Logo variant="c" wordmark title="Variant C" />
+    <Logo variant="a" title="Mark A" />
+    <Logo variant="b" title="Mark B" />
+    <Logo variant="c" title="Mark C" />
+  </div>
+</SgSection>

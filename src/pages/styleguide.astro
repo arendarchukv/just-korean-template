@@ -1,0 +1,44 @@
+---
+/**
+ * Developer styleguide for the "Paper & cut-outs" design system.
+ * English-only sample copy: exempt from the i18n dictionary rule. Not linked, noindex, not in the sitemap.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ColorsSection from '@/components/styleguide/ColorsSection.astro';
+import ControlsSection from '@/components/styleguide/ControlsSection.astro';
+import PatternsSection from '@/components/styleguide/PatternsSection.astro';
+import ShapesSection from '@/components/styleguide/ShapesSection.astro';
+import TypeSection from '@/components/styleguide/TypeSection.astro';
+
+const NAV = [
+  ['colors', 'Color'],
+  ['type', 'Typography'],
+  ['controls', 'Controls'],
+  ['patterns', 'Learning patterns'],
+  ['shapes', 'Shapes & logo'],
+] as const;
+---
+
+<BaseLayout title="Styleguide" noindex monolingual>
+  <div class="container-page pt-14 pb-6">
+    <p class="eyebrow">Design system</p>
+    <h1 class="mt-2 text-4xl font-bold tracking-tight md:text-5xl">Paper &amp; cut-outs</h1>
+    <p class="mt-4 max-w-2xl text-lg text-muted">
+      Calm academic precision with one hand-made layer from the channel intro.
+    </p>
+    <nav aria-label="Styleguide sections" class="mt-8 flex flex-wrap gap-x-5 gap-y-2">
+      {NAV.map(([id, label]) => (
+        <a href={`#${id}`} class="link">
+          {label}
+        </a>
+      ))}
+    </nav>
+  </div>
+  <div class="container-page">
+    <ColorsSection />
+    <TypeSection />
+    <ControlsSection />
+    <PatternsSection />
+    <ShapesSection />
+  </div>
+</BaseLayout>

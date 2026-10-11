@@ -7,9 +7,10 @@ import { localizePath, stripLocale, useTranslations } from '@/i18n/utils';
 
 interface Props {
   lang: Lang;
+  showLanguageSwitch?: boolean;
 }
 
-const { lang } = Astro.props;
+const { lang, showLanguageSwitch = true } = Astro.props;
 const t = useTranslations(lang);
 
 const NAV: { path: string; key: UIKey }[] = [
@@ -55,7 +56,7 @@ const bookHref = localizePath(lang, 'classes');
     </nav>
 
     <div class="ml-auto flex items-center gap-1">
-      <LanguageSwitcher lang={lang} />
+      {showLanguageSwitch && <LanguageSwitcher lang={lang} />}
       <ThemeToggle lang={lang} />
       <a href={bookHref} class="btn btn-primary ml-2 hidden md:inline-flex">
         {t('nav.bookClass')}

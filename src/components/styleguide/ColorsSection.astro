@@ -1,0 +1,105 @@
+---
+import themeCss from '@/styles/theme.css?raw';
+import { contrastRatio } from '@/lib/contrast';
+import { parseThemeCss } from '@/lib/theme-tokens';
+import { CONTRAST_PAIRS } from '@/design/contrast-pairs';
+import SgSection from './SgSection.astro';
+
+const tokens = parseThemeCss(themeCss);
+const scales = ['brand', 'teal'].map((scale) => ({
+  scale,
+  steps: Object.entries(tokens.raw).filter(([k]) => k.startsWith(`${scale}-`)),
+}));
+const SWATCHES = [
+  'bg',
+  'surface',
+  'border',
+  'text',
+  'muted',
+  'brand',
+  'brand-strong',
+  'brand-tint',
+  'teal',
+  'teal-strong',
+  'teal-tint',
+  'danger',
+  'danger-tint',
+  'focus',
+];
+const themes = (['light', 'dark'] as const).map((theme) => ({
+  theme,
+  rows: CONTRAST_PAIRS.map((p) => {
+    const ratio = contrastRatio(tokens[theme][p.fg]!, tokens[theme][p.bg]!);
+    return { ...p, ratio, pass: ratio >= p.min };
+  }),
+}));
+---
+
+<SgSection
+  id="colors"
+  title="Color"
+  shape="grid"
+  lead="Raw scales are for the theme file only. Components use the semantic tokens below. Ratios are computed from src/styles/theme.css at build time."
+>
+  <div class="flex flex-col gap-6">
+    {scales.map(({ scale, steps }) => (
+      <div>
+        <p class="mb-2 text-sm font-semibold capitalize">{scale}</p>
+        <div class="grid grid-cols-6 gap-1 sm:grid-cols-11">
+          {steps.map(([name, hex]) => (
+            <div>
+              <div class="h-12 rounded-control border border-border" style={`background:${hex}`} />
+              <p class="mt-1 text-xs text-muted">{name.split('-')[1]}</p>
+              <p class="font-mono text-[0.7rem] text-muted">{hex}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-10 grid gap-6 lg:grid-cols-2">
+    {themes.map(({ theme, rows }) => (
+      <div data-theme={theme} class="rounded-card border border-border bg-bg p-5 text-text">
+        <p class="mb-4 font-semibold capitalize">{theme} theme</p>
+        <div class="mb-5 grid grid-cols-7 gap-1">
+          {SWATCHES.map((t) => (
+            <div title={t}>
+              <div class="h-9 rounded-md border border-border" style={`background:var(--${t})`} />
+              <p class="mt-1 truncate text-[0.65rem] text-muted">{t}</p>
+            </div>
+          ))}
+        </div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-muted">
+              <th class="py-1 font-medium">Pair</th>
+              <th class="py-1 font-medium">Sample</th>
+              <th class="py-1 text-right font-medium">Ratio</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr class="border-t border-border">
+                <td class="py-1.5 pr-2">{r.use}</td>
+                <td class="py-1.5">
+                  <span
+                    class="rounded px-1.5 py-0.5 font-semibold"
+                    style={`color:var(--${r.fg});background:var(--${r.bg})`}
+                  >
+                    Aa 가
+                  </span>
+                </td>
+                <td
+                  class:list={['py-1.5 text-right font-mono', r.pass ? 'text-teal' : 'text-danger']}
+                >
+                  {r.ratio.toFixed(2)} {r.pass ? '✓' : '✗'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    ))}
+  </div>
+</SgSection>

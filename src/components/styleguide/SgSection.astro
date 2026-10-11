@@ -1,0 +1,22 @@
+---
+import SectionHeading from '@/components/SectionHeading.astro';
+import type { ShapeName } from '@/components/shapes/Shape.astro';
+
+interface Props {
+  id: string;
+  title: string;
+  shape?: ShapeName;
+  lead?: string;
+}
+const { id, title, shape = 'blob', lead } = Astro.props;
+---
+
+<section id={id} class="scroll-mt-24 border-t border-border py-14" aria-labelledby={`${id}-title`}>
+  <SectionHeading id={`${id}-title`} shape={shape}>
+    {title}
+  </SectionHeading>
+  {lead && <p class="mt-3 max-w-2xl text-muted">{lead}</p>}
+  <div class="mt-8">
+    <slot />
+  </div>
+</section>

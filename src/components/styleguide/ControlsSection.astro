@@ -1,0 +1,55 @@
+---
+import SgSection from './SgSection.astro';
+---
+
+<SgSection
+  id="controls"
+  title="Links and controls"
+  shape="zigzag"
+  lead="Hover the links and buttons; use Tab to see the teal focus ring."
+>
+  <p class="max-w-[68ch]">
+    A sentence with an{' '}
+    <a href="#controls" class="link">
+      inline link
+    </a>{' '}
+    and
+    <a href="#patterns" class="link">
+      another one
+    </a>
+    : the underline turns into a pencil hatch on hover.
+  </p>
+  <div class="mt-8 flex flex-wrap items-center gap-3">
+    <button type="button" class="btn btn-primary">
+      Primary
+    </button>
+    <button type="button" class="btn btn-teal">
+      Check answer
+    </button>
+    <button type="button" class="btn btn-ghost">
+      Ghost
+    </button>
+    <button type="button" class="btn btn-primary" disabled>
+      Disabled
+    </button>
+    <button type="button" class="icon-btn" aria-label="Icon button">
+      <svg
+        viewBox="0 0 24 24"
+        class="size-5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M5 12h14M12 5v14"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="mt-8 max-w-sm">
+    <label for="sg-field" class="mb-1.5 block text-sm font-medium">
+      Search a pattern
+    </label>
+    <input id="sg-field" type="text" class="field" placeholder="e.g. 아/어 봤자" />
+  </div>
+</SgSection>

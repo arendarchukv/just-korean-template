@@ -69,12 +69,12 @@
     color: inherit;
     background-image: repeating-linear-gradient(
       -45deg,
-      color-mix(in oklab, var(--teal) 40%, transparent) 0 2px,
-      transparent 2px 5px
+      color-mix(in oklab, var(--teal) 60%, transparent) 0 1.5px,
+      transparent 1.5px 3.5px
     );
     background-repeat: no-repeat;
-    background-position: 0 88%;
-    background-size: 100% 0.42em;
+    background-position: 0 90%;
+    background-size: 100% 0.45em;
     padding-inline: 0.08em;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;

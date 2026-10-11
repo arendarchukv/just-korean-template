@@ -1,0 +1,47 @@
+---
+import SgSection from './SgSection.astro';
+const SCALE = [
+  ['text-5xl', '3 rem'],
+  ['text-4xl', '2.25 rem'],
+  ['text-3xl', '1.875 rem'],
+  ['text-2xl', '1.5 rem'],
+  ['text-xl', '1.25 rem'],
+  ['text-base', '1 rem'],
+  ['text-sm', '0.875 rem'],
+] as const;
+---
+
+<SgSection
+  id="type"
+  title="Typography"
+  shape="arch"
+  lead="Outfit for Latin, Pretendard for Korean. Body 17px / 1.65, Korean examples 22px / 1.7."
+>
+  <div class="grid gap-10 lg:grid-cols-2">
+    <div class="flex flex-col gap-3">
+      {SCALE.map(([cls, size]) => (
+        <p class:list={[cls, 'font-bold tracking-tight']}>
+          Learn Korean{' '}
+          <span class="text-sm font-normal text-muted">
+            {cls} · {size}
+          </span>
+        </p>
+      ))}
+    </div>
+    <div lang="ko" class="flex flex-col gap-3" style="font-family: var(--font-korean)">
+      {SCALE.map(([cls]) => (
+        <p class:list={[cls, 'font-bold tracking-tight']}>한국어 배우기</p>
+      ))}
+    </div>
+  </div>
+  <div class="mt-10 grid gap-8 lg:grid-cols-2">
+    <p class="max-w-[68ch]">
+      Body text is 17px with a 1.65 line height and a measure of about 68 characters, so long
+      explanations stay comfortable to read. Secondary text uses the{' '}
+      <span class="text-muted">muted ink</span>.
+    </p>
+    <p lang="ko" class="max-w-[40em]" style="font-family: var(--font-korean)">
+      본문은 읽기 편하도록 줄 간격을 넉넉하게 두었어요. 한국어 예문은 더 크게 보여 줘요.
+    </p>
+  </div>
+</SgSection>

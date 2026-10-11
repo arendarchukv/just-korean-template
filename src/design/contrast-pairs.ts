@@ -24,6 +24,7 @@ export const CONTRAST_PAIRS: ContrastPair[] = [
   { fg: 'on-teal', bg: 'teal-strong-hover', min: 4.5, use: 'Learning button hover' },
   { fg: 'danger', bg: 'bg', min: 4.5, use: 'Error text' },
   { fg: 'danger', bg: 'danger-tint', min: 4.5, use: 'Wrong answer label' },
+  { fg: 'text', bg: 'key-mark', min: 4.5, use: 'Key expression over its hatch' },
   { fg: 'text', bg: 'selection', min: 4.5, use: 'Selected text' },
   { fg: 'focus', bg: 'bg', min: 3, use: 'Focus ring' },
   { fg: 'focus', bg: 'surface', min: 3, use: 'Focus ring on paper' },

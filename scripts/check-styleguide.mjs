@@ -12,6 +12,17 @@ const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
 const dupes = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
 if (dupes.length) problems.push(`duplicate ids: ${dupes.join(', ')}`);
 
+// Quiz options: only a selected option is "pressed"; revealed results need screen-reader text.
+for (const [button] of html.matchAll(/<button[^>]*class="quiz-option"[\s\S]*?<\/button>/g)) {
+  const state = /data-state="(\w+)"/.exec(button)?.[1];
+  if (/aria-pressed="true"/.test(button) && state !== 'selected') {
+    problems.push(`quiz option "${state}" is announced as pressed`);
+  }
+  if ((state === 'correct' || state === 'wrong') && !/class="sr-only"/.test(button)) {
+    problems.push(`quiz option "${state}" has no screen-reader label`);
+  }
+}
+
 const sitemap = readFileSync(new URL('../dist/sitemap-0.xml', import.meta.url), 'utf8');
 if (sitemap.includes('/styleguide')) problems.push('listed in sitemap');
 

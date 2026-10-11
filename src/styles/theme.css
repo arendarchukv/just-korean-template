@@ -35,6 +35,25 @@
     'Pretendard Variable', ui-sans-serif, system-ui, -apple-system, 'Apple SD Gothic Neo',
     'Malgun Gothic', sans-serif;
 
+  /* Type scale (spec §2). Tailwind defaults are reset so only these sizes exist. */
+  --text-*: initial;
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.5;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.65;
+  --text-lg: 1.25rem;
+  --text-lg--line-height: 1.55;
+  --text-xl: 1.5rem;
+  --text-xl--line-height: 1.4;
+  --text-2xl: 1.875rem;
+  --text-2xl--line-height: 1.3;
+  --text-3xl: 2.5rem;
+  --text-3xl--line-height: 1.2;
+  --text-4xl: 3.25rem;
+  --text-4xl--line-height: 1.1;
+
   --text-body: 1.0625rem;
   --text-body--line-height: 1.65;
   --text-example: 1.375rem;
@@ -74,6 +93,7 @@
 
   --focus: var(--color-teal-500);
   --selection: var(--color-teal-100);
+  --key-mark: var(--color-teal-300);
   --logo: var(--color-brand-500);
   --logo-secondary: var(--color-brand-700);
 
@@ -111,6 +131,7 @@
 
   --focus: var(--color-teal-300);
   --selection: var(--color-teal-800);
+  --key-mark: var(--color-teal-700);
   --logo: var(--color-brand-300);
   --logo-secondary: var(--color-brand-500);
 

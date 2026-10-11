@@ -58,8 +58,9 @@ const bookHref = localizePath(lang, 'classes');
         {t('nav.bookClass')}
       </a>
 
-      <!-- Mobile menu: native disclosure, no JS. -->
-      <details class="group md:hidden">
+      <!-- Mobile menu: a native disclosure, so it works without JS; the script below adds
+           Escape / backdrop to close, scroll lock, and closing when the window widens. -->
+      <details class="group md:hidden" data-mobile-menu>
         <summary class="icon-btn cursor-pointer list-none [&::-webkit-details-marker]:hidden">
           <span class="sr-only">{t('a11y.menu')}</span>
           <svg
@@ -85,9 +86,10 @@ const bookHref = localizePath(lang, 'classes');
             <path d="M6 6l12 12M18 6L6 18"></path>
           </svg>
         </summary>
+        <div class="menu-backdrop" data-menu-backdrop aria-hidden="true"></div>
         <nav
           aria-label={t('a11y.mainNav')}
-          class="absolute inset-x-0 top-16 border-b border-border bg-bg shadow-sm"
+          class="mobile-menu-panel absolute inset-x-0 top-16 z-10 border-b border-border bg-bg shadow-sm"
         >
           <ul class="container-page flex flex-col gap-1 py-4">
             {items.map((item) => (
@@ -112,3 +114,31 @@ const bookHref = localizePath(lang, 'classes');
     </div>
   </div>
 </header>
+
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('details[data-mobile-menu]');
+  if (menu) {
+    const summary = menu.querySelector('summary')!;
+    const root = document.documentElement;
+    const desktop = window.matchMedia('(min-width: 48rem)');
+    const close = () => {
+      menu.open = false;
+    };
+
+    // Scroll lock follows the open state, however the menu was opened or closed.
+    const sync = () => root.toggleAttribute('data-menu-open', menu.open);
+    menu.addEventListener('toggle', sync);
+    sync();
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        close();
+        summary.focus();
+      }
+    });
+    menu.querySelector('[data-menu-backdrop]')?.addEventListener('click', close);
+    desktop.addEventListener('change', (event) => {
+      if (event.matches) close();
+    });
+  }
+</script>

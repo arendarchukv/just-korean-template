@@ -360,6 +360,35 @@
     color: var(--muted);
   }
 
+  /* Mobile menu: soft entrance (CSS only), dimmed backdrop, scroll lock while open. */
+  .mobile-menu-panel {
+    transition:
+      opacity 180ms var(--ease-calm),
+      translate 180ms var(--ease-calm);
+  }
+  /* Positioned from the header (its backdrop-filter makes it the containing block): from the
+     header bottom down one screen height. */
+  .menu-backdrop {
+    position: absolute;
+    top: 4rem;
+    inset-inline: 0;
+    height: 100dvh;
+    background-color: color-mix(in oklab, var(--text) 18%, transparent);
+    transition: opacity 180ms var(--ease-calm);
+  }
+  @starting-style {
+    details[open] > .mobile-menu-panel {
+      opacity: 0;
+      translate: 0 -6px;
+    }
+    details[open] > .menu-backdrop {
+      opacity: 0;
+    }
+  }
+  html[data-menu-open] {
+    overflow: hidden;
+  }
+
   .shape {
     display: block;
   }

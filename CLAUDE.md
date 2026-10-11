@@ -44,7 +44,8 @@ Build the skeleton, **no feature functionality yet**:
 4. Base layout: `<head>` (SEO meta, OG, favicon), header with nav placeholders
    (Learn · Materials · Classes · News, and a "Book a class" button), footer
    (YouTube, Instagram, Contact, Support on Ko-fi), skip link
-5. Theme toggle (light / dark / system) with an inline head script so there is no flash
+5. Theme toggle (light / dark; first visit follows the OS until the visitor chooses) with an
+   inline head script so there is no flash
 6. Placeholder home page (EN + KO) and a 404 page
 7. Logo as an SVG component + `favicon.svg`
 8. Fonts self-hosted (no Google Fonts requests): Outfit for Latin

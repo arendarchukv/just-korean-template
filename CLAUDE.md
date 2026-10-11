@@ -169,6 +169,8 @@ Data decisions already made:
 - Project lives directly in the repo root (no subfolder). Scaffolded with
   `npm create astro` (minimal) + `astro add tailwind svelte sitemap`.
 - Package manager: **npm**.
+- Icons and share image: `npm run icons` renders `public/*.png` from the logo and shapes in
+  `src/components/shapes/paths.ts` (re-run after logo/colour changes; commit the PNGs).
 - Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.

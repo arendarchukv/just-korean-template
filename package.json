@@ -16,7 +16,8 @@
     "deploy": "npm run build && wrangler deploy",
     "astro": "astro",
     "test": "vitest run",
-    "check:dist": "node scripts/check-dist.mjs"
+    "check:dist": "node scripts/check-dist.mjs",
+    "icons": "node scripts/generate-icons.ts"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.3",

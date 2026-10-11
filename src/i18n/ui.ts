@@ -11,6 +11,7 @@ const en = {
   'site.tagline': 'The channel teaches, the site helps you learn.',
   'site.description':
     'Learning companion for the Just Korean YouTube channel: courses in order, a grammar reference, practice and class materials.',
+  'site.ogImageAlt': 'Just Korean logo beside cut-paper shapes in blue and teal',
 
   'a11y.skipToContent': 'Skip to content',
   'a11y.home': 'Just Korean, home',
@@ -74,6 +75,7 @@ const ko: Partial<Record<UIKey, string>> = {
   'site.tagline': '채널에서 배우고, 사이트에서 익혀요.',
   'site.description':
     'Just Korean 유튜브 채널의 학습 도우미: 순서대로 보는 코스, 문법 사전, 연습 문제, 수업 자료.',
+  'site.ogImageAlt': '파란색과 청록색 종이 오림 도형 옆의 Just Korean 로고',
 
   'a11y.skipToContent': '본문으로 건너뛰기',
   'a11y.home': 'Just Korean 홈',

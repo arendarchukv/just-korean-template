@@ -1,5 +1,5 @@
 // Checks the built site in dist/ (run after `npm run build`).
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 const problems = [];
@@ -75,6 +75,63 @@ const currentLinks = [...read('classes/index.html').matchAll(/<a[^>]*aria-curren
 const hatched = currentLinks.filter(([a]) => /class="[^"]*\bnav-link\b/.test(a));
 if (hatched.length < 2) {
   problems.push(`current page has the nav-link hatch in ${hatched.length} of 2 menus`);
+}
+
+// --- Icons, manifest, share image, robots.txt ---
+const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
+/** Width and height from a PNG header. */
+const pngSize = (path) => {
+  const buf = readFileSync(new URL(`../dist/${path}`, import.meta.url));
+  return [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+};
+const expectPng = (path, w, h) => {
+  if (!exists(path)) return problems.push(`missing ${path}`);
+  const [pw, ph] = pngSize(path);
+  if (pw !== w || ph !== h) problems.push(`${path} is ${pw}x${ph}, expected ${w}x${h}`);
+};
+
+expectPng('apple-touch-icon.png', 180, 180);
+if (!/<link rel="apple-touch-icon" href="\/apple-touch-icon\.png"/.test(home)) {
+  problems.push('apple-touch-icon link missing');
+}
+
+if (!/<link rel="manifest" href="\/site\.webmanifest"/.test(home)) {
+  problems.push('manifest link missing');
+}
+if (exists('site.webmanifest')) {
+  try {
+    const manifest = JSON.parse(read('site.webmanifest'));
+    if (!manifest.name || !manifest.icons?.length) problems.push('manifest lacks name or icons');
+    for (const icon of manifest.icons ?? []) {
+      const [w, h] = icon.sizes.split('x').map(Number);
+      expectPng(icon.src.replace(/^\//, ''), w, h);
+    }
+    if (!manifest.icons?.some((i) => i.purpose === 'maskable')) {
+      problems.push('manifest has no maskable icon');
+    }
+  } catch (error) {
+    problems.push(`site.webmanifest is not valid JSON: ${error.message}`);
+  }
+} else {
+  problems.push('missing site.webmanifest');
+}
+
+expectPng('og-default.png', 1200, 630);
+for (const page of ['index.html', 'ko/index.html']) {
+  const html = read(page);
+  const og = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1];
+  if (!og?.startsWith('https://')) problems.push(`${page}: og:image is not an absolute URL`);
+  if (!/<meta property="og:image:alt" content="[^"]+"/.test(html)) {
+    problems.push(`${page}: og:image:alt missing`);
+  }
+  if (!/<meta name="twitter:card" content="summary_large_image"/.test(html)) {
+    problems.push(`${page}: twitter:card is not summary_large_image`);
+  }
+}
+
+if (!exists('robots.txt')) problems.push('missing robots.txt');
+else if (!/^Sitemap: https:\/\/\S+\/sitemap-index\.xml$/m.test(read('robots.txt'))) {
+  problems.push('robots.txt has no absolute Sitemap line');
 }
 
 // --- Latin font is preloaded, so text does not render in a fallback and then shift ---

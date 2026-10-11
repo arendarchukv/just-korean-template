@@ -1,4 +1,6 @@
 ---
+import { LOGO_MARK_PATHS, LOGO_MARK_ROUNDED_POLYLINES } from '@/components/shapes/paths';
+
 /**
  * Just Korean mark: ㄱ + ㄴ rotated 180° against each other, interlocking into a square.
  * Final variant is TBD:
@@ -29,14 +31,15 @@ const a11y = title
         stroke-linecap="round"
         stroke-linejoin="round"
       >
-        <polyline points="10,10 90,10 90,58" />
-        <polyline points="10,42 10,90 90,90" />
+        {LOGO_MARK_ROUNDED_POLYLINES.map((points) => (
+          <polyline points={points} />
+        ))}
       </g>
     ) : (
       <>
-        <path d="M0 0H100V66H80V20H0Z" fill="currentColor" />
+        <path d={LOGO_MARK_PATHS[0]} fill="currentColor" />
         <path
-          d="M0 34H20V80H100V100H0Z"
+          d={LOGO_MARK_PATHS[1]}
           fill={variant === 'c' ? 'var(--color-logo-secondary)' : 'currentColor'}
         />
       </>

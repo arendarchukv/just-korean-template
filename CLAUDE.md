@@ -3,6 +3,39 @@
 This file records decisions made during planning. Anything marked **TBD** is still being
 discussed with the site owner — do not build it yet.
 
+## Status — paused 2026-10-12, read this first
+
+**Work is paused until the content direction is known.** The owner is finding out what the site
+will actually hold: the YouTube-companion idea below, something similar, or something else.
+The "Planned information architecture" section is a rough early sketch, **not** a commitment:
+do not build content structure (collections, video/grammar pages, data models) until the owner
+confirms the direction.
+
+Done and content-independent (all on `main`, all checks green):
+
+- Foundation: Astro 7 static, Tailwind v4, strict TS, i18n EN (`/`) + KO (`/ko/`), sitemap,
+  theme toggle (light/dark), header/footer, placeholder pages (Learn, Materials, Classes, News,
+  About), 404s.
+- Design system "Paper & cut-outs" (spec `docs/superpowers/specs/2026-10-11-design-system-design.md`),
+  shown on `/styleguide` (dev page, noindex).
+- Long-form typography (`.prose`), print styles, app icons + share image (`npm run icons`),
+  `robots.txt`, web manifest.
+- Polish: mobile menu behaviour, heading anchors, page transitions, finishing details.
+- Quality gates: `npm test` (unit), `npm run check`, `npm run build` + `npm run check:dist`,
+  `npm run test:browser` (axe a11y, print, UI, performance budget in local Chrome).
+
+Waiting on the owner (do not guess these):
+
+- Content direction (see above) — the next work depends on it.
+- Domain (placeholder `https://just-korean.example` in `astro.config.mjs`) and hosting/deploy
+  (Cloudflare Workers is planned; no deploy until asked).
+- Brand: final colour (#5C7EBE vs #68ACF9), logo variant A/B/C, wordmark font.
+- Footer/social links (`src/config.ts`), Korean UI strings review (`TODO(ko-review)`), About text.
+- Privacy page and analytics (needed once Tally forms or analytics are added).
+
+When resuming: run the quality gates above first; `npx astro dev --background` for the dev
+server (restart it after changing Markdown config).
+
 ## What this is
 
 A static learning companion site for **Just Korean (그냥 한국어)**, a YouTube channel

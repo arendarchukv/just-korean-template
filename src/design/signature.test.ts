@@ -37,6 +37,13 @@ describe('signature.css', () => {
     }
   });
 
+  it('marks callouts with an inset straight bar, not a border bent by the corner radius', () => {
+    expect(ruleBody(/\.callout/)).not.toMatch(/border-left/);
+    const bar = ruleBody(/\.callout::before/);
+    expect(bar).toMatch(/position:\s*absolute/);
+    expect(bar).toMatch(/background-color:\s*var\(--callout-bar\)/);
+  });
+
   it('has a link-style button variant', () => {
     expect(ruleBody(/\.btn-link/)).toMatch(/color:\s*var\(--brand\)/);
   });

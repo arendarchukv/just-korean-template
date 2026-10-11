@@ -14,28 +14,39 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 
-const FEATURES: { title: UIKey; body: UIKey; shape: ShapeName; tone: ShapeTone }[] = [
+// Courses, grammar and practice live under Learn for now; update the paths when those pages exist.
+const FEATURES: {
+  title: UIKey;
+  body: UIKey;
+  path: string;
+  shape: ShapeName;
+  tone: ShapeTone;
+}[] = [
   {
     title: 'home.feature.courses.title',
     body: 'home.feature.courses.body',
+    path: 'learn',
     shape: 'arch',
     tone: 'teal',
   },
   {
     title: 'home.feature.grammar.title',
     body: 'home.feature.grammar.body',
+    path: 'learn',
     shape: 'grid',
     tone: 'brand',
   },
   {
     title: 'home.feature.practice.title',
     body: 'home.feature.practice.body',
+    path: 'learn',
     shape: 'blob',
     tone: 'teal',
   },
   {
     title: 'home.feature.materials.title',
     body: 'home.feature.materials.body',
+    path: 'materials',
     shape: 'zigzag',
     tone: 'brand',
   },
@@ -64,16 +75,21 @@ const FEATURES: { title: UIKey; body: UIKey; shape: ShapeName; tone: ShapeTone }
     <SectionHeading id="features-title">{t('home.featuresTitle')}</SectionHeading>
     <ul class="mt-8 grid gap-4 sm:grid-cols-2">
       {FEATURES.map((f) => (
-        <li class="card bg-surface">
-          <Shape
-            name={f.shape}
-            tone={f.tone}
-            texture="hatch"
-            class="absolute -top-4 -right-4 w-20 opacity-90"
-          />
-          <h3 class="relative text-lg font-semibold">{t(f.title)}</h3>
-          <p class="relative mt-2 max-w-[34ch] text-muted">{t(f.body)}</p>
-          <p class="badge relative mt-4">{t('placeholder.comingSoon')}</p>
+        <li>
+          <a
+            href={localizePath(lang, f.path)}
+            class="card card-interactive block h-full bg-surface"
+          >
+            <Shape
+              name={f.shape}
+              tone={f.tone}
+              texture="hatch"
+              class="card-shape absolute -top-4 -right-4 w-20 opacity-90"
+            />
+            <h3 class="relative text-lg font-semibold">{t(f.title)}</h3>
+            <p class="relative mt-2 max-w-[34ch] text-muted">{t(f.body)}</p>
+            <p class="badge relative mt-4">{t('placeholder.comingSoon')}</p>
+          </a>
         </li>
       ))}
     </ul>

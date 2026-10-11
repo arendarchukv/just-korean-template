@@ -41,6 +41,20 @@ for (const page of ['index.html', 'ko/index.html', 'styleguide/index.html']) {
   }
 }
 
+// Home feature cards are links with the hover effect, in both languages.
+for (const [page, prefix] of [
+  ['index.html', ''],
+  ['ko/index.html', '/ko'],
+]) {
+  const cards = [...read(page).matchAll(/<a[^>]*class="[^"]*\bcard-interactive\b[^"]*"[^>]*>/g)];
+  const hrefs = cards.map(([a]) => /href="([^"]+)"/.exec(a)?.[1]);
+  if (cards.length !== 4)
+    problems.push(`${page}: ${cards.length} linked feature cards, expected 4`);
+  if (hrefs.some((h) => !h?.startsWith(`${prefix}/`))) {
+    problems.push(`${page}: feature card links leave the ${prefix || 'en'} locale: ${hrefs}`);
+  }
+}
+
 // --- Current page is marked by the hatch in both desktop and mobile navigation ---
 const currentLinks = [...read('classes/index.html').matchAll(/<a[^>]*aria-current="page"[^>]*>/g)];
 const hatched = currentLinks.filter(([a]) => /class="[^"]*\bnav-link\b/.test(a));

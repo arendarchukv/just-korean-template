@@ -32,6 +32,12 @@ for (const [button] of html.matchAll(/<button[^>]*class="quiz-option"[\s\S]*?<\/
 
 if (!/class="btn btn-link"/.test(html)) problems.push('styleguide does not show the link button');
 
+// Long-form sample: Markdown renders inside .prose, and tables get the scroll wrapper.
+if (!/class="prose"/.test(html)) problems.push('styleguide has no .prose long-form sample');
+if (!/<div class="table-scroll" tabindex="0"><table>/.test(html)) {
+  problems.push('Markdown tables are not wrapped in a focusable .table-scroll');
+}
+
 if (read('sitemap-0.xml').includes('/styleguide')) problems.push('styleguide listed in sitemap');
 
 // --- Interactive cards must be links (hover feedback promises a click) ---

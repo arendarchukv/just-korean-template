@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import './theme.css';
 @import './signature.css';
+@import './prose.css';
 
 /* Dark mode follows the resolved theme on <html data-theme>, set by the inline head script. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
@@ -22,6 +23,10 @@
   /* Korean pages: Pretendard for everything, so Latin and Hangul share metrics. */
   html:lang(ko) {
     font-family: var(--font-korean);
+  }
+
+  /* Korean wraps between words, never inside one: also for Korean phrases on English pages. */
+  :lang(ko) {
     word-break: keep-all;
   }
 

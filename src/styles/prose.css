@@ -1,0 +1,235 @@
+/*
+ * Long-form text (lessons, articles, notes rendered from Markdown): add class="prose" to the
+ * wrapper. Same "Paper & cut-outs" language as the rest of the system. Semantic tokens only.
+ * Links and <mark> share their rules with .link and .key-mark in signature.css.
+ */
+
+@layer components {
+  .prose {
+    max-width: 68ch;
+    color: var(--text);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  /* Vertical rhythm */
+  .prose > * + * {
+    margin-top: 1em;
+  }
+  .prose > :first-child {
+    margin-top: 0;
+  }
+
+  /* Headings: h2 carries the small cut-paper section mark, like eyebrows. */
+  .prose h2 {
+    margin-top: 2.25em;
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
+    font-weight: 700;
+  }
+  .prose h2::before {
+    content: '';
+    display: inline-block;
+    width: 0.55em;
+    height: 0.55em;
+    margin-right: 0.45em;
+    vertical-align: 0.05em;
+    background-color: var(--teal);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 C66 3 82 9 91 23 C99 36 97 52 93 64 C88 80 76 93 57 96 C40 99 21 92 11 78 C2 65 3 47 8 34 C14 19 31 7 50 5 Z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 C66 3 82 9 91 23 C99 36 97 52 93 64 C88 80 76 93 57 96 C40 99 21 92 11 78 C2 65 3 47 8 34 C14 19 31 7 50 5 Z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
+  .prose h3 {
+    margin-top: 1.75em;
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+    font-weight: 650;
+  }
+  .prose h4 {
+    margin-top: 1.5em;
+    font-size: var(--text-lg);
+    line-height: var(--text-lg--line-height);
+    font-weight: 600;
+  }
+  .prose :is(h2, h3, h4) + * {
+    margin-top: 0.6em;
+  }
+
+  /* Inline text */
+  .prose strong {
+    font-weight: 650;
+  }
+  /* Hangul has no italic; browsers would slant it. Use Korean emphasis dots (방점) instead. */
+  .prose :lang(ko) em,
+  .prose em:lang(ko) {
+    font-style: normal;
+    -webkit-text-emphasis: filled dot var(--teal);
+    text-emphasis: filled dot var(--teal);
+    -webkit-text-emphasis-position: over right;
+    text-emphasis-position: over right;
+  }
+  .prose sup {
+    font-size: 0.75em;
+    line-height: 0;
+  }
+
+  /* Pronunciation above a word: <ruby>읽다<rt>익따</rt></ruby> */
+  .prose rt {
+    font-size: 0.55em;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  /* Lists: a short teal dash instead of a bullet; teal numbers. */
+  .prose ul,
+  .prose ol {
+    padding-left: 1.5em;
+  }
+  .prose ul {
+    list-style: none;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li,
+  .prose li > :is(ul, ol) {
+    margin-top: 0.4em;
+  }
+  .prose ul > li {
+    position: relative;
+  }
+  .prose ul > li::before {
+    content: '';
+    position: absolute;
+    top: calc(0.825em - 1px);
+    left: -1.1em;
+    width: 0.55em;
+    height: 2px;
+    border-radius: 999px;
+    background-color: var(--teal);
+  }
+  .prose ol > li::marker {
+    color: var(--teal);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Quote: the same straight bar with round caps as callouts and pairs. */
+  .prose blockquote {
+    position: relative;
+    padding-left: 1.25em;
+    color: var(--muted);
+  }
+  .prose blockquote::before {
+    content: '';
+    position: absolute;
+    top: 0.25em;
+    bottom: 0.25em;
+    left: 0;
+    width: 3px;
+    border-radius: 999px;
+    background-color: var(--muted);
+  }
+  .prose blockquote > * + * {
+    margin-top: 0.75em;
+  }
+
+  /* Divider: a short pencil hatch. */
+  .prose hr {
+    height: 0.35em;
+    width: 4.5em;
+    margin-block: 2.5em;
+    border: 0;
+    background-image: repeating-linear-gradient(-45deg, var(--teal) 0 1.5px, transparent 1.5px 4px);
+  }
+
+  /* Code */
+  .prose code {
+    /* Pretendard covers Hangul, which monospace fonts lack. */
+    font-family: ui-monospace, 'Cascadia Code', Consolas, 'Pretendard Variable', monospace;
+    font-size: 0.875em;
+  }
+  .prose :not(pre) > code {
+    border-radius: 0.375em;
+    background-color: var(--surface);
+    padding: 0.1em 0.35em;
+  }
+  .prose pre {
+    overflow-x: auto;
+    border-radius: var(--radius-control);
+    background-color: var(--surface);
+    padding: 1em 1.25em;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+  .prose pre code {
+    font-size: inherit;
+  }
+
+  /* Images and figures */
+  .prose img {
+    border-radius: var(--radius-card);
+  }
+  .prose figcaption {
+    margin-top: 0.5em;
+    font-size: var(--text-sm);
+    color: var(--muted);
+  }
+
+  /* Tables: wrapped by rehypeWrapTables, so wide tables scroll inside, not the page. */
+  .prose .table-scroll {
+    overflow-x: auto;
+    border-radius: 2px;
+  }
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+  }
+  .prose th {
+    border-bottom: 1px solid color-mix(in oklab, var(--text) 35%, transparent);
+    text-align: left;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .prose td {
+    border-bottom: 1px solid var(--border);
+  }
+  .prose :is(th, td) {
+    min-width: 8em;
+    padding: 0.6em 1em 0.6em 0;
+    vertical-align: top;
+  }
+  .prose :is(th, td):last-child {
+    padding-right: 0;
+  }
+
+  /* Expandable explanation */
+  .prose details {
+    border-radius: var(--radius-control);
+    background-color: var(--surface);
+    padding: 0.75em 1em;
+  }
+  .prose summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .prose summary::marker {
+    color: var(--teal);
+  }
+  .prose details[open] > summary {
+    margin-bottom: 0.5em;
+  }
+
+  /* Footnotes (GFM) */
+  .prose .footnotes {
+    margin-top: 3em;
+    border-top: 1px solid var(--border);
+    padding-top: 1em;
+    font-size: var(--text-sm);
+    color: var(--muted);
+  }
+}

@@ -90,6 +90,11 @@ Rules:
   key-expression hatch mark, 원고지 grid paper for examples, cut-paper shapes (collage only in
   hero / 404 / empty states). Tokens: `src/styles/theme.css`; classes: `src/styles/signature.css`.
 - `npm test` checks every semantic text/background pair for WCAG AA in both themes.
+- Long-form text (Markdown lessons, articles): wrap in `class="prose"` (`src/styles/prose.css`).
+  Mark Korean inside English text with `lang="ko"` (font, keep-all wrapping, 방점 instead of
+  italics). Sample: `src/components/styleguide/samples/lesson.md`.
+- Markdown runs on Astro 7's default processor, Sätteri (`@astrojs/markdown-satteri`): extend it
+  with Sätteri hast/mdast plugins (see `src/lib/wrap-tables-plugin.ts`), not remark/rehype.
 - Semantic tokens (`--color-bg`, `--color-surface`, `--color-text`, `--color-muted`,
   `--color-border`, `--color-brand`, `--color-teal`, `--color-danger`, ...) are redefined
   per theme. Components use only semantic tokens, never raw hex. The Tailwind default

@@ -45,7 +45,8 @@
 
   /* Links: thin underline; on hover a teal pencil hatch slides in below the text
      (bottom padding holds it, so it never covers descenders; inline padding keeps line height). */
-  .link {
+  .link,
+  .prose a:not([class]) {
     color: var(--brand);
     text-decoration-line: underline;
     text-decoration-thickness: 1px;
@@ -60,7 +61,8 @@
       background-size 180ms var(--ease-calm),
       text-decoration-color 180ms var(--ease-calm);
   }
-  .link:hover {
+  .link:hover,
+  .prose a:not([class]):hover {
     background-size: 100% 0.2em;
     text-decoration-color: transparent;
   }
@@ -89,7 +91,8 @@
   }
 
   /* Key expression: pencil hatch behind the lower part of the text. */
-  .key-mark {
+  .key-mark,
+  .prose mark {
     background-color: transparent;
     color: inherit;
     background-image: repeating-linear-gradient(

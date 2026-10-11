@@ -3,6 +3,8 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import svelte from '@astrojs/svelte';
 import sitemap from '@astrojs/sitemap';
+import { satteri } from '@astrojs/markdown-satteri';
+import { wrapTablesPlugin } from './src/lib/wrap-tables-plugin.ts';
 
 import { rename, rmdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -39,6 +41,11 @@ export default defineConfig({
     routing: {
       prefixDefaultLocale: false,
     },
+  },
+  markdown: {
+    // Code is styled by .prose with semantic tokens; Shiki would inject its own colours.
+    syntaxHighlight: false,
+    processor: satteri({ hastPlugins: [wrapTablesPlugin] }),
   },
   integrations: [
     svelte(),

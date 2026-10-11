@@ -1,5 +1,14 @@
 /* Signature details of the "Paper & cut-outs" system. Semantic tokens only. */
 
+/* Non-color theme values (kept out of theme.css, which holds colors only). */
+:root,
+[data-theme='light'] {
+  --collage-opacity: 1;
+}
+[data-theme='dark'] {
+  --collage-opacity: 0.85;
+}
+
 @layer components {
   .container-page {
     margin-inline: auto;
@@ -14,9 +23,24 @@
   }
 
   .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--teal);
+  }
+  /* Section mark: the blob shape, tinted by the current theme. */
+  .eyebrow::before {
+    content: '';
+    width: 0.7em;
+    height: 0.7em;
+    flex-shrink: 0;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 C66 3 82 9 91 23 C99 36 97 52 93 64 C88 80 76 93 57 96 C40 99 21 92 11 78 C2 65 3 47 8 34 C14 19 31 7 50 5 Z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 C66 3 82 9 91 23 C99 36 97 52 93 64 C88 80 76 93 57 96 C40 99 21 92 11 78 C2 65 3 47 8 34 C14 19 31 7 50 5 Z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
   }
 
   /* Links: thin underline; on hover a teal pencil hatch slides in. */
@@ -49,8 +73,8 @@
     color: var(--muted);
     background-image: repeating-linear-gradient(-45deg, var(--teal) 0 1.5px, transparent 1.5px 4px);
     background-repeat: no-repeat;
-    background-position: 0.75rem calc(100% - 0.55rem);
-    background-size: 0 0.3em;
+    background-position: 0.75rem calc(100% - 0.2rem);
+    background-size: 0 0.25em;
     transition:
       background-size 180ms var(--ease-calm),
       color 150ms;
@@ -60,7 +84,7 @@
   }
   .nav-link[aria-current='page'] {
     color: var(--text);
-    background-size: calc(100% - 1.5rem) 0.3em;
+    background-size: calc(100% - 1.5rem) 0.25em;
   }
 
   /* Key expression: pencil hatch behind the lower part of the text. */
@@ -119,22 +143,33 @@
     background-color: var(--brand-strong);
     color: var(--on-brand);
   }
-  .btn-primary:not(:disabled):hover {
+  .btn-primary:not(:disabled):not([aria-disabled='true']):hover {
     background-color: var(--brand-strong-hover);
   }
   .btn-teal {
     background-color: var(--teal-strong);
     color: var(--on-teal);
   }
-  .btn-teal:not(:disabled):hover {
+  .btn-teal:not(:disabled):not([aria-disabled='true']):hover {
     background-color: var(--teal-strong-hover);
   }
   .btn-ghost {
     border-color: var(--border);
     color: var(--text);
   }
-  .btn-ghost:not(:disabled):hover {
+  .btn-ghost:not(:disabled):not([aria-disabled='true']):hover {
     background-color: var(--surface);
+  }
+  .btn-link {
+    padding-inline: 0.25rem;
+    color: var(--brand);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+    text-decoration-color: color-mix(in oklab, var(--brand) 45%, transparent);
+  }
+  .btn-link:not(:disabled):not([aria-disabled='true']):hover {
+    text-decoration-color: var(--teal);
   }
 
   .icon-btn {
@@ -323,9 +358,7 @@
   .collage {
     pointer-events: none;
     user-select: none;
-  }
-  [data-theme='dark'] .collage {
-    opacity: 0.85;
+    opacity: var(--collage-opacity);
   }
 }
 
@@ -336,5 +369,9 @@
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .card-interactive:hover .card-shape,
+  .btn:active {
+    transform: none;
   }
 }

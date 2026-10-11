@@ -8,17 +8,8 @@ import SgSection from './SgSection.astro';
   shape="zigzag"
   lead="Hover the links and buttons; use Tab to see the teal focus ring."
 >
-  <p class="max-w-[68ch]">
-    A sentence with an{' '}
-    <a href="#controls" class="link">
-      inline link
-    </a>{' '}
-    and
-    <a href="#patterns" class="link">
-      another one
-    </a>
-    — the underline turns into a pencil hatch on hover.
-  </p>
+  <!-- prettier-ignore -->
+  <p class="max-w-[68ch]">A sentence with an <a href="#controls" class="link">inline link</a> and <a href="#patterns" class="link">another one</a>: the underline turns into a pencil hatch on hover.</p>
   <div class="mt-8 flex flex-wrap items-center gap-3">
     <button type="button" class="btn btn-primary">
       Primary
@@ -28,6 +19,9 @@ import SgSection from './SgSection.astro';
     </button>
     <button type="button" class="btn btn-ghost">
       Ghost
+    </button>
+    <button type="button" class="btn btn-link">
+      Link button
     </button>
     <button type="button" class="btn btn-primary" disabled>
       Disabled

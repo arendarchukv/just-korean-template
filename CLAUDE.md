@@ -91,8 +91,9 @@ Rules:
 - `npm test` checks every semantic text/background pair for WCAG AA in both themes.
 - Semantic tokens (`--color-bg`, `--color-surface`, `--color-text`, `--color-muted`,
   `--color-border`, `--color-brand`, `--color-teal`, `--color-danger`, ...) are redefined
-  per theme. Components use only semantic tokens, never raw hex (the Tailwind default
-  palette is reset, so raw color utilities do not exist).
+  per theme. Components use only semantic tokens, never raw hex. The Tailwind default
+  palette is reset; the raw `brand-*` / `teal-*` scale utilities still compile (they back the
+  theme), but components must not use them.
 - Radius: about 10–12px for controls, 16–20px for cards. Touch targets 44px or more.
 - Style: clean, calm, lots of white space. No gradient washes, no emoji in the UI,
   no "K-pop pink".
@@ -162,7 +163,7 @@ Data decisions already made:
 - Project lives directly in the repo root (no subfolder). Scaffolded with
   `npm create astro` (minimal) + `astro add tailwind svelte sitemap`.
 - Package manager: **npm**.
-- Tests: Vitest (`npm test`). `npm run check:styleguide` checks the built styleguide page.
+- Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
 - Footer / social links: empty placeholders in `src/config.ts` (contact will be a Tally form).

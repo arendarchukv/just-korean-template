@@ -1,4 +1,6 @@
 ---
+import { nextId } from '@/lib/uid';
+
 /**
  * Decorative cut-paper shape in the spirit of the channel intro.
  * Edges stay clean: the hand-cut feel comes from slightly asymmetric geometry, not from filters.
@@ -26,7 +28,7 @@ const PATHS: Record<Exclude<ShapeName, 'wave'>, string> = {
 };
 const WAVE = 'M4 58 C12 28 20 28 27 52 S41 78 49 52 S63 25 71 50 S87 76 96 42';
 
-const uid = `shape-${crypto.randomUUID().slice(0, 8)}`;
+const uid = nextId('shape');
 const fill = `fill: var(--shape-${tone})`;
 const lineStyle = 'stroke: var(--shape-ink); stroke-opacity: 0.5';
 ---

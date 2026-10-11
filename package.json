@@ -16,7 +16,7 @@
     "deploy": "npm run build && wrangler deploy",
     "astro": "astro",
     "test": "vitest run",
-    "check:styleguide": "node scripts/check-styleguide.mjs"
+    "check:dist": "node scripts/check-dist.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

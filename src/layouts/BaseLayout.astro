@@ -1,0 +1,79 @@
+---
+import '@fontsource-variable/outfit';
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+import '@/styles/global.css';
+
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import ThemeScript from '@/components/ThemeScript.astro';
+import { SITE } from '@/config';
+import { defaultLang, languages, type Lang } from '@/i18n/ui';
+import { getLangFromUrl, switchLocalePath, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  /** Page title without the site name. Omit on the home page. */
+  title?: string;
+  description?: string;
+  /** Set for pages that should not be indexed (e.g. 404). */
+  noindex?: boolean;
+}
+
+const lang: Lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const { title, description = t('site.description'), noindex = false } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${t('site.tagline')}`;
+
+const site = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, site).href;
+const alternates = (Object.keys(languages) as Lang[]).map((l) => ({
+  lang: l,
+  href: new URL(switchLocalePath(Astro.url, l), site).href,
+}));
+const xDefault = alternates.find((a) => a.lang === defaultLang)!.href;
+const ogLocale = lang === 'ko' ? 'ko_KR' : 'en_US';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <ThemeScript />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {!noindex && alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={xDefault} />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={ogLocale} />
+    <!-- TODO: og:image once there is a share image. -->
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1a2b" media="(prefers-color-scheme: dark)" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body class="flex min-h-dvh flex-col bg-bg text-text antialiased">
+    <a
+      href="#main"
+      class="sr-only z-50 rounded-control bg-brand-strong px-4 py-3 font-semibold text-on-brand focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+    >
+      {t('a11y.skipToContent')}
+    </a>
+    <Header lang={lang} />
+    <main id="main" tabindex="-1" class="flex-1 focus:outline-none">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>

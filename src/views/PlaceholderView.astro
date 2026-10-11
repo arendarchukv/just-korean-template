@@ -1,0 +1,26 @@
+---
+/** "Coming soon" page for sections planned in later phases. */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+  titleKey: UIKey;
+}
+
+const { lang, titleKey } = Astro.props;
+const t = useTranslations(lang);
+const title = t(titleKey);
+---
+
+<BaseLayout title={title}>
+  <section class="container-page py-20 md:py-28">
+    <p class="mb-4 text-sm font-semibold text-brand">{t('placeholder.comingSoon')}</p>
+    <h1 class="text-4xl font-bold tracking-tight md:text-5xl">{title}</h1>
+    <p class="mt-6 max-w-xl text-lg text-muted">{t('placeholder.body')}</p>
+    <a href={localizePath(lang)} class="btn btn-ghost mt-10">
+      {t('placeholder.backHome')}
+    </a>
+  </section>
+</BaseLayout>

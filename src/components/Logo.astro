@@ -1,0 +1,51 @@
+---
+/**
+ * Just Korean mark: ㄱ + ㄴ rotated 180° against each other, interlocking into a square.
+ * Final variant is TBD:
+ *   a — sharp (default), b — rounded (avatars), c — two-tone.
+ * Wordmark font is unknown; Outfit 700 for now.
+ */
+interface Props {
+  variant?: 'a' | 'b' | 'c';
+  wordmark?: boolean;
+  /** Accessible name. Omit when the logo sits inside a labelled link. */
+  title?: string;
+  class?: string;
+}
+
+const { variant = 'a', wordmark = false, title, class: className } = Astro.props;
+const a11y = title
+  ? { role: 'img' as const, 'aria-label': title }
+  : { 'aria-hidden': 'true' as const };
+---
+
+<span class:list={['inline-flex items-center gap-2.5 text-logo', className]} {...a11y}>
+  <svg viewBox="0 0 100 100" class="size-[1.75em] shrink-0" xmlns="http://www.w3.org/2000/svg">
+    {variant === 'b' ? (
+      <g
+        fill="none"
+        stroke="currentColor"
+        stroke-width="20"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="10,10 90,10 90,58" />
+        <polyline points="10,42 10,90 90,90" />
+      </g>
+    ) : (
+      <>
+        <path d="M0 0H100V66H80V20H0Z" fill="currentColor" />
+        <path
+          d="M0 34H20V80H100V100H0Z"
+          fill={variant === 'c' ? 'var(--color-logo-secondary)' : 'currentColor'}
+        />
+      </>
+    )}
+  </svg>
+  {wordmark && (
+    <span class="flex flex-col font-['Outfit_Variable',sans-serif] text-[0.8em] leading-[0.95] font-bold tracking-tight text-text">
+      <span>Just</span>
+      <span>Korean</span>
+    </span>
+  )}
+</span>

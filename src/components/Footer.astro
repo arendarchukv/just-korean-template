@@ -1,0 +1,58 @@
+---
+import Logo from '@/components/Logo.astro';
+import { SITE, SOCIAL_LINKS, type SocialKey } from '@/config';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const LINKS: { key: SocialKey; label: UIKey }[] = [
+  { key: 'youtube', label: 'footer.youtube' },
+  { key: 'instagram', label: 'footer.instagram' },
+  { key: 'contact', label: 'footer.contact' },
+  { key: 'kofi', label: 'footer.kofi' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-border bg-surface">
+  <div class="container-page flex flex-col gap-8 py-10 md:flex-row md:items-start md:justify-between">
+    <div class="flex flex-col gap-3">
+      <Logo wordmark class="text-lg" />
+      <p class="max-w-xs text-sm text-muted">{t('site.tagline')}</p>
+    </div>
+
+    <nav aria-label={t('a11y.footerNav')}>
+      <ul class="flex flex-wrap gap-x-2 gap-y-1">
+        {LINKS.map(({ key, label }) => {
+          const href = SOCIAL_LINKS[key];
+          const external = href.startsWith('http');
+          return (
+            <li>
+              <a
+                href={href || '#'}
+                aria-disabled={href ? undefined : 'true'}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+                class="inline-flex min-h-touch items-center rounded-control px-3 text-sm font-medium text-muted hover:bg-bg hover:text-text"
+              >
+                {t(label)}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  </div>
+  <div class="container-page border-t border-border py-5 text-sm text-muted">
+    <p>
+      &copy; {year} {SITE.name}. {t('footer.rights')}
+    </p>
+  </div>
+</footer>

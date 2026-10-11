@@ -1,0 +1,19 @@
+---
+/** Inline, render-blocking: resolves the theme before first paint to avoid a flash. */
+---
+
+<script is:inline>
+  (function () {
+    var pref = null;
+    try {
+      pref = localStorage.getItem('theme');
+    } catch (e) {}
+    if (pref !== 'light' && pref !== 'dark') pref = 'system';
+    var dark =
+      pref === 'dark' ||
+      (pref === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var root = document.documentElement;
+    root.dataset.theme = dark ? 'dark' : 'light';
+    root.dataset.themePref = pref;
+  })();
+</script>

@@ -1,0 +1,24 @@
+---
+/** Links to the same page in the other locale(s). */
+import { languages, type Lang } from '@/i18n/ui';
+import { switchLocalePath, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const targets = (Object.keys(languages) as Lang[]).filter((l) => l !== lang);
+---
+
+{targets.map((target) => (
+  <a
+    href={switchLocalePath(Astro.url, target)}
+    hreflang={target}
+    lang={target}
+    title={useTranslations(target)('lang.switchTo')}
+    class="inline-flex min-h-touch items-center rounded-control px-3 text-sm font-medium text-muted hover:bg-surface hover:text-text"
+  >
+    {languages[target]}
+  </a>
+))}

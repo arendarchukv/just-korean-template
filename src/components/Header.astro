@@ -1,0 +1,117 @@
+---
+import Logo from '@/components/Logo.astro';
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
+import ThemeToggle from '@/components/ThemeToggle.astro';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, stripLocale, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const NAV: { path: string; key: UIKey }[] = [
+  { path: 'learn', key: 'nav.learn' },
+  { path: 'materials', key: 'nav.materials' },
+  { path: 'classes', key: 'nav.classes' },
+  { path: 'news', key: 'nav.news' },
+];
+
+const current = stripLocale(Astro.url.pathname);
+const items = NAV.map((item) => ({
+  href: localizePath(lang, item.path),
+  label: t(item.key),
+  active: current === item.path || current.startsWith(`${item.path}/`),
+}));
+const bookHref = localizePath(lang, 'classes');
+---
+
+<header class="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
+  <div class="container-page flex h-16 items-center gap-4">
+    <a
+      href={localizePath(lang)}
+      aria-label={t('a11y.home')}
+      class="-ml-1 inline-flex min-h-touch items-center rounded-control px-1 text-xl"
+    >
+      <Logo wordmark />
+    </a>
+
+    <nav aria-label={t('a11y.mainNav')} class="ml-6 hidden md:block">
+      <ul class="flex items-center gap-1">
+        {items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={item.active ? 'page' : undefined}
+              class="inline-flex min-h-touch items-center rounded-control px-3 font-medium text-muted hover:bg-surface hover:text-text aria-[current=page]:text-brand"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="ml-auto flex items-center gap-1">
+      <LanguageSwitcher lang={lang} />
+      <ThemeToggle lang={lang} />
+      <a href={bookHref} class="btn btn-primary ml-2 hidden md:inline-flex">
+        {t('nav.bookClass')}
+      </a>
+
+      <!-- Mobile menu: native disclosure, no JS. -->
+      <details class="group md:hidden">
+        <summary class="icon-btn cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+          <span class="sr-only">{t('a11y.menu')}</span>
+          <svg
+            class="size-6 group-open:hidden"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+          <svg
+            class="hidden size-6 group-open:block"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M6 6l12 12M18 6L6 18"></path>
+          </svg>
+        </summary>
+        <nav
+          aria-label={t('a11y.mainNav')}
+          class="absolute inset-x-0 top-16 border-b border-border bg-bg shadow-sm"
+        >
+          <ul class="container-page flex flex-col gap-1 py-4">
+            {items.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={item.active ? 'page' : undefined}
+                  class="flex min-h-touch items-center rounded-control px-3 text-lg font-medium text-text hover:bg-surface aria-[current=page]:text-brand"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+            <li class="pt-2">
+              <a href={bookHref} class="btn btn-primary w-full">
+                {t('nav.bookClass')}
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>

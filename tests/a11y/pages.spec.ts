@@ -10,6 +10,8 @@ const PAGES = [
   '/materials/',
   '/classes/',
   '/news/',
+  '/about/',
+  '/ko/about/',
   '/styleguide/',
   '/missing-page/',
   '/ko/missing-page/',

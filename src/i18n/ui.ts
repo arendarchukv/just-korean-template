@@ -30,6 +30,7 @@ const en = {
   'theme.toDark': 'Switch to dark theme',
   'theme.toLight': 'Switch to light theme',
 
+  'footer.about': 'About',
   'footer.youtube': 'YouTube',
   'footer.instagram': 'Instagram',
   'footer.contact': 'Contact',
@@ -62,6 +63,7 @@ const en = {
   'page.materials.title': 'Materials',
   'page.classes.title': 'Classes',
   'page.news.title': 'News',
+  'page.about.title': 'About',
 
   'notFound.title': 'Page not found',
   'notFound.body': 'The page you are looking for does not exist or has moved.',
@@ -94,6 +96,7 @@ const ko: Partial<Record<UIKey, string>> = {
   'theme.toDark': '다크 모드로 전환',
   'theme.toLight': '라이트 모드로 전환',
 
+  'footer.about': '소개',
   'footer.youtube': '유튜브',
   'footer.instagram': '인스타그램',
   'footer.contact': '문의',
@@ -123,6 +126,7 @@ const ko: Partial<Record<UIKey, string>> = {
   'page.materials.title': '자료',
   'page.classes.title': '수업',
   'page.news.title': '소식',
+  'page.about.title': '소개',
 
   'notFound.title': '페이지를 찾을 수 없어요',
   'notFound.body': '찾으시는 페이지가 없거나 이동되었어요.',

@@ -2,6 +2,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 
 const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
+const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
 const problems = [];
 
 // --- Styleguide: English-only, unindexed, clean shapes, accessible samples ---
@@ -61,6 +62,21 @@ for (const [page, prefix] of [
   }
 }
 
+// --- About page exists in both languages, is in the sitemap and linked from the footer ---
+for (const [page, href] of [
+  ['index.html', '/about/'],
+  ['ko/index.html', '/ko/about/'],
+]) {
+  const footer = /<footer[\s\S]*<\/footer>/.exec(read(page))?.[0] ?? '';
+  if (!footer.includes(`href="${href}"`)) problems.push(`${page}: footer does not link to ${href}`);
+}
+for (const page of ['about/index.html', 'ko/about/index.html']) {
+  if (!exists(page)) problems.push(`missing ${page}`);
+}
+if (!/<loc>https:\/\/[^<]+\/about\/<\/loc>/.test(read('sitemap-0.xml'))) {
+  problems.push('about page is not in the sitemap');
+}
+
 // --- Theme toggle is a plain light/dark switch (no confusing "system" state) ---
 const home = read('index.html');
 if (/data-label-system|themePref|theme-icon-system/.test(home)) {
@@ -78,7 +94,6 @@ if (hatched.length < 2) {
 }
 
 // --- Icons, manifest, share image, robots.txt ---
-const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
 /** Width and height from a PNG header. */
 const pngSize = (path) => {
   const buf = readFileSync(new URL(`../dist/${path}`, import.meta.url));

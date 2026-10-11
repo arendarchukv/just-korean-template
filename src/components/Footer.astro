@@ -2,7 +2,7 @@
 import Logo from '@/components/Logo.astro';
 import { SITE, SOCIAL_LINKS, type SocialKey } from '@/config';
 import type { Lang, UIKey } from '@/i18n/ui';
-import { useTranslations } from '@/i18n/utils';
+import { localizePath, useTranslations } from '@/i18n/utils';
 
 interface Props {
   lang: Lang;
@@ -33,6 +33,11 @@ const year = new Date().getFullYear();
 
     <nav aria-label={t('a11y.footerNav')}>
       <ul class="flex flex-wrap gap-x-2 gap-y-1">
+        <li>
+          <a href={localizePath(lang, 'about')} class="nav-link text-sm">
+            {t('footer.about')}
+          </a>
+        </li>
         {LINKS.map(({ key, label }) => {
           const href = SOCIAL_LINKS[key];
           const external = href.startsWith('http');

@@ -26,6 +26,7 @@ deployed to Cloudflare Workers static assets.
 | `npm run check`      | Type-check `.astro`, `.ts` and `.svelte` files       |
 | `npm run format`     | Format all files with Prettier                       |
 | `npm test`           | Unit tests (Vitest): contrast, tokens, CSS rules     |
+| `npm run test:a11y`  | Accessibility checks (axe) in Chrome on every page   |
 | `npm run check:dist` | Checks the built HTML in `dist/` (after build)       |
 | `npm run icons`      | Render PNG icons and share image into `public/`      |
 | `npm run cf:preview` | Build and serve via Wrangler, as on Cloudflare       |

@@ -171,6 +171,9 @@ Data decisions already made:
 - Package manager: **npm**.
 - Icons and share image: `npm run icons` renders `public/*.png` from the logo and shapes in
   `src/components/shapes/paths.ts` (re-run after logo/colour changes; commit the PNGs).
+- Accessibility: `npm run test:a11y` builds, then runs axe (WCAG 2.1 A/AA) with Playwright in the
+  locally installed Chrome on every page, both themes, desktop and mobile, plus a keyboard
+  skip-link test. Add new page templates to `tests/a11y/pages.spec.ts`.
 - Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.

@@ -1,0 +1,18 @@
+---
+/** Signature pattern: Korean line, translation beneath (as in the channel subtitles). */
+interface Props {
+  ko?: string;
+  translation: string;
+  romanization?: string;
+}
+
+const { ko, translation, romanization } = Astro.props;
+---
+
+<figure class="pair">
+  <p class="pair-ko" lang="ko">
+    <slot name="ko">{ko}</slot>
+  </p>
+  {romanization && <p class="pair-roman">{romanization}</p>}
+  <figcaption class="pair-tr">{translation}</figcaption>
+</figure>

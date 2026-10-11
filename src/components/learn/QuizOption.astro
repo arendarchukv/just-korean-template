@@ -1,0 +1,46 @@
+---
+/** Visual quiz option. State is shown by color, icon and (optionally) screen-reader text. */
+interface Props {
+  state?: 'default' | 'selected' | 'correct' | 'wrong';
+  stateLabel?: string;
+}
+const { state = 'default', stateLabel } = Astro.props;
+---
+
+<button type="button" class="quiz-option" data-state={state} aria-pressed={state !== 'default'}>
+  <span>
+    <slot />
+  </span>
+  <span
+    class="quiz-icon inline-flex size-5 shrink-0 items-center justify-center"
+    aria-hidden="true"
+  >
+    {state === 'correct' && (
+      <svg
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="size-5"
+      >
+        <path d="M4 10.5l4 4 8-9" />
+      </svg>
+    )}
+    {state === 'wrong' && (
+      <svg
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        class="size-5"
+      >
+        <path d="M5 5l10 10M15 5L5 15" />
+      </svg>
+    )}
+    {state === 'selected' && <span class="size-2.5 rounded-full bg-brand" />}
+  </span>
+  {stateLabel && <span class="sr-only">{stateLabel}</span>}
+</button>

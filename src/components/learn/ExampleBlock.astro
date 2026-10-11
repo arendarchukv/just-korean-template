@@ -1,0 +1,10 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<div class:list={['grid-paper flex flex-col gap-6 rounded-card p-6 md:p-8', className]}>
+  <slot />
+</div>

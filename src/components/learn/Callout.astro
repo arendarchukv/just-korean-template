@@ -1,0 +1,14 @@
+---
+interface Props {
+  tone: 'tip' | 'attention';
+  title: string;
+}
+const { tone, title } = Astro.props;
+---
+
+<aside class:list={['callout', `callout-${tone}`]}>
+  <p class="callout-title">{title}</p>
+  <div class="text-text">
+    <slot />
+  </div>
+</aside>

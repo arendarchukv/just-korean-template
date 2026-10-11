@@ -16,6 +16,11 @@
     text-rendering: optimizeLegibility;
     /* Reserve the scrollbar space, so locking scroll (open menu) does not shift the page. */
     scrollbar-gutter: stable;
+    scrollbar-color: color-mix(in oklab, var(--muted) 45%, transparent) transparent;
+    /* Anchored headings land below the sticky header (4rem) with some air. */
+    scroll-padding-top: 5rem;
+    /* Focus and active states are styled; the grey tap flash only looks unfinished. */
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -38,6 +43,13 @@
   h3 {
     text-wrap: balance;
     letter-spacing: -0.015em;
+  }
+
+  /* No lone word on the last line. */
+  p,
+  li,
+  figcaption {
+    text-wrap: pretty;
   }
 
   :focus-visible {

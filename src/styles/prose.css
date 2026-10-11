@@ -52,6 +52,29 @@
     line-height: var(--text-lg--line-height);
     font-weight: 600;
   }
+  /* Anchor link appended to h2/h3 (headingAnchorsPlugin): shown on hover or focus,
+     faintly on touch screens where there is no hover. */
+  .prose .heading-anchor {
+    margin-left: 0.35em;
+    color: var(--muted);
+    font-weight: 400;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 150ms var(--ease-calm);
+  }
+  .prose .heading-anchor::after {
+    content: '#' / '';
+  }
+  .prose :is(h2, h3):hover .heading-anchor,
+  .prose .heading-anchor:focus-visible {
+    opacity: 1;
+  }
+  @media (hover: none) {
+    .prose .heading-anchor {
+      opacity: 0.45;
+    }
+  }
+
   .prose :is(h2, h3, h4) + * {
     margin-top: 0.6em;
   }

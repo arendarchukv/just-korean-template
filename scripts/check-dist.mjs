@@ -39,6 +39,17 @@ if (!/<div class="table-scroll" tabindex="0"><table>/.test(html)) {
   problems.push('Markdown tables are not wrapped in a focusable .table-scroll');
 }
 
+// Long-form headings carry an anchor to their own id.
+const anchored = [
+  ...html.matchAll(
+    /<h[23] id="([^"]+)"[^>]*>(?:(?!<\/h[23]>)[\s\S])*?<a class="heading-anchor" href="#([^"]+)"/g,
+  ),
+];
+if (anchored.length === 0) problems.push('long-form headings have no anchor links');
+for (const [, id, href] of anchored) {
+  if (id !== href) problems.push(`heading #${id} anchors to #${href}`);
+}
+
 if (read('sitemap-0.xml').includes('/styleguide')) problems.push('styleguide listed in sitemap');
 
 // --- Interactive cards must be links (hover feedback promises a click) ---

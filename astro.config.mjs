@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import svelte from '@astrojs/svelte';
 import sitemap from '@astrojs/sitemap';
 import { satteri } from '@astrojs/markdown-satteri';
+import { headingAnchorsPlugin } from './src/lib/heading-anchors-plugin.ts';
 import { wrapTablesPlugin } from './src/lib/wrap-tables-plugin.ts';
 
 import { rename, rmdir } from 'node:fs/promises';
@@ -45,7 +46,7 @@ export default defineConfig({
   markdown: {
     // Code is styled by .prose with semantic tokens; Shiki would inject its own colours.
     syntaxHighlight: false,
-    processor: satteri({ hastPlugins: [wrapTablesPlugin] }),
+    processor: satteri({ hastPlugins: [wrapTablesPlugin, headingAnchorsPlugin] }),
   },
   integrations: [
     svelte(),

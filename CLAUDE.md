@@ -95,6 +95,8 @@ Rules:
   italics). Sample: `src/components/styleguide/samples/lesson.md`.
 - Markdown runs on Astro 7's default processor, Sätteri (`@astrojs/markdown-satteri`): extend it
   with Sätteri hast/mdast plugins (see `src/lib/wrap-tables-plugin.ts`), not remark/rehype.
+  `headingAnchorsPlugin` gives h2/h3 an id (same slugger as Astro, pronunciation in `<rt>` left
+  out) and a "#" anchor link; restart the dev server after changing Markdown config.
 - Semantic tokens (`--color-bg`, `--color-surface`, `--color-text`, `--color-muted`,
   `--color-border`, `--color-brand`, `--color-teal`, `--color-danger`, ...) are redefined
   per theme. Components use only semantic tokens, never raw hex. The Tailwind default

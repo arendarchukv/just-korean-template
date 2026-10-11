@@ -412,3 +412,19 @@
     transform: none;
   }
 }
+
+/* Page transitions: a soft cross-fade between pages, browser-native (no JS). The header keeps
+   its place. Browsers without support, and visitors who prefer reduced motion, get none. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+header {
+  view-transition-name: site-header;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+  animation-timing-function: var(--ease-calm);
+}

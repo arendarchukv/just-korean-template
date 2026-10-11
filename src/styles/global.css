@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './theme.css';
+@import './signature.css';
 
 /* Dark mode follows the resolved theme on <html data-theme>, set by the inline head script. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
@@ -13,15 +14,27 @@
     text-rendering: optimizeLegibility;
   }
 
+  body {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
   /* Korean pages: Pretendard for everything, so Latin and Hangul share metrics. */
   html:lang(ko) {
     font-family: var(--font-korean);
     word-break: keep-all;
   }
 
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+  }
+
   :focus-visible {
     outline: 2px solid var(--focus);
-    outline-offset: 2px;
+    outline-offset: 3px;
   }
 
   ::selection {
@@ -32,66 +45,6 @@
   @media (prefers-reduced-motion: no-preference) {
     html {
       scroll-behavior: smooth;
-    }
-  }
-}
-
-@layer components {
-  .btn {
-    display: inline-flex;
-    min-height: var(--spacing-touch);
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    border-radius: var(--radius-control);
-    padding-inline: 1.125rem;
-    font-weight: 600;
-    line-height: 1.2;
-    transition:
-      background-color 150ms,
-      color 150ms,
-      border-color 150ms;
-  }
-
-  .btn-primary {
-    background-color: var(--brand-strong);
-    color: var(--on-brand);
-  }
-  .btn-primary:hover {
-    background-color: var(--brand-strong-hover);
-  }
-
-  .btn-ghost {
-    border: 1px solid var(--border);
-    color: var(--text);
-  }
-  .btn-ghost:hover {
-    background-color: var(--surface);
-  }
-
-  .icon-btn {
-    display: inline-flex;
-    width: var(--spacing-touch);
-    height: var(--spacing-touch);
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-control);
-    color: var(--muted);
-  }
-  .icon-btn:hover {
-    background-color: var(--surface);
-    color: var(--text);
-  }
-
-  .container-page {
-    margin-inline: auto;
-    width: 100%;
-    max-width: 72rem;
-    padding-inline: 1.25rem;
-  }
-  @media (min-width: 48rem) {
-    .container-page {
-      padding-inline: 2rem;
     }
   }
 }

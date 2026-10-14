@@ -1,0 +1,123 @@
+---
+/**
+ * Korean news previews from the OhmyNews RSS, loaded in the visitor's browser (builds are rare,
+ * so nothing time-dependent is baked in; the feed allows cross-origin reads). Text only: title,
+ * category, time, a short excerpt and a link to the article. Without JS: a link to OhmyNews.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lang } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const FEED = 'https://rss.ohmynews.com/rss/ohmynews.xml';
+const SITE = 'https://www.ohmynews.com/';
+---
+
+<BaseLayout title={t('page.news.title')}>
+  <div class="container-page page-head">
+    <h1 class="page-title">{t('page.news.title')}</h1>
+    <p class="page-lead">{t('news.lead')}</p>
+  </div>
+
+  <section
+    class="container-page page-section news-feed"
+    data-news-feed
+    data-feed={FEED}
+    data-limit="12"
+    aria-labelledby="news-heading"
+  >
+    <h2 id="news-heading" class="sr-only">
+      {t('news.latest')}
+    </h2>
+    <p class="news-status" data-news-status role="status" hidden>
+      {t('news.loading')}
+    </p>
+    <ol class="news-list" hidden></ol>
+    <div class="news-unavailable" data-news-unavailable hidden>
+      <p>{t('news.unavailable')}</p>
+      <a class="btn btn-ghost" href={SITE} target="_blank" rel="noopener noreferrer">
+        {t('news.openSite')}
+      </a>
+    </div>
+    <noscript>
+      <div class="news-unavailable">
+        <p>{t('news.noScript')}</p>
+        <a class="btn btn-ghost" href={SITE} target="_blank" rel="noopener noreferrer">
+          {t('news.openSite')}
+        </a>
+      </div>
+    </noscript>
+    <p class="news-source">
+      {t('news.source')}
+      <a class="link" href={SITE} target="_blank" rel="noopener noreferrer">
+        OhmyNews
+      </a>
+    </p>
+  </section>
+
+  <template id="news-item-template">
+    <li>
+      <p class="news-meta">
+        <span class="news-category" lang="ko"></span> · <time></time>
+      </p>
+      <a class="news-link" target="_blank" rel="noopener noreferrer">
+        <span class="news-title" lang="ko"></span>
+        <span class="sr-only">({t('news.newTab')})</span>
+      </a>
+      <p class="news-excerpt" lang="ko"></p>
+    </li>
+  </template>
+</BaseLayout>
+
+<script>
+  import { parseRss } from '@/lib/news';
+
+  async function load(box: HTMLElement) {
+    const status = box.querySelector<HTMLElement>('[data-news-status]')!;
+    const list = box.querySelector<HTMLOListElement>('.news-list')!;
+    const failed = box.querySelector<HTMLElement>('[data-news-unavailable]')!;
+    const template = document.querySelector<HTMLTemplateElement>('#news-item-template')!;
+    status.hidden = false;
+    try {
+      const response = await fetch(box.dataset.feed!, { signal: AbortSignal.timeout(10_000) });
+      if (!response.ok) throw new Error(`feed answered ${response.status}`);
+      const items = parseRss(await response.text()).slice(0, Number(box.dataset.limit));
+      if (items.length === 0) throw new Error('feed is empty');
+      const format = new Intl.DateTimeFormat(
+        document.documentElement.lang === 'ko' ? 'ko-KR' : 'en-GB',
+        {
+          day: 'numeric',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit',
+        },
+      );
+      for (const item of items) {
+        const li = template.content.firstElementChild!.cloneNode(true) as HTMLLIElement;
+        li.classList.add('news-item');
+        li.querySelector('.news-category')!.textContent = item.category;
+        const time = li.querySelector('time')!;
+        time.dateTime = item.date.toISOString();
+        time.textContent = format.format(item.date);
+        const link = li.querySelector<HTMLAnchorElement>('.news-link')!;
+        link.href = item.link;
+        link.querySelector('.news-title')!.textContent = item.title;
+        li.querySelector('.news-excerpt')!.textContent = item.excerpt;
+        list.append(li);
+      }
+      list.hidden = false;
+    } catch {
+      failed.hidden = false;
+    } finally {
+      status.hidden = true;
+    }
+  }
+
+  const box = document.querySelector<HTMLElement>('[data-news-feed]');
+  if (box) load(box);
+</script>

@@ -186,6 +186,11 @@ for (const [page, prefix] of LOCALES) {
     problems.push(`${page}: footer YouTube link does not come from site settings`);
   }
   if (/href="#"/.test(footer)) problems.push(`${page}: footer has an empty "#" link`);
+  // Contact: the Tally form when set, otherwise the demo contact page.
+  const contactHref = site.contactForm || `${prefix}/contact/`;
+  if (!footer.includes(`href="${contactHref}"`)) {
+    problems.push(`${page}: footer Contact does not lead to ${contactHref}`);
+  }
 
   // Notices: every notice is rendered with its dates; the browser hides the ones out of range.
   const notices = [...html.matchAll(/<li[^>]*data-notice="([^"]+)"[^>]*>/g)];
@@ -395,6 +400,39 @@ for (const page of ['practice/index.html', 'ko/practice/index.html']) {
   }
   if (!/name="mainSearchWord"/.test(html)) problems.push(`${page}: dictionary field name`);
   for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
+}
+
+// --- Contact (demo): labelled fields, nothing is sent anywhere ---
+for (const page of ['contact/index.html', 'ko/contact/index.html']) {
+  if (!exists(page)) {
+    problems.push(`missing ${page}`);
+    continue;
+  }
+  const form = /<form[\s\S]*?<\/form>/.exec(read(page))?.[0] ?? '';
+  for (const name of ['name', 'email', 'topic', 'message']) {
+    const id = new RegExp(`name="${name}"[^>]*id="([^"]+)"|id="([^"]+)"[^>]*name="${name}"`).exec(
+      form,
+    );
+    const fieldId = id?.[1] ?? id?.[2];
+    if (!fieldId) problems.push(`${page}: no field "${name}"`);
+    else if (!form.includes(`for="${fieldId}"`))
+      problems.push(`${page}: field "${name}" has no label`);
+  }
+  if (/action="/.test(form)) problems.push(`${page}: demo form has an action (it would send)`);
+  if (!/data-demo-form/.test(form)) problems.push(`${page}: form is not marked as a demo`);
+}
+
+// --- News: loaded in the browser from the OhmyNews RSS (builds are rare), never baked in ---
+for (const page of ['news/index.html', 'ko/news/index.html']) {
+  const html = read(page);
+  if (!/data-news-feed[^>]*data-feed="https:\/\/rss\.ohmynews\.com\//.test(html)) {
+    problems.push(`${page}: no client-side news feed container`);
+  }
+  if (/<li[^>]*class="news-item"/.test(html)) problems.push(`${page}: news baked in at build time`);
+  if (!/<noscript>[\s\S]*?href="https:\/\/www\.ohmynews\.com\/"/.test(html)) {
+    problems.push(`${page}: no fallback link to OhmyNews without JavaScript`);
+  }
+  if (!/OhmyNews/.test(html)) problems.push(`${page}: no source attribution`);
 }
 
 // --- No duplicate ids on any built page ---

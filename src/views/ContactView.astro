@@ -1,0 +1,73 @@
+---
+/**
+ * Contact form, demo only: it validates in the browser and sends nothing. Shown until JiEun sets
+ * her Tally form link in Site settings; then "Contact" links go to Tally instead.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lang } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={t('page.contact.title')}>
+  <div class="container-page page-head">
+    <p class="eyebrow mb-4">{t('contact.demo')}</p>
+    <h1 class="page-title">{t('page.contact.title')}</h1>
+    <p class="page-lead">{t('contact.lead')}</p>
+  </div>
+
+  <section class="container-page page-section">
+    <form class="contact-form" data-demo-form>
+      <div class="contact-row">
+        <div class="contact-field">
+          <label for="contact-name">{t('contact.name')}</label>
+          <input id="contact-name" name="name" class="field" autocomplete="name" required />
+        </div>
+        <div class="contact-field">
+          <label for="contact-email">{t('contact.email')}</label>
+          <input
+            id="contact-email"
+            name="email"
+            type="email"
+            class="field"
+            autocomplete="email"
+            required
+          />
+        </div>
+      </div>
+      <div class="contact-field">
+        <label for="contact-topic">{t('contact.topic')}</label>
+        <select id="contact-topic" name="topic" class="field" required>
+          <option value="">{t('contact.topicChoose')}</option>
+          <option value="classes">{t('contact.topicClasses')}</option>
+          <option value="materials">{t('contact.topicMaterials')}</option>
+          <option value="other">{t('contact.topicOther')}</option>
+        </select>
+      </div>
+      <div class="contact-field">
+        <label for="contact-message">{t('contact.message')}</label>
+        <textarea id="contact-message" name="message" class="field" rows="6" required></textarea>
+      </div>
+      <div class="contact-actions">
+        <button type="submit" class="btn btn-primary">
+          {t('contact.send')}
+        </button>
+        <p class="contact-status" role="status" data-demo-status></p>
+      </div>
+    </form>
+  </section>
+</BaseLayout>
+
+<script is:inline define:vars={{ note: t('contact.demoSent') }}>
+  document.querySelector('[data-demo-form]')?.addEventListener('submit', (event) => {
+    // Demo: the browser has already checked the fields; nothing is sent anywhere.
+    event.preventDefault();
+    document.querySelector('[data-demo-status]').textContent = note;
+  });
+</script>

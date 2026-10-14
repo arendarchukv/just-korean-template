@@ -300,6 +300,30 @@ for (const [page, prefix] of [
   }
 }
 
+/** Internal links inside <main> that do not lead to a built page. */
+const deadLinks = (html) => {
+  const main = /<main[\s\S]*?<\/main>/.exec(html)?.[0] ?? '';
+  return [...main.matchAll(/href="(\/[^"#]*)"/g)]
+    .map((m) => m[1])
+    .filter((href) => {
+      const path = href.replace(/^\//, '');
+      return !exists(`${path}index.html`) && !exists(path) && !exists(`${path}/index.html`);
+    });
+};
+
+// --- Lesson page: player only after a click, real content, links resolve ---
+{
+  const html = read('lessons/ge-vs-dorok/index.html');
+  if (/<iframe/.test(html)) problems.push('lesson page loads a YouTube iframe before a click');
+  if (!/data-video-facade/.test(html)) problems.push('lesson page has no video facade');
+  if (!/href="\/grammar\/ge\/"/.test(html)) problems.push('lesson page does not link its grammar');
+  if (!/class="prose"/.test(html)) problems.push('lesson body is not rendered in .prose');
+  for (const href of deadLinks(html)) problems.push(`lesson page links to missing ${href}`);
+  if (/data-video-facade/.test(read('lessons/korean-numbers/index.html'))) {
+    problems.push('lesson without video shows a player');
+  }
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

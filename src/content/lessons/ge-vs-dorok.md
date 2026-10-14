@@ -7,3 +7,17 @@ level: intermediate
 grammar: [ge, dorok]
 summary: '-게 and -도록: "so that" in everyday speech and in formal Korean.'
 ---
+
+Both endings mean "so that", and in many sentences you can use either. The difference is mostly
+register: <span lang="ko">-게</span> is everyday speech, <span lang="ko">-도록</span> sounds more
+formal and is common in instructions and writing.
+
+## In everyday speech
+
+<span lang="ko">잘 들리게 크게 말해 주세요.</span> — Please speak loudly so that I can hear you.
+
+## In instructions
+
+<span lang="ko">늦지 않도록 일찍 출발하세요.</span> — Leave early so that you are not late.
+
+[Draft for review: JiEun's own explanation goes here.]

@@ -1,0 +1,152 @@
+---
+/** Lesson page: player, text, grammar, files, practice, series navigation. */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import VideoFacade from '@/components/VideoFacade.astro';
+import { getDecks, getLessons, getQuizzes, renderBody, type Lesson } from '@/content/queries';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+import { neighbours, sortInSeries } from '@/lib/site-logic';
+
+interface Props {
+  lang: Lang;
+  lesson: Lesson;
+}
+const { lang, lesson } = Astro.props;
+const t = useTranslations(lang);
+const Body = await renderBody('lessons', lesson.id);
+const all = await getLessons();
+const seriesLessons = lesson.seriesEntry
+  ? sortInSeries(
+      all.filter((l) => l.series === lesson.series),
+      lesson.seriesEntry.data.kind,
+    )
+  : [];
+const { prev, next } = neighbours(seriesLessons, lesson.id);
+const deck = (await getDecks()).find((d) => d.lessonEntry?.id === lesson.id);
+const quiz = (await getQuizzes()).find((q) => q.lessonEntry?.id === lesson.id);
+const href = (id: string) => localizePath(lang, `lessons/${id}`);
+const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
+---
+
+<BaseLayout title={lesson.title} description={lesson.summary}>
+  <div class="container-page lesson-layout">
+    <article class="lesson-main">
+      {lesson.youtube && <VideoFacade id={lesson.youtube} title={lesson.title} lang={lang} />}
+      <header class="lesson-head">
+        {lesson.seriesEntry && (
+          <p class="lesson-series">
+            {lesson.seriesEntry.data.title}
+            {lesson.episode && ` · ${t('lessons.episode')} ${lesson.episode}`}
+          </p>
+        )}
+        <h1 class="lesson-heading">{lesson.title}</h1>
+        {lesson.summary && <p class="page-lead">{lesson.summary}</p>}
+      </header>
+      <div class="prose">
+        <Body />
+      </div>
+
+      {lesson.grammarEntries.length > 0 && (
+        <section class="lesson-block" aria-labelledby="lesson-grammar">
+          <h2 id="lesson-grammar" class="lesson-block-title">
+            {t('lesson.grammar')}
+          </h2>
+          <ul class="chip-list">
+            {lesson.grammarEntries.map((g) => (
+              <li>
+                <a class="pattern-chip" lang="ko" href={localizePath(lang, `grammar/${g.id}`)}>
+                  {g.data.pattern}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {lesson.downloads.length > 0 && (
+        <section class="lesson-block" aria-labelledby="lesson-files">
+          <h2 id="lesson-files" class="lesson-block-title">
+            {t('lesson.files')}
+          </h2>
+          <ul class="file-list">
+            {lesson.downloads.map((f) => (
+              <li>
+                <a class="file-link" href={f.url} target="_blank" rel="noopener noreferrer">
+                  <span class="file-kind">{kind(f.kind)}</span>
+                  <span>{f.label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {(deck || quiz) && (
+        <section class="lesson-block" aria-labelledby="lesson-practice">
+          <h2 id="lesson-practice" class="lesson-block-title">
+            {t('lesson.practice')}
+          </h2>
+          <ul class="file-list">
+            {deck && (
+              <li>
+                <a class="file-link" href={`${localizePath(lang, 'practice')}#${deck.id}`}>
+                  <span class="file-kind">{t('lesson.deck')}</span>
+                  <span>
+                    {deck.title} · {deck.cards.length} {t('lesson.cards')}
+                  </span>
+                </a>
+              </li>
+            )}
+            {quiz && (
+              <li>
+                <a class="file-link" href={`${localizePath(lang, 'practice')}#${quiz.id}`}>
+                  <span class="file-kind">{t('lesson.quiz')}</span>
+                  <span>
+                    {quiz.title} · {quiz.questions.length} {t('lesson.questions')}
+                  </span>
+                </a>
+              </li>
+            )}
+          </ul>
+        </section>
+      )}
+
+      {(prev || next) && (
+        <nav class="lesson-pager" aria-label={t('lesson.series')}>
+          {prev && (
+            <a class="pager-link" href={href(prev.id)} rel="prev">
+              <span class="pager-label">{t('lesson.prev')}</span>
+              <span>{prev.title}</span>
+            </a>
+          )}
+          {next && (
+            <a class="pager-link pager-next" href={href(next.id)} rel="next">
+              <span class="pager-label">{t('lesson.next')}</span>
+              <span>{next.title}</span>
+            </a>
+          )}
+        </nav>
+      )}
+    </article>
+
+    {seriesLessons.length > 1 && (
+      <aside class="lesson-aside" aria-labelledby="lesson-series-title">
+        <h2 id="lesson-series-title" class="lesson-block-title">
+          {lesson.seriesEntry!.data.title}
+        </h2>
+        <ol class="series-list">
+          {seriesLessons.map((l) => (
+            <li>
+              <a href={href(l.id)} aria-current={l.id === lesson.id ? 'page' : undefined}>
+                {l.episode && (
+                  <span class="series-number">{String(l.episode).padStart(2, '0')}</span>
+                )}
+                <span>{l.title}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </aside>
+    )}
+  </div>
+</BaseLayout>

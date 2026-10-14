@@ -1,0 +1,59 @@
+---
+/**
+ * Click-to-load YouTube player: a local thumbnail until the visitor presses play, then a
+ * youtube-nocookie iframe. Without JS the button is a plain link to the video on YouTube.
+ */
+import { Image } from 'astro:assets';
+import type { Lang } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+import { youtubeEmbedUrl } from '@/lib/site-logic';
+import { youtubeThumbnail } from '@/lib/youtube';
+
+interface Props {
+  id: string;
+  title: string;
+  lang: Lang;
+}
+const { id, title, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<div class="video-facade" data-video-facade data-embed={youtubeEmbedUrl(id)} data-title={title}>
+  <a class="video-play" href={`https://www.youtube.com/watch?v=${id}`} data-play>
+    <Image
+      src={youtubeThumbnail(id)}
+      alt=""
+      width={960}
+      height={540}
+      fit="cover"
+      loading="eager"
+      class="video-thumb"
+    />
+    <span class="video-play-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28">
+        <path d="M8 5l11 7-11 7z" fill="currentColor" />
+      </svg>
+    </span>
+    <span class="sr-only">
+      {t('lesson.play')}: {title}
+    </span>
+  </a>
+</div>
+
+<script is:inline>
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('[data-play]');
+    if (!link) return;
+    const box = link.closest('[data-video-facade]');
+    event.preventDefault();
+    const frame = document.createElement('iframe');
+    frame.src = box.dataset.embed;
+    frame.title = box.dataset.title;
+    frame.allow =
+      'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+    frame.allowFullscreen = true;
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    link.replaceWith(frame);
+    frame.focus();
+  });
+</script>

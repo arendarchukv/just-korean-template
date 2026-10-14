@@ -1,7 +1,7 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { getLessons } from '@/content/queries';
-import LessonPlaceholderView from '@/views/LessonPlaceholderView.astro';
+import LessonView from '@/views/LessonView.astro';
 
 export const getStaticPaths = (async () =>
   (await getLessons()).map((lesson) => ({
@@ -12,4 +12,4 @@ export const getStaticPaths = (async () =>
 const { lesson } = Astro.props;
 ---
 
-<LessonPlaceholderView lang="en" lesson={lesson} />
+<LessonView lang="en" lesson={lesson} />

@@ -9,12 +9,23 @@ const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url),
 const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
 const problems = [];
 
-// --- Styleguide: English-only, unindexed, clean shapes, accessible samples ---
-const html = read('styleguide/index.html');
+// --- Site info (DEMO ONLY: content map + design system): English-only, unindexed ---
+for (const page of ['site-info/index.html', 'site-info/design/index.html']) {
+  const doc = read(page);
+  if (/hreflang=/.test(doc)) problems.push(`${page} emits hreflang links`);
+  if (/href="\/ko\/site-info/.test(doc)) problems.push(`${page} links to /ko/site-info`);
+  if (!/name="robots" content="noindex"/.test(doc)) problems.push(`${page} missing noindex`);
+}
+// Every Pages CMS form has its card on the content map.
+const forms = parse(readFileSync(new URL('../.pages.yml', import.meta.url), 'utf8')).content;
+for (const { name } of forms) {
+  if (!read('site-info/index.html').includes(`id="unit-${name}"`)) {
+    problems.push(`site-info has no card for the ${name} form`);
+  }
+}
 
-if (/hreflang=/.test(html)) problems.push('styleguide emits hreflang links');
-if (/href="\/ko\/styleguide/.test(html)) problems.push('styleguide links to /ko/styleguide');
-if (!/name="robots" content="noindex"/.test(html)) problems.push('styleguide missing noindex');
+// --- Design system samples: clean shapes, accessible samples ---
+const html = read('site-info/design/index.html');
 
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
 const dupes = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
@@ -54,10 +65,10 @@ for (const [, id, href] of anchored) {
   if (id !== href) problems.push(`heading #${id} anchors to #${href}`);
 }
 
-if (read('sitemap-0.xml').includes('/styleguide')) problems.push('styleguide listed in sitemap');
+if (read('sitemap-0.xml').includes('/site-info')) problems.push('site info listed in sitemap');
 
 // --- Interactive cards must be links (hover feedback promises a click) ---
-for (const page of ['index.html', 'ko/index.html', 'styleguide/index.html']) {
+for (const page of ['index.html', 'ko/index.html', 'site-info/design/index.html']) {
   for (const [, tag] of read(page).matchAll(/<(\w+)[^>]*class="[^"]*\bcard-interactive\b/g)) {
     if (tag !== 'a') problems.push(`${page}: card-interactive on <${tag}>, not a link`);
   }

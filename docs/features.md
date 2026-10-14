@@ -17,3 +17,6 @@ Update this table at the end of every cycle.
 
 Also built beyond her list: notices strip (important / news / info, pinned), grammar reference
 with search, lessons library by series, Pages CMS forms for all content.
+
+For review only (removed before launch): **Site info** (`/site-info/`, nav "Site info · demo") —
+what each Pages CMS form contains and what it becomes on the site, plus the design system tab.

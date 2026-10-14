@@ -1,0 +1,114 @@
+---
+/**
+ * DEMO ONLY — how the content units connect: an arrow means "points to". The lesson is the hub.
+ * Nodes link to their cards; hovering a card or a node highlights its arrows (CSS in site-info.css,
+ * selectors generated below because they depend on the unit names).
+ */
+import { UNITS } from '@/data/site-info';
+
+interface Props {
+  labels: Record<string, string>;
+  counts: Record<string, string>;
+}
+const { labels, counts } = Astro.props;
+
+const W = 104;
+const H = 44;
+const POS: Record<string, { x: number; y: number; w?: number; h?: number }> = {
+  series: { x: 95, y: 40 },
+  grammar: { x: 265, y: 40 },
+  lessons: { x: 180, y: 150, w: 150, h: 54 },
+  materials: { x: 64, y: 262 },
+  decks: { x: 180, y: 262 },
+  quizzes: { x: 296, y: 262 },
+  notices: { x: 95, y: 382 },
+  site: { x: 265, y: 382 },
+};
+const box = (name: string) => {
+  const p = POS[name]!;
+  return { ...p, w: p.w ?? W, h: p.h ?? H };
+};
+const edges = Object.entries(UNITS).flatMap(([from, unit]) =>
+  unit.refs.map((to) => {
+    const a = box(from);
+    const b = box(to);
+    // Arrows run vertically between the facing edges of the two boxes.
+    const down = b.y > a.y;
+    // Each end shifts towards the other box, so arrows meeting at the hub do not overlap.
+    return {
+      from,
+      to,
+      x1: a.x + (b.x - a.x) * (a.w > W ? 0.4 : 0.1),
+      y1: down ? a.y + a.h / 2 : a.y - a.h / 2,
+      x2: b.x + (a.x - b.x) * (b.w > W ? 0.4 : 0.1),
+      y2: down ? b.y - b.h / 2 - 4 : b.y + b.h / 2 + 4,
+    };
+  }),
+);
+const names = Object.keys(UNITS);
+const css = names
+  .map(
+    (n) =>
+      `.site-info:has(#unit-${n}:is(:hover,:focus-within)) .diagram [data-for~="${n}"],` +
+      `.diagram:has([data-node="${n}"]:is(:hover,:focus-visible)) [data-for~="${n}"]{--on:1;--state:running;--edge-color:var(--color-brand);--node-stroke:var(--color-brand);--node-fill:var(--color-brand-tint)}`,
+  )
+  .join('');
+---
+
+<figure class="diagram">
+  <svg viewBox="0 0 360 420" role="group" aria-labelledby="diagram-title">
+    <title id="diagram-title">
+      Lessons are the hub: a lesson belongs to a series and explains grammar patterns; materials,
+      flashcards and quizzes point to a lesson. Notices and site settings stand alone.
+    </title>
+    <defs>
+      <marker
+        id="diagram-arrow"
+        viewBox="0 0 10 10"
+        refX="8"
+        refY="5"
+        markerWidth="7"
+        markerHeight="7"
+        orient="auto-start-reverse"
+      >
+        <path class="diagram-arrowhead" d="M0 0 10 5 0 10z"></path>
+      </marker>
+    </defs>
+    {edges.map((e) => (
+      <line
+        class="diagram-edge"
+        data-for={`${e.from} ${e.to}`}
+        x1={e.x1}
+        y1={e.y1}
+        x2={e.x2}
+        y2={e.y2}
+        marker-end="url(#diagram-arrow)"
+      />
+    ))}
+    <line class="diagram-divider" x1="12" y1="322" x2="348" y2="322" />
+    <text class="diagram-caption" x="180" y="342" text-anchor="middle">
+      on their own, not linked to lessons
+    </text>
+    {names.map((n) => {
+      const b = box(n);
+      return (
+        <a
+          href={`#unit-${n}`}
+          data-node={n}
+          data-for={n}
+          class:list={['diagram-node', { 'is-hub': n === 'lessons' }]}
+        >
+          <rect x={b.x - b.w / 2} y={b.y - b.h / 2} width={b.w} height={b.h} rx="10" />
+          <text x={b.x} y={b.y - 2} text-anchor="middle" class="diagram-label">
+            {labels[n]}
+          </text>
+          <text x={b.x} y={b.y + 13} text-anchor="middle" class="diagram-count">
+            {counts[n]}
+          </text>
+        </a>
+      );
+    })}
+  </svg>
+  <figcaption>Arrows mean “points to”. Select a box to jump to its form.</figcaption>
+  <style is:inline set:html={css}></style>
+</figure>

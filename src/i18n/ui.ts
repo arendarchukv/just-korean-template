@@ -25,8 +25,12 @@ const en = {
   'nav.materials': 'Materials',
   'nav.classes': 'Classes',
   'nav.bookClass': 'Book a class',
+  // DEMO ONLY: the Site info page link (remove with the page before launch).
+  'nav.siteInfo': 'Site info',
+  'nav.demo': 'demo',
 
   'lang.switchTo': 'Switch to English',
+  'lang.label': 'Language',
 
   'theme.toDark': 'Switch to dark theme',
   'theme.toLight': 'Switch to light theme',
@@ -227,8 +231,11 @@ const ko: Partial<Record<UIKey, string>> = {
   'nav.materials': '자료',
   'nav.classes': '수업',
   'nav.bookClass': '수업 예약',
+  'nav.siteInfo': '사이트 정보', // TODO(ko-review)
+  'nav.demo': '데모', // TODO(ko-review)
 
   'lang.switchTo': '한국어로 보기',
+  'lang.label': '언어', // TODO(ko-review)
 
   'theme.toDark': '다크 모드로 전환',
   'theme.toLight': '라이트 모드로 전환',

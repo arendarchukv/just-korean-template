@@ -30,7 +30,8 @@ const PAGES = [
   '/lessons/ge-vs-dorok/',
   '/ko/lessons/ge-vs-dorok/',
   '/lessons/korean-numbers/',
-  '/styleguide/',
+  '/site-info/',
+  '/site-info/design/',
   '/missing-page/',
   '/ko/missing-page/',
 ];

@@ -1,0 +1,147 @@
+---
+/**
+ * DEMO ONLY — "Content" tab of Site info: how editing reaches the site, the map of content units,
+ * then one card per Pages CMS form (its real fields, read from .pages.yml) beside what it becomes.
+ */
+import { readFileSync } from 'node:fs';
+import {
+  getDecks,
+  getGrammar,
+  getLessons,
+  getMaterials,
+  getNotices,
+  getQuizzes,
+  getSeries,
+} from '@/content/queries';
+import { HARDCODED, UNITS } from '@/data/site-info';
+import { cmsForms } from '@/lib/cms-forms';
+import '@/styles/site-info.css';
+import Diagram from './Diagram.astro';
+import FormFields from './FormFields.astro';
+import SiteInfoLayout from './SiteInfoLayout.astro';
+import Sketch from './Sketch.astro';
+
+const forms = cmsForms(readFileSync('.pages.yml', 'utf8'));
+const entries = (n: number) => `${n} ${n === 1 ? 'entry' : 'entries'} in the demo`;
+const counts: Record<string, string> = {
+  lessons: entries((await getLessons()).length),
+  series: entries((await getSeries()).length),
+  grammar: entries((await getGrammar()).length),
+  materials: entries((await getMaterials()).length),
+  decks: entries((await getDecks()).length),
+  quizzes: entries((await getQuizzes()).length),
+  notices: entries((await getNotices()).length),
+  site: 'one settings file',
+};
+const labels = Object.fromEntries(forms.map((f) => [f.name, f.label]));
+const shortCounts = Object.fromEntries(
+  Object.entries(counts).map(([k, v]) => [k, v.replace(' in the demo', '')]),
+);
+
+const STEPS = [
+  { title: 'Fill in a form', text: 'In Pages CMS: one form per kind of content, below.' },
+  {
+    title: 'Save',
+    text: 'Each entry is saved as a small text file in the site’s GitHub repository.',
+  },
+  { title: 'Build', text: 'Run by hand, now and then. It turns the files into pages.' },
+  { title: 'On the site', text: 'Pages, lists and links update together.' },
+];
+---
+
+<SiteInfoLayout tab="content" title="Site info: content">
+  <div class="site-info">
+    <section class="container-page page-section" aria-labelledby="flow-title">
+      <h2 id="flow-title" class="page-section-title">
+        How an edit reaches the site
+      </h2>
+      <ol class="info-flow">
+        {STEPS.map((s, i) => (
+          <li>
+            <span class="info-flow-number">{i + 1}</span>
+            <span class="info-flow-title">{s.title}</span>
+            <span class="info-flow-text">{s.text}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="info-note">
+        Notices appear and disappear by their dates, and Korean news loads from OhmyNews, both in
+        the visitor’s browser: neither waits for a build.
+      </p>
+    </section>
+
+    <section class="container-page page-section info-map" aria-labelledby="units-title">
+      <div class="info-map-side">
+        <h2 id="units-title" class="page-section-title">
+          Content units
+        </h2>
+        <p class="page-section-lead">
+          Eight forms. Seven are collections: she adds as many entries as she likes, one file each.
+          Site settings is a single form.
+        </p>
+        <Diagram labels={labels} counts={shortCounts} />
+        <div class="info-hardcoded">
+          <h3>Not in Pages CMS</h3>
+          <p>Changes rarely, so it lives in the code (ask the developer):</p>
+          <ul>
+            {HARDCODED.map((h) => (
+              <li>
+                {h.text} <code>{h.where}</code>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-units">
+        {forms.map((form) => {
+          const unit = UNITS[form.name]!;
+          return (
+            <article
+              id={`unit-${form.name}`}
+              class="unit"
+              aria-labelledby={`unit-${form.name}-title`}
+            >
+              <header class="unit-head">
+                <h3 id={`unit-${form.name}-title`} class="unit-title">
+                  {form.label}
+                </h3>
+                <span class="unit-kind">
+                  {form.kind === 'collection' ? 'Collection' : 'Single form'} · {counts[form.name]}
+                </span>
+                <p class="unit-what">{unit.what}</p>
+              </header>
+              <div class="unit-body">
+                <div class="unit-form">
+                  <h4 class="unit-subtitle">The form in Pages CMS</h4>
+                  <FormFields fields={form.fields} />
+                </div>
+                <div class="unit-site">
+                  <h4 class="unit-subtitle">On the site</h4>
+                  <div class="unit-sketches">
+                    {unit.sketches.map((s) => (
+                      <Sketch title={s.title} rows={s.rows} />
+                    ))}
+                  </div>
+                  <ul class="unit-becomes">
+                    {unit.becomes.map((b) => (
+                      <li>
+                        {b.href ? (
+                          <a class="link" href={b.href}>
+                            {b.text}
+                          </a>
+                        ) : (
+                          b.text
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  </div>
+</SiteInfoLayout>

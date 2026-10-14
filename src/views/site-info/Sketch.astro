@@ -1,0 +1,35 @@
+---
+/** DEMO ONLY — a tiny wireframe of a page; the highlighted parts are where a unit shows up. */
+import type { SketchRow } from '@/data/site-info';
+
+interface Props {
+  title: string;
+  rows: SketchRow[];
+}
+const { title, rows } = Astro.props;
+const parts = rows.map((r) => ({ kind: r.replace('*', ''), hl: r.endsWith('*') }));
+---
+
+<figure class="sketch">
+  <div class="sketch-page" aria-hidden="true">
+    {parts.map((p) => (
+      <div class:list={['sketch-row', `sketch-${p.kind}`, { 'is-hl': p.hl }]}>
+        {p.kind === 'cards' && (
+          <>
+            <i />
+            <i />
+            <i />
+          </>
+        )}
+        {p.kind === 'chips' && (
+          <>
+            <i />
+            <i />
+            <i />
+          </>
+        )}
+      </div>
+    ))}
+  </div>
+  <figcaption>{title}</figcaption>
+</figure>

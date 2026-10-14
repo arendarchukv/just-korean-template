@@ -1,0 +1,356 @@
+/*
+ * Home page blocks. Each block has its own form (tape strip, cut-out photo, timetable, 목차,
+ * thumbnails) instead of one repeated card; semantic tokens only.
+ */
+@layer components {
+  /* Notice strip: a band of paper tape under the header, not a card. */
+  .notice-strip {
+    border-bottom: 1px solid var(--color-border);
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        transparent 0 6px,
+        color-mix(in oklab, var(--color-brand) 7%, transparent) 6px 7px
+      ),
+      var(--color-surface);
+  }
+  .notice-strip ul {
+    display: grid;
+    margin-block: 0;
+    padding-block: 0.25rem;
+    list-style: none;
+  }
+  /* Dates and text stack on phones; the dismiss button always stays on the right. */
+  .notice-strip li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 1rem;
+    padding-block: 0.375rem;
+  }
+  .notice-strip li .icon-btn {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  @media (min-width: 48rem) {
+    .notice-strip li {
+      grid-template-columns: auto 1fr auto;
+    }
+    .notice-strip li p {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .notice-strip li .icon-btn {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+  .notice-strip li + li {
+    border-top: 1px dashed var(--color-border);
+  }
+  .notice-strip li[hidden],
+  .notice-strip[hidden] {
+    display: none;
+  }
+  .notice-strip p {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+  /* Tone word and dates: the word says the type, so colour is never the only signal. */
+  .notice-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .notice-tone {
+    font-weight: 700;
+  }
+  /* Important (red) and news (green) rows get their tint across the full width of the strip. */
+  .notice-strip li[data-tone='important'],
+  .notice-strip li[data-tone='news'] {
+    box-shadow: 0 0 0 100vmax var(--row-tint);
+    clip-path: inset(0 -100vmax);
+    background: var(--row-tint);
+  }
+  .notice-strip li[data-tone='important'] {
+    --row-tint: var(--color-danger-tint);
+  }
+  .notice-strip li[data-tone='news'] {
+    --row-tint: var(--color-teal-tint);
+  }
+  .notice-strip li[data-tone='important'] .notice-meta {
+    color: var(--color-danger);
+  }
+  .notice-strip li[data-tone='news'] .notice-meta {
+    color: var(--color-teal);
+  }
+  .notice-strip li[data-tone='info'] .notice-meta {
+    color: var(--color-brand);
+  }
+  .notice-strip li[data-tone='important'] + li,
+  .notice-strip li[data-tone='news'] + li {
+    border-top-color: transparent;
+  }
+
+  .home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  .home-section {
+    padding-block: 3rem;
+  }
+  .home-section-title {
+    margin: 0 0 1.5rem;
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
+    font-weight: 700;
+  }
+
+  /* About: asymmetric, text first on small screens. */
+  .about-hero {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+    padding-block: 3rem 2.5rem;
+  }
+  @media (min-width: 48rem) {
+    .about-hero {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 4rem;
+      padding-block: 4.5rem 3.5rem;
+    }
+  }
+  .about-hero h1 {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+  }
+  .about-title-ko {
+    font-size: clamp(3.25rem, 10vw, 6rem);
+    line-height: 1;
+  }
+  .about-greeting {
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+    font-weight: 600;
+    color: var(--color-brand);
+  }
+  .about-intro {
+    margin: 1.25rem 0 0;
+    max-width: 40ch;
+    font-size: var(--text-lg);
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+  .about-side {
+    display: grid;
+    gap: 1.25rem;
+  }
+  /* Photo cut out by an organic shape, not a rounded box. */
+  .about-photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 7 / 8;
+    object-fit: cover;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M9 13 C22 2 52 1 74 6 C93 11 99 30 97 55 C95 80 83 96 57 98 C31 100 8 92 3 66 C-1 42 0 21 9 13 Z'/%3E%3C/svg%3E")
+      center / 100% 100% no-repeat;
+  }
+  .about-credentials {
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 1rem 1.25rem;
+  }
+  .about-credentials ul {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-sm);
+  }
+  .about-credentials li::before {
+    content: '— ';
+    color: var(--color-teal);
+  }
+
+  /* Timetable: ruled lines, no boxes, like a printed class schedule. */
+  .timetable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .timetable th,
+  .timetable td {
+    padding: 1rem 1.25rem 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: top;
+    min-width: 10em;
+  }
+  .timetable thead th {
+    padding-block: 0.5rem;
+    border-bottom: 2px solid var(--color-text);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .timetable tbody th {
+    font-weight: 600;
+  }
+  .timetable td {
+    color: var(--color-muted);
+  }
+  /* Phones: each format becomes a short block with its own labels instead of a sideways scroll. */
+  @media (max-width: 39.99rem) {
+    .timetable thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .timetable,
+    .timetable tbody,
+    .timetable tr,
+    .timetable th,
+    .timetable td {
+      display: block;
+    }
+    .timetable tr {
+      padding-block: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .timetable tbody tr:first-child {
+      border-top: 2px solid var(--color-text);
+    }
+    .timetable th,
+    .timetable td {
+      min-width: 0;
+      padding: 0.2rem 0;
+      border: 0;
+    }
+    .timetable td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+  }
+
+  /* 목차: numbered contents with ruled lines, no boxes. */
+  .toc {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--color-text);
+  }
+  .toc-link {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    gap: 0.75rem;
+    align-items: baseline;
+    min-height: 44px;
+    padding-block: 1.1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: inherit;
+    text-decoration: none;
+  }
+  .toc-number {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-teal);
+  }
+  .toc-body {
+    display: grid;
+    gap: 0.2rem;
+  }
+  .toc-title {
+    font-size: var(--text-lg);
+    line-height: var(--text-lg--line-height);
+    font-weight: 600;
+  }
+  .toc-term {
+    margin-right: 0.6rem;
+    color: var(--color-brand);
+  }
+  .toc-text {
+    color: var(--color-muted);
+  }
+  .toc-arrow {
+    color: var(--color-muted);
+    transition: transform 0.2s ease;
+  }
+  .toc-link:hover .toc-title,
+  .toc-link:hover .toc-arrow {
+    color: var(--color-brand);
+  }
+  .toc-link:hover .toc-arrow {
+    transform: translateX(4px);
+  }
+
+  /* New lessons: the only image-led block. */
+  .home-section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+  .lesson-row {
+    display: grid;
+    gap: 1.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 40rem) {
+    .lesson-row {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .lesson-tile {
+    display: grid;
+    gap: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .lesson-thumb {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 12px;
+    background-color: var(--color-surface);
+  }
+  .lesson-meta {
+    margin-top: 0.25rem;
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+  .lesson-title {
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .lesson-tile:hover .lesson-title {
+    color: var(--color-brand);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toc-link:hover .toc-arrow {
+      transform: none;
+    }
+  }
+}

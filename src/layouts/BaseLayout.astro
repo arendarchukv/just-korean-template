@@ -2,6 +2,8 @@
 import '@fontsource-variable/outfit';
 import outfitLatinUrl from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+// Korean serif (명조): only the slices holding the display glyphs (npm run fonts).
+import '@/styles/display-font.css';
 import '@/styles/global.css';
 
 import Footer from '@/components/Footer.astro';
@@ -91,6 +93,7 @@ const ogImage = new URL('/og-default.png', site).href;
       {t('a11y.skipToContent')}
     </a>
     <Header lang={lang} showLanguageSwitch={!monolingual} />
+    <slot name="before-main" />
     <main id="main" tabindex="-1" class="flex-1 focus:outline-none">
       <slot />
     </main>

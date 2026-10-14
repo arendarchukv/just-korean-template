@@ -2,6 +2,7 @@
 @import './theme.css';
 @import './signature.css';
 @import './prose.css';
+@import './home.css';
 @import './print.css';
 
 /* Dark mode follows the resolved theme on <html data-theme>, set by the inline head script. */

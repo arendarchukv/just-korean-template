@@ -1,0 +1,124 @@
+---
+import { getNotices } from '@/content/queries';
+import { isNoticeActive, sortNotices, toDay } from '@/lib/content-logic';
+import type { Lang } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+/**
+ * Strip of paper tape under the header with current notices. Every notice is rendered with its
+ * dates (hidden unless active at build); the inline script re-checks them in the visitor's
+ * browser, so a notice appears and disappears on its days without a rebuild, and the built page
+ * does not depend on the build date. Delete old notices in the CMS to keep the page lean. Tone
+ * (important / news / info) sets colour and order and is also said in words; pinned notices have
+ * no close button. Dismissed notices are remembered
+ * per id. At most two notices show at once.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const buildDay = toDay(new Date());
+const notices = sortNotices(await getNotices());
+const MAX = 2;
+const formatter = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
+  day: 'numeric',
+  month: 'short',
+});
+const href = (link: string) =>
+  link.startsWith('http') ? link : localizePath(lang, link.replace(/^\/|\/$/g, ''));
+let shown = 0;
+---
+
+{notices.length > 0 && (
+  <section
+    class="notice-strip"
+    aria-label={t('notice.label')}
+    data-home-block="notices"
+    data-print="hide"
+  >
+    <ul class="container-page" data-notice-list>
+      {notices.map((n) => {
+        const visible = isNoticeActive(n, buildDay) && shown++ < MAX;
+        return (
+          <li
+            data-notice={n.id}
+            data-from={toDay(n.from)}
+            data-to={toDay(n.to)}
+            data-tone={n.tone}
+            data-pinned={n.pinned ? '' : undefined}
+            hidden={!visible}
+          >
+            <span class="notice-meta">
+              <span class="notice-tone">{t(`notice.tone.${n.tone}`)}</span>
+              <span class="notice-dates">
+                {formatter.format(n.from)} – {formatter.format(n.to)}
+              </span>
+            </span>
+            <p>
+              <strong>{n.title}.</strong> {n.text}
+              {n.link && (
+                <>
+                  {' '}
+                  <a class="link" href={href(n.link)}>
+                    {t('notice.details')}
+                  </a>
+                </>
+              )}
+            </p>
+            {!n.pinned && (
+              <button type="button" class="icon-btn" data-dismiss aria-label={t('notice.dismiss')}>
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path
+                    d="M6 6l12 12M18 6L6 18"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+)}
+
+<script is:inline define:vars={{ MAX }}>
+  (() => {
+    const list = document.querySelector('[data-notice-list]');
+    if (!list) return;
+    const KEY = 'dismissed-notices';
+    let dismissed = [];
+    try {
+      dismissed = JSON.parse(localStorage.getItem(KEY) || '[]');
+    } catch {}
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const update = () => {
+      let shown = 0;
+      for (const li of list.querySelectorAll('[data-notice]')) {
+        const active = li.dataset.from <= today && today <= li.dataset.to;
+        // A pinned notice ignores an old dismissal (it may have been unpinned before).
+        const closed = !('pinned' in li.dataset) && dismissed.includes(li.dataset.notice);
+        const show = active && !closed && shown < MAX;
+        li.hidden = !show;
+        if (show) shown += 1;
+      }
+      list.closest('section').hidden = shown === 0;
+    };
+    list.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-dismiss]');
+      if (!button) return;
+      dismissed.push(button.closest('[data-notice]').dataset.notice);
+      try {
+        localStorage.setItem(KEY, JSON.stringify(dismissed));
+      } catch {}
+      update();
+    });
+    update();
+  })();
+</script>

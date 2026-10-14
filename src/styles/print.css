@@ -49,7 +49,8 @@
     display: none;
   }
   /* Where a collage sat beside text, give the text the full width. */
-  :has(> .collage) {
+  :has(> .collage),
+  :has(> * > .collage) {
     grid-template-columns: 1fr !important;
   }
 

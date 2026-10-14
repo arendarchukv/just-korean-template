@@ -18,13 +18,16 @@
     "test": "vitest run",
     "check:dist": "node scripts/check-dist.mjs",
     "icons": "node scripts/generate-icons.ts",
-    "test:browser": "npm run build && playwright test"
+    "test:browser": "npm run build && playwright test",
+    "fonts": "node scripts/generate-display-font.ts",
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.3",
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/svelte": "^9.0.1",
     "@fontsource-variable/outfit": "^5.3.0",
+    "@fontsource/gowun-batang": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.8",
     "github-slugger": "^2.0.0",
@@ -45,7 +48,8 @@
     "sharp": "^0.35.5",
     "typescript": "^6.0.3",
     "vitest": "^5.0.3",
-    "wrangler": "^4.149.0"
+    "wrangler": "^4.149.0",
+    "yaml": "^2.9.1"
   },
   "private": true
 }

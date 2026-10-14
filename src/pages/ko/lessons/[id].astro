@@ -1,0 +1,15 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getLessons } from '@/content/queries';
+import LessonPlaceholderView from '@/views/LessonPlaceholderView.astro';
+
+export const getStaticPaths = (async () =>
+  (await getLessons()).map((lesson) => ({
+    params: { id: lesson.id },
+    props: { lesson },
+  }))) satisfies GetStaticPaths;
+
+const { lesson } = Astro.props;
+---
+
+<LessonPlaceholderView lang="ko" lesson={lesson} />

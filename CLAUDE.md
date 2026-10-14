@@ -3,15 +3,18 @@
 This file records decisions made during planning. Anything marked **TBD** is still being
 discussed with the site owner — do not build it yet.
 
-## Status — paused 2026-10-12, read this first
+## Status — read this first (updated 2026-10-14)
 
-**Work is paused until the content direction is known.** The owner is finding out what the site
-will actually hold: the YouTube-companion idea below, something similar, or something else.
-The "Planned information architecture" section is a rough early sketch, **not** a commitment:
-do not build content structure (collections, video/grammar pages, data models) until the owner
-confirms the direction.
+**Content direction is set:** a lesson-centred library built on her YouTube channel, edited in
+Pages CMS. Spec: `docs/superpowers/specs/2026-10-14-content-model-and-home-design.md` (content
+model, CMS rules, home page). Built: content collections + `.pages.yml`, real demo content, the
+new home page (notice strip, about, classes, 목차, new lessons), placeholder lesson pages.
 
-Done and content-independent (all on `main`, all checks green):
+Next cycles, each with its own spec (from the spec's "Out of scope"): 1. lesson page and series
+library, 2. grammar reference, 3. materials page, 4. flashcards, 5. quizzes with Tally results, 6. dictionary search and pronunciation, 7. Korean news reading (RSS). Also later: daily rebuild on
+the host, an R2 upload page, content translations.
+
+Done earlier (content-independent):
 
 - Foundation: Astro 7 static, Tailwind v4, strict TS, i18n EN (`/`) + KO (`/ko/`), sitemap,
   theme toggle (light/dark), header/footer, placeholder pages (Learn, Materials, Classes, News,
@@ -26,11 +29,12 @@ Done and content-independent (all on `main`, all checks green):
 
 Waiting on the owner (do not guess these):
 
-- Content direction (see above) — the next work depends on it.
+- Her photo, bio wording (`src/content/settings/home.yml`, drafted), TidyCal and Tally URLs,
+  the R2 public domain (`site.yml`; add it to `image.domains` in `astro.config.mjs` for the photo).
 - Domain (placeholder `https://just-korean.example` in `astro.config.mjs`) and hosting/deploy
   (Cloudflare Workers is planned; no deploy until asked).
 - Brand: final colour (#5C7EBE vs #68ACF9), logo variant A/B/C, wordmark font.
-- Footer/social links (`src/config.ts`), Korean UI strings review (`TODO(ko-review)`), About text.
+- Instagram/Ko-fi links (`src/content/settings/site.yml`), Korean UI strings review (`TODO(ko-review)`), About text.
 - Privacy page and analytics (needed once Tally forms or analytics are added).
 
 When resuming: run the quality gates above first; `npx astro dev --background` for the dev
@@ -159,7 +163,11 @@ Variant C (two-tone): second path in brand-700.
 The final variant is TBD. Make the component accept a `variant` prop.
 The wordmark font is unknown: use Outfit 700 for now.
 
-## Planned information architecture (later phases — build only empty routes or placeholders if useful)
+## Planned information architecture (early sketch)
+
+The current content model is the 2026-10-14 spec (lessons as the hub, a YouTube video is
+optional; series, grammar, materials, decks, quizzes, notices, settings). The routes below are the
+early sketch; each later cycle settles its own routes in its spec.
 
 ```
 /                    Home
@@ -181,11 +189,9 @@ The wordmark font is unknown: use Outfit 700 for now.
 
 Data decisions already made:
 
-- **No YouTube API at runtime or build.** Each video is a content entry keyed by
-  its YouTube ID (`src/content/videos/<id>.md`): id, title (her own wording),
-  series, order, level, tags, plus optional pdf/audio URLs, key expressions and
-  quiz. Thumbnails come from `https://i.ytimg.com/vi/<id>/hqdefault.jpg`. Embeds use
-  a click-to-load facade (lite-youtube style).
+- **No YouTube API at runtime or build.** A lesson entry (`src/content/lessons/<slug>.md`) may
+  carry a YouTube link; thumbnails come from `https://i.ytimg.com/vi/<id>/hqdefault.jpg`, fetched
+  and optimised at build. Embeds use a click-to-load facade (lite-youtube style).
 - A one-time import script may seed these files. After that, the repo is the source of truth.
 - Notices: title, body, `activeFrom`, `activeTo`. The home strip shows only active ones.
 - No accounts. "Progress" (watched videos, quiz results) lives in localStorage.
@@ -212,12 +218,32 @@ Data decisions already made:
   installed Chrome: axe (WCAG 2.1 A/AA) on every page in both themes, desktop and mobile; a
   keyboard skip-link test; print rendering (`tests/print`); mobile menu and page transitions (`tests/ui`); a performance budget on a
   throttled phone (`tests/perf`: LCP < 2 s, CLS < 0.1, one render-blocking CSS < 25 KB brotli, no
-  external JS). Recheck real numbers with PageSpeed Insights after hosting. Add new page templates to
+  external JS, fonts ≤ 300 KB on the English home). Recheck real numbers with PageSpeed Insights after hosting. Add new page templates to
   `tests/a11y/pages.spec.ts`.
 - Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
-- Footer / social links: empty placeholders in `src/config.ts` (contact will be a Tally form).
+- Links (TidyCal, Tally forms, social, R2 base URL) live in `src/content/settings/site.yml`,
+  editable in Pages CMS. Empty footer links are left out; "Book a class" falls back to the Classes
+  page until the TidyCal link is set. Form fields carry the same limits as the schemas (tested).
+
+## Decisions from the content cycle (2026-10-14)
+
+- Content lives in `src/content/` (one file per entry; Markdown for long text, YAML for data).
+  Schemas: `src/content/schemas.ts` (the source of truth). Pages read content **only** through
+  `src/content/queries.ts`, which resolves references; the home page calls
+  `validateReferences()`, so a reference to a missing entry fails the build.
+- `.pages.yml` mirrors the schemas; `src/content/pages-config.test.ts` fails when a form and its
+  schema disagree, or a field has no hint. Change both together.
+- Files (PDF, audio, photo) live in Cloudflare R2; content stores `https://` links only.
+  `npm run check:links` checks them (skips the `.example` placeholder domain); run before deploy.
+- Content is single-language (English with Korean examples); only the UI is translated.
+- Serif display font (Gowun Batang 700) is loaded only for the glyphs in
+  `src/lib/display-text.ts`: after changing that text run `npm run fonts` (regenerates
+  `src/styles/display-font.css`; a unit test fails until you do). Home block styles:
+  `src/styles/home.css`. Notice strip hides notices outside their dates in the browser; tones
+  `important` (red) / `news` (green) / `info` (blue) set colour and order and are named in words;
+  `pinned` notices have no close button.
 - Korean UI strings are machine-drafted for design testing and marked
   `// TODO(ko-review)` — JiEun should review them before launch.
 - Theme toggle is a small vanilla script, not a Svelte island (zero-JS default).

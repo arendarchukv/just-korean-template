@@ -6,6 +6,8 @@ import { expect, test } from '@playwright/test';
  * the local build, so it guards what our code controls; real-network numbers (compression,
  * caching, CDN) come from PageSpeed Insights once the site is hosted.
  * Baseline 2026-10-12: LCP 0.84–1.21 s, CLS 0–0.036, CSS 17 KB brotli, no external JS.
+ * 2026-10-14 (new home): LCP 0.92 s, CSS 18.5 KB, fonts ~243 KB on the English home (Outfit 32,
+ * serif display slices 57, Pretendard slices for Korean lesson titles 154).
  */
 const BUDGET = {
   lcpMs: 2000,
@@ -13,7 +15,7 @@ const BUDGET = {
   cssBrotliBytes: 25_000,
   renderBlocking: 1,
   scripts: 0,
-  fontFilesOnEnglishHome: 4,
+  fontKBOnEnglishHome: 300,
 };
 
 test.beforeEach(({}, testInfo) => {
@@ -26,7 +28,7 @@ type Measured = {
   blocking: string[];
   css: number;
   scripts: number;
-  fonts: number;
+  fontBytes: number;
 };
 
 async function measure(page: import('@playwright/test').Page, path: string): Promise<Measured> {
@@ -42,11 +44,11 @@ async function measure(page: import('@playwright/test').Page, path: string): Pro
 
   let css = 0;
   let scripts = 0;
-  let fonts = 0;
+  let fontBytes = 0;
   page.on('response', async (response) => {
     const type = response.request().resourceType();
     if (type === 'script') scripts += 1;
-    if (type === 'font') fonts += 1;
+    if (type === 'font') fontBytes += (await response.body()).length;
     if (type === 'stylesheet') css += brotliCompressSync(await response.body()).length;
   });
 
@@ -84,7 +86,7 @@ async function measure(page: import('@playwright/test').Page, path: string): Pro
         .map((r) => r.name),
     };
   });
-  return { ...metrics, css, scripts, fonts };
+  return { ...metrics, css, scripts, fontBytes };
 }
 
 for (const path of ['/', '/ko/', '/styleguide/']) {
@@ -96,6 +98,8 @@ for (const path of ['/', '/ko/', '/styleguide/']) {
     expect(m.blocking.length, report).toBeLessThanOrEqual(BUDGET.renderBlocking);
     expect(m.css, report).toBeLessThan(BUDGET.cssBrotliBytes);
     expect(m.scripts, report).toBe(BUDGET.scripts);
-    if (path === '/') expect(m.fonts, report).toBeLessThanOrEqual(BUDGET.fontFilesOnEnglishHome);
+    if (path === '/') {
+      expect(m.fontBytes / 1024, report).toBeLessThanOrEqual(BUDGET.fontKBOnEnglishHome);
+    }
   });
 }

@@ -19,7 +19,8 @@
     "check:dist": "node scripts/check-dist.mjs",
     "icons": "node scripts/generate-icons.ts",
     "test:browser": "npm run build && playwright test",
-    "fonts": "node scripts/generate-display-font.ts"
+    "fonts": "node scripts/generate-display-font.ts",
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.3",

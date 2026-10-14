@@ -33,33 +33,35 @@
 
 ## File structure
 
-| File | Responsibility |
-|---|---|
-| `src/lib/youtube.ts` | `parseYouTubeId`, `youtubeThumbnail` |
-| `src/lib/content-logic.ts` | `toEntryId`, `isNoticeActive`, `selectNotices`, `selectNewLessons` (pure) |
-| `src/content/schemas.ts` | zod schemas for every collection + `download`, `level` |
-| `src/content.config.ts` | collections → glob loaders + schemas |
-| `src/content/queries.ts` | the only reader of content; resolves and checks references |
-| `src/content/**` | demo content (Markdown / YAML) |
-| `.pages.yml` | Pages CMS forms |
-| `src/content/pages-config.test.ts` | `.pages.yml` ↔ schemas drift test |
-| `src/components/home/NoticeStrip.astro` | notice strip + inline script |
-| `src/components/home/AboutHero.astro` | about block |
-| `src/components/home/ClassesTable.astro` | classes timetable |
-| `src/components/home/SiteContents.astro` | 목차 list |
-| `src/components/home/NewLessons.astro` | latest lessons with local thumbnails |
-| `src/views/HomeView.astro` | assembles the blocks |
-| `src/views/LessonPlaceholderView.astro`, `src/pages/lessons/[id].astro`, `src/pages/ko/lessons/[id].astro` | placeholder lesson route |
-| `scripts/check-links.mjs` | `npm run check:links` |
+| File                                                                                                       | Responsibility                                                            |
+| ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `src/lib/youtube.ts`                                                                                       | `parseYouTubeId`, `youtubeThumbnail`                                      |
+| `src/lib/content-logic.ts`                                                                                 | `toEntryId`, `isNoticeActive`, `selectNotices`, `selectNewLessons` (pure) |
+| `src/content/schemas.ts`                                                                                   | zod schemas for every collection + `download`, `level`                    |
+| `src/content.config.ts`                                                                                    | collections → glob loaders + schemas                                      |
+| `src/content/queries.ts`                                                                                   | the only reader of content; resolves and checks references                |
+| `src/content/**`                                                                                           | demo content (Markdown / YAML)                                            |
+| `.pages.yml`                                                                                               | Pages CMS forms                                                           |
+| `src/content/pages-config.test.ts`                                                                         | `.pages.yml` ↔ schemas drift test                                         |
+| `src/components/home/NoticeStrip.astro`                                                                    | notice strip + inline script                                              |
+| `src/components/home/AboutHero.astro`                                                                      | about block                                                               |
+| `src/components/home/ClassesTable.astro`                                                                   | classes timetable                                                         |
+| `src/components/home/SiteContents.astro`                                                                   | 목차 list                                                                 |
+| `src/components/home/NewLessons.astro`                                                                     | latest lessons with local thumbnails                                      |
+| `src/views/HomeView.astro`                                                                                 | assembles the blocks                                                      |
+| `src/views/LessonPlaceholderView.astro`, `src/pages/lessons/[id].astro`, `src/pages/ko/lessons/[id].astro` | placeholder lesson route                                                  |
+| `scripts/check-links.mjs`                                                                                  | `npm run check:links`                                                     |
 
 ---
 
 ### Task 1: Pure logic — YouTube ids, entry ids, notice dates, lesson selection
 
 **Files:**
+
 - Create: `src/lib/youtube.ts`, `src/lib/youtube.test.ts`, `src/lib/content-logic.ts`, `src/lib/content-logic.test.ts`
 
 **Interfaces:**
+
 - Produces:
   - `parseYouTubeId(input: string): string | null`
   - `youtubeThumbnail(id: string): string` → `https://i.ytimg.com/vi/<id>/hqdefault.jpg`
@@ -281,11 +283,13 @@ git commit -m "Content logic: YouTube ids, entry ids, notice dates, new-lesson s
 ### Task 2: Schemas, collections, queries and demo content
 
 **Files:**
+
 - Create: `src/content/schemas.ts`, `src/content/schemas.test.ts`, `src/content.config.ts`, `src/content/queries.ts`
 - Create demo content (listed in Step 5)
 - Modify: `vitest.config.ts` only if `src/content/*.test.ts` is not already matched by `src/**/*.test.ts` (it is; no change expected)
 
 **Interfaces:**
+
 - Consumes: `parseYouTubeId`, `toEntryId` (Task 1)
 - Produces (schemas.ts): `level`, `download`, `lessonSchema`, `seriesSchema`, `grammarSchema`, `materialSchema`, `deckSchema`, `quizSchema`, `noticeSchema`, `homeSchema`, `classesSchema`, `siteSchema`, and `SCHEMAS: Record<string, z.ZodObject>` keyed by collection name (`lessons`, `series`, `grammar`, `materials`, `decks`, `quizzes`, `notices`, `home`, `classes`, `site`).
 - Produces (queries.ts):
@@ -511,7 +515,9 @@ export const homeSchema = z.object({
 
 export const classesSchema = z.object({
   formats: z
-    .array(z.object({ name: z.string().min(1), forWhom: z.string().min(1), how: z.string().min(1) }))
+    .array(
+      z.object({ name: z.string().min(1), forWhom: z.string().min(1), how: z.string().min(1) }),
+    )
     .min(1),
   faq: z.array(z.object({ question: z.string().min(1), answer: z.string().min(1) })).default([]),
 });
@@ -578,6 +584,7 @@ export const collections = {
 Demo content (real channel data; dates approximate; bio marked for review). Create each file exactly:
 
 `src/content/series/crash-course.yml`
+
 ```yaml
 title: Beginner Korean Crash Course
 description: Ten short lessons that take you from the alphabet to your first conversations. Watch them in order.
@@ -587,6 +594,7 @@ order: 1
 ```
 
 `src/content/series/grammar.yml`
+
 ```yaml
 title: Grammar
 description: Patterns explained side by side, so you know which one to use and when.
@@ -596,6 +604,7 @@ order: 2
 ```
 
 `src/content/lessons/negative-form.md`
+
 ```md
 ---
 title: Beginner Korean Intensive Course! 4. Negative Form
@@ -609,6 +618,7 @@ summary: How to say "not" in Korean with 안 and -지 않다.
 ```
 
 `src/content/lessons/location-particles.md`
+
 ```md
 ---
 title: Beginner Korean Intensive Course! 6. Location particles
@@ -622,9 +632,10 @@ summary: 에 and 에서: where something is, and where something happens.
 ```
 
 `src/content/lessons/eumyeon-mana-vs-a-bwatja.md`
+
 ```md
 ---
-title: "Korean Grammar 한국어 문법 : (으)나 마나 vs 아/어 봤자"
+title: 'Korean Grammar 한국어 문법 : (으)나 마나 vs 아/어 봤자'
 youtube: _lgDjyWiheU
 series: grammar
 date: 2026-10-03
@@ -639,22 +650,24 @@ downloads:
 ```
 
 `src/content/lessons/ge-vs-dorok.md`
+
 ```md
 ---
-title: "Korean Grammar 한국어 문법 : 게 vs 도록"
+title: 'Korean Grammar 한국어 문법 : 게 vs 도록'
 youtube: R3Ny_hDzKpc
 series: grammar
 date: 2026-09-23
 level: intermediate
 grammar: [ge, dorok]
-summary: "-게 and -도록: \"so that\" in everyday speech and in formal Korean."
+summary: '-게 and -도록: "so that" in everyday speech and in formal Korean.'
 ---
 ```
 
 `src/content/lessons/a-itda-vs-go-itda.md`
+
 ```md
 ---
-title: "Korean Grammar 한국어 문법 : 아/어 있다 vs 고 있다"
+title: 'Korean Grammar 한국어 문법 : 아/어 있다 vs 고 있다'
 youtube: RvBFVpgYfWQ
 series: grammar
 date: 2025-10-10
@@ -664,6 +677,7 @@ summary: A state that continues, or an action in progress.
 ```
 
 `src/content/lessons/korean-numbers.md` (lesson without a video)
+
 ```md
 ---
 title: Korean numbers and how to use them
@@ -680,6 +694,7 @@ downloads:
 ```
 
 `src/content/grammar/a-bwatja.md`
+
 ```md
 ---
 pattern: -아/어 봤자
@@ -694,6 +709,7 @@ compare: [euna-mana]
 ```
 
 `src/content/grammar/euna-mana.md`
+
 ```md
 ---
 pattern: -(으)나 마나
@@ -708,6 +724,7 @@ compare: [a-bwatja]
 ```
 
 `src/content/grammar/ge.md`
+
 ```md
 ---
 pattern: -게
@@ -722,6 +739,7 @@ compare: [dorok]
 ```
 
 `src/content/grammar/dorok.md`
+
 ```md
 ---
 pattern: -도록
@@ -736,6 +754,7 @@ compare: [ge]
 ```
 
 `src/content/notices/winter-break-2026.yml`
+
 ```yaml
 title: Winter break
 text: No classes from December 19 to January 1. Bookings reopen in January.
@@ -745,6 +764,7 @@ tone: important
 ```
 
 `src/content/notices/spain-timetable.yml`
+
 ```yaml
 title: Spain timetable
 text: From October 12 to December 18 classes follow Spanish time (CET).
@@ -755,6 +775,7 @@ link: /classes/
 ```
 
 `src/content/materials/korean-family.yml`
+
 ```yaml
 title: 한국의 가족 (Korean family words)
 category: class-helper
@@ -767,6 +788,7 @@ files:
 ```
 
 `src/content/decks/negative-form.yml`
+
 ```yaml
 title: Negative form
 level: beginner
@@ -779,25 +801,27 @@ cards:
 ```
 
 `src/content/quizzes/ge-vs-dorok.yml`
+
 ```yaml
-title: "-게 or -도록?"
+title: '-게 or -도록?'
 level: intermediate
 lesson: ge-vs-dorok
 questions:
   - type: choice
-    prompt: "늦지 않___ 일찍 출발하세요."
+    prompt: '늦지 않___ 일찍 출발하세요.'
     options:
       - text: 도록
         correct: true
       - text: 려고
-    explanation: "-도록 states the purpose: so that you are not late."
+    explanation: '-도록 states the purpose: so that you are not late.'
   - type: fill
-    sentence: "잘 들리___ 크게 말해 주세요."
+    sentence: '잘 들리___ 크게 말해 주세요.'
     answer: 게
     alternatives: [도록]
 ```
 
 `src/content/settings/home.yml`
+
 ```yaml
 # Draft for review: JiEun should rewrite the greeting, intro and credentials in her own words.
 greeting: Hi, I'm JiEun
@@ -812,6 +836,7 @@ newLessonsCount: 3
 ```
 
 `src/content/settings/classes.yml`
+
 ```yaml
 formats:
   - name: 1:1 private class
@@ -827,6 +852,7 @@ faq: []
 ```
 
 `src/content/settings/site.yml`
+
 ```yaml
 tidycal: ''
 contactForm: ''
@@ -874,7 +900,9 @@ export async function getLessons(): Promise<Lesson[]> {
       return {
         ...l.data,
         id: l.id,
-        seriesEntry: l.data.series ? await resolve('series', l.data.series, `${from}: series`) : undefined,
+        seriesEntry: l.data.series
+          ? await resolve('series', l.data.series, `${from}: series`)
+          : undefined,
         grammarEntries: await Promise.all(
           l.data.grammar.map((g) => resolve('grammar', g, `${from}: grammar`)),
         ),
@@ -936,10 +964,12 @@ git commit -m "Content collections with validated schemas, reference checks and 
 ### Task 3: Pages CMS configuration and drift test
 
 **Files:**
+
 - Create: `.pages.yml`, `src/content/pages-config.test.ts`
 - Modify: `package.json` (devDependency `yaml`)
 
 **Interfaces:**
+
 - Consumes: `SCHEMAS` (Task 2)
 
 - [ ] **Step 1: Add the YAML parser**
@@ -1536,9 +1566,11 @@ git commit -m "Pages CMS forms for every collection, with hints; test keeps them
 ### Task 4: Footer and settings read from `site.yml`
 
 **Files:**
+
 - Modify: `src/components/Footer.astro`, `src/config.ts`, `scripts/check-dist.mjs`
 
 **Interfaces:**
+
 - Consumes: `getSite()` (Task 2)
 
 - [ ] **Step 1: Write the failing dist check**
@@ -1612,10 +1644,12 @@ git commit -m "Footer links come from site settings (editable in Pages CMS)"
 ### Task 5: Serif display font, notice strip, new HomeView skeleton
 
 **Files:**
+
 - Modify: `package.json` (`@fontsource/gowun-batang`), `src/styles/theme.css`, `src/layouts/BaseLayout.astro`, `src/styles/signature.css`, `src/i18n/ui.ts`, `src/views/HomeView.astro`, `scripts/check-dist.mjs`
 - Create: `src/components/home/NoticeStrip.astro`, `tests/ui/notices.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `getNotices`, `validateReferences` (Task 2), `selectNotices`, `toDay` (Task 1)
 - Produces: CSS `--font-display` token and `.font-display` utility; `.notice-strip` styles; HomeView with `<NoticeStrip>` and slots for later blocks; i18n keys `notice.details`, `notice.dismiss`, `notice.label`
 
@@ -1646,7 +1680,8 @@ test.beforeEach(({}, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'notice behaviour is checked on desktop');
 });
 
-const strip = (page: import('@playwright/test').Page) => page.getByRole('region', { name: /notice/i });
+const strip = (page: import('@playwright/test').Page) =>
+  page.getByRole('region', { name: /notice/i });
 
 test('shows notices active today and hides expired ones', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-12-20T10:00:00'));
@@ -1698,7 +1733,7 @@ Inspect `node_modules/@fontsource/gowun-batang/700.css` and confirm it is split 
 In `src/styles/theme.css`, next to `--font-sans` / `--font-korean`, add:
 
 ```css
-  --font-display: 'Gowun Batang', 'Noto Serif KR', 'Batang', serif;
+--font-display: 'Gowun Batang', 'Noto Serif KR', 'Batang', serif;
 ```
 
 In `src/layouts/BaseLayout.astro` add after the Pretendard import:
@@ -1710,13 +1745,13 @@ import '@fontsource/gowun-batang/700.css';
 In `src/styles/signature.css` (inside the existing `@layer components` block) add:
 
 ```css
-  /* Second voice: Korean serif (명조) for a few display lines only. */
-  .font-display {
-    font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    word-break: keep-all;
-  }
+/* Second voice: Korean serif (명조) for a few display lines only. */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
 ```
 
 - [ ] **Step 4: Notice strip component**
@@ -1768,46 +1803,49 @@ const href = (link: string) =>
 let shown = 0;
 ---
 
-{
-  notices.length > 0 && (
-    <section class="notice-strip" aria-label={t('notice.label')} data-print="hide">
-      <ul class="container-page" data-notice-list>
-        {notices.map((n) => {
-          const visible = isNoticeActive(n, buildDay) && shown++ < MAX;
-          return (
-            <li
-              data-notice={n.id}
-              data-from={toDay(n.from)}
-              data-to={toDay(n.to)}
-              data-tone={n.tone}
-              hidden={!visible}
-            >
-              <span class="notice-dates">
-                {formatter.format(n.from)} – {formatter.format(n.to)}
-              </span>
-              <p>
-                <strong>{n.title}.</strong> {n.text}
-                {n.link && (
-                  <>
-                    {' '}
-                    <a class="link" href={href(n.link)}>
-                      {t('notice.details')}
-                    </a>
-                  </>
-                )}
-              </p>
-              <button type="button" class="icon-btn" data-dismiss aria-label={t('notice.dismiss')}>
-                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
-  )
-}
+{notices.length > 0 && (
+  <section class="notice-strip" aria-label={t('notice.label')} data-print="hide">
+    <ul class="container-page" data-notice-list>
+      {notices.map((n) => {
+        const visible = isNoticeActive(n, buildDay) && shown++ < MAX;
+        return (
+          <li
+            data-notice={n.id}
+            data-from={toDay(n.from)}
+            data-to={toDay(n.to)}
+            data-tone={n.tone}
+            hidden={!visible}
+          >
+            <span class="notice-dates">
+              {formatter.format(n.from)} – {formatter.format(n.to)}
+            </span>
+            <p>
+              <strong>{n.title}.</strong> {n.text}
+              {n.link && (
+                <>
+                  {' '}
+                  <a class="link" href={href(n.link)}>
+                    {t('notice.details')}
+                  </a>
+                </>
+              )}
+            </p>
+            <button type="button" class="icon-btn" data-dismiss aria-label={t('notice.dismiss')}>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+)}
 
 <script is:inline define:vars={{ MAX }}>
   (() => {
@@ -1848,51 +1886,51 @@ let shown = 0;
 Styles in `src/styles/signature.css`:
 
 ```css
-  /* Notice strip: a band of paper tape, not a card. */
-  .notice-strip {
-    border-bottom: 1px solid var(--color-border);
-    background:
-      repeating-linear-gradient(
-        -45deg,
-        transparent 0 6px,
-        color-mix(in oklab, var(--color-brand) 7%, transparent) 6px 7px
-      ),
-      var(--color-surface);
-  }
-  .notice-strip ul {
-    display: grid;
-    gap: 0;
-    padding-block: 0.25rem;
-  }
-  .notice-strip li {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.25rem 1rem;
-    padding-block: 0.5rem;
-  }
-  .notice-strip li + li {
-    border-top: 1px dashed var(--color-border);
-  }
-  .notice-strip li[hidden] {
-    display: none;
-  }
-  .notice-strip p {
-    flex: 1 1 18rem;
-    margin: 0;
-    font-size: var(--text-sm);
-  }
-  .notice-dates {
-    font-size: var(--text-xs);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-    font-variant-numeric: tabular-nums;
-  }
-  .notice-strip li[data-tone='important'] .notice-dates {
-    color: var(--color-brand-strong);
-  }
+/* Notice strip: a band of paper tape, not a card. */
+.notice-strip {
+  border-bottom: 1px solid var(--color-border);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent 0 6px,
+      color-mix(in oklab, var(--color-brand) 7%, transparent) 6px 7px
+    ),
+    var(--color-surface);
+}
+.notice-strip ul {
+  display: grid;
+  gap: 0;
+  padding-block: 0.25rem;
+}
+.notice-strip li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  padding-block: 0.5rem;
+}
+.notice-strip li + li {
+  border-top: 1px dashed var(--color-border);
+}
+.notice-strip li[hidden] {
+  display: none;
+}
+.notice-strip p {
+  flex: 1 1 18rem;
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.notice-dates {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-variant-numeric: tabular-nums;
+}
+.notice-strip li[data-tone='important'] .notice-dates {
+  color: var(--color-brand-strong);
+}
 ```
 
 If `var(--text-sm)` / `var(--text-xs)` are not the names theme.css uses for the type scale, use the names it defines (check `src/styles/theme.css`). If `color-mix` breaks the contrast test (`npm test`), use `var(--color-brand-tint)` as the band colour.
@@ -1945,10 +1983,12 @@ git commit -m "Home: notice strip that follows its dates in the browser; Korean 
 ### Task 6: About block and classes timetable
 
 **Files:**
+
 - Create: `src/components/home/AboutHero.astro`, `src/components/home/ClassesTable.astro`
 - Modify: `src/views/HomeView.astro`, `src/i18n/ui.ts`, `src/styles/signature.css`, `scripts/check-dist.mjs`
 
 **Interfaces:**
+
 - Consumes: `getHome`, `getClasses`, `getSite` (Task 2); `Collage` (`src/components/shapes/Collage.astro`, `variant="hero"`)
 - Produces: i18n keys `home.bookClass`, `home.watchLessons`, `home.classes.title`, `home.classes.format`, `home.classes.forWhom`, `home.classes.how`, `home.classes.more`
 
@@ -1985,9 +2025,12 @@ for (const page of ['index.html', 'ko/index.html']) {
 
 // --- Classes: a real table with headers, rows from settings/classes.yml ---
 {
-  const table = /<section[^>]*data-home-block="classes"[\s\S]*?<\/section>/.exec(read('index.html'))?.[0] ?? '';
-  if ((table.match(/<th scope="col"/g) ?? []).length < 3) problems.push('classes table lacks column headers');
-  if (!table.includes('1:1 private class')) problems.push('classes table does not read classes.yml');
+  const table =
+    /<section[^>]*data-home-block="classes"[\s\S]*?<\/section>/.exec(read('index.html'))?.[0] ?? '';
+  if ((table.match(/<th scope="col"/g) ?? []).length < 3)
+    problems.push('classes table lacks column headers');
+  if (!table.includes('1:1 private class'))
+    problems.push('classes table does not read classes.yml');
 }
 ```
 
@@ -2054,7 +2097,9 @@ const booking = site.tidycal;
 <section class="container-page about-hero" data-home-block="about" aria-labelledby="about-title">
   <div class="about-text">
     <h1 id="about-title">
-      <span lang="ko" class="font-display about-title-ko">{SITE.nameKo}</span>
+      <span lang="ko" class="font-display about-title-ko">
+        {SITE.nameKo}
+      </span>
       <span class="about-greeting">{home.greeting}</span>
     </h1>
     <p class="about-intro">{home.intro}</p>
@@ -2069,37 +2114,35 @@ const booking = site.tidycal;
       >
         {t('home.bookClass')}
       </a>
-      <a class="btn btn-ghost" href={localizePath(lang, 'learn')}>{t('home.watchLessons')}</a>
+      <a class="btn btn-ghost" href={localizePath(lang, 'learn')}>
+        {t('home.watchLessons')}
+      </a>
     </div>
   </div>
 
   <div class="about-side">
-    {
-      home.photo ? (
-        <Image
-          src={home.photo}
-          alt={home.photoAlt ?? ''}
-          width={560}
-          height={640}
-          class="about-photo"
-          loading="eager"
-        />
-      ) : (
-        <Collage variant="hero" class="about-photo-placeholder" />
-      )
-    }
-    {
-      home.credentials.length > 0 && (
-        <div class="about-credentials grid-paper">
-          <h2 class="sr-only">{t('home.credentials')}</h2>
-          <ul>
-            {home.credentials.map((c) => (
-              <li>{c}</li>
-            ))}
-          </ul>
-        </div>
-      )
-    }
+    {home.photo ? (
+      <Image
+        src={home.photo}
+        alt={home.photoAlt ?? ''}
+        width={560}
+        height={640}
+        class="about-photo"
+        loading="eager"
+      />
+    ) : (
+      <Collage variant="hero" class="about-photo-placeholder" />
+    )}
+    {home.credentials.length > 0 && (
+      <div class="about-credentials grid-paper">
+        <h2 class="sr-only">{t('home.credentials')}</h2>
+        <ul>
+          {home.credentials.map((c) => (
+            <li>{c}</li>
+          ))}
+        </ul>
+      </div>
+    )}
   </div>
 </section>
 ```
@@ -2107,79 +2150,79 @@ const booking = site.tidycal;
 Styles (`src/styles/signature.css`, components layer):
 
 ```css
-  /* About block: asymmetric, text first on small screens. */
+/* About block: asymmetric, text first on small screens. */
+.about-hero {
+  display: grid;
+  gap: 2.5rem;
+  padding-block: 3.5rem 3rem;
+  align-items: center;
+}
+@media (min-width: 48rem) {
   .about-hero {
-    display: grid;
-    gap: 2.5rem;
-    padding-block: 3.5rem 3rem;
-    align-items: center;
+    grid-template-columns: 1.2fr 1fr;
+    padding-block: 5rem 4rem;
   }
-  @media (min-width: 48rem) {
-    .about-hero {
-      grid-template-columns: 1.2fr 1fr;
-      padding-block: 5rem 4rem;
-    }
-  }
-  .about-hero h1 {
-    display: grid;
-    gap: 0.75rem;
-    margin: 0;
-  }
-  .about-title-ko {
-    font-size: clamp(3rem, 9vw, 5.5rem);
-    line-height: 1;
-    color: var(--color-text);
-  }
-  .about-greeting {
-    font-size: var(--text-2xl);
-    font-weight: 600;
-    color: var(--color-brand-strong);
-  }
-  .about-intro {
-    margin: 1.5rem 0 0;
-    max-width: 38ch;
-    font-size: var(--text-lg);
-    line-height: 1.6;
-    color: var(--color-muted);
-  }
-  .about-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 2rem;
-  }
-  .about-side {
-    position: relative;
-    display: grid;
-    gap: 1.25rem;
-  }
-  /* Photo cut out by an organic shape (same blob as the eyebrow mark), not a rounded box. */
-  .about-photo {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 7 / 8;
-    object-fit: cover;
-    mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M8 14C20 2 52 0 74 6S99 30 97 56 84 96 56 98 6 92 3 64 -4 26 8 14Z"/></svg>')
-      center / 100% 100% no-repeat;
-  }
-  .about-credentials {
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    padding: 1rem 1.25rem;
-    background-color: var(--color-bg);
-  }
-  .about-credentials ul {
-    display: grid;
-    gap: 0.35rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-size: var(--text-sm);
-  }
-  .about-credentials li::before {
-    content: '— ';
-    color: var(--color-teal-strong);
-  }
+}
+.about-hero h1 {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+.about-title-ko {
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  line-height: 1;
+  color: var(--color-text);
+}
+.about-greeting {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  color: var(--color-brand-strong);
+}
+.about-intro {
+  margin: 1.5rem 0 0;
+  max-width: 38ch;
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  color: var(--color-muted);
+}
+.about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+.about-side {
+  position: relative;
+  display: grid;
+  gap: 1.25rem;
+}
+/* Photo cut out by an organic shape (same blob as the eyebrow mark), not a rounded box. */
+.about-photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 7 / 8;
+  object-fit: cover;
+  mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M8 14C20 2 52 0 74 6S99 30 97 56 84 96 56 98 6 92 3 64 -4 26 8 14Z"/></svg>')
+    center / 100% 100% no-repeat;
+}
+.about-credentials {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-bg);
+}
+.about-credentials ul {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+}
+.about-credentials li::before {
+  content: '— ';
+  color: var(--color-teal-strong);
+}
 ```
 
 - [ ] **Step 5: ClassesTable**
@@ -2203,8 +2246,14 @@ const { formats } = await getClasses();
 const booking = (await getSite()).tidycal;
 ---
 
-<section class="container-page home-section" data-home-block="classes" aria-labelledby="classes-title">
-  <h2 id="classes-title" class="home-section-title">{t('home.classes.title')}</h2>
+<section
+  class="container-page home-section"
+  data-home-block="classes"
+  aria-labelledby="classes-title"
+>
+  <h2 id="classes-title" class="home-section-title">
+    {t('home.classes.title')}
+  </h2>
   <div class="table-scroll" tabindex="0">
     <table class="timetable">
       <thead>
@@ -2215,15 +2264,13 @@ const booking = (await getSite()).tidycal;
         </tr>
       </thead>
       <tbody>
-        {
-          formats.map((f) => (
-            <tr>
-              <th scope="row">{f.name}</th>
-              <td>{f.forWhom}</td>
-              <td>{f.how}</td>
-            </tr>
-          ))
-        }
+        {formats.map((f) => (
+          <tr>
+            <th scope="row">{f.name}</th>
+            <td>{f.forWhom}</td>
+            <td>{f.how}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   </div>
@@ -2237,7 +2284,9 @@ const booking = (await getSite()).tidycal;
     >
       {t('home.bookClass')}
     </a>
-    <a class="btn btn-link" href={localizePath(lang, 'classes')}>{t('home.classes.more')}</a>
+    <a class="btn btn-link" href={localizePath(lang, 'classes')}>
+      {t('home.classes.more')}
+    </a>
   </div>
 </section>
 ```
@@ -2245,43 +2294,43 @@ const booking = (await getSite()).tidycal;
 Styles:
 
 ```css
-  .home-section {
-    padding-block: 3rem;
-  }
-  .home-section-title {
-    margin: 0 0 1.5rem;
-    font-size: var(--text-2xl);
-    font-weight: 700;
-  }
-  /* Timetable: ruled lines, no boxes, like a printed class schedule. */
-  .timetable {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: var(--text-base);
-  }
-  .timetable th,
-  .timetable td {
-    padding: 1rem 1rem 1rem 0;
-    border-bottom: 1px solid var(--color-border);
-    text-align: left;
-    vertical-align: top;
-    min-width: 10em;
-  }
-  .timetable thead th {
-    padding-block: 0.5rem;
-    border-bottom: 2px solid var(--color-text);
-    font-size: var(--text-xs);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-muted);
-  }
-  .timetable tbody th {
-    font-weight: 600;
-  }
-  .timetable td {
-    color: var(--color-muted);
-  }
+.home-section {
+  padding-block: 3rem;
+}
+.home-section-title {
+  margin: 0 0 1.5rem;
+  font-size: var(--text-2xl);
+  font-weight: 700;
+}
+/* Timetable: ruled lines, no boxes, like a printed class schedule. */
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-base);
+}
+.timetable th,
+.timetable td {
+  padding: 1rem 1rem 1rem 0;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+  min-width: 10em;
+}
+.timetable thead th {
+  padding-block: 0.5rem;
+  border-bottom: 2px solid var(--color-text);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.timetable tbody th {
+  font-weight: 600;
+}
+.timetable td {
+  color: var(--color-muted);
+}
 ```
 
 - [ ] **Step 6: Wire into HomeView**
@@ -2289,8 +2338,8 @@ Styles:
 In `src/views/HomeView.astro` import both components and replace `<div class="home"></div>` with:
 
 ```astro
-  <AboutHero lang={lang} />
-  <ClassesTable lang={lang} />
+<AboutHero lang={lang} />
+<ClassesTable lang={lang} />
 ```
 
 - [ ] **Step 7: Verify**
@@ -2310,10 +2359,12 @@ git commit -m "Home: about block with Korean serif title and credentials; classe
 ### Task 7: Site contents (목차), new lessons with local thumbnails, lesson placeholder route
 
 **Files:**
+
 - Create: `src/components/home/SiteContents.astro`, `src/components/home/NewLessons.astro`, `src/views/LessonPlaceholderView.astro`, `src/pages/lessons/[id].astro`, `src/pages/ko/lessons/[id].astro`
 - Modify: `astro.config.mjs` (`image.domains`), `src/views/HomeView.astro`, `src/i18n/ui.ts`, `src/styles/signature.css`, `scripts/check-dist.mjs`, `tests/a11y/pages.spec.ts`
 
 **Interfaces:**
+
 - Consumes: `getLessons`, `getHome` (Task 2); `selectNewLessons` (Task 1); `youtubeThumbnail` (Task 1)
 - Produces: route `/lessons/<id>/` and `/ko/lessons/<id>/` for every lesson
 
@@ -2323,28 +2374,40 @@ Append to `scripts/check-dist.mjs`:
 
 ```js
 // --- 목차: five numbered sections, links stay in the locale ---
-for (const [page, prefix] of [['index.html', ''], ['ko/index.html', '/ko']]) {
-  const block = /<section[^>]*data-home-block="contents"[\s\S]*?<\/section>/.exec(read(page))?.[0] ?? '';
+for (const [page, prefix] of [
+  ['index.html', ''],
+  ['ko/index.html', '/ko'],
+]) {
+  const block =
+    /<section[^>]*data-home-block="contents"[\s\S]*?<\/section>/.exec(read(page))?.[0] ?? '';
   const links = [...block.matchAll(/<a[^>]*href="([^"]+)"/g)].map((m) => m[1]);
-  if (links.length !== 5) problems.push(`${page}: site contents has ${links.length} links, expected 5`);
-  if (links.some((h) => !h.startsWith(`${prefix}/`))) problems.push(`${page}: contents leave the locale`);
+  if (links.length !== 5)
+    problems.push(`${page}: site contents has ${links.length} links, expected 5`);
+  if (links.some((h) => !h.startsWith(`${prefix}/`)))
+    problems.push(`${page}: contents leave the locale`);
 }
 
 // --- New lessons: local optimised thumbnails, links to existing lesson pages ---
-for (const [page, prefix] of [['index.html', ''], ['ko/index.html', '/ko']]) {
-  const block = /<section[^>]*data-home-block="new-lessons"[\s\S]*?<\/section>/.exec(read(page))?.[0] ?? '';
+for (const [page, prefix] of [
+  ['index.html', ''],
+  ['ko/index.html', '/ko'],
+]) {
+  const block =
+    /<section[^>]*data-home-block="new-lessons"[\s\S]*?<\/section>/.exec(read(page))?.[0] ?? '';
   const imgs = [...block.matchAll(/<img[^>]*>/g)].map((m) => m[0]);
   if (imgs.length !== 3) problems.push(`${page}: ${imgs.length} new-lesson thumbnails, expected 3`);
   for (const img of imgs) {
     if (/i\.ytimg\.com/.test(img)) problems.push(`${page}: thumbnail loads from YouTube`);
-    if (!/width="\d+"/.test(img) || !/height="\d+"/.test(img)) problems.push(`${page}: thumbnail without size`);
+    if (!/width="\d+"/.test(img) || !/height="\d+"/.test(img))
+      problems.push(`${page}: thumbnail without size`);
   }
   for (const [, href] of block.matchAll(/<a[^>]*href="([^"]+)"/g)) {
     if (!href.startsWith(`${prefix}/lessons/`)) continue;
     const file = `${href.replace(/^\//, '')}index.html`;
     if (!exists(file)) problems.push(`${page}: new lesson links to missing ${href}`);
   }
-  if (/korean-numbers/.test(block)) problems.push(`${page}: a lesson without video is in New lessons`);
+  if (/korean-numbers/.test(block))
+    problems.push(`${page}: a lesson without video is in New lessons`);
 }
 ```
 
@@ -2427,32 +2490,38 @@ const ITEMS: { key: string; term: string; path: string }[] = [
 const k = (item: string, part: 'title' | 'body') => `home.contents.${item}.${part}` as UIKey;
 ---
 
-<section class="container-page home-section" data-home-block="contents" aria-labelledby="contents-title">
-  <h2 id="contents-title" class="home-section-title">{t('home.contents.title')}</h2>
+<section
+  class="container-page home-section"
+  data-home-block="contents"
+  aria-labelledby="contents-title"
+>
+  <h2 id="contents-title" class="home-section-title">
+    {t('home.contents.title')}
+  </h2>
   <ol class="toc">
-    {
-      ITEMS.map((item, i) => (
-        <li>
-          <a href={localizePath(lang, item.path)} class="toc-link">
-            <span class="toc-number" aria-hidden="true">
-              {String(i + 1).padStart(2, '0')}
+    {ITEMS.map((item, i) => (
+      <li>
+        <a href={localizePath(lang, item.path)} class="toc-link">
+          <span class="toc-number" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <span class="toc-body">
+            <span class="toc-title">
+              {lang !== 'ko' && (
+                <span lang="ko" class="toc-term font-display">
+                  {item.term}
+                </span>
+              )}
+              {t(k(item.key, 'title'))}
             </span>
-            <span class="toc-body">
-              <span class="toc-title">
-                {lang !== 'ko' && (
-                  <span lang="ko" class="toc-term font-display">
-                    {item.term}
-                  </span>
-                )}
-                {t(k(item.key, 'title'))}
-              </span>
-              <span class="toc-text">{t(k(item.key, 'body'))}</span>
-            </span>
-            <span class="toc-arrow" aria-hidden="true">→</span>
-          </a>
-        </li>
-      ))
-    }
+            <span class="toc-text">{t(k(item.key, 'body'))}</span>
+          </span>
+          <span class="toc-arrow" aria-hidden="true">
+            →
+          </span>
+        </a>
+      </li>
+    ))}
   </ol>
 </section>
 ```
@@ -2460,55 +2529,55 @@ const k = (item: string, part: 'title' | 'body') => `home.contents.${item}.${par
 Styles:
 
 ```css
-  /* 목차: numbered contents with leader lines, no boxes. */
-  .toc {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-top: 1px solid var(--color-border);
-  }
-  .toc-link {
-    display: grid;
-    grid-template-columns: 3rem 1fr auto;
-    gap: 1rem;
-    align-items: baseline;
-    min-height: 44px;
-    padding-block: 1.1rem;
-    border-bottom: 1px solid var(--color-border);
-    color: inherit;
-    text-decoration: none;
-  }
-  .toc-number {
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-    color: var(--color-teal-strong);
-  }
-  .toc-body {
-    display: grid;
-    gap: 0.25rem;
-  }
-  .toc-title {
-    font-size: var(--text-lg);
-    font-weight: 600;
-  }
-  .toc-term {
-    margin-right: 0.6rem;
-    color: var(--color-brand-strong);
-  }
-  .toc-text {
-    color: var(--color-muted);
-  }
-  .toc-arrow {
-    color: var(--color-muted);
-    transition: transform 0.2s ease;
-  }
-  .toc-link:hover .toc-title {
-    color: var(--color-brand-strong);
-  }
-  .toc-link:hover .toc-arrow {
-    transform: translateX(4px);
-    color: var(--color-brand-strong);
-  }
+/* 목차: numbered contents with leader lines, no boxes. */
+.toc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+.toc-link {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto;
+  gap: 1rem;
+  align-items: baseline;
+  min-height: 44px;
+  padding-block: 1.1rem;
+  border-bottom: 1px solid var(--color-border);
+  color: inherit;
+  text-decoration: none;
+}
+.toc-number {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--color-teal-strong);
+}
+.toc-body {
+  display: grid;
+  gap: 0.25rem;
+}
+.toc-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+.toc-term {
+  margin-right: 0.6rem;
+  color: var(--color-brand-strong);
+}
+.toc-text {
+  color: var(--color-muted);
+}
+.toc-arrow {
+  color: var(--color-muted);
+  transition: transform 0.2s ease;
+}
+.toc-link:hover .toc-title {
+  color: var(--color-brand-strong);
+}
+.toc-link:hover .toc-arrow {
+  transform: translateX(4px);
+  color: var(--color-brand-strong);
+}
 ```
 
 Add `.toc-arrow` to the existing reduced-motion block (`transition: none`).
@@ -2552,91 +2621,93 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
 });
 ---
 
-{
-  lessons.length > 0 && (
-    <section class="container-page home-section" data-home-block="new-lessons" aria-labelledby="new-lessons-title">
-      <div class="home-section-head">
-        <h2 id="new-lessons-title" class="home-section-title">
-          {t('home.newLessons.title')}
-        </h2>
-        <a class="link" href={localizePath(lang, 'learn')}>
-          {t('home.newLessons.all')}
-        </a>
-      </div>
-      <ul class="lesson-row">
-        {lessons.map((l) => (
-          <li>
-            <a class="lesson-tile" href={localizePath(lang, `lessons/${l.id}`)}>
-              <Image
-                src={youtubeThumbnail(l.youtube!)}
-                alt=""
-                width={480}
-                height={270}
-                fit="cover"
-                class="lesson-thumb"
-              />
-              <span class="lesson-meta">
-                {l.seriesEntry?.data.title}
-                {l.seriesEntry && ' · '}
-                <time datetime={l.date.toISOString().slice(0, 10)}>{dateFormat.format(l.date)}</time>
-              </span>
-              <span class="lesson-title">{l.title}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-}
+{lessons.length > 0 && (
+  <section
+    class="container-page home-section"
+    data-home-block="new-lessons"
+    aria-labelledby="new-lessons-title"
+  >
+    <div class="home-section-head">
+      <h2 id="new-lessons-title" class="home-section-title">
+        {t('home.newLessons.title')}
+      </h2>
+      <a class="link" href={localizePath(lang, 'learn')}>
+        {t('home.newLessons.all')}
+      </a>
+    </div>
+    <ul class="lesson-row">
+      {lessons.map((l) => (
+        <li>
+          <a class="lesson-tile" href={localizePath(lang, `lessons/${l.id}`)}>
+            <Image
+              src={youtubeThumbnail(l.youtube!)}
+              alt=""
+              width={480}
+              height={270}
+              fit="cover"
+              class="lesson-thumb"
+            />
+            <span class="lesson-meta">
+              {l.seriesEntry?.data.title}
+              {l.seriesEntry && ' · '}
+              <time datetime={l.date.toISOString().slice(0, 10)}>{dateFormat.format(l.date)}</time>
+            </span>
+            <span class="lesson-title">{l.title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
 ```
 
 Styles:
 
 ```css
-  .home-section-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem 1rem;
-  }
+.home-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+.lesson-row {
+  display: grid;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 40rem) {
   .lesson-row {
-    display: grid;
-    gap: 1.5rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    grid-template-columns: repeat(3, 1fr);
   }
-  @media (min-width: 40rem) {
-    .lesson-row {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  .lesson-tile {
-    display: grid;
-    gap: 0.6rem;
-    color: inherit;
-    text-decoration: none;
-  }
-  .lesson-thumb {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    border-radius: 12px;
-    background: var(--color-surface);
-  }
-  .lesson-meta {
-    font-size: var(--text-xs);
-    color: var(--color-muted);
-  }
-  .lesson-title {
-    font-weight: 600;
-    line-height: 1.35;
-  }
-  .lesson-tile:hover .lesson-title {
-    color: var(--color-brand-strong);
-  }
+}
+.lesson-tile {
+  display: grid;
+  gap: 0.6rem;
+  color: inherit;
+  text-decoration: none;
+}
+.lesson-thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+.lesson-meta {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+.lesson-title {
+  font-weight: 600;
+  line-height: 1.35;
+}
+.lesson-tile:hover .lesson-title {
+  color: var(--color-brand-strong);
+}
 ```
 
 - [ ] **Step 6: Lesson placeholder route**
@@ -2667,19 +2738,19 @@ const t = useTranslations(lang);
     {lesson.summary && <p class="mt-4 max-w-2xl text-lg text-muted">{lesson.summary}</p>}
     <p class="mt-6 text-muted">{t('lesson.comingSoon')}</p>
     <div class="about-actions">
-      {
-        lesson.youtube && (
-          <a
-            class="btn btn-primary"
-            href={`https://www.youtube.com/watch?v=${lesson.youtube}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('lesson.watchOnYouTube')}
-          </a>
-        )
-      }
-      <a class="btn btn-ghost" href={localizePath(lang, '')}>{t('placeholder.backHome')}</a>
+      {lesson.youtube && (
+        <a
+          class="btn btn-primary"
+          href={`https://www.youtube.com/watch?v=${lesson.youtube}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('lesson.watchOnYouTube')}
+        </a>
+      )}
+      <a class="btn btn-ghost" href={localizePath(lang, '')}>
+        {t('placeholder.backHome')}
+      </a>
     </div>
   </section>
 </BaseLayout>
@@ -2694,7 +2765,10 @@ import { getLessons } from '@/content/queries';
 import LessonPlaceholderView from '@/views/LessonPlaceholderView.astro';
 
 export const getStaticPaths = (async () =>
-  (await getLessons()).map((lesson) => ({ params: { id: lesson.id }, props: { lesson } }))) satisfies GetStaticPaths;
+  (await getLessons()).map((lesson) => ({
+    params: { id: lesson.id },
+    props: { lesson },
+  }))) satisfies GetStaticPaths;
 
 const { lesson } = Astro.props;
 ---
@@ -2709,8 +2783,8 @@ const { lesson } = Astro.props;
 After `<ClassesTable lang={lang} />` add:
 
 ```astro
-  <SiteContents lang={lang} />
-  <NewLessons lang={lang} />
+<SiteContents lang={lang} />
+<NewLessons lang={lang} />
 ```
 
 with the matching imports.
@@ -2735,6 +2809,7 @@ git commit -m "Home: site contents as a 목차, new lessons with local thumbnail
 ### Task 8: `npm run check:links` and project notes
 
 **Files:**
+
 - Create: `scripts/check-links.mjs`
 - Modify: `package.json` (script), `CLAUDE.md`
 
@@ -2761,7 +2836,9 @@ walk(root.pathname.replace(/^\/(\w:)/, '$1'));
 
 const links = new Map();
 for (const file of files) {
-  for (const [, url] of readFileSync(file, 'utf8').matchAll(/(?:url|photo):\s*['"]?(https:\/\/[^\s'"]+)/g)) {
+  for (const [, url] of readFileSync(file, 'utf8').matchAll(
+    /(?:url|photo):\s*['"]?(https:\/\/[^\s'"]+)/g,
+  )) {
     if (/\.example(\/|$)/.test(new URL(url).hostname + '/')) continue;
     links.set(url, file);
   }

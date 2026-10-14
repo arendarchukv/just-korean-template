@@ -52,18 +52,18 @@ required). Hint: "Upload the file to R2 in the Cloudflare dashboard, then paste 
 
 ### lessons (`.md`)
 
-| field | type | notes |
-|---|---|---|
-| title | string, required | her wording, as on YouTube |
-| youtube | string, optional | full YouTube link or 11-char ID; schema normalises to the ID |
-| series | reference → series, optional | |
-| episode | number, optional | position in an ordered series |
-| date | date, required | sorts "new lessons" |
-| level | select: beginner / intermediate / advanced | |
-| grammar | reference → grammar, multiple, optional | patterns the lesson covers |
-| summary | text, optional | one or two sentences for cards and meta description |
-| downloads | list of download, optional | files for this lesson |
-| body | Markdown | explanation or transcript |
+| field     | type                                       | notes                                                        |
+| --------- | ------------------------------------------ | ------------------------------------------------------------ |
+| title     | string, required                           | her wording, as on YouTube                                   |
+| youtube   | string, optional                           | full YouTube link or 11-char ID; schema normalises to the ID |
+| series    | reference → series, optional               |                                                              |
+| episode   | number, optional                           | position in an ordered series                                |
+| date      | date, required                             | sorts "new lessons"                                          |
+| level     | select: beginner / intermediate / advanced |                                                              |
+| grammar   | reference → grammar, multiple, optional    | patterns the lesson covers                                   |
+| summary   | text, optional                             | one or two sentences for cards and meta description          |
+| downloads | list of download, optional                 | files for this lesson                                        |
+| body      | Markdown                                   | explanation or transcript                                    |
 
 ### series (`.yml`)
 
@@ -197,8 +197,8 @@ Test first, as in earlier work:
 ## Out of scope (later cycles, each with its own spec)
 
 1. Lesson page and series library. 2. Grammar reference. 3. Materials page. 4. Flashcards.
-5. Quizzes with Tally results. 6. Dictionary search and pronunciation. 7. Korean news reading
-(RSS). Also: daily rebuild on the host, an R2 upload page, content translations.
+2. Quizzes with Tally results. 6. Dictionary search and pronunciation. 7. Korean news reading
+   (RSS). Also: daily rebuild on the host, an R2 upload page, content translations.
 
 ## Open, needs the owner
 

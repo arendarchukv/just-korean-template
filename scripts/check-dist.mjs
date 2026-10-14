@@ -172,6 +172,45 @@ for (const page of ['index.html', 'ko/index.html']) {
   }
 }
 
+// --- Home blocks appear in order ---
+const HOME_BLOCKS = ['notices', 'about', 'classes', 'contents', 'new-lessons'];
+for (const page of ['index.html', 'ko/index.html']) {
+  const found = [...read(page).matchAll(/data-home-block="([\w-]+)"/g)].map((m) => m[1]);
+  const expected = HOME_BLOCKS.filter((b) => found.includes(b));
+  if (found.join() !== expected.join()) {
+    problems.push(`${page}: home blocks out of order: ${found.join(', ')}`);
+  }
+  for (const block of ['notices', 'about', 'classes']) {
+    if (!found.includes(block)) problems.push(`${page}: home block "${block}" missing`);
+  }
+}
+
+// --- About: one h1 containing the Korean serif title; booking button is inert while unset ---
+for (const page of ['index.html', 'ko/index.html']) {
+  const html = read(page);
+  const h1s = [...html.matchAll(/<h1[\s\S]*?<\/h1>/g)].map((m) => m[0]);
+  if (h1s.length !== 1) problems.push(`${page}: ${h1s.length} h1 elements`);
+  if (!/lang="ko"[^>]*class="[^"]*font-display/.test(h1s[0] ?? '')) {
+    problems.push(`${page}: h1 lacks the Korean display title`);
+  }
+  const book = /<a[^>]*data-book-class[^>]*>/.exec(html)?.[0] ?? '';
+  if (!book) problems.push(`${page}: no Book a class button`);
+  else if (/href="#"/.test(book) && !/aria-disabled="true"/.test(book)) {
+    problems.push(`${page}: empty TidyCal link is not marked disabled`);
+  }
+}
+
+// --- Classes: a real table with headers, rows from settings/classes.yml ---
+{
+  const table =
+    /<section[^>]*data-home-block="classes"[\s\S]*?<\/section>/.exec(read('index.html'))?.[0] ?? '';
+  if ((table.match(/<th scope="col"/g) ?? []).length < 3) {
+    problems.push('classes table lacks column headers');
+  }
+  if (!table.includes('1:1 private class'))
+    problems.push('classes table does not read classes.yml');
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

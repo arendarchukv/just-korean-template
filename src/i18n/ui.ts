@@ -37,6 +37,15 @@ const en = {
   'footer.kofi': 'Support on Ko-fi',
   'footer.rights': 'All rights reserved.',
 
+  'home.bookClass': 'Book a class',
+  'home.watchLessons': 'Watch lessons',
+  'home.credentials': 'About the teacher',
+  'home.classes.title': 'Classes',
+  'home.classes.format': 'Format',
+  'home.classes.forWhom': 'For whom',
+  'home.classes.how': 'How it works',
+  'home.classes.more': 'Classes, prices and FAQ',
+
   'notice.label': 'Notices',
   'notice.details': 'Details',
   'notice.dismiss': 'Dismiss notice',
@@ -87,6 +96,15 @@ const ko: Partial<Record<UIKey, string>> = {
   'footer.instagram': '인스타그램',
   'footer.contact': '문의',
   'footer.kofi': 'Ko-fi로 후원하기',
+
+  'home.bookClass': '수업 예약',
+  'home.watchLessons': '강의 보기',
+  'home.credentials': '선생님 소개',
+  'home.classes.title': '수업',
+  'home.classes.format': '수업 형태',
+  'home.classes.forWhom': '대상',
+  'home.classes.how': '진행 방식',
+  'home.classes.more': '수업 안내와 자주 묻는 질문',
 
   'notice.label': '공지',
   'notice.details': '자세히',

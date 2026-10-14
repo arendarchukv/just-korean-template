@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import Collage from '@/components/shapes/Collage.astro';
+import { SITE } from '@/config';
+import { getHome, getSite } from '@/content/queries';
+import type { Lang } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+/** Who she is and what she does: Korean serif title, two sentences, credentials, two actions. */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = await getHome();
+const booking = (await getSite()).tidycal;
+---
+
+<section class="container-page about-hero" data-home-block="about" aria-labelledby="about-title">
+  <div>
+    <h1 id="about-title">
+      <span lang="ko" class="font-display about-title-ko">
+        {SITE.nameKo}
+      </span>
+      <span class="about-greeting">{home.greeting}</span>
+    </h1>
+    <p class="about-intro">{home.intro}</p>
+    <div class="home-actions">
+      <a
+        class="btn btn-primary"
+        data-book-class
+        href={booking || '#'}
+        aria-disabled={booking ? undefined : 'true'}
+        target={booking ? '_blank' : undefined}
+        rel={booking ? 'noopener noreferrer' : undefined}
+      >
+        {t('home.bookClass')}
+      </a>
+      <a class="btn btn-ghost" href={localizePath(lang, 'learn')}>
+        {t('home.watchLessons')}
+      </a>
+    </div>
+  </div>
+
+  <div class="about-side">
+    {home.photo ? (
+      <Image
+        src={home.photo}
+        alt={home.photoAlt ?? ''}
+        width={560}
+        height={640}
+        class="about-photo"
+        loading="eager"
+      />
+    ) : (
+      <Collage variant="hero" />
+    )}
+    {home.credentials.length > 0 && (
+      <div class="about-credentials grid-paper">
+        <h2 class="sr-only">{t('home.credentials')}</h2>
+        <ul>
+          {home.credentials.map((c) => (
+            <li>{c}</li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</section>

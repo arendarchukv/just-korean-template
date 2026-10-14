@@ -20,12 +20,30 @@
     padding-block: 0.25rem;
     list-style: none;
   }
+  /* Dates and text stack on phones; the dismiss button always stays on the right. */
   .notice-strip li {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    gap: 0.25rem 1rem;
+    column-gap: 1rem;
     padding-block: 0.375rem;
+  }
+  .notice-strip li .icon-btn {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  @media (min-width: 48rem) {
+    .notice-strip li {
+      grid-template-columns: auto 1fr auto;
+    }
+    .notice-strip li p {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .notice-strip li .icon-btn {
+      grid-column: 3;
+      grid-row: 1;
+    }
   }
   .notice-strip li + li {
     border-top: 1px dashed var(--color-border);
@@ -35,7 +53,6 @@
     display: none;
   }
   .notice-strip p {
-    flex: 1 1 18rem;
     margin: 0;
     font-size: var(--text-sm);
   }
@@ -49,5 +66,157 @@
   }
   .notice-strip li[data-tone='important'] .notice-dates {
     color: var(--color-brand-strong);
+  }
+
+  .home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  .home-section {
+    padding-block: 3rem;
+  }
+  .home-section-title {
+    margin: 0 0 1.5rem;
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
+    font-weight: 700;
+  }
+
+  /* About: asymmetric, text first on small screens. */
+  .about-hero {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+    padding-block: 3rem 2.5rem;
+  }
+  @media (min-width: 48rem) {
+    .about-hero {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 4rem;
+      padding-block: 4.5rem 3.5rem;
+    }
+  }
+  .about-hero h1 {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+  }
+  .about-title-ko {
+    font-size: clamp(3.25rem, 10vw, 6rem);
+    line-height: 1;
+  }
+  .about-greeting {
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+    font-weight: 600;
+    color: var(--color-brand-strong);
+  }
+  .about-intro {
+    margin: 1.25rem 0 0;
+    max-width: 40ch;
+    font-size: var(--text-lg);
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+  .about-side {
+    display: grid;
+    gap: 1.25rem;
+  }
+  /* Photo cut out by an organic shape, not a rounded box. */
+  .about-photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 7 / 8;
+    object-fit: cover;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M9 13 C22 2 52 1 74 6 C93 11 99 30 97 55 C95 80 83 96 57 98 C31 100 8 92 3 66 C-1 42 0 21 9 13 Z'/%3E%3C/svg%3E")
+      center / 100% 100% no-repeat;
+  }
+  .about-credentials {
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 1rem 1.25rem;
+  }
+  .about-credentials ul {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-sm);
+  }
+  .about-credentials li::before {
+    content: '— ';
+    color: var(--color-teal-strong);
+  }
+
+  /* Timetable: ruled lines, no boxes, like a printed class schedule. */
+  .timetable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .timetable th,
+  .timetable td {
+    padding: 1rem 1.25rem 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: top;
+    min-width: 10em;
+  }
+  .timetable thead th {
+    padding-block: 0.5rem;
+    border-bottom: 2px solid var(--color-text);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .timetable tbody th {
+    font-weight: 600;
+  }
+  .timetable td {
+    color: var(--color-muted);
+  }
+  /* Phones: each format becomes a short block with its own labels instead of a sideways scroll. */
+  @media (max-width: 39.99rem) {
+    .timetable thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .timetable,
+    .timetable tbody,
+    .timetable tr,
+    .timetable th,
+    .timetable td {
+      display: block;
+    }
+    .timetable tr {
+      padding-block: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .timetable tbody tr:first-child {
+      border-top: 2px solid var(--color-text);
+    }
+    .timetable th,
+    .timetable td {
+      min-width: 0;
+      padding: 0.2rem 0;
+      border: 0;
+    }
+    .timetable td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
   }
 }

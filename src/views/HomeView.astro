@@ -1,6 +1,8 @@
 ---
 /** Home page, shared by `/` and `/ko/`. Content comes from src/content; copy from i18n. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import AboutHero from '@/components/home/AboutHero.astro';
+import ClassesTable from '@/components/home/ClassesTable.astro';
 import NoticeStrip from '@/components/home/NoticeStrip.astro';
 import { validateReferences } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
@@ -16,4 +18,6 @@ await validateReferences();
 
 <BaseLayout>
   <NoticeStrip lang={lang} slot="before-main" />
+  <AboutHero lang={lang} />
+  <ClassesTable lang={lang} />
 </BaseLayout>

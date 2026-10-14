@@ -3,7 +3,7 @@
    * Quiz: one question at a time (choice or fill in the gap), feedback with the explanation,
    * a score at the end. Keeps only the best score in this browser (jk:quiz:<id>). Stands alone.
    */
-  import { onMount } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import { isFillCorrect, quizKey, readStore, writeStore } from '@/lib/widgets';
 
   type Question =
@@ -50,8 +50,12 @@
   // Read in the browser after mount, so the server render and hydration match.
   let best = $state<number | null>(null);
   onMount(() => {
-    best = readStore<number | null>(key, null);
+    const stored = readStore<unknown>(key, null);
+    best = Number.isInteger(stored) ? (stored as number) : null;
   });
+
+  let questionBox = $state<HTMLElement>();
+  let nextButton = $state<HTMLButtonElement>();
 
   const question = $derived(questions[index]);
   const last = $derived(index === questions.length - 1);
@@ -61,13 +65,27 @@
     chosen = i;
     checked = question.options[i].correct;
     if (checked) score += 1;
+    focusNextButton();
+  }
+
+  /** After an answer the options lock: move focus to "Next" so it is not lost. */
+  async function focusNextButton() {
+    await tick();
+    nextButton?.focus();
+  }
+
+  /** On a new question, focus its first option or the answer field. */
+  async function focusQuestion() {
+    await tick();
+    questionBox?.querySelector<HTMLElement>('.quiz-option, input')?.focus();
   }
 
   function checkTyped(event: SubmitEvent) {
     event.preventDefault();
-    if (checked !== null || question.type !== 'fill') return;
+    if (checked !== null || question.type !== 'fill' || !typed.trim()) return;
     checked = isFillCorrect(typed, question.answer, question.alternatives);
     if (checked) score += 1;
+    focusNextButton();
   }
 
   function next() {
@@ -83,6 +101,7 @@
     chosen = null;
     typed = '';
     checked = null;
+    focusQuestion();
   }
 
   function restart() {
@@ -92,6 +111,7 @@
     typed = '';
     checked = null;
     finished = false;
+    focusQuestion();
   }
 
   const stateOf = (i: number) => {
@@ -107,83 +127,88 @@
   {/if}
 
   {#if !finished && question}
-    <p class="widget-progress">
-      <span>{fill(labels.position, { n: index + 1, total: questions.length })}</span>
-    </p>
+    <div bind:this={questionBox} class="quiz-question">
+      <p class="widget-progress">
+        <span>{fill(labels.position, { n: index + 1, total: questions.length })}</span>
+      </p>
 
-    {#if question.type === 'choice'}
-      <p class="quiz-prompt" lang="ko">{question.prompt}</p>
-      <div class="quiz-options">
-        {#each question.options as option, i (i)}
-          {@const state = stateOf(i)}
-          <button
-            type="button"
-            class="quiz-option"
-            data-state={state}
-            disabled={checked !== null}
-            onclick={() => choose(i)}
-          >
-            <span lang="ko">{option.text}</span>
-            <span class="quiz-icon" aria-hidden="true">
-              {#if state === 'correct'}
-                <svg
-                  viewBox="0 0 20 20"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"><path d="M4 10.5l4 4 8-9" /></svg
-                >
-              {:else if state === 'wrong'}
-                <svg
-                  viewBox="0 0 20 20"
-                  width="20"
-                  height="20"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15" /></svg
-                >
-              {/if}
-            </span>
-            {#if state === 'correct'}<span class="sr-only">({labels.correct})</span>{/if}
-            {#if state === 'wrong'}<span class="sr-only">({labels.wrong})</span>{/if}
-          </button>
-        {/each}
-      </div>
-    {:else}
-      <p class="quiz-prompt" lang="ko">{question.sentence}</p>
-      <form class="quiz-fill" onsubmit={checkTyped}>
-        <label for={`${quizId}-answer`}>{labels.yourAnswer}</label>
-        <div class="quiz-fill-row">
-          <input
-            id={`${quizId}-answer`}
-            class="field"
-            lang="ko"
-            autocomplete="off"
-            bind:value={typed}
-            disabled={checked !== null}
-            required
-          />
-          <button type="submit" class="btn btn-primary" disabled={checked !== null}>
-            {labels.check}
-          </button>
+      {#if question.type === 'choice'}
+        <p class="quiz-prompt" lang="ko">{question.prompt}</p>
+        <div class="quiz-options">
+          {#each question.options as option, i (`${index}-${i}`)}
+            {@const state = stateOf(i)}
+            <button
+              type="button"
+              class="quiz-option"
+              data-state={state}
+              disabled={checked !== null}
+              onclick={() => choose(i)}
+            >
+              <span lang="ko">{option.text}</span>
+              <span class="quiz-icon" aria-hidden="true">
+                {#if state === 'correct'}
+                  <svg
+                    viewBox="0 0 20 20"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"><path d="M4 10.5l4 4 8-9" /></svg
+                  >
+                {:else if state === 'wrong'}
+                  <svg
+                    viewBox="0 0 20 20"
+                    width="20"
+                    height="20"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15" /></svg
+                  >
+                {/if}
+              </span>
+              {#if state === 'correct'}<span class="sr-only">({labels.correct})</span>{/if}
+              {#if state === 'wrong'}<span class="sr-only">({labels.wrong})</span>{/if}
+            </button>
+          {/each}
         </div>
-      </form>
-    {/if}
-
+      {:else}
+        <p class="quiz-prompt" lang="ko">{question.sentence}</p>
+        <form class="quiz-fill" onsubmit={checkTyped}>
+          <label for={`${quizId}-answer`}>{labels.yourAnswer}</label>
+          <div class="quiz-fill-row">
+            <input
+              id={`${quizId}-answer`}
+              class="field"
+              lang="ko"
+              autocomplete="off"
+              bind:value={typed}
+              disabled={checked !== null}
+            />
+            <button type="submit" class="btn btn-primary" disabled={checked !== null}>
+              {labels.check}
+            </button>
+          </div>
+        </form>
+      {/if}
+    </div>
+    <!-- Always in the DOM, so the verdict and explanation are read out when they appear. -->
+    <div aria-live="polite">
+      {#if checked !== null}
+        <div class="quiz-feedback" data-correct={checked}>
+          <p class="quiz-verdict">{checked ? labels.correct : labels.wrong}</p>
+          {#if !checked && question.type === 'fill'}
+            <p>{labels.expected} <span lang="ko">{question.answer}</span></p>
+          {/if}
+          {#if question.explanation}<p class="quiz-explanation">{question.explanation}</p>{/if}
+        </div>
+      {/if}
+    </div>
     {#if checked !== null}
-      <div class="quiz-feedback" data-correct={checked}>
-        <p class="quiz-verdict">{checked ? labels.correct : labels.wrong}</p>
-        {#if !checked && question.type === 'fill'}
-          <p>{labels.expected} <span lang="ko">{question.answer}</span></p>
-        {/if}
-        {#if question.explanation}<p class="quiz-explanation">{question.explanation}</p>{/if}
-      </div>
       <div class="widget-actions">
-        <button type="button" class="btn btn-primary" onclick={next}>
+        <button bind:this={nextButton} type="button" class="btn btn-primary" onclick={next}>
           {last ? labels.seeResult : labels.next}
         </button>
       </div>

@@ -23,9 +23,12 @@ const href = (id: string) => localizePath(lang, `lessons/${id}`);
     <p class="page-lead">{t('lessons.lead')}</p>
   </div>
   {groups.map((g, i) => (
-    <section class="container-page page-section" aria-labelledby={`series-${i}`}>
+    <section
+      class="container-page page-section"
+      aria-labelledby={`series-${g.series?.id ?? 'other'}`}
+    >
       <div class="page-section-head">
-        <h2 id={`series-${i}`} class="page-section-title">
+        <h2 id={`series-${g.series?.id ?? 'other'}`} class="page-section-title">
           {g.series?.title ?? t('lessons.other')}
         </h2>
         {g.series?.youtubePlaylist && (

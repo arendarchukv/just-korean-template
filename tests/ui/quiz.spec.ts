@@ -49,3 +49,26 @@ test('"Try again" starts from the first question', async ({ page }) => {
   await page.getByRole('button', { name: 'Try again' }).click();
   await expect(page.getByRole('button', { name: '려고' })).toBeEnabled();
 });
+
+test('focus moves to Next after answering, then to the next question, and feedback is announced', async ({
+  page,
+}) => {
+  await open(page);
+  await page.getByRole('button', { name: '도록' }).click();
+  await expect(page.locator('[aria-live="polite"]').first()).toContainText('Correct');
+  await expect(page.getByRole('button', { name: 'Next' })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('textbox', { name: /answer/i })).toBeFocused();
+});
+
+test('an empty answer is ignored, and a broken stored best score is not shown', async ({
+  page,
+}) => {
+  await page.addInitScript(() => localStorage.setItem('jk:quiz:ge-vs-dorok', '"abc"'));
+  await open(page);
+  await expect(page.getByText(/best score/i)).toHaveCount(0);
+  await page.getByRole('button', { name: '도록' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByRole('button', { name: 'Check' }).click();
+  await expect(page.getByText(/^(Correct|Not quite)$/)).toHaveCount(0);
+});

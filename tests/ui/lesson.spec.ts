@@ -46,3 +46,16 @@ test('the play button shows a focus ring that is not clipped by the frame', asyn
   });
   expect(clipped).toBe(false);
 });
+
+test('Ctrl+click on play opens YouTube normally instead of the embedded player', async ({
+  page,
+}) => {
+  await page.goto('/lessons/ge-vs-dorok/');
+  const link = page.getByRole('link', { name: /play video/i });
+  const swapped = await link.evaluate((el) => {
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true, ctrlKey: true });
+    el.dispatchEvent(event);
+    return document.querySelector('[data-video-facade] iframe') !== null;
+  });
+  expect(swapped).toBe(false);
+});

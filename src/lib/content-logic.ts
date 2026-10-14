@@ -21,8 +21,16 @@ export function toDay(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
+/**
+ * Calendar day of a date written in content (YAML `2026-12-18` = UTC midnight), the same in any
+ * time zone of the build machine. `toDay` is for "today" on the visitor's or builder's clock.
+ */
+export function contentDay(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
 export function isNoticeActive(n: { from: Date; to: Date }, today: string): boolean {
-  return toDay(n.from) <= today && today <= toDay(n.to);
+  return contentDay(n.from) <= today && today <= contentDay(n.to);
 }
 
 export type NoticeTone = 'important' | 'news' | 'info';

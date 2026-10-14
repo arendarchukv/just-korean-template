@@ -91,7 +91,7 @@ const en = {
   'classes.lead':
     'Live online classes with JiEun: one to one, in a small group, or in a group by level.',
   'widget.fromLesson': 'From the lesson',
-  'deck.flipHint': 'Tap to see the meaning',
+  'deck.flipHint': 'Show the meaning',
   'deck.meaning': 'Meaning',
   'deck.know': 'I know it',
   'deck.again': 'Again',
@@ -140,6 +140,7 @@ const en = {
   'practice.pronunciationBody':
     'Practise the sounds of Korean with the King Sejong Institute, then watch the pronunciation lessons.',
   'practice.pronunciationLink': 'Open pronunciation practice',
+  'practice.pronunciationLessons': 'Pronunciation lessons',
 
   'news.lead':
     'Fresh Korean news to practise reading: a few lines from each article, then the full story on OhmyNews.',
@@ -289,7 +290,7 @@ const ko: Partial<Record<UIKey, string>> = {
 
   'classes.lead': '지은 선생님과 함께하는 온라인 수업: 1:1, 소그룹, 레벨별 그룹 수업이 있어요.',
   'widget.fromLesson': '관련 강의',
-  'deck.flipHint': '눌러서 뜻 보기',
+  'deck.flipHint': '뜻 보기',
   'deck.meaning': '뜻',
   'deck.know': '알아요',
   'deck.again': '다시',
@@ -336,6 +337,7 @@ const ko: Partial<Record<UIKey, string>> = {
   'practice.pronunciationBody':
     '세종학당 발음 연습으로 한국어 소리를 연습하고, 발음 강의도 봐 보세요.',
   'practice.pronunciationLink': '발음 연습 열기',
+  'practice.pronunciationLessons': '발음 강의',
 
   'news.lead':
     '읽기 연습을 위한 최신 한국어 뉴스예요. 기사 앞부분을 읽고 오마이뉴스에서 전체 기사를 보세요.',

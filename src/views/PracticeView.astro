@@ -1,7 +1,7 @@
 ---
-/** Practice: decks and quizzes (interactive versions later), krdict search, pronunciation link. */
+/** Practice: links to deck and quiz pages, krdict search, pronunciation practice and lessons. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getDecks, getQuizzes } from '@/content/queries';
+import { getDecks, getQuizzes, getSeries } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 import { KRDICT } from '@/lib/site-logic';
@@ -13,6 +13,8 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const decks = await getDecks();
 const quizzes = await getQuizzes();
+// The pronunciation lessons, once a series with the id "pronunciation" exists in the CMS.
+const pronunciation = (await getSeries()).find((s) => s.id === 'pronunciation');
 const level = (l: string) => t(`grammar.level.${l}` as UIKey);
 ---
 
@@ -23,57 +25,61 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
   </div>
 
   <div class="container-page practice-grid">
-    <section class="practice-block" aria-labelledby="decks-title">
-      <h2 id="decks-title" class="page-section-title">
-        {t('practice.decks')}
-      </h2>
-      <ul class="file-list">
-        {decks.map((d) => (
-          <li id={`deck-${d.id}`} class="practice-item">
-            <a
-              class="material-title practice-link"
-              href={localizePath(lang, `practice/deck/${d.id}`)}
-            >
-              {d.title}
-            </a>
-            <span class="material-meta">
-              {level(d.level)} · {d.cards.length} {t('lesson.cards')}
-              {d.lessonEntry && (
-                <a class="link" href={localizePath(lang, `lessons/${d.lessonEntry.id}`)}>
-                  {d.lessonEntry.title}
-                </a>
-              )}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    {decks.length > 0 && (
+      <section class="practice-block" aria-labelledby="decks-title">
+        <h2 id="decks-title" class="page-section-title">
+          {t('practice.decks')}
+        </h2>
+        <ul class="file-list">
+          {decks.map((d) => (
+            <li id={`deck-${d.id}`} class="practice-item">
+              <a
+                class="material-title practice-link"
+                href={localizePath(lang, `practice/deck/${d.id}`)}
+              >
+                {d.title}
+              </a>
+              <span class="material-meta">
+                {level(d.level)} · {d.cards.length} {t('lesson.cards')}
+                {d.lessonEntry && (
+                  <a class="link" href={localizePath(lang, `lessons/${d.lessonEntry.id}`)}>
+                    {d.lessonEntry.title}
+                  </a>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
 
-    <section class="practice-block" aria-labelledby="quizzes-title">
-      <h2 id="quizzes-title" class="page-section-title">
-        {t('practice.quizzes')}
-      </h2>
-      <ul class="file-list">
-        {quizzes.map((q) => (
-          <li id={`quiz-${q.id}`} class="practice-item">
-            <a
-              class="material-title practice-link"
-              href={localizePath(lang, `practice/quiz/${q.id}`)}
-            >
-              {q.title}
-            </a>
-            <span class="material-meta">
-              {level(q.level)} · {q.questions.length} {t('lesson.questions')}
-              {q.lessonEntry && (
-                <a class="link" href={localizePath(lang, `lessons/${q.lessonEntry.id}`)}>
-                  {q.lessonEntry.title}
-                </a>
-              )}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    {quizzes.length > 0 && (
+      <section class="practice-block" aria-labelledby="quizzes-title">
+        <h2 id="quizzes-title" class="page-section-title">
+          {t('practice.quizzes')}
+        </h2>
+        <ul class="file-list">
+          {quizzes.map((q) => (
+            <li id={`quiz-${q.id}`} class="practice-item">
+              <a
+                class="material-title practice-link"
+                href={localizePath(lang, `practice/quiz/${q.id}`)}
+              >
+                {q.title}
+              </a>
+              <span class="material-meta">
+                {level(q.level)} · {q.questions.length} {t('lesson.questions')}
+                {q.lessonEntry && (
+                  <a class="link" href={localizePath(lang, `lessons/${q.lessonEntry.id}`)}>
+                    {q.lessonEntry.title}
+                  </a>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
   </div>
 
   <div class="container-page practice-grid">
@@ -116,6 +122,11 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
       >
         {t('practice.pronunciationLink')}
       </a>
+      {pronunciation && (
+        <a class="btn btn-link" href={`${localizePath(lang, 'lessons')}#series-pronunciation`}>
+          {t('practice.pronunciationLessons')}
+        </a>
+      )}
     </section>
   </div>
 </BaseLayout>

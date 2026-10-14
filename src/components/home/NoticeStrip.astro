@@ -1,6 +1,6 @@
 ---
 import { getNotices } from '@/content/queries';
-import { isNoticeActive, sortNotices, toDay } from '@/lib/content-logic';
+import { contentDay, isNoticeActive, sortNotices, toDay } from '@/lib/content-logic';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -25,10 +25,14 @@ const MAX = 3;
 const formatter = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
   day: 'numeric',
   month: 'short',
+  // Content dates are calendar days (UTC midnight from YAML): format them as such.
+  timeZone: 'UTC',
 });
 const href = (link: string) =>
   link.startsWith('http') ? link : localizePath(lang, link.replace(/^\/|\/$/g, ''));
 let shown = 0;
+// Without JS, a strip whose notices all start later would be an empty band: hide it.
+const anyActiveAtBuild = notices.some((n) => isNoticeActive(n, buildDay));
 ---
 
 {notices.length > 0 && (
@@ -37,6 +41,7 @@ let shown = 0;
     aria-label={t('notice.label')}
     data-home-block="notices"
     data-print="hide"
+    hidden={!anyActiveAtBuild}
   >
     <ul data-notice-list>
       {notices.map((n) => {
@@ -44,8 +49,8 @@ let shown = 0;
         return (
           <li
             data-notice={n.id}
-            data-from={toDay(n.from)}
-            data-to={toDay(n.to)}
+            data-from={contentDay(n.from)}
+            data-to={contentDay(n.to)}
             data-tone={n.tone}
             data-pinned={n.pinned ? '' : undefined}
             hidden={!visible}
@@ -110,7 +115,9 @@ let shown = 0;
       for (const li of list.querySelectorAll('[data-notice]')) {
         const active = li.dataset.from <= today && today <= li.dataset.to;
         // A pinned notice ignores an old dismissal (it may have been unpinned before).
-        const closed = !('pinned' in li.dataset) && dismissed.includes(li.dataset.notice);
+        const closed =
+          !('pinned' in li.dataset) &&
+          dismissed.includes(li.dataset.notice + '@' + li.dataset.from);
         const show = active && !closed && shown < MAX;
         li.hidden = !show;
         if (show) shown += 1;
@@ -120,7 +127,9 @@ let shown = 0;
     list.addEventListener('click', (event) => {
       const button = event.target.closest('[data-dismiss]');
       if (!button) return;
-      dismissed.push(button.closest('[data-notice]').dataset.notice);
+      // Keyed with the start date, so next year's notice with the same file name shows again.
+      const item = button.closest('[data-notice]');
+      dismissed.push(item.dataset.notice + '@' + item.dataset.from);
       try {
         localStorage.setItem(KEY, JSON.stringify(dismissed));
       } catch {}

@@ -71,9 +71,13 @@
     font-size: var(--text-sm);
     color: var(--color-muted);
   }
+  /* The meaning sits right under the card, centred; its space is kept so buttons do not jump. */
   .flashcard-back {
     display: grid;
     gap: 0.4rem;
+    min-height: 3.5rem;
+    margin-top: -0.5rem;
+    text-align: center;
   }
   .flashcard-meaning {
     font-size: var(--text-xl);

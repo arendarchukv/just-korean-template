@@ -43,8 +43,11 @@ const t = useTranslations(lang);
 <script is:inline>
   document.addEventListener('click', (event) => {
     const link = event.target.closest('[data-play]');
-    if (!link) return;
-    const box = link.closest('[data-video-facade]');
+    const box = link?.closest('[data-video-facade]');
+    // Ctrl/Cmd/Shift/middle click: let the browser open YouTube as a normal link.
+    const modified =
+      event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+    if (!box || modified) return;
     event.preventDefault();
     const frame = document.createElement('iframe');
     frame.src = box.dataset.embed;

@@ -374,6 +374,11 @@ content:
       - name: link
         type: string
         description: Optional link for "Details", e.g. /classes/ or a full https:// link.
+        pattern:
+          {
+            regex: '^(https://|/)',
+            message: Use a site path like /classes/ or a full https:// link,
+          }
 
   - name: site
     label: Site settings

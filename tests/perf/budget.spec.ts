@@ -99,7 +99,7 @@ async function measure(page: import('@playwright/test').Page, path: string): Pro
 const WIDGET_PAGES = ['/practice/deck/negative-form/'];
 
 for (const path of ['/', '/ko/', '/styleguide/', '/lessons/ge-vs-dorok/', ...WIDGET_PAGES]) {
-  test(`${path} stays within the performance budget`, async ({ page }) => {
+  test(`${path} stays within the performance budget @perf`, async ({ page }) => {
     const m = await measure(page, path);
     const report = JSON.stringify(m);
     expect(m.lcp, report).toBeLessThan(BUDGET.lcpMs);

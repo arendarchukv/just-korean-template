@@ -49,6 +49,12 @@ const labels = {
   <section class="container-page page-section">
     <Flashcards client:visible deckId={deck.id} cards={deck.cards} labels={labels} />
     <noscript>
+      <!-- Without JS the widget cannot work: show only the readable list. -->
+      <style>
+        .widget {
+          display: none;
+        }
+      </style>
       <ol class="widget-fallback">
         {deck.cards.map((card) => (
           <li>

@@ -124,7 +124,10 @@ export const noticeSchema = z
     to: day,
     tone: z.enum(['important', 'news', 'info']),
     pinned: z.boolean().default(false),
-    link: z.string().optional(),
+    link: z
+      .string()
+      .regex(/^(https:\/\/|\/)/, 'Use a site path like /classes/ or a full https:// link')
+      .optional(),
   })
   .refine((n) => n.to >= n.from, { message: 'End date is before the start date', path: ['to'] });
 

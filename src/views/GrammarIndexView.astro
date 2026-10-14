@@ -62,7 +62,7 @@ const groups = groupByLevel(await getGrammar());
       box.hidden = false;
       const input = box.querySelector('input');
       const status = box.querySelector('[role="status"]');
-      input.addEventListener('input', () => {
+      const filter = () => {
         const q = input.value.trim().toLowerCase();
         let total = 0;
         for (const group of document.querySelectorAll('[data-grammar-group]')) {
@@ -76,6 +76,16 @@ const groups = groupByLevel(await getGrammar());
           total += shown;
         }
         status.textContent = total === 0 ? status.dataset.noResults : '';
+      };
+      // While Hangul is being composed the field holds a bare jamo: wait for the syllable.
+      input.addEventListener('input', (event) => {
+        if (!event.isComposing) filter();
+      });
+      input.addEventListener('compositionend', filter);
+      // A value restored by the browser (back/forward) arrives after this script runs:
+      // apply it once the page is shown.
+      window.addEventListener('pageshow', () => {
+        if (input.value) filter();
       });
     })();
   </script>

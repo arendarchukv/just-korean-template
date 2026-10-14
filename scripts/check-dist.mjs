@@ -488,6 +488,27 @@ for (const page of ['news/index.html', 'ko/news/index.html']) {
   if (!/OhmyNews/.test(html)) problems.push(`${page}: no source attribution`);
 }
 
+// --- Deck pages: the widget, and every card readable without JavaScript ---
+for (const dir of ['', 'ko/']) {
+  for (const file of contentFiles('decks')) {
+    const id = file.replace(/\.ya?ml$/, '');
+    const page = `${dir}practice/deck/${id}/index.html`;
+    if (!exists(page)) {
+      problems.push(`missing ${page}`);
+      continue;
+    }
+    const html = read(page);
+    if (!/<astro-island[^>]*Flashcards/.test(html)) problems.push(`${page}: no flashcards widget`);
+    const fallback = /<noscript>[\s\S]*?<\/noscript>/.exec(html)?.[0] ?? '';
+    const fronts = [
+      ...readFileSync(new URL(file, contentDir('decks')), 'utf8').matchAll(/front:\s*(.+)/g),
+    ].map((m) => m[1].trim());
+    for (const front of fronts) {
+      if (!fallback.includes(front)) problems.push(`${page}: card "${front}" missing without JS`);
+    }
+  }
+}
+
 // --- No duplicate ids on any built page ---
 const htmlPages = (dir = '') =>
   readdirSync(new URL(`../dist/${dir}`, import.meta.url), { withFileTypes: true }).flatMap((e) =>

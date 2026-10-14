@@ -20,7 +20,12 @@ describe('toEntryId', () => {
 });
 
 describe('notices', () => {
-  const n = (id: string, from: string, to: string, tone: 'important' | 'info' = 'info') => ({
+  const n = (
+    id: string,
+    from: string,
+    to: string,
+    tone: 'important' | 'news' | 'info' = 'info',
+  ) => ({
     id,
     from: d(from),
     to: d(to),
@@ -46,6 +51,15 @@ describe('notices', () => {
       n('now', '2026-10-10', '2026-10-20', 'important'),
     ];
     expect(sortNotices(list).map((x) => x.id)).toEqual(['now', 'soon', 'old', 'info']);
+  });
+
+  it('puts news between important and info', () => {
+    const list = [
+      n('info', '2026-10-01', '2026-12-18'),
+      n('news', '2026-10-05', '2026-12-18', 'news'),
+      n('important', '2026-10-09', '2026-12-18', 'important'),
+    ];
+    expect(sortNotices(list).map((x) => x.id)).toEqual(['important', 'news', 'info']);
   });
 });
 

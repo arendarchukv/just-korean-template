@@ -20,15 +20,37 @@ test('the last day of a notice still shows it', async ({ page }) => {
   await expect(strip(page).getByText('Spain timetable')).toBeVisible();
 });
 
-test('a dismissed notice stays hidden after reload', async ({ page }) => {
-  await page.clock.setFixedTime(new Date('2026-10-14T10:00:00'));
+test('a dismissed notice stays hidden after reload and frees its place', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-20T10:00:00'));
   await page.goto('/');
-  const item = strip(page).getByRole('listitem').filter({ hasText: 'Winter break' });
+  // Three notices are active; two show at once (important, then news), info waits.
+  await expect(strip(page).getByText('Spain timetable')).toBeHidden();
+  const item = strip(page).getByRole('listitem').filter({ hasText: 'New website' });
   await item.getByRole('button', { name: /dismiss/i }).click();
   await expect(item).toBeHidden();
   await page.reload();
-  await expect(strip(page).getByText('Winter break')).toBeHidden();
+  await expect(strip(page).getByText('New website')).toBeHidden();
   await expect(strip(page).getByText('Spain timetable')).toBeVisible();
+});
+
+test('a pinned notice has no dismiss button and always shows during its dates', async ({
+  page,
+}) => {
+  await page.clock.setFixedTime(new Date('2026-10-20T10:00:00'));
+  await page.goto('/');
+  const pinned = strip(page).getByRole('listitem').filter({ hasText: 'Winter break' });
+  await expect(pinned).toBeVisible();
+  await expect(pinned.getByRole('button', { name: /dismiss/i })).toHaveCount(0);
+});
+
+test('each notice says its type in words, not only in colour', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-20T10:00:00'));
+  await page.goto('/');
+  const rows = strip(page).getByRole('listitem');
+  await expect(rows.filter({ hasText: 'Winter break' })).toContainText('Important');
+  await expect(rows.filter({ hasText: 'New website' })).toContainText('New');
+  await expect(rows.filter({ hasText: 'Winter break' })).toHaveAttribute('data-tone', 'important');
+  await expect(rows.filter({ hasText: 'New website' })).toHaveAttribute('data-tone', 'news');
 });
 
 test('without JavaScript, exactly the notices active at build time show', async ({ browser }) => {

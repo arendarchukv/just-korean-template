@@ -56,7 +56,11 @@
     margin: 0;
     font-size: var(--text-sm);
   }
-  .notice-dates {
+  /* Tone word and dates: the word says the type, so colour is never the only signal. */
+  .notice-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6rem;
     font-size: var(--text-xs);
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -64,8 +68,34 @@
     color: var(--color-muted);
     font-variant-numeric: tabular-nums;
   }
-  .notice-strip li[data-tone='important'] .notice-dates {
+  .notice-tone {
+    font-weight: 700;
+  }
+  /* Important (red) and news (green) rows get their tint across the full width of the strip. */
+  .notice-strip li[data-tone='important'],
+  .notice-strip li[data-tone='news'] {
+    box-shadow: 0 0 0 100vmax var(--row-tint);
+    clip-path: inset(0 -100vmax);
+    background: var(--row-tint);
+  }
+  .notice-strip li[data-tone='important'] {
+    --row-tint: var(--color-danger-tint);
+  }
+  .notice-strip li[data-tone='news'] {
+    --row-tint: var(--color-teal-tint);
+  }
+  .notice-strip li[data-tone='important'] .notice-meta {
+    color: var(--color-danger);
+  }
+  .notice-strip li[data-tone='news'] .notice-meta {
+    color: var(--color-teal);
+  }
+  .notice-strip li[data-tone='info'] .notice-meta {
     color: var(--color-brand);
+  }
+  .notice-strip li[data-tone='important'] + li,
+  .notice-strip li[data-tone='news'] + li {
+    border-top-color: transparent;
   }
 
   .home-actions {

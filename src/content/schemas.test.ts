@@ -56,6 +56,15 @@ describe('siteSchema', () => {
 });
 
 describe('noticeSchema', () => {
+  const notice = { title: 'New site', text: 'Welcome', from: '2026-10-14', to: '2026-11-14' };
+
+  it('has three tones and is not pinned unless set', () => {
+    const r = noticeSchema.parse({ ...notice, tone: 'news' });
+    expect(r.tone).toBe('news');
+    expect(r.pinned).toBe(false);
+    expect(noticeSchema.parse({ ...notice, tone: 'info', pinned: true }).pinned).toBe(true);
+  });
+
   it('rejects an end date before the start', () => {
     const r = noticeSchema.safeParse({
       title: 'Break',

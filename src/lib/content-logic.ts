@@ -25,17 +25,18 @@ export function isNoticeActive(n: { from: Date; to: Date }, today: string): bool
   return toDay(n.from) <= today && today <= toDay(n.to);
 }
 
-export type NoticeLike = { id: string; from: Date; to: Date; tone: 'important' | 'info' };
+export type NoticeTone = 'important' | 'news' | 'info';
+export type NoticeLike = { id: string; from: Date; to: Date; tone: NoticeTone };
+
+const TONE_ORDER: Record<NoticeTone, number> = { important: 0, news: 1, info: 2 };
 
 /**
- * Every notice, important first, then the earliest start. Expired ones are rendered too (hidden):
+ * Every notice: important, then news, then info; within a tone, the earliest start. Expired ones are rendered too (hidden):
  * the browser decides by its own date, so the built page does not depend on the build date.
  */
 export function sortNotices<T extends NoticeLike>(notices: T[]): T[] {
   return [...notices].sort(
-    (a, b) =>
-      Number(b.tone === 'important') - Number(a.tone === 'important') ||
-      a.from.getTime() - b.from.getTime(),
+    (a, b) => TONE_ORDER[a.tone] - TONE_ORDER[b.tone] || a.from.getTime() - b.from.getTime(),
   );
 }
 

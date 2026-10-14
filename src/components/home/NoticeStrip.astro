@@ -8,7 +8,9 @@ import { localizePath, useTranslations } from '@/i18n/utils';
  * Strip of paper tape under the header with current notices. Every notice is rendered with its
  * dates (hidden unless active at build); the inline script re-checks them in the visitor's
  * browser, so a notice appears and disappears on its days without a rebuild, and the built page
- * does not depend on the build date. Delete old notices in the CMS to keep the page lean. Dismissed notices are remembered
+ * does not depend on the build date. Delete old notices in the CMS to keep the page lean. Tone
+ * (important / news / info) sets colour and order and is also said in words; pinned notices have
+ * no close button. Dismissed notices are remembered
  * per id. At most two notices show at once.
  */
 interface Props {
@@ -45,10 +47,14 @@ let shown = 0;
             data-from={toDay(n.from)}
             data-to={toDay(n.to)}
             data-tone={n.tone}
+            data-pinned={n.pinned ? '' : undefined}
             hidden={!visible}
           >
-            <span class="notice-dates">
-              {formatter.format(n.from)} – {formatter.format(n.to)}
+            <span class="notice-meta">
+              <span class="notice-tone">{t(`notice.tone.${n.tone}`)}</span>
+              <span class="notice-dates">
+                {formatter.format(n.from)} – {formatter.format(n.to)}
+              </span>
             </span>
             <p>
               <strong>{n.title}.</strong> {n.text}
@@ -61,16 +67,18 @@ let shown = 0;
                 </>
               )}
             </p>
-            <button type="button" class="icon-btn" data-dismiss aria-label={t('notice.dismiss')}>
-              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                <path
-                  d="M6 6l12 12M18 6L6 18"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </button>
+            {!n.pinned && (
+              <button type="button" class="icon-btn" data-dismiss aria-label={t('notice.dismiss')}>
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                  <path
+                    d="M6 6l12 12M18 6L6 18"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </button>
+            )}
           </li>
         );
       })}
@@ -94,7 +102,9 @@ let shown = 0;
       let shown = 0;
       for (const li of list.querySelectorAll('[data-notice]')) {
         const active = li.dataset.from <= today && today <= li.dataset.to;
-        const show = active && !dismissed.includes(li.dataset.notice) && shown < MAX;
+        // A pinned notice ignores an old dismissal (it may have been unpinned before).
+        const closed = !('pinned' in li.dataset) && dismissed.includes(li.dataset.notice);
+        const show = active && !closed && shown < MAX;
         li.hidden = !show;
         if (show) shown += 1;
       }

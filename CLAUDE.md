@@ -241,7 +241,9 @@ Data decisions already made:
 - Serif display font (Gowun Batang 700) is loaded only for the glyphs in
   `src/lib/display-text.ts`: after changing that text run `npm run fonts` (regenerates
   `src/styles/display-font.css`; a unit test fails until you do). Home block styles:
-  `src/styles/home.css`. Notice strip hides notices outside their dates in the browser.
+  `src/styles/home.css`. Notice strip hides notices outside their dates in the browser; tones
+  `important` (red) / `news` (green) / `info` (blue) set colour and order and are named in words;
+  `pinned` notices have no close button.
 - Korean UI strings are machine-drafted for design testing and marked
   `// TODO(ko-review)` — JiEun should review them before launch.
 - Theme toggle is a small vanilla script, not a Svelte island (zero-JS default).

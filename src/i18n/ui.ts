@@ -65,6 +65,9 @@ const en = {
   'notice.label': 'Notices',
   'notice.details': 'Details',
   'notice.dismiss': 'Dismiss notice',
+  'notice.tone.important': 'Important',
+  'notice.tone.news': 'New',
+  'notice.tone.info': 'Info',
 
   'placeholder.comingSoon': 'Coming soon',
   'placeholder.body': 'This section is being built. Meanwhile, the lessons are on YouTube.',
@@ -141,6 +144,9 @@ const ko: Partial<Record<UIKey, string>> = {
   'notice.label': '공지',
   'notice.details': '자세히',
   'notice.dismiss': '공지 닫기',
+  'notice.tone.important': '중요',
+  'notice.tone.news': '새 소식',
+  'notice.tone.info': '안내',
 
   'placeholder.comingSoon': '준비 중',
   'placeholder.body': '이 페이지는 준비 중이에요. 그동안 유튜브에서 강의를 볼 수 있어요.',

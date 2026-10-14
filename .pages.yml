@@ -362,11 +362,15 @@ content:
       - name: tone
         type: select
         required: true
-        description: Important notices come first and stand out more.
+        description: 'Colour and order in the strip: Important (red) first, then News (green), then Info (blue).'
         options:
           values:
-            - { name: important, label: Important }
-            - { name: info, label: Info }
+            - { name: important, label: 'Important (red), e.g. no classes for a while' }
+            - { name: news, label: 'News (green), e.g. a new site or a new group' }
+            - { name: info, label: 'Info (blue), e.g. a timetable change' }
+      - name: pinned
+        type: boolean
+        description: Always show it during its dates; students cannot close it. Leave off for notices they may dismiss.
       - name: link
         type: string
         description: Optional link for "Details", e.g. /classes/ or a full https:// link.

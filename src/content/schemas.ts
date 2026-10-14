@@ -122,7 +122,8 @@ export const noticeSchema = z
     text: z.string().min(1),
     from: day,
     to: day,
-    tone: z.enum(['important', 'info']),
+    tone: z.enum(['important', 'news', 'info']),
+    pinned: z.boolean().default(false),
     link: z.string().optional(),
   })
   .refine((n) => n.to >= n.from, { message: 'End date is before the start date', path: ['to'] });

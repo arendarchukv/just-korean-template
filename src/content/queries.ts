@@ -46,14 +46,12 @@ export async function getNotices() {
   return (await getCollection('notices')).map((n) => ({ ...n.data, id: n.id }));
 }
 
-async function single<C extends 'home' | 'site'>(name: C) {
-  const entry = await getEntry(name, name);
-  if (!entry) throw new Error(`settings/${name}.yml is missing`);
-  return entry.data as CollectionEntry<C>['data'];
+/** Site settings (links she sets in Pages CMS). */
+export async function getSite() {
+  const entry = await getEntry('site', 'site');
+  if (!entry) throw new Error('settings/site.yml is missing');
+  return entry.data;
 }
-
-export const getHome = () => single('home');
-export const getSite = () => single('site');
 
 /** Fails the build when any reference points to an entry that does not exist. */
 export async function validateReferences(): Promise<void> {

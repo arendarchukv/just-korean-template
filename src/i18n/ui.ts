@@ -90,6 +90,13 @@ const en = {
 
   'classes.lead':
     'Live online classes with JiEun: one to one, in a small group, or in a group by level.',
+  'about.principles': 'How I teach',
+  'about.timeline': 'Where I have taught',
+  'about.channel': 'The channel',
+  'about.channelLink': 'Open the channel',
+  'about.cta': 'Learn with me',
+  'about.ctaText': 'Join a live class, or start with the free lessons from the channel.',
+  'about.toClasses': 'See classes',
   'classes.faq': 'Questions before booking',
   'classes.formats': 'Class formats',
   'classes.aboutTeacher': 'About the teacher',
@@ -260,6 +267,13 @@ const ko: Partial<Record<UIKey, string>> = {
   'materials.lesson': '강의 보기',
 
   'classes.lead': '지은 선생님과 함께하는 온라인 수업: 1:1, 소그룹, 레벨별 그룹 수업이 있어요.',
+  'about.principles': '수업 방식',
+  'about.timeline': '가르쳐 온 곳',
+  'about.channel': '유튜브 채널',
+  'about.channelLink': '채널 열기',
+  'about.cta': '함께 배워요',
+  'about.ctaText': '실시간 수업에 참여하거나, 채널의 무료 강의로 시작해 보세요.',
+  'about.toClasses': '수업 보기',
   'classes.faq': '예약 전에 자주 묻는 질문',
   'classes.formats': '수업 형태',
   'classes.aboutTeacher': '선생님 소개',

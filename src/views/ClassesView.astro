@@ -4,7 +4,8 @@
  * block to book or ask. Content is hardcoded in src/data/classes.ts (this page changes rarely).
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getHome, getSite } from '@/content/queries';
+import { getSite } from '@/content/queries';
+import { TEACHER } from '@/data/teacher';
 import { FAQ, FORMATS, STEPS } from '@/data/classes';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -15,7 +16,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const site = await getSite();
-const { credentials } = await getHome();
+const { credentials } = TEACHER;
 // Tally form when set; until then the demo contact page.
 const contact = site.contactForm || localizePath(lang, 'contact');
 const external = (href: string) =>

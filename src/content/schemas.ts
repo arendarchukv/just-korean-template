@@ -128,15 +128,6 @@ export const noticeSchema = z
   })
   .refine((n) => n.to >= n.from, { message: 'End date is before the start date', path: ['to'] });
 
-export const homeSchema = z.object({
-  greeting: z.string().min(1),
-  intro: z.string().min(1),
-  photo: httpsUrl.optional(),
-  photoAlt: z.string().optional(),
-  credentials: z.array(z.string().min(1)).default([]),
-  newLessonsCount: z.number().int().min(1).max(6).default(3),
-});
-
 const optionalUrl = z.union([httpsUrl, z.literal('')]).default('');
 
 export const siteSchema = z.object({
@@ -159,6 +150,5 @@ export const SCHEMAS = {
   decks: deckSchema,
   quizzes: quizSchema,
   notices: noticeSchema,
-  home: homeSchema,
   site: siteSchema,
 } as const;

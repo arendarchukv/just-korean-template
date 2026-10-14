@@ -13,7 +13,7 @@ the end of every cycle.
 
 Built: content collections + `.pages.yml`, demo content, home page (notice strip, about, classes,
 목차, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
-search + pattern pages, Materials, Classes (formats with facts, how to start, FAQ), Practice (decks and quizzes listed,
+search + pattern pages, Materials, Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (decks and quizzes listed,
 krdict search, pronunciation link), Korean news (OhmyNews RSS previews loaded in the browser),
 demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Grammar · Materials · Practice · Classes.
 
@@ -39,7 +39,7 @@ Done earlier (content-independent):
 
 Waiting on the owner (do not guess these):
 
-- Her photo, bio wording (`src/content/settings/home.yml`, drafted), TidyCal and Tally URLs,
+- Her photo and bio wording (`src/data/teacher.ts`, drafted; photo link + R2 domain in `image.domains`), TidyCal and Tally URLs,
   the R2 public domain (`site.yml`; add it to `image.domains` in `astro.config.mjs` for the photo).
 - Domain (placeholder `https://just-korean.example` in `astro.config.mjs`) and hosting/deploy
   (Cloudflare Workers is planned; no deploy until asked).
@@ -240,8 +240,9 @@ Data decisions already made:
 ## Decisions from the content cycle (2026-10-14)
 
 - **Pages CMS holds only the main, frequently changing content** (lessons, grammar, materials,
-  decks, quizzes, notices) plus the home text and Site settings links. Pages that change rarely
-  are hardcoded: Classes formats, facts, steps and FAQ live in `src/data/classes.ts` (also used by
+  decks, quizzes, notices) plus the Site settings links. Pages that change rarely
+  are hardcoded: the teacher text (home about block, About, Classes) in `src/data/teacher.ts`;
+  Classes formats, facts, steps and FAQ in `src/data/classes.ts` (also used by
   the home timetable). We are not building a full CMS clone; ask "will she edit this often?"
   before adding a collection or field.
 - Content lives in `src/content/` (one file per entry; Markdown for long text, YAML for data).

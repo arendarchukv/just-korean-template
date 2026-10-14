@@ -1,0 +1,125 @@
+---
+/**
+ * About the teacher: greeting and story, how she teaches, where she has taught, the channel in
+ * numbers, and a calm way on to classes or lessons. Text in src/data/teacher.ts (not CMS).
+ */
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Collage from '@/components/shapes/Collage.astro';
+import { getSite } from '@/content/queries';
+import { TEACHER } from '@/data/teacher';
+import type { Lang } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const { social } = await getSite();
+---
+
+<BaseLayout title={t('page.about.title')} description={TEACHER.intro}>
+  <section class="container-page about-page" aria-labelledby="about-title">
+    <div class="about-page-text">
+      <p class="eyebrow mb-4">{t('page.about.title')}</p>
+      <h1 id="about-title" class="page-title">
+        {TEACHER.greeting}
+      </h1>
+      <p class="page-lead">{TEACHER.intro}</p>
+      {TEACHER.story.map((paragraph) => (
+        <p class="about-story">{paragraph}</p>
+      ))}
+    </div>
+    <div class="about-side">
+      {TEACHER.photo ? (
+        <Image
+          src={TEACHER.photo}
+          alt={TEACHER.photoAlt}
+          width={560}
+          height={640}
+          class="about-photo"
+        />
+      ) : (
+        <Collage variant="hero" />
+      )}
+      <div class="about-credentials grid-paper">
+        <h2 class="sr-only">{t('home.credentials')}</h2>
+        <ul>
+          {TEACHER.credentials.map((c) => (
+            <li>{c}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page page-section" aria-labelledby="principles-title">
+    <h2 id="principles-title" class="page-section-title">
+      {t('about.principles')}
+    </h2>
+    <ul class="principles">
+      {TEACHER.principles.map((p) => (
+        <li class="principle">
+          <h3 class="step-title">{p.title}</h3>
+          <p class="step-text">{p.text}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container-page page-section" aria-labelledby="timeline-title">
+    <h2 id="timeline-title" class="page-section-title">
+      {t('about.timeline')}
+    </h2>
+    <ol class="timeline">
+      {TEACHER.timeline.map((stop) => (
+        <li class="timeline-stop">
+          <span class="timeline-place">{stop.place}</span>
+          <span class="timeline-text">{stop.text}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="container-page page-section" aria-labelledby="channel-title">
+    <div class="page-section-head">
+      <h2 id="channel-title" class="page-section-title">
+        {t('about.channel')}
+      </h2>
+      {social.youtube && (
+        <a class="link" href={social.youtube} target="_blank" rel="noopener noreferrer">
+          {t('about.channelLink')}
+        </a>
+      )}
+    </div>
+    <dl class="channel-stats">
+      {TEACHER.channel.map((stat) => (
+        <div>
+          <dt>{stat.label}</dt>
+          <dd>{stat.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="container-page page-section" aria-labelledby="about-cta-title">
+    <div class="classes-cta grid-paper">
+      <div>
+        <h2 id="about-cta-title" class="page-section-title">
+          {t('about.cta')}
+        </h2>
+        <p class="classes-cta-text">{t('about.ctaText')}</p>
+      </div>
+      <div class="home-actions">
+        <a class="btn btn-primary" href={localizePath(lang, 'classes')}>
+          {t('about.toClasses')}
+        </a>
+        <a class="btn btn-ghost" href={localizePath(lang, 'lessons')}>
+          {t('home.watchLessons')}
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -242,8 +242,8 @@ Data decisions already made:
   `src/lib/display-text.ts`: after changing that text run `npm run fonts` (regenerates
   `src/styles/display-font.css`; a unit test fails until you do). Home block styles:
   `src/styles/home.css`. Notice strip hides notices outside their dates in the browser; tones
-  `important` (red) / `news` (green) / `info` (blue) set the stripe colour and order (same striped
-  paper band for every notice, bands stacked) and are named in words;
+  `important` (red) / `news` (green) / `info` (blue) set order and a near-transparent colour wash over
+  one continuous striped band (info: no wash) and are named in words;
   `pinned` notices have no close button.
 - Korean UI strings are machine-drafted for design testing and marked
   `// TODO(ko-review)` — JiEun should review them before launch.

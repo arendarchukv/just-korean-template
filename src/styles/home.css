@@ -4,39 +4,33 @@
  */
 @layer components {
   /*
-   * Notice strip: bands of paper tape under the header, one per notice, stacked without gaps.
-   * Every band has the same diagonal stripes on paper; only the stripe colour follows the tone.
+   * Notice strip: one band of paper tape under the header with the original diagonal stripes,
+   * running unbroken under all notices. Notices stack inside it in order; important and news
+   * lay a nearly transparent wash of their colour over the stripes, info adds none.
    */
   .notice-strip {
     border-bottom: 1px solid var(--color-border);
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        transparent 0 6px,
+        color-mix(in oklab, var(--color-brand) 7%, transparent) 6px 7px
+      ),
+      var(--color-surface);
   }
   .notice-strip ul {
     margin: 0;
     padding: 0;
     list-style: none;
   }
-  .notice-strip li {
-    --stripe: var(--color-brand);
-    --stripe-strength: 14%;
-    background:
-      repeating-linear-gradient(
-        -45deg,
-        transparent 0 6px,
-        color-mix(in oklab, var(--stripe) var(--stripe-strength), transparent) 6px 7.5px
-      ),
-      var(--color-surface);
-  }
   .notice-strip li + li {
     border-top: 1px dashed var(--color-border);
   }
   .notice-strip li[data-tone='important'] {
-    --stripe: var(--color-danger);
-    --stripe-strength: 22%;
+    background: color-mix(in oklab, var(--color-danger) 7%, transparent);
   }
   .notice-strip li[data-tone='news'] {
-    /* The paper-shape teal: the text teal is too dark to read as green in thin stripes. */
-    --stripe: var(--shape-teal);
-    --stripe-strength: 40%;
+    background: color-mix(in oklab, var(--color-teal) 8%, transparent);
   }
   .notice-strip li[hidden],
   .notice-strip[hidden] {

@@ -346,6 +346,23 @@ if (exists('grammar/ge/index.html')) {
   for (const href of deadLinks(ge)) problems.push(`grammar/ge links to missing ${href}`);
 }
 
+// --- Materials: chips match sections, every file link is https, no empty section ---
+for (const page of ['materials/index.html', 'ko/materials/index.html']) {
+  const html = read(page);
+  const chips = [...html.matchAll(/<a[^>]*class="[^"]*section-chip[^"]*"[^>]*href="#([\w-]+)"/g)].map(
+    (m) => m[1],
+  );
+  const sections = [...html.matchAll(/<section[^>]*id="([\w-]+)"[^>]*data-material-section/g)].map(
+    (m) => m[1],
+  );
+  if (sections.length === 0) problems.push(`${page}: no material sections`);
+  if (chips.join() !== sections.join()) problems.push(`${page}: chips [${chips}] vs [${sections}]`);
+  for (const [, url] of html.matchAll(/class="file-link"[^>]*href="([^"]+)"/g)) {
+    if (!url.startsWith('https://')) problems.push(`${page}: file link ${url} is not https`);
+  }
+  for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

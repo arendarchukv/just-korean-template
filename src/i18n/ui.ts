@@ -81,6 +81,13 @@ const en = {
   'grammar.videos': 'Lessons about this pattern',
   'grammar.all': 'All grammar',
 
+  'materials.lead': 'Worksheets, notes and transcripts to study with. Free to download.',
+  'materials.section.class-helper': 'Class Helper',
+  'materials.section.podcast': 'Podcast',
+  'materials.section.extra-notes': 'Extra notes',
+  'materials.section.from-lessons': 'From lessons',
+  'materials.lesson': 'Open the lesson',
+
   'lesson.watchOnYouTube': 'Watch on YouTube',
   'lesson.play': 'Play video',
   'lesson.grammar': 'Grammar in this lesson',
@@ -195,6 +202,13 @@ const ko: Partial<Record<UIKey, string>> = {
   'grammar.compare': '비교해 보세요',
   'grammar.videos': '이 문법을 다룬 강의',
   'grammar.all': '모든 문법',
+
+  'materials.lead': '공부할 때 쓰는 학습지, 노트, 대본이에요. 무료로 내려받으세요.',
+  'materials.section.class-helper': '수업 보조 자료',
+  'materials.section.podcast': '팟캐스트',
+  'materials.section.extra-notes': '추가 노트',
+  'materials.section.from-lessons': '강의 자료',
+  'materials.lesson': '강의 보기',
 
   'lesson.watchOnYouTube': '유튜브에서 보기',
   'lesson.play': '영상 재생',

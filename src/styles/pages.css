@@ -375,4 +375,77 @@
   .grammar-page .prose:not(:empty) {
     margin-top: 2.5rem;
   }
+
+  /* Materials: anchor chips, then one ruled list per section. */
+  .section-chips {
+    margin-top: 1.5rem;
+  }
+  .chip-count {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted);
+  }
+  .page-section-title + .material-list {
+    margin-top: 1.25rem;
+  }
+  [data-material-section] {
+    scroll-margin-top: 5rem;
+  }
+  .material-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--color-text);
+  }
+  .material-row {
+    display: grid;
+    gap: 0.75rem 2rem;
+    align-items: center;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  @media (min-width: 48rem) {
+    .material-row {
+      grid-template-columns: 1fr auto;
+    }
+  }
+  .material-info {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .material-title {
+    font-weight: 600;
+  }
+  .material-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .material-tag {
+    padding: 0 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: var(--text-xs);
+  }
+  .material-files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .material-files .file-link {
+    padding-inline: 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+  }
+  .material-files .file-link:hover {
+    border-color: var(--color-brand);
+  }
+  .material-files .file-kind {
+    min-width: 0;
+  }
 }

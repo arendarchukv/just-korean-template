@@ -138,7 +138,7 @@ describe('.pages.yml', () => {
 
   it('collections point at the folders the site loads', () => {
     for (const e of config.content) {
-      const expected = ['home', 'classes', 'site'].includes(e.name)
+      const expected = ['home', 'site'].includes(e.name)
         ? `src/content/settings/${e.name}.yml`
         : `src/content/${e.name}`;
       expect(e.path, e.name).toBe(expected);

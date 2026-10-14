@@ -137,15 +137,6 @@ export const homeSchema = z.object({
   newLessonsCount: z.number().int().min(1).max(6).default(3),
 });
 
-export const classesSchema = z.object({
-  formats: z
-    .array(
-      z.object({ name: z.string().min(1), forWhom: z.string().min(1), how: z.string().min(1) }),
-    )
-    .min(1),
-  faq: z.array(z.object({ question: z.string().min(1), answer: z.string().min(1) })).default([]),
-});
-
 const optionalUrl = z.union([httpsUrl, z.literal('')]).default('');
 
 export const siteSchema = z.object({
@@ -169,6 +160,5 @@ export const SCHEMAS = {
   quizzes: quizSchema,
   notices: noticeSchema,
   home: homeSchema,
-  classes: classesSchema,
   site: siteSchema,
 } as const;

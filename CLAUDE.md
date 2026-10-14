@@ -13,7 +13,7 @@ the end of every cycle.
 
 Built: content collections + `.pages.yml`, demo content, home page (notice strip, about, classes,
 목차, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
-search + pattern pages, Materials, Classes (timetable + FAQ), Practice (decks and quizzes listed,
+search + pattern pages, Materials, Classes (formats with facts, how to start, FAQ), Practice (decks and quizzes listed,
 krdict search, pronunciation link), Korean news (OhmyNews RSS previews loaded in the browser),
 demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Grammar · Materials · Practice · Classes.
 
@@ -239,6 +239,11 @@ Data decisions already made:
 
 ## Decisions from the content cycle (2026-10-14)
 
+- **Pages CMS holds only the main, frequently changing content** (lessons, grammar, materials,
+  decks, quizzes, notices) plus the home text and Site settings links. Pages that change rarely
+  are hardcoded: Classes formats, facts, steps and FAQ live in `src/data/classes.ts` (also used by
+  the home timetable). We are not building a full CMS clone; ask "will she edit this often?"
+  before adding a collection or field.
 - Content lives in `src/content/` (one file per entry; Markdown for long text, YAML for data).
   Schemas: `src/content/schemas.ts` (the source of truth). Pages read content **only** through
   `src/content/queries.ts`, which resolves references; the home page calls

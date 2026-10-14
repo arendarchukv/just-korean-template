@@ -34,7 +34,7 @@ Done earlier (content-independent):
   `robots.txt`, web manifest.
 - Polish: mobile menu behaviour, heading anchors, page transitions, finishing details.
 - Quality gates: `npm test` (unit), `npm run check`, `npm run build` + `npm run check:dist`,
-  `npm run test:browser` (axe a11y, print, UI, then the performance budget on its own with one
+  `npm run test:browser` (axe a11y, print, UI, then the `@perf` budget tests on their own with one
   worker so parallel tests do not skew the throttled timings; local Chrome).
 
 Waiting on the owner (do not guess these):

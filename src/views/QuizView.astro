@@ -50,6 +50,12 @@ const labels = {
   <section class="container-page page-section">
     <Quiz client:visible quizId={quiz.id} questions={quiz.questions} labels={labels} />
     <noscript>
+      <!-- Without JS the widget cannot work: show only the readable list. -->
+      <style>
+        .widget {
+          display: none;
+        }
+      </style>
       <ol class="widget-fallback">
         {quiz.questions.map((q) => (
           <li lang="ko">

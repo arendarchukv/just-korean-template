@@ -63,6 +63,8 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
                 {item.lesson && (
                   <a class="link" href={localizePath(lang, `lessons/${item.lesson.id}`)}>
                     {t('materials.lesson')}
+                    {/* Unique link names in a screen reader's list of links. */}
+                    <span class="sr-only">: {item.lesson.title}</span>
                   </a>
                 )}
               </span>

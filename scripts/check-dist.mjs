@@ -500,9 +500,9 @@ for (const dir of ['', 'ko/']) {
     const html = read(page);
     if (!/<astro-island[^>]*Flashcards/.test(html)) problems.push(`${page}: no flashcards widget`);
     const fallback = /<noscript>[\s\S]*?<\/noscript>/.exec(html)?.[0] ?? '';
-    const fronts = [
-      ...readFileSync(new URL(file, contentDir('decks')), 'utf8').matchAll(/front:\s*(.+)/g),
-    ].map((m) => m[1].trim());
+    // Parsed as YAML, so quoted values work too.
+    const deckData = parse(readFileSync(new URL(file, contentDir('decks')), 'utf8'));
+    const fronts = (deckData.cards ?? []).map((c) => String(c.front));
     for (const front of fronts) {
       if (!fallback.includes(front)) problems.push(`${page}: card "${front}" missing without JS`);
     }
@@ -547,10 +547,17 @@ for (const [page, prefix] of [
   }
   if (/coming soon|곧 직접/i.test(html)) problems.push(`${page}: still says "coming soon"`);
 }
-{
-  const lesson = read('lessons/negative-form/index.html');
-  if (!lesson.includes('href="/practice/deck/negative-form/"')) {
-    problems.push('lesson page does not link its deck page');
+for (const [prefix, dir] of [
+  ['', ''],
+  ['/ko', 'ko/'],
+]) {
+  const deckLesson = read(`${dir}lessons/negative-form/index.html`);
+  if (!deckLesson.includes(`href="${prefix}/practice/deck/negative-form/"`)) {
+    problems.push(`${dir}lesson page does not link its deck page`);
+  }
+  const quizLesson = read(`${dir}lessons/ge-vs-dorok/index.html`);
+  if (!quizLesson.includes(`href="${prefix}/practice/quiz/ge-vs-dorok/"`)) {
+    problems.push(`${dir}lesson page does not link its quiz page`);
   }
 }
 

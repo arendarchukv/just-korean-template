@@ -13,11 +13,11 @@ the end of every cycle.
 
 Built: content collections + `.pages.yml`, demo content, home page (notice strip, about, classes,
 목차, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
-search + pattern pages, Materials, Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (decks and quizzes listed,
+search + pattern pages, Materials, Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (deck and quiz pages with Svelte widgets,
 krdict search, pronunciation link), Korean news (OhmyNews RSS previews loaded in the browser),
 demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Grammar · Materials · Practice · Classes.
 
-Next cycles, each with its own spec: 1. interactive flashcards (study mode, progress), 2. quizzes with results via Tally, 3. site search (Pagefind).
+Next cycles, each with its own spec: 1. polish from reviews + visual pass, 2. quiz results via Tally (needs her form), 3. site search (Pagefind).
 Also later: an R2 upload page, content translations.
 
 **Builds are rare and manual** (no scheduled or daily rebuilds). Anything that depends on the date
@@ -255,6 +255,13 @@ Data decisions already made:
 - Files (PDF, audio, photo) live in Cloudflare R2; content stores `https://` links only.
   `npm run check:links` checks them (skips the `.example` placeholder domain); run before deploy.
 - Content is single-language (English with Korean examples); only the UI is translated.
+- Practice widgets (spec `docs/superpowers/specs/2026-10-14-widgets-design.md`): Svelte 5 islands
+  in `src/components/widgets/` (`Flashcards`, `Quiz`), one per page on `/practice/deck/<id>/` and
+  `/practice/quiz/<id>/`, hydrated `client:visible`. **Minimal by design**: each stands alone,
+  keeps only its own progress in `localStorage` (`jk:deck:<id>`, `jk:quiz:<id>`, read after mount,
+  never throws), no links between widgets. UI copy is passed in as `labels`. Without JS a
+  `<noscript>` list shows the content. `check:dist` fails if any other page loads a JS file;
+  tests wait for hydration (`astro-island` without `ssr`) before clicking.
 - Serif display font (Gowun Batang 700) is loaded only for the glyphs in
   `src/lib/display-text.ts`: after changing that text run `npm run fonts` (regenerates
   `src/styles/display-font.css`; a unit test fails until you do). Home block styles:

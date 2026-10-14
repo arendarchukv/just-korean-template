@@ -15,6 +15,8 @@ const BUDGET = {
   cssBrotliBytes: 25_000,
   renderBlocking: 1,
   scripts: 0,
+  /** Widget pages (flashcards, quiz) may load JS, but only a little. */
+  widgetJsBrotliBytes: 30_000,
   fontKBOnEnglishHome: 300,
 };
 
@@ -28,6 +30,7 @@ type Measured = {
   blocking: string[];
   css: number;
   scripts: number;
+  jsBrotli: number;
   fontBytes: number;
 };
 
@@ -44,10 +47,14 @@ async function measure(page: import('@playwright/test').Page, path: string): Pro
 
   let css = 0;
   let scripts = 0;
+  let jsBrotli = 0;
   let fontBytes = 0;
   page.on('response', async (response) => {
     const type = response.request().resourceType();
-    if (type === 'script') scripts += 1;
+    if (type === 'script') {
+      scripts += 1;
+      jsBrotli += brotliCompressSync(await response.body()).length;
+    }
     if (type === 'font') fontBytes += (await response.body()).length;
     if (type === 'stylesheet') css += brotliCompressSync(await response.body()).length;
   });
@@ -86,10 +93,12 @@ async function measure(page: import('@playwright/test').Page, path: string): Pro
         .map((r) => r.name),
     };
   });
-  return { ...metrics, css, scripts, fontBytes };
+  return { ...metrics, css, scripts, jsBrotli, fontBytes };
 }
 
-for (const path of ['/', '/ko/', '/styleguide/', '/lessons/ge-vs-dorok/']) {
+const WIDGET_PAGES = ['/practice/deck/negative-form/'];
+
+for (const path of ['/', '/ko/', '/styleguide/', '/lessons/ge-vs-dorok/', ...WIDGET_PAGES]) {
   test(`${path} stays within the performance budget`, async ({ page }) => {
     const m = await measure(page, path);
     const report = JSON.stringify(m);
@@ -97,7 +106,11 @@ for (const path of ['/', '/ko/', '/styleguide/', '/lessons/ge-vs-dorok/']) {
     expect(m.cls, report).toBeLessThan(BUDGET.cls);
     expect(m.blocking.length, report).toBeLessThanOrEqual(BUDGET.renderBlocking);
     expect(m.css, report).toBeLessThan(BUDGET.cssBrotliBytes);
-    expect(m.scripts, report).toBe(BUDGET.scripts);
+    if (WIDGET_PAGES.includes(path)) {
+      expect(m.jsBrotli, report).toBeLessThan(BUDGET.widgetJsBrotliBytes);
+    } else {
+      expect(m.scripts, report).toBe(BUDGET.scripts);
+    }
     if (path === '/') {
       expect(m.fontBytes / 1024, report).toBeLessThanOrEqual(BUDGET.fontKBOnEnglishHome);
     }

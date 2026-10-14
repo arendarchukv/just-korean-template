@@ -1,0 +1,140 @@
+/* Practice widgets (flashcards, quiz): calm, large tap targets, semantic tokens only. */
+@layer components {
+  .widget {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 40rem;
+  }
+  .widget-lesson {
+    margin: 0.75rem 0 0;
+    color: var(--color-muted);
+  }
+  .widget-progress {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0;
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted);
+  }
+  .widget-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .widget-summary {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+  .widget-summary:empty {
+    display: none;
+  }
+  .widget-fallback {
+    display: grid;
+    gap: 0.5rem;
+    max-width: 40rem;
+    padding-left: 1.25rem;
+  }
+
+  /* Flashcard: a sheet of paper on 원고지 grid; the Korean is the hero. */
+  .flashcard {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 0.75rem;
+    min-height: 15rem;
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background-color: var(--color-surface);
+    background-image:
+      linear-gradient(var(--color-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+    background-size: 2rem 2rem;
+    background-position: -1px -1px;
+    color: var(--color-text);
+    text-align: center;
+    cursor: pointer;
+  }
+  .flashcard:hover {
+    border-color: var(--color-brand);
+  }
+  .flashcard-front {
+    font-family: var(--font-korean);
+    font-size: clamp(2rem, 6vw, 3rem);
+    line-height: 1.2;
+    font-weight: 700;
+  }
+  .flashcard-hint {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .flashcard-back {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .flashcard-meaning {
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--color-teal);
+  }
+  .flashcard-example {
+    font-family: var(--font-korean);
+    color: var(--color-muted);
+  }
+
+  /* Quiz: the sentence large, options as the design-system quiz buttons. */
+  .quiz-prompt {
+    margin: 0;
+    font-family: var(--font-korean);
+    font-size: var(--text-2xl);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .quiz-options {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .quiz-option:disabled {
+    cursor: default;
+  }
+  .quiz-fill {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .quiz-fill label {
+    font-weight: 600;
+  }
+  .quiz-fill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .quiz-fill-row .field {
+    flex: 1 1 12rem;
+  }
+  .quiz-feedback {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--color-danger);
+  }
+  .quiz-feedback[data-correct='true'] {
+    border-left-color: var(--color-teal);
+  }
+  .quiz-feedback p {
+    margin: 0;
+  }
+  .quiz-verdict {
+    font-weight: 700;
+    color: var(--color-danger);
+  }
+  .quiz-feedback[data-correct='true'] .quiz-verdict {
+    color: var(--color-teal);
+  }
+  .quiz-explanation {
+    color: var(--color-muted);
+  }
+}

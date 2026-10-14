@@ -488,17 +488,96 @@ for (const page of ['news/index.html', 'ko/news/index.html']) {
   if (!/OhmyNews/.test(html)) problems.push(`${page}: no source attribution`);
 }
 
+// --- Deck pages: the widget, and every card readable without JavaScript ---
+for (const dir of ['', 'ko/']) {
+  for (const file of contentFiles('decks')) {
+    const id = file.replace(/\.ya?ml$/, '');
+    const page = `${dir}practice/deck/${id}/index.html`;
+    if (!exists(page)) {
+      problems.push(`missing ${page}`);
+      continue;
+    }
+    const html = read(page);
+    if (!/<astro-island[^>]*Flashcards/.test(html)) problems.push(`${page}: no flashcards widget`);
+    const fallback = /<noscript>[\s\S]*?<\/noscript>/.exec(html)?.[0] ?? '';
+    const fronts = [
+      ...readFileSync(new URL(file, contentDir('decks')), 'utf8').matchAll(/front:\s*(.+)/g),
+    ].map((m) => m[1].trim());
+    for (const front of fronts) {
+      if (!fallback.includes(front)) problems.push(`${page}: card "${front}" missing without JS`);
+    }
+  }
+}
+
+// --- Quiz pages: the widget, and every question readable without JavaScript ---
+for (const dir of ['', 'ko/']) {
+  for (const file of contentFiles('quizzes')) {
+    const id = file.replace(/\.ya?ml$/, '');
+    const page = `${dir}practice/quiz/${id}/index.html`;
+    if (!exists(page)) {
+      problems.push(`missing ${page}`);
+      continue;
+    }
+    const html = read(page);
+    if (!/<astro-island[^>]*Quiz/.test(html)) problems.push(`${page}: no quiz widget`);
+    const fallback = /<noscript>[\s\S]*?<\/noscript>/.exec(html)?.[0] ?? '';
+    const count = (
+      readFileSync(new URL(file, contentDir('quizzes')), 'utf8').match(/- type:/g) ?? []
+    ).length;
+    if ((fallback.match(/<li/g) ?? []).length < count) {
+      problems.push(`${page}: questions missing without JS`);
+    }
+  }
+}
+
+// --- Practice and lesson pages link to the widget pages ---
+for (const [page, prefix] of [
+  ['practice/index.html', ''],
+  ['ko/practice/index.html', '/ko'],
+]) {
+  const html = read(page);
+  for (const [dir, kind] of [
+    ['decks', 'deck'],
+    ['quizzes', 'quiz'],
+  ]) {
+    for (const file of contentFiles(dir)) {
+      const href = `${prefix}/practice/${kind}/${file.replace(/\.ya?ml$/, '')}/`;
+      if (!html.includes(`href="${href}"`)) problems.push(`${page}: no link to ${href}`);
+    }
+  }
+  if (/coming soon|곧 직접/i.test(html)) problems.push(`${page}: still says "coming soon"`);
+}
+{
+  const lesson = read('lessons/negative-form/index.html');
+  if (!lesson.includes('href="/practice/deck/negative-form/"')) {
+    problems.push('lesson page does not link its deck page');
+  }
+}
+
+// --- JavaScript files load only where a widget lives ---
+{
+  const widgetPage = (p) => /(^|\/)practice\/(deck|quiz)\//.test(p);
+  for (const page of htmlPages()) {
+    const html = read(page);
+    const hasJsFile = /<astro-island|<script[^>]*\ssrc=/.test(html);
+    if (hasJsFile && !widgetPage(page)) problems.push(`${page}: loads a JS file but has no widget`);
+  }
+}
+
 // --- No duplicate ids on any built page ---
-const htmlPages = (dir = '') =>
-  readdirSync(new URL(`../dist/${dir}`, import.meta.url), { withFileTypes: true }).flatMap((e) =>
-    e.isDirectory()
-      ? e.name.startsWith('_')
-        ? []
-        : htmlPages(`${dir}${e.name}/`)
-      : e.name.endsWith('.html')
-        ? [`${dir}${e.name}`]
-        : [],
+/** Every built HTML page (skips /_astro assets). A declaration, so checks above can use it. */
+function htmlPages(dir = '') {
+  return readdirSync(new URL(`../dist/${dir}`, import.meta.url), { withFileTypes: true }).flatMap(
+    (e) =>
+      e.isDirectory()
+        ? e.name.startsWith('_')
+          ? []
+          : htmlPages(`${dir}${e.name}/`)
+        : e.name.endsWith('.html')
+          ? [`${dir}${e.name}`]
+          : [],
   );
+}
 for (const page of htmlPages()) {
   const pageIds = [...read(page).matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
   const twice = [...new Set(pageIds.filter((id, i) => pageIds.indexOf(id) !== i))];

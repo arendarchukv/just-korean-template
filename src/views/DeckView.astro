@@ -1,0 +1,61 @@
+---
+/** One flashcard deck: title, level, linked lesson, then the widget (JS only on this page). */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Flashcards from '@/components/widgets/Flashcards.svelte';
+import type { getDecks } from '@/content/queries';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+type Deck = Awaited<ReturnType<typeof getDecks>>[number];
+interface Props {
+  lang: Lang;
+  deck: Deck;
+}
+
+const { lang, deck } = Astro.props;
+const t = useTranslations(lang);
+const labels = {
+  flipHint: t('deck.flipHint'),
+  meaning: t('deck.meaning'),
+  know: t('deck.know'),
+  again: t('deck.again'),
+  position: t('deck.position'),
+  knownCount: t('deck.knownCount'),
+  done: t('deck.done'),
+  rest: t('deck.rest'),
+  restart: t('deck.restart'),
+};
+---
+
+<BaseLayout title={deck.title} description={deck.description}>
+  <div class="container-page page-head">
+    <p class="lesson-series">
+      <a class="link" href={localizePath(lang, 'practice')}>
+        {t('page.practice.title')}
+      </a>
+      · {t('practice.decks')} · {t(`grammar.level.${deck.level}` as UIKey)}
+    </p>
+    <h1 class="page-title">{deck.title}</h1>
+    {deck.description && <p class="page-lead">{deck.description}</p>}
+    {deck.lessonEntry && (
+      <p class="widget-lesson">
+        {t('widget.fromLesson')}{' '}
+        <a class="link" href={localizePath(lang, `lessons/${deck.lessonEntry.id}`)}>
+          {deck.lessonEntry.title}
+        </a>
+      </p>
+    )}
+  </div>
+  <section class="container-page page-section">
+    <Flashcards client:visible deckId={deck.id} cards={deck.cards} labels={labels} />
+    <noscript>
+      <ol class="widget-fallback">
+        {deck.cards.map((card) => (
+          <li>
+            <span lang="ko">{card.front}</span> — {card.back}
+          </li>
+        ))}
+      </ol>
+    </noscript>
+  </section>
+</BaseLayout>

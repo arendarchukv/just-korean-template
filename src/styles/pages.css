@@ -518,10 +518,12 @@
     padding-inline: 0.75rem;
     background-color: var(--color-teal-tint);
   }
-  .practice-soon {
-    margin: 0.75rem 0 0;
-    font-size: var(--text-sm);
-    color: var(--color-muted);
+  .practice-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  .practice-link:hover {
+    color: var(--color-brand);
   }
   .practice-tool {
     padding: 1.5rem;

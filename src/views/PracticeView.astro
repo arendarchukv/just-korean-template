@@ -30,7 +30,12 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
       <ul class="file-list">
         {decks.map((d) => (
           <li id={`deck-${d.id}`} class="practice-item">
-            <span class="material-title">{d.title}</span>
+            <a
+              class="material-title practice-link"
+              href={localizePath(lang, `practice/deck/${d.id}`)}
+            >
+              {d.title}
+            </a>
             <span class="material-meta">
               {level(d.level)} · {d.cards.length} {t('lesson.cards')}
               {d.lessonEntry && (
@@ -42,7 +47,6 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
           </li>
         ))}
       </ul>
-      <p class="practice-soon">{t('practice.soon')}</p>
     </section>
 
     <section class="practice-block" aria-labelledby="quizzes-title">
@@ -52,7 +56,12 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
       <ul class="file-list">
         {quizzes.map((q) => (
           <li id={`quiz-${q.id}`} class="practice-item">
-            <span class="material-title">{q.title}</span>
+            <a
+              class="material-title practice-link"
+              href={localizePath(lang, `practice/quiz/${q.id}`)}
+            >
+              {q.title}
+            </a>
             <span class="material-meta">
               {level(q.level)} · {q.questions.length} {t('lesson.questions')}
               {q.lessonEntry && (
@@ -64,7 +73,6 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
           </li>
         ))}
       </ul>
-      <p class="practice-soon">{t('practice.soon')}</p>
     </section>
   </div>
 

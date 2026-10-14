@@ -14,10 +14,15 @@ the end of every cycle.
 Built: content collections + `.pages.yml`, demo content, home page (notice strip, about, classes,
 목차, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
 search + pattern pages, Materials, Classes (timetable + FAQ), Practice (decks and quizzes listed,
-krdict search, pronunciation link). Navigation: Lessons · Grammar · Materials · Practice · Classes.
+krdict search, pronunciation link), Korean news (OhmyNews RSS previews loaded in the browser),
+demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Grammar · Materials · Practice · Classes.
 
-Next cycles, each with its own spec: 1. interactive flashcards (study mode, progress), 2. quizzes with results via Tally, 3. Korean news reading (RSS), 4. site search (Pagefind).
-Also later: daily rebuild on the host, an R2 upload page, content translations.
+Next cycles, each with its own spec: 1. interactive flashcards (study mode, progress), 2. quizzes with results via Tally, 3. site search (Pagefind).
+Also later: an R2 upload page, content translations.
+
+**Builds are rare and manual** (no scheduled or daily rebuilds). Anything that depends on the date
+or on outside data runs in the browser (notices by date, news from the OhmyNews RSS) or is not
+built; never rely on a fresh build.
 
 Done earlier (content-independent):
 

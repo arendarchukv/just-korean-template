@@ -4,7 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Timetable from '@/components/Timetable.astro';
 import { getClasses, getSite } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
-import { useTranslations } from '@/i18n/utils';
+import { localizePath, useTranslations } from '@/i18n/utils';
 
 interface Props {
   lang: Lang;
@@ -24,31 +24,28 @@ const site = await getSite();
   </div>
   <section class="container-page page-section" aria-labelledby="classes-page-title">
     <Timetable lang={lang} labelledBy="classes-page-title" />
-    {(site.tidycal || site.contactForm) && (
-      <div class="home-actions">
-        {site.tidycal && (
-          <a
-            class="btn btn-primary"
-            data-book-class
-            href={site.tidycal}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('home.bookClass')}
-          </a>
-        )}
-        {site.contactForm && (
-          <a
-            class="btn btn-ghost"
-            href={site.contactForm}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t('classes.contact')}
-          </a>
-        )}
-      </div>
-    )}
+    <div class="home-actions">
+      {site.tidycal && (
+        <a
+          class="btn btn-primary"
+          data-book-class
+          href={site.tidycal}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('home.bookClass')}
+        </a>
+      )}
+      {/* Tally form when set; until then the demo contact page. */}
+      <a
+        class="btn btn-ghost"
+        href={site.contactForm || localizePath(lang, 'contact')}
+        target={site.contactForm ? '_blank' : undefined}
+        rel={site.contactForm ? 'noopener noreferrer' : undefined}
+      >
+        {t('classes.contact')}
+      </a>
+    </div>
   </section>
   {faq.length > 0 && (
     <section class="container-page page-section" aria-labelledby="faq-title">

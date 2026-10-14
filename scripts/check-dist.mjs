@@ -3,6 +3,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 // Classes data is hardcoded (not CMS); Node runs the TS module directly.
 import { FAQ, FORMATS, STEPS } from '../src/data/classes.ts';
+import { NEW_LESSONS_COUNT, TEACHER } from '../src/data/teacher.ts';
 
 const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
@@ -70,8 +71,29 @@ for (const [page, href] of [
   const footer = /<footer[\s\S]*<\/footer>/.exec(read(page))?.[0] ?? '';
   if (!footer.includes(`href="${href}"`)) problems.push(`${page}: footer does not link to ${href}`);
 }
+// About content comes from src/data/teacher.ts: story, principles, timeline, channel numbers.
 for (const page of ['about/index.html', 'ko/about/index.html']) {
-  if (!exists(page)) problems.push(`missing ${page}`);
+  if (!exists(page)) {
+    problems.push(`missing ${page}`);
+    continue;
+  }
+  const html = read(page);
+  if (/placeholder\.comingSoon|Coming soon|준비 중/.test(html))
+    problems.push(`${page}: still a placeholder`);
+  if (!html.includes(TEACHER.greeting.replace("'", '&#39;')) && !html.includes(TEACHER.greeting)) {
+    problems.push(`${page}: no greeting`);
+  }
+  const timeline = /<ol[^>]*class="timeline"[\s\S]*?<\/ol>/.exec(html)?.[0] ?? '';
+  if ((timeline.match(/<li/g) ?? []).length !== TEACHER.timeline.length) {
+    problems.push(`${page}: timeline does not list ${TEACHER.timeline.length} places`);
+  }
+  const stats = /<dl[^>]*class="channel-stats"[\s\S]*?<\/dl>/.exec(html)?.[0] ?? '';
+  if ((stats.match(/<dd/g) ?? []).length !== TEACHER.channel.length) {
+    problems.push(`${page}: channel numbers missing`);
+  }
+  for (const p of TEACHER.principles) {
+    if (!html.includes(p.title)) problems.push(`${page}: principle "${p.title}" missing`);
+  }
 }
 if (!/<loc>https:\/\/[^<]+\/about\/<\/loc>/.test(read('sitemap-0.xml'))) {
   problems.push('about page is not in the sitemap');
@@ -163,12 +185,11 @@ const contentFiles = (dir) =>
 const settings = (name) =>
   parse(readFileSync(new URL(`${name}.yml`, contentDir('settings')), 'utf8'));
 const site = settings('site');
-const homeSettings = settings('home');
 const noticeCount = contentFiles('notices').length;
 const videoLessons = contentFiles('lessons').filter((f) =>
   /^youtube:\s*\S/m.test(readFileSync(new URL(f, contentDir('lessons')), 'utf8')),
 ).length;
-const expectedNewLessons = Math.min(homeSettings.newLessonsCount ?? 3, videoLessons);
+const expectedNewLessons = Math.min(NEW_LESSONS_COUNT, videoLessons);
 
 const LOCALES = [
   ['index.html', ''],

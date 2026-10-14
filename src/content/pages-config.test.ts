@@ -112,7 +112,6 @@ describe('.pages.yml', () => {
       }
       return found!;
     };
-    expect(field('home.newLessonsCount').options).toMatchObject({ min: 1, max: 6 });
     expect(field('lessons.episode').options).toMatchObject({ min: 1 });
     expect(field('quizzes.questions').list).toMatchObject({ min: 1 });
     expect(field('quizzes.questions.fill.sentence').pattern?.regex).toBe('___');
@@ -138,9 +137,8 @@ describe('.pages.yml', () => {
 
   it('collections point at the folders the site loads', () => {
     for (const e of config.content) {
-      const expected = ['home', 'site'].includes(e.name)
-        ? `src/content/settings/${e.name}.yml`
-        : `src/content/${e.name}`;
+      const expected =
+        e.name === 'site' ? `src/content/settings/${e.name}.yml` : `src/content/${e.name}`;
       expect(e.path, e.name).toBe(expected);
     }
   });

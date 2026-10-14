@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import Collage from '@/components/shapes/Collage.astro';
 import { SITE_NAME_KO } from '@/lib/display-text';
-import { getHome, getSite } from '@/content/queries';
+import { getSite } from '@/content/queries';
+import { TEACHER as home } from '@/data/teacher';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -13,7 +14,6 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const home = await getHome();
 // Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
 const tidycal = (await getSite()).tidycal;
 const booking = tidycal || localizePath(lang, 'classes');

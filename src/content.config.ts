@@ -14,6 +14,5 @@ export const collections = {
   decks: defineCollection({ loader: many('decks', 'yml'), schema: SCHEMAS.decks }),
   quizzes: defineCollection({ loader: many('quizzes', 'yml'), schema: SCHEMAS.quizzes }),
   notices: defineCollection({ loader: many('notices', 'yml'), schema: SCHEMAS.notices }),
-  home: defineCollection({ loader: one('home'), schema: SCHEMAS.home }),
   site: defineCollection({ loader: one('site'), schema: SCHEMAS.site }),
 };

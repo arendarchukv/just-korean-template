@@ -375,36 +375,6 @@ content:
         type: string
         description: Optional link for "Details", e.g. /classes/ or a full https:// link.
 
-  - name: home
-    label: Home page
-    type: file
-    path: src/content/settings/home.yml
-    format: yaml
-    fields:
-      - name: greeting
-        type: string
-        required: true
-        description: First line of the about block, e.g. "Hi, I'm JiEun".
-      - name: intro
-        type: text
-        required: true
-        description: Two sentences about you and how you teach.
-      - name: photo
-        type: string
-        description: Your photo. Upload it to R2 and paste the https:// link; a paper shape shows until then.
-        pattern: { regex: '^https://', message: The link must start with https:// }
-      - name: photoAlt
-        type: string
-        description: Short description of the photo for screen readers.
-      - name: credentials
-        type: string
-        list: true
-        description: Short facts students trust, one per line (degree, experience, subscribers).
-      - name: newLessonsCount
-        type: number
-        description: How many new lessons the home page shows (1 to 6).
-        options: { min: 1, max: 6 }
-
   - name: site
     label: Site settings
     type: file

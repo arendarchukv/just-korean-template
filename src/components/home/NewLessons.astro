@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
-import { getHome, getLessons } from '@/content/queries';
+import { getLessons } from '@/content/queries';
+import { NEW_LESSONS_COUNT } from '@/data/teacher';
 import { selectNewLessons } from '@/lib/content-logic';
 import { youtubeThumbnail } from '@/lib/youtube';
 import type { Lang } from '@/i18n/ui';
@@ -13,8 +14,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const { newLessonsCount } = await getHome();
-const lessons = selectNewLessons(await getLessons(), newLessonsCount);
+const lessons = selectNewLessons(await getLessons(), NEW_LESSONS_COUNT);
 const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
   day: 'numeric',
   month: 'short',

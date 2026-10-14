@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-// The mobile menu exists below the md breakpoint, so these run in the mobile project only.
+// The mobile menu exists below the lg breakpoint, so these run in the mobile project only.
 test.beforeEach(({}, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'mobile menu is checked on mobile only');
 });
@@ -46,7 +46,7 @@ test('widening the window to desktop closes the menu and releases the scroll loc
   page,
 }) => {
   await openMenu(page);
-  await page.setViewportSize({ width: 1024, height: 800 });
+  await page.setViewportSize({ width: 1280, height: 800 });
   await expect(menu(page)).not.toHaveAttribute('open', '');
   await expect(page.locator('html')).not.toHaveAttribute('data-menu-open', '');
 });
@@ -58,4 +58,21 @@ test('page does not shift sideways when the scroll lock removes the scrollbar', 
   expect(
     await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarGutter),
   ).toBe('stable');
+});
+
+test('on a tablet the header fits its width in both languages, the menu holding the links', async ({
+  page,
+}) => {
+  for (const width of [768, 900, 1024]) {
+    await page.setViewportSize({ width, height: 800 });
+    for (const path of ['/', '/ko/']) {
+      await page.goto(path);
+      const row = page.locator('header > .container-page');
+      const { scroll, client } = await row.evaluate((el) => ({
+        scroll: el.scrollWidth,
+        client: el.clientWidth,
+      }));
+      expect(scroll, `${path} at ${width}px`).toBeLessThanOrEqual(client);
+    }
+  }
 });

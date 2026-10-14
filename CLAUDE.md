@@ -15,7 +15,9 @@ Built: content collections + `.pages.yml`, demo content, home page (notice strip
 목차, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
 search + pattern pages, Materials, Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (deck and quiz pages with Svelte widgets,
 krdict search, pronunciation link), Korean news (OhmyNews RSS previews loaded in the browser),
-demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Grammar · Materials · Practice · Classes.
+demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Grammar · Materials · Practice · Classes · Site info (demo); full menu from 1024px, the menu button below. Language menu: a `<details>` list of every locale in its own name (Ukrainian planned at launch: add it to `languages` + a dictionary; Outfit and Pretendard have no Cyrillic, so add a Cyrillic font then).
+
+**Site info is DEMO ONLY** (`/site-info/` content map + `/site-info/design/` design system, English-only, noindex): explains the content units for review. The content tab reads the real forms from `.pages.yml` (`src/lib/cms-forms.ts`), descriptions in `src/data/site-info.ts`. Before launch delete `src/pages/site-info/`, `src/views/site-info/`, `src/data/site-info*`, `src/lib/cms-forms*`, `src/styles/site-info.css`, the `nav.siteInfo` item in `Header.astro` and its tests (`tests/ui/language.spec.ts` site info block, check-dist and a11y entries); keep the design system somewhere if still wanted.
 
 Next cycles, each with its own spec: 1. polish from reviews + visual pass, 2. quiz results via Tally (needs her form), 3. site search (Pagefind).
 Also later: an R2 upload page, content translations.
@@ -29,7 +31,7 @@ Done earlier (content-independent):
 - Foundation: Astro 7 static, Tailwind v4, strict TS, i18n EN (`/`) + KO (`/ko/`), sitemap,
   theme toggle (light/dark), header/footer, About page, 404s.
 - Design system "Paper & cut-outs" (spec `docs/superpowers/specs/2026-10-11-design-system-design.md`),
-  shown on `/styleguide` (dev page, noindex).
+  shown on `/site-info/design/` (demo page, noindex).
 - Long-form typography (`.prose`), print styles, app icons + share image (`npm run icons`),
   `robots.txt`, web manifest.
 - Polish: mobile menu behaviour, heading anchors, page transitions, finishing details.
@@ -134,7 +136,7 @@ Rules:
   intro) is the second color, used for learning moments (key-expression marks, "correct",
   progress, focus ring). Muted red only for errors / "wrong". White text never on teal-400/500.
 - Design system "Paper & cut-outs": see `docs/superpowers/specs/2026-10-11-design-system-design.md`
-  and `/styleguide` (dev reference page, noindex). Signature details: hatch link underline,
+  and `/site-info/design/` (demo reference page, noindex). Signature details: hatch link underline,
   key-expression hatch mark, 원고지 grid paper for examples, cut-paper shapes (collage only in
   hero / 404 / empty states). Tokens: `src/styles/theme.css`; classes: `src/styles/signature.css`.
 - `npm test` checks every semantic text/background pair for WCAG AA in both themes.
@@ -231,7 +233,7 @@ Data decisions already made:
   throttled phone (`tests/perf`: LCP < 2 s, CLS < 0.1, one render-blocking CSS < 25 KB brotli, no
   external JS, fonts ≤ 300 KB on the English home). Recheck real numbers with PageSpeed Insights after hosting. Add new page templates to
   `tests/a11y/pages.spec.ts`.
-- Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
+- Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: Site info pages are English-only and unindexed with a card per CMS form, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
 - Links (TidyCal, Tally forms, social, R2 base URL) live in `src/content/settings/site.yml`,

@@ -30,6 +30,7 @@ components:
             - { name: audio, label: Audio }
             - { name: transcript, label: Transcript }
       - name: url
+        label: Link to the file
         type: string
         required: true
         description: Full https:// link to the file in R2.
@@ -56,6 +57,7 @@ content:
         required: true
         description: The lesson title, as on YouTube.
       - name: youtube
+        label: YouTube video
         type: string
         description: Paste the YouTube link (or the 11-character video id). Leave empty for a lesson without a video.
         pattern:
@@ -125,6 +127,7 @@ content:
             - { name: library, label: Library }
             - { name: podcast, label: Podcast }
       - name: youtubePlaylist
+        label: YouTube playlist
         type: string
         description: Link to the YouTube playlist (optional).
         pattern: { regex: '^https://', message: The link must start with https:// }
@@ -160,10 +163,12 @@ content:
         list: { collapsible: { collapsed: true, summary: '{ko}' } }
         fields:
           - name: ko
+            label: Korean
             type: string
             required: true
             description: Example in Korean.
           - name: en
+            label: English
             type: string
             required: true
             description: English translation.
@@ -350,11 +355,13 @@ content:
         required: true
         description: One line shown in the strip at the top of the site.
       - name: from
+        label: Show from
         type: date
         required: true
         description: First day the notice is shown.
         options: { format: yyyy-MM-dd }
       - name: to
+        label: Show until
         type: date
         required: true
         description: Last day the notice is shown; it disappears automatically after this day.
@@ -372,6 +379,7 @@ content:
         type: boolean
         description: Always show it during its dates; students cannot close it. Leave off for notices they may dismiss.
       - name: link
+        label: Details link
         type: string
         description: Optional link for "Details", e.g. /classes/ or a full https:// link.
         pattern:
@@ -387,18 +395,22 @@ content:
     format: yaml
     fields:
       - name: tidycal
+        label: TidyCal booking link
         type: string
         description: Your TidyCal booking link; "Book a class" buttons open it.
         pattern: { regex: '^https://', message: The link must start with https:// }
       - name: contactForm
+        label: Contact form (Tally)
         type: string
         description: Tally contact form link.
         pattern: { regex: '^https://', message: The link must start with https:// }
       - name: quizResultsForm
+        label: Quiz results form (Tally)
         type: string
         description: Tally form that receives quiz results.
         pattern: { regex: '^https://', message: The link must start with https:// }
       - name: filesBaseUrl
+        label: R2 files address
         type: string
         description: Public address of the R2 bucket, e.g. https://files.example.com.
         pattern: { regex: '^https://', message: The link must start with https:// }
@@ -407,6 +419,7 @@ content:
         description: Links in the footer. Leave empty to hide.
         fields:
           - name: youtube
+            label: YouTube channel
             type: string
             description: YouTube channel link.
             pattern: { regex: '^https://', message: The link must start with https:// }
@@ -415,6 +428,7 @@ content:
             description: Instagram profile link.
             pattern: { regex: '^https://', message: The link must start with https:// }
           - name: kofi
+            label: Ko-fi
             type: string
             description: Ko-fi page link.
             pattern: { regex: '^https://', message: The link must start with https:// }

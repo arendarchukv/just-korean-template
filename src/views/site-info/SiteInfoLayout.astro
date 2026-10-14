@@ -1,0 +1,43 @@
+---
+/**
+ * DEMO ONLY — frame of the Site info pages: title, "demo" note and the two tabs (plain links, no JS).
+ * Not part of the live site; see src/data/site-info.ts for what to delete before launch.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface Props {
+  tab: 'content' | 'design';
+  title: string;
+}
+const { tab, title } = Astro.props;
+const TABS = [
+  { id: 'content', label: 'Content', href: '/site-info/' },
+  { id: 'design', label: 'Design system', href: '/site-info/design/' },
+] as const;
+---
+
+<BaseLayout title={title} noindex monolingual>
+  <div class="container-page page-head">
+    <p class="demo-note">
+      <span class="demo-tag">Demo</span>
+      For reviewing the site; this page will not exist on the live site.
+    </p>
+    <h1 class="page-title">Site info</h1>
+    <p class="page-lead">
+      What can be edited, what each form becomes on the site, and the design system it is built
+      with.
+    </p>
+    <nav aria-label="Site info" class="info-tabs">
+      <ul>
+        {TABS.map((t) => (
+          <li>
+            <a href={t.href} aria-current={t.id === tab ? 'page' : undefined}>
+              {t.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+  <slot />
+</BaseLayout>

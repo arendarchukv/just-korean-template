@@ -1,5 +1,8 @@
 ---
-/** Links to the same page in the other locale(s). */
+/**
+ * Language menu: a native disclosure listing every locale in its own name, each linking to the
+ * same page. Works without JS; the script adds Escape and a click outside to close it.
+ */
 import { languages, type Lang } from '@/i18n/ui';
 import { switchLocalePath, useTranslations } from '@/i18n/utils';
 
@@ -8,17 +11,57 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-const targets = (Object.keys(languages) as Lang[]).filter((l) => l !== lang);
+const t = useTranslations(lang);
+const locales = Object.keys(languages) as Lang[];
 ---
 
-{targets.map((target) => (
-  <a
-    href={switchLocalePath(Astro.url, target)}
-    hreflang={target}
-    lang={target}
-    title={useTranslations(target)('lang.switchTo')}
-    class="inline-flex min-h-touch items-center rounded-control px-3 text-sm font-medium text-muted hover:bg-surface hover:text-text"
-  >
-    {languages[target]}
-  </a>
-))}
+<details class="lang-menu" data-lang-menu>
+  <summary class="lang-menu-button">
+    <span class="sr-only">
+      {t('lang.label')}: {languages[lang]}
+    </span>
+    <span aria-hidden="true">{lang.toUpperCase()}</span>
+    <svg
+      class="lang-menu-chevron"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m7 10 5 5 5-5"></path>
+    </svg>
+  </summary>
+  <ul class="lang-menu-list">
+    {locales.map((l) => (
+      <li>
+        <a
+          href={switchLocalePath(Astro.url, l)}
+          hreflang={l}
+          lang={l}
+          aria-current={l === lang ? 'true' : undefined}
+        >
+          {languages[l]}
+        </a>
+      </li>
+    ))}
+  </ul>
+</details>
+
+<script>
+  const menu = document.querySelector<HTMLDetailsElement>('details[data-lang-menu]');
+  if (menu) {
+    const summary = menu.querySelector('summary')!;
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        summary.focus();
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    });
+  }
+</script>

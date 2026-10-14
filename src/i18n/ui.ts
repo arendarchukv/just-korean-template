@@ -60,6 +60,13 @@ const en = {
   'home.newLessons.title': 'New lessons',
   'home.newLessons.all': 'All lessons',
 
+  'lessons.lead':
+    'Every lesson from the channel, grouped the way it is on YouTube. Courses are meant to be watched in order.',
+  'lessons.other': 'Other lessons',
+  'lessons.playlist': 'Playlist on YouTube',
+  'lessons.episode': 'Episode',
+  'lessons.noVideo': 'Lesson without video',
+
   'lesson.watchOnYouTube': 'Watch on YouTube',
   'lesson.comingSoon': 'The full lesson page is being built.',
 
@@ -141,6 +148,13 @@ const ko: Partial<Record<UIKey, string>> = {
   'home.contents.news.body': '배울 단어와 함께 읽는 진짜 한국어 뉴스.',
   'home.newLessons.title': '새 강의',
   'home.newLessons.all': '모든 강의',
+
+  'lessons.lead':
+    '강의는 유튜브 채널과 같은 방식으로 정리했어요. 코스는 순서대로 보는 걸 추천해요.',
+  'lessons.other': '기타 강의',
+  'lessons.playlist': '유튜브 재생목록',
+  'lessons.episode': '에피소드',
+  'lessons.noVideo': '영상 없는 강의',
 
   'lesson.watchOnYouTube': '유튜브에서 보기',
   'lesson.comingSoon': '강의 페이지를 준비하고 있어요.',

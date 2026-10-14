@@ -285,6 +285,21 @@ for (const path of ['lessons', 'grammar', 'practice']) {
   }
 }
 
+// --- Lessons library: every lesson linked, a course as a numbered list, in both languages ---
+for (const [page, prefix] of [
+  ['lessons/index.html', ''],
+  ['ko/lessons/index.html', '/ko'],
+]) {
+  const html = read(page);
+  for (const file of contentFiles('lessons')) {
+    const id = file.replace(/\.md$/, '');
+    if (!html.includes(`href="${prefix}/lessons/${id}/"`)) problems.push(`${page}: no link to ${id}`);
+  }
+  if (!/<ol[^>]*class="[^"]*course-list/.test(html)) {
+    problems.push(`${page}: course is not a numbered list`);
+  }
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

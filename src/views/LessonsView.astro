@@ -1,0 +1,79 @@
+---
+/** Lessons library: series in CMS order; a course as a numbered table of contents, others as a grid. */
+import { Image } from 'astro:assets';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getLessons, getSeries } from '@/content/queries';
+import type { Lang } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+import { groupBySeries } from '@/lib/site-logic';
+import { youtubeThumbnail } from '@/lib/youtube';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const groups = groupBySeries(await getLessons(), await getSeries());
+const href = (id: string) => localizePath(lang, `lessons/${id}`);
+---
+
+<BaseLayout title={t('page.lessons.title')}>
+  <div class="container-page page-head">
+    <h1 class="page-title">{t('page.lessons.title')}</h1>
+    <p class="page-lead">{t('lessons.lead')}</p>
+  </div>
+  {groups.map((g, i) => (
+    <section class="container-page page-section" aria-labelledby={`series-${i}`}>
+      <div class="page-section-head">
+        <h2 id={`series-${i}`} class="page-section-title">
+          {g.series?.title ?? t('lessons.other')}
+        </h2>
+        {g.series?.youtubePlaylist && (
+          <a class="link" href={g.series.youtubePlaylist} target="_blank" rel="noopener noreferrer">
+            {t('lessons.playlist')}
+          </a>
+        )}
+      </div>
+      {g.series?.description && <p class="page-section-lead">{g.series.description}</p>}
+      {g.series?.kind === 'course' ? (
+        <ol class="course-list">
+          {g.lessons.map((l) => (
+            <li>
+              <a href={href(l.id)} class="course-link">
+                <span class="course-number" aria-hidden="true">
+                  {l.episode ? String(l.episode).padStart(2, '0') : '·'}
+                </span>
+                <span class="course-title">{l.title}</span>
+                {l.summary && <span class="course-summary">{l.summary}</span>}
+              </a>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <ul class="lesson-row">
+          {g.lessons.map((l) => (
+            <li>
+              <a class="lesson-tile" href={href(l.id)}>
+                {l.youtube ? (
+                  <Image
+                    src={youtubeThumbnail(l.youtube)}
+                    alt=""
+                    width={480}
+                    height={270}
+                    fit="cover"
+                    class="lesson-thumb"
+                  />
+                ) : (
+                  <span class="lesson-thumb lesson-thumb-empty grid-paper">
+                    {t('lessons.noVideo')}
+                  </span>
+                )}
+                <span class="lesson-title">{l.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  ))}
+</BaseLayout>

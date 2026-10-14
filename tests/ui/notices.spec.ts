@@ -23,7 +23,7 @@ test('the last day of a notice still shows it', async ({ page }) => {
 test('a dismissed notice stays hidden after reload and frees its place', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-10-20T10:00:00'));
   await page.goto('/');
-  // Three notices are active; two show at once (important, then news), info waits.
+  // Four notices are active; three show at once (important, then news), info waits.
   await expect(strip(page).getByText('Spain timetable')).toBeHidden();
   const item = strip(page).getByRole('listitem').filter({ hasText: 'New website' });
   await item.getByRole('button', { name: /dismiss/i }).click();
@@ -41,6 +41,16 @@ test('a pinned notice has no dismiss button and always shows during its dates', 
   const pinned = strip(page).getByRole('listitem').filter({ hasText: 'Winter break' });
   await expect(pinned).toBeVisible();
   await expect(pinned.getByRole('button', { name: /dismiss/i })).toHaveCount(0);
+});
+
+test('every visible notice row has the same height, pinned or not', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-20T10:00:00'));
+  await page.goto('/');
+  const heights = await strip(page)
+    .locator('[data-notice]:not([hidden])')
+    .evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().height)));
+  expect(heights.length).toBe(3);
+  expect(new Set(heights).size, heights.join(', ')).toBe(1);
 });
 
 test('each notice says its type in words, not only in colour', async ({ page }) => {
@@ -71,7 +81,7 @@ test('without JavaScript, exactly the notices active at build time show', async 
   expect(items.length).toBeGreaterThan(0);
   let shown = 0;
   for (const item of items) {
-    const active = item.from <= today && today <= item.to && shown < 2;
+    const active = item.from <= today && today <= item.to && shown < 3;
     if (active) shown += 1;
     expect(item.hidden, JSON.stringify(item)).toBe(!active);
   }

@@ -11,7 +11,7 @@ import { localizePath, useTranslations } from '@/i18n/utils';
  * does not depend on the build date. Delete old notices in the CMS to keep the page lean. Tone
  * (important / news / info) sets colour and order and is also said in words; pinned notices have
  * no close button. Dismissed notices are remembered
- * per id. At most two notices show at once.
+ * per id. At most three notices show at once; every row has the same height.
  */
 interface Props {
   lang: Lang;
@@ -21,7 +21,7 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const buildDay = toDay(new Date());
 const notices = sortNotices(await getNotices());
-const MAX = 2;
+const MAX = 3;
 const formatter = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
   day: 'numeric',
   month: 'short',

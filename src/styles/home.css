@@ -23,8 +23,12 @@
     padding: 0;
     list-style: none;
   }
+  /* Every row carries the same 1px border (invisible on the first), so heights match. */
+  .notice-strip li {
+    border-top: 1px dashed transparent;
+  }
   .notice-strip li + li {
-    border-top: 1px dashed var(--color-border);
+    border-top-color: var(--color-border);
   }
   .notice-strip li[data-tone='important'] {
     background: color-mix(in oklab, var(--color-danger) 7%, transparent);
@@ -42,7 +46,8 @@
     grid-template-columns: 1fr auto;
     align-items: center;
     column-gap: 1rem;
-    min-height: 2.75rem;
+    /* Same height with or without the 44px dismiss button (pinned notices have none). */
+    min-height: calc(2.75rem + 0.75rem);
     padding-block: 0.375rem;
   }
   .notice-row .icon-btn {

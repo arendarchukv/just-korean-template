@@ -35,7 +35,7 @@ test('hides site chrome and decoration, keeps the logo as a letterhead', async (
 
   await expect(page.locator('header nav').first()).toBeHidden();
   await expect(page.locator('[data-theme-toggle]')).toBeHidden();
-  await expect(page.getByRole('link', { name: '한국어' })).toBeHidden();
+  await expect(page.getByRole('link', { name: '한국어', exact: true })).toBeHidden();
   // Desktop button and the one inside the mobile menu.
   for (const button of await page.locator('header .btn-primary').all()) {
     await expect(button).toBeHidden();
@@ -60,16 +60,18 @@ test('gives text the full width where a collage was, and drops empty decoration'
 }) => {
   await page.goto('/');
   await page.emulateMedia({ media: 'print' });
+  // The about block is a two-column grid on screen; in print the collage is gone.
   const columns = await page
-    .locator(':has(> .collage)')
-    .first()
+    .locator('.about-hero')
     .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length);
   expect(columns).toBe(1);
+  await page.goto('/styleguide/');
   const eyebrowMark = await page
     .locator('.eyebrow')
     .first()
     .evaluate((el) => getComputedStyle(el, '::before').display);
   expect(eyebrowMark).toBe('none');
+  await page.goto('/');
   // The footer prints only its copyright line, not an empty bordered block.
   await expect(page.locator('footer > .container-page').first()).toBeHidden();
   await expect(page.getByText(/© \d{4} Just Korean/)).toBeVisible();

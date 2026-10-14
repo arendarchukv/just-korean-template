@@ -43,6 +43,11 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
+  image: {
+    // YouTube thumbnails are fetched at build and served as local WebP. Add the R2 domain here
+    // once it is known, so her photo is optimised the same way.
+    domains: ['i.ytimg.com'],
+  },
   markdown: {
     // Code is styled by .prose with semantic tokens; Shiki would inject its own colours.
     syntaxHighlight: false,

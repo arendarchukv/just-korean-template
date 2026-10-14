@@ -211,6 +211,47 @@ for (const page of ['index.html', 'ko/index.html']) {
     problems.push('classes table does not read classes.yml');
 }
 
+const LOCALES = [
+  ['index.html', ''],
+  ['ko/index.html', '/ko'],
+];
+const homeBlock = (page, name) =>
+  new RegExp(`<section[^>]*data-home-block="${name}"[\\s\\S]*?</section>`).exec(read(page))?.[0] ??
+  '';
+
+// --- 목차: five numbered sections, links stay in the locale ---
+for (const [page, prefix] of LOCALES) {
+  const links = [...homeBlock(page, 'contents').matchAll(/<a[^>]*href="([^"]+)"/g)].map(
+    (m) => m[1],
+  );
+  if (links.length !== 5) problems.push(`${page}: site contents has ${links.length} links, not 5`);
+  if (links.some((h) => !h.startsWith(`${prefix}/`)))
+    problems.push(`${page}: contents leave locale`);
+}
+
+// --- New lessons: local optimised thumbnails, links to existing lesson pages ---
+for (const [page, prefix] of LOCALES) {
+  const block = homeBlock(page, 'new-lessons');
+  const imgs = [...block.matchAll(/<img[^>]*>/g)].map((m) => m[0]);
+  if (imgs.length !== 3) problems.push(`${page}: ${imgs.length} new-lesson thumbnails, not 3`);
+  for (const img of imgs) {
+    if (/i\.ytimg\.com/.test(img)) problems.push(`${page}: thumbnail loads from YouTube`);
+    if (!/width="\d+"/.test(img) || !/height="\d+"/.test(img)) {
+      problems.push(`${page}: thumbnail without size`);
+    }
+  }
+  const lessonLinks = [...block.matchAll(/<a[^>]*href="([^"]+)"/g)]
+    .map((m) => m[1])
+    .filter((h) => h.startsWith(`${prefix}/lessons/`));
+  if (lessonLinks.length !== 3) problems.push(`${page}: ${lessonLinks.length} lesson links, not 3`);
+  for (const href of lessonLinks) {
+    if (!exists(`${href.replace(/^\//, '')}index.html`)) {
+      problems.push(`${page}: new lesson links to missing ${href}`);
+    }
+  }
+  if (/korean-numbers/.test(block)) problems.push(`${page}: a lesson without video is listed`);
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

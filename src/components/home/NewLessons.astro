@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import { getHome, getLessons } from '@/content/queries';
+import { selectNewLessons } from '@/lib/content-logic';
+import { youtubeThumbnail } from '@/lib/youtube';
+import type { Lang } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+/** Latest lessons with a video: thumbnails fetched and optimised at build (no requests to Google). */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const { newLessonsCount } = await getHome();
+const lessons = selectNewLessons(await getLessons(), newLessonsCount);
+const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+---
+
+{lessons.length > 0 && (
+  <section
+    class="container-page home-section"
+    data-home-block="new-lessons"
+    aria-labelledby="new-lessons-title"
+  >
+    <div class="home-section-head">
+      <h2 id="new-lessons-title" class="home-section-title">
+        {t('home.newLessons.title')}
+      </h2>
+      <a class="link" href={localizePath(lang, 'learn')}>
+        {t('home.newLessons.all')}
+      </a>
+    </div>
+    <ul class="lesson-row">
+      {lessons.map((l) => (
+        <li>
+          <a class="lesson-tile" href={localizePath(lang, `lessons/${l.id}`)}>
+            <Image
+              src={youtubeThumbnail(l.youtube!)}
+              alt=""
+              width={480}
+              height={270}
+              fit="cover"
+              class="lesson-thumb"
+            />
+            <span class="lesson-meta">
+              {l.seriesEntry && `${l.seriesEntry.data.title} · `}
+              <time datetime={l.date.toISOString().slice(0, 10)}>{dateFormat.format(l.date)}</time>
+            </span>
+            <span class="lesson-title">{l.title}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}

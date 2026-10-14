@@ -3,7 +3,9 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import AboutHero from '@/components/home/AboutHero.astro';
 import ClassesTable from '@/components/home/ClassesTable.astro';
+import NewLessons from '@/components/home/NewLessons.astro';
 import NoticeStrip from '@/components/home/NoticeStrip.astro';
+import SiteContents from '@/components/home/SiteContents.astro';
 import { validateReferences } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 
@@ -20,4 +22,6 @@ await validateReferences();
   <NoticeStrip lang={lang} slot="before-main" />
   <AboutHero lang={lang} />
   <ClassesTable lang={lang} />
+  <SiteContents lang={lang} />
+  <NewLessons lang={lang} />
 </BaseLayout>

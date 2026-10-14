@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Collage from '@/components/shapes/Collage.astro';
-import { SITE } from '@/config';
+import { SITE_NAME_KO } from '@/lib/display-text';
 import { getHome, getSite } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -21,7 +21,7 @@ const booking = (await getSite()).tidycal;
   <div>
     <h1 id="about-title">
       <span lang="ko" class="font-display about-title-ko">
-        {SITE.nameKo}
+        {SITE_NAME_KO}
       </span>
       <span class="about-greeting">{home.greeting}</span>
     </h1>

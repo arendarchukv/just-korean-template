@@ -1,0 +1,39 @@
+---
+/** Minimal lesson page until the real one is built: title, summary, link to the video. */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { Lesson } from '@/content/queries';
+import type { Lang } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+  lesson: Lesson;
+}
+
+const { lang, lesson } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={lesson.title} description={lesson.summary}>
+  <section class="container-page home-section">
+    {lesson.seriesEntry && <p class="eyebrow mb-4">{lesson.seriesEntry.data.title}</p>}
+    <h1 class="text-3xl font-bold">{lesson.title}</h1>
+    {lesson.summary && <p class="mt-4 max-w-2xl text-lg text-muted">{lesson.summary}</p>}
+    <p class="mt-6 text-muted">{t('lesson.comingSoon')}</p>
+    <div class="home-actions">
+      {lesson.youtube && (
+        <a
+          class="btn btn-primary"
+          href={`https://www.youtube.com/watch?v=${lesson.youtube}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('lesson.watchOnYouTube')}
+        </a>
+      )}
+      <a class="btn btn-ghost" href={localizePath(lang, '')}>
+        {t('placeholder.backHome')}
+      </a>
+    </div>
+  </section>
+</BaseLayout>

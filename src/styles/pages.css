@@ -792,6 +792,13 @@
       gap: 4rem;
     }
   }
+  /* The illustration has its own paper background: show it as a sheet, not masked. */
+  .about-portrait {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+  }
   .about-story {
     margin: 1rem 0 0;
     max-width: 60ch;

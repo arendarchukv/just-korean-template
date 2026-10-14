@@ -90,6 +90,7 @@ const en = {
 
   'classes.lead':
     'Live online classes with JiEun: one to one, in a small group, or in a group by level.',
+  'about.portraitAlt': 'Illustrated portrait of JiEun smiling and waving',
   'about.principles': 'How I teach',
   'about.timeline': 'Where I have taught',
   'about.channel': 'The channel',
@@ -267,6 +268,7 @@ const ko: Partial<Record<UIKey, string>> = {
   'materials.lesson': '강의 보기',
 
   'classes.lead': '지은 선생님과 함께하는 온라인 수업: 1:1, 소그룹, 레벨별 그룹 수업이 있어요.',
+  'about.portraitAlt': '웃으며 손을 흔드는 지은 선생님 일러스트',
   'about.principles': '수업 방식',
   'about.timeline': '가르쳐 온 곳',
   'about.channel': '유튜브 채널',

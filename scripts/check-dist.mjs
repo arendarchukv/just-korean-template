@@ -509,6 +509,27 @@ for (const dir of ['', 'ko/']) {
   }
 }
 
+// --- Quiz pages: the widget, and every question readable without JavaScript ---
+for (const dir of ['', 'ko/']) {
+  for (const file of contentFiles('quizzes')) {
+    const id = file.replace(/\.ya?ml$/, '');
+    const page = `${dir}practice/quiz/${id}/index.html`;
+    if (!exists(page)) {
+      problems.push(`missing ${page}`);
+      continue;
+    }
+    const html = read(page);
+    if (!/<astro-island[^>]*Quiz/.test(html)) problems.push(`${page}: no quiz widget`);
+    const fallback = /<noscript>[\s\S]*?<\/noscript>/.exec(html)?.[0] ?? '';
+    const count = (
+      readFileSync(new URL(file, contentDir('quizzes')), 'utf8').match(/- type:/g) ?? []
+    ).length;
+    if ((fallback.match(/<li/g) ?? []).length < count) {
+      problems.push(`${page}: questions missing without JS`);
+    }
+  }
+}
+
 // --- No duplicate ids on any built page ---
 const htmlPages = (dir = '') =>
   readdirSync(new URL(`../dist/${dir}`, import.meta.url), { withFileTypes: true }).flatMap((e) =>

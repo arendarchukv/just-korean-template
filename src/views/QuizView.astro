@@ -1,0 +1,64 @@
+---
+/** One quiz: title, level, linked lesson, then the widget (JS only on this page). */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Quiz from '@/components/widgets/Quiz.svelte';
+import type { getQuizzes } from '@/content/queries';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+type QuizEntry = Awaited<ReturnType<typeof getQuizzes>>[number];
+interface Props {
+  lang: Lang;
+  quiz: QuizEntry;
+}
+
+const { lang, quiz } = Astro.props;
+const t = useTranslations(lang);
+const labels = {
+  position: t('quiz.position'),
+  yourAnswer: t('quiz.yourAnswer'),
+  check: t('quiz.check'),
+  correct: t('quiz.correct'),
+  wrong: t('quiz.wrong'),
+  expected: t('quiz.expected'),
+  next: t('quiz.next'),
+  seeResult: t('quiz.seeResult'),
+  result: t('quiz.result'),
+  best: t('quiz.best'),
+  again: t('quiz.again'),
+};
+---
+
+<BaseLayout title={quiz.title}>
+  <div class="container-page page-head">
+    <p class="lesson-series">
+      <a class="link" href={localizePath(lang, 'practice')}>
+        {t('page.practice.title')}
+      </a>
+      · {t('practice.quizzes')} · {t(`grammar.level.${quiz.level}` as UIKey)}
+    </p>
+    <h1 class="page-title">{quiz.title}</h1>
+    {quiz.lessonEntry && (
+      <p class="widget-lesson">
+        {t('widget.fromLesson')}{' '}
+        <a class="link" href={localizePath(lang, `lessons/${quiz.lessonEntry.id}`)}>
+          {quiz.lessonEntry.title}
+        </a>
+      </p>
+    )}
+  </div>
+  <section class="container-page page-section">
+    <Quiz client:visible quizId={quiz.id} questions={quiz.questions} labels={labels} />
+    <noscript>
+      <ol class="widget-fallback">
+        {quiz.questions.map((q) => (
+          <li lang="ko">
+            {q.type === 'choice'
+              ? `${q.prompt} (${q.options.map((o) => o.text).join(' / ')})`
+              : q.sentence}
+          </li>
+        ))}
+      </ol>
+    </noscript>
+  </section>
+</BaseLayout>

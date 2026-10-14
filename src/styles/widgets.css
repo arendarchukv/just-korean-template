@@ -84,4 +84,57 @@
     font-family: var(--font-korean);
     color: var(--color-muted);
   }
+
+  /* Quiz: the sentence large, options as the design-system quiz buttons. */
+  .quiz-prompt {
+    margin: 0;
+    font-family: var(--font-korean);
+    font-size: var(--text-2xl);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .quiz-options {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .quiz-option:disabled {
+    cursor: default;
+  }
+  .quiz-fill {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .quiz-fill label {
+    font-weight: 600;
+  }
+  .quiz-fill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .quiz-fill-row .field {
+    flex: 1 1 12rem;
+  }
+  .quiz-feedback {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--color-danger);
+  }
+  .quiz-feedback[data-correct='true'] {
+    border-left-color: var(--color-teal);
+  }
+  .quiz-feedback p {
+    margin: 0;
+  }
+  .quiz-verdict {
+    font-weight: 700;
+    color: var(--color-danger);
+  }
+  .quiz-feedback[data-correct='true'] .quiz-verdict {
+    color: var(--color-teal);
+  }
+  .quiz-explanation {
+    color: var(--color-muted);
+  }
 }

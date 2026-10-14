@@ -1,0 +1,450 @@
+# Pages CMS forms. Keep in step with src/content/schemas.ts (checked by pages-config.test.ts).
+# Files (PDF, audio, photos) live in Cloudflare R2: upload there, paste the public link here.
+
+components:
+  level:
+    type: select
+    label: Level
+    description: Who the content is for.
+    options:
+      values:
+        - { name: beginner, label: Beginner }
+        - { name: intermediate, label: Intermediate }
+        - { name: advanced, label: Advanced }
+  download:
+    type: object
+    label: File
+    description: Upload the file to R2 in the Cloudflare dashboard, then paste its public link.
+    fields:
+      - name: label
+        type: string
+        required: true
+        description: What students see, e.g. "Lesson notes" or "Transcript".
+      - name: kind
+        type: select
+        required: true
+        description: Shown as a small label next to the download button.
+        options:
+          values:
+            - { name: pdf, label: PDF }
+            - { name: audio, label: Audio }
+            - { name: transcript, label: Transcript }
+      - name: url
+        type: string
+        required: true
+        description: Full https:// link to the file in R2.
+        pattern:
+          regex: '^https://'
+          message: The link must start with https://
+
+content:
+  - name: lessons
+    label: Lessons
+    type: collection
+    path: src/content/lessons
+    format: yaml-frontmatter
+    filename: { template: '{primary}.md', field: create }
+    view:
+      fields: [title, date, series]
+      primary: title
+      search: [title, summary]
+      sort: [date, title]
+      default: { sort: date, order: desc }
+    fields:
+      - name: title
+        type: string
+        required: true
+        description: The lesson title, as on YouTube.
+      - name: youtube
+        type: string
+        description: Paste the YouTube link (or the 11-character video id). Leave empty for a lesson without a video.
+      - name: series
+        type: reference
+        description: The playlist or series this lesson belongs to.
+        options: { collection: series, search: title, value: '{name}', label: '{title}' }
+      - name: episode
+        type: number
+        description: Position in an ordered series (course). Leave empty otherwise.
+      - name: date
+        type: date
+        required: true
+        description: Publication date; the home page shows the newest lessons first.
+        options: { format: yyyy-MM-dd }
+      - name: level
+        component: level
+        required: true
+      - name: grammar
+        type: reference
+        description: Grammar patterns explained in this lesson.
+        options: { collection: grammar, multiple: true, search: pattern, value: '{name}', label: '{pattern}' }
+      - name: summary
+        type: text
+        description: One or two sentences for cards and search results.
+      - name: downloads
+        component: download
+        label: Files
+        description: Files for this lesson (notes, transcript, audio). Upload to R2 first.
+        list: { collapsible: { collapsed: true, summary: '{label}' } }
+      - name: body
+        type: rich-text
+        label: Lesson text
+        description: Explanation or transcript shown on the lesson page.
+
+  - name: series
+    label: Series
+    type: collection
+    path: src/content/series
+    format: yaml
+    filename: { template: '{primary}.yml', field: create }
+    view: { fields: [title, kind, order], primary: title, default: { sort: order, order: asc } }
+    fields:
+      - name: title
+        type: string
+        required: true
+        description: Series name, e.g. "Beginner Korean Crash Course".
+      - name: description
+        type: text
+        description: One or two sentences about the series.
+      - name: kind
+        type: select
+        required: true
+        description: Course = watch in order (shows progress). Library = any order. Podcast = episodes.
+        options:
+          values:
+            - { name: course, label: Course (in order) }
+            - { name: library, label: Library }
+            - { name: podcast, label: Podcast }
+      - name: youtubePlaylist
+        type: string
+        description: Link to the YouTube playlist (optional).
+      - name: order
+        type: number
+        description: Display order on the site; smaller numbers come first.
+
+  - name: grammar
+    label: Grammar
+    type: collection
+    path: src/content/grammar
+    format: yaml-frontmatter
+    filename: { template: '{primary}.md', field: create }
+    view: { fields: [pattern, meaning, level], primary: pattern, search: [pattern, meaning] }
+    fields:
+      - name: pattern
+        type: string
+        required: true
+        description: The pattern as students search for it, e.g. "-아/어 봤자".
+      - name: meaning
+        type: string
+        required: true
+        description: Meaning in one short English line.
+      - name: level
+        component: level
+        required: true
+      - name: formation
+        type: text
+        description: How the pattern is formed, e.g. "Verb stem + 아/어 봤자".
+      - name: examples
+        type: object
+        description: Example sentences with a translation.
+        list: { collapsible: { collapsed: true, summary: '{ko}' } }
+        fields:
+          - name: ko
+            type: string
+            required: true
+            description: Example in Korean.
+          - name: en
+            type: string
+            required: true
+            description: English translation.
+      - name: compare
+        type: reference
+        description: Similar patterns students confuse with this one.
+        options: { collection: grammar, multiple: true, search: pattern, value: '{name}', label: '{pattern}' }
+      - name: body
+        type: rich-text
+        label: Notes
+        description: Longer explanation (optional).
+
+  - name: materials
+    label: Materials
+    type: collection
+    path: src/content/materials
+    format: yaml
+    filename: { template: '{primary}.yml', field: create }
+    view:
+      fields: [title, category, date]
+      primary: title
+      search: [title, tags]
+      default: { sort: date, order: desc }
+    fields:
+      - name: title
+        type: string
+        required: true
+        description: Title students see in the materials list.
+      - name: category
+        type: select
+        required: true
+        description: Section of the materials page.
+        options:
+          values:
+            - { name: class-helper, label: Class Helper }
+            - { name: podcast, label: Podcast }
+            - { name: extra-notes, label: Extra Notes }
+      - name: tags
+        type: string
+        list: true
+        description: Short topics for filtering, e.g. "vocabulary", "reading".
+      - name: date
+        type: date
+        required: true
+        description: Date the material was added.
+        options: { format: yyyy-MM-dd }
+      - name: files
+        component: download
+        label: Files
+        description: One or more files. Upload to R2 first, then paste the links.
+        list: { min: 1, collapsible: { collapsed: true, summary: '{label}' } }
+      - name: lesson
+        type: reference
+        description: Lesson this material belongs to (optional).
+        options: { collection: lessons, search: title, value: '{name}', label: '{title}' }
+
+  - name: decks
+    label: Flashcards
+    type: collection
+    path: src/content/decks
+    format: yaml
+    filename: { template: '{primary}.yml', field: create }
+    view: { fields: [title, level], primary: title, search: [title] }
+    fields:
+      - name: title
+        type: string
+        required: true
+        description: Deck name, e.g. "Food and snacks".
+      - name: level
+        component: level
+        required: true
+      - name: description
+        type: text
+        description: One sentence about the deck (optional).
+      - name: lesson
+        type: reference
+        description: Lesson or podcast episode this deck goes with (optional).
+        options: { collection: lessons, search: title, value: '{name}', label: '{title}' }
+      - name: cards
+        type: object
+        description: The cards. Korean on the front, meaning on the back.
+        list: { min: 1, collapsible: { collapsed: true, summary: '{front}' } }
+        fields:
+          - name: front
+            type: string
+            required: true
+            description: Korean word or phrase.
+          - name: back
+            type: string
+            required: true
+            description: Meaning.
+          - name: example
+            type: string
+            description: Example sentence (optional).
+
+  - name: quizzes
+    label: Quizzes
+    type: collection
+    path: src/content/quizzes
+    format: yaml
+    filename: { template: '{primary}.yml', field: create }
+    view: { fields: [title, level], primary: title, search: [title] }
+    fields:
+      - name: title
+        type: string
+        required: true
+        description: Quiz title.
+      - name: level
+        component: level
+        required: true
+      - name: lesson
+        type: reference
+        description: Lesson this quiz checks (optional).
+        options: { collection: lessons, search: title, value: '{name}', label: '{title}' }
+      - name: questions
+        type: block
+        description: Add questions; each can be multiple choice or fill in the gap.
+        list: true
+        blockKey: type
+        blocks:
+          - name: choice
+            label: Multiple choice
+            fields:
+              - name: prompt
+                type: string
+                required: true
+                description: The question or sentence.
+              - name: options
+                type: object
+                description: Answer options; tick the correct one.
+                list: { min: 2 }
+                fields:
+                  - name: text
+                    type: string
+                    required: true
+                    description: Option text.
+                  - name: correct
+                    type: boolean
+                    description: Tick if this option is correct.
+              - name: explanation
+                type: text
+                description: Shown after answering (optional).
+          - name: fill
+            label: Fill in the gap
+            fields:
+              - name: sentence
+                type: string
+                required: true
+                description: Sentence with the gap written as ___ (three underscores).
+              - name: answer
+                type: string
+                required: true
+                description: The correct answer.
+              - name: alternatives
+                type: string
+                list: true
+                description: Other accepted answers (optional).
+              - name: explanation
+                type: text
+                description: Shown after answering (optional).
+
+  - name: notices
+    label: Notices
+    type: collection
+    path: src/content/notices
+    format: yaml
+    filename: { template: '{primary}.yml', field: create }
+    view: { fields: [title, from, to, tone], primary: title, default: { sort: from, order: desc } }
+    fields:
+      - name: title
+        type: string
+        required: true
+        description: Short headline, e.g. "Winter break".
+      - name: text
+        type: text
+        required: true
+        description: One line shown in the strip at the top of the site.
+      - name: from
+        type: date
+        required: true
+        description: First day the notice is shown.
+        options: { format: yyyy-MM-dd }
+      - name: to
+        type: date
+        required: true
+        description: Last day the notice is shown; it disappears automatically after this day.
+        options: { format: yyyy-MM-dd }
+      - name: tone
+        type: select
+        required: true
+        description: Important notices come first and stand out more.
+        options:
+          values:
+            - { name: important, label: Important }
+            - { name: info, label: Info }
+      - name: link
+        type: string
+        description: Optional link for "Details", e.g. /classes/ or a full https:// link.
+
+  - name: home
+    label: Home page
+    type: file
+    path: src/content/settings/home.yml
+    format: yaml
+    fields:
+      - name: greeting
+        type: string
+        required: true
+        description: First line of the about block, e.g. "Hi, I'm JiEun".
+      - name: intro
+        type: text
+        required: true
+        description: Two sentences about you and how you teach.
+      - name: photo
+        type: string
+        description: Your photo. Upload it to R2 and paste the https:// link; a paper shape shows until then.
+      - name: photoAlt
+        type: string
+        description: Short description of the photo for screen readers.
+      - name: credentials
+        type: string
+        list: true
+        description: Short facts students trust, one per line (degree, experience, subscribers).
+      - name: newLessonsCount
+        type: number
+        description: How many new lessons the home page shows (1 to 6).
+
+  - name: classes
+    label: Classes
+    type: file
+    path: src/content/settings/classes.yml
+    format: yaml
+    fields:
+      - name: formats
+        type: object
+        description: Class formats, shown on the home page and the Classes page.
+        list: { min: 1, collapsible: { collapsed: true, summary: '{name}' } }
+        fields:
+          - name: name
+            type: string
+            required: true
+            description: Format name, e.g. "1:1 private class".
+          - name: forWhom
+            type: string
+            required: true
+            description: Who it suits, in a few words.
+          - name: how
+            type: text
+            required: true
+            description: How it works, in one sentence.
+      - name: faq
+        type: object
+        description: Questions students ask before booking.
+        list: { collapsible: { collapsed: true, summary: '{question}' } }
+        fields:
+          - name: question
+            type: string
+            required: true
+            description: The question.
+          - name: answer
+            type: text
+            required: true
+            description: The answer.
+
+  - name: site
+    label: Site settings
+    type: file
+    path: src/content/settings/site.yml
+    format: yaml
+    fields:
+      - name: tidycal
+        type: string
+        description: Your TidyCal booking link; "Book a class" buttons open it.
+      - name: contactForm
+        type: string
+        description: Tally contact form link.
+      - name: quizResultsForm
+        type: string
+        description: Tally form that receives quiz results.
+      - name: filesBaseUrl
+        type: string
+        description: Public address of the R2 bucket, e.g. https://files.example.com.
+      - name: social
+        type: object
+        description: Links in the footer. Leave empty to hide.
+        fields:
+          - name: youtube
+            type: string
+            description: YouTube channel link.
+          - name: instagram
+            type: string
+            description: Instagram profile link.
+          - name: kofi
+            type: string
+            description: Ko-fi page link.

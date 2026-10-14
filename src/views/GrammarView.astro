@@ -1,0 +1,86 @@
+---
+/** Pattern page: meaning, formation, examples on grid paper, compare-with, and its video lessons. */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BilingualPair from '@/components/learn/BilingualPair.astro';
+import ExampleBlock from '@/components/learn/ExampleBlock.astro';
+import { getGrammar, getLessons, renderBody } from '@/content/queries';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+import { lessonsForPattern } from '@/lib/site-logic';
+
+type Pattern = Awaited<ReturnType<typeof getGrammar>>[number];
+interface Props {
+  lang: Lang;
+  pattern: Pattern;
+}
+const { lang, pattern } = Astro.props;
+const t = useTranslations(lang);
+const all = await getGrammar();
+const compare = pattern.compare.map((id) => all.find((g) => g.id === id)!).filter(Boolean);
+const lessons = lessonsForPattern(await getLessons(), pattern.id);
+const Body = await renderBody('grammar', pattern.id);
+---
+
+<BaseLayout title={pattern.pattern} description={pattern.meaning}>
+  <article class="container-page grammar-page">
+    <p class="lesson-series">
+      <a class="link" href={localizePath(lang, 'grammar')}>
+        {t('grammar.all')}
+      </a>{' '}
+      · {t(`grammar.level.${pattern.level}` as UIKey)}
+    </p>
+    <h1 class="grammar-pattern" lang="ko">
+      {pattern.pattern}
+    </h1>
+    <p class="grammar-meaning">{pattern.meaning}</p>
+    {pattern.formation && (
+      <section class="lesson-block">
+        <h2 class="lesson-block-title">{t('grammar.formation')}</h2>
+        <p class="grammar-formation" lang="ko">
+          {pattern.formation}
+        </p>
+      </section>
+    )}
+    {pattern.examples.length > 0 && (
+      <section class="lesson-block">
+        <h2 class="lesson-block-title">{t('grammar.examples')}</h2>
+        <ExampleBlock>
+          {pattern.examples.map((e) => (
+            <BilingualPair ko={e.ko} translation={e.en} />
+          ))}
+        </ExampleBlock>
+      </section>
+    )}
+    <div class="prose">
+      <Body />
+    </div>
+    {compare.length > 0 && (
+      <section class="lesson-block">
+        <h2 class="lesson-block-title">{t('grammar.compare')}</h2>
+        <ul class="chip-list">
+          {compare.map((c) => (
+            <li>
+              <a class="pattern-chip" lang="ko" href={localizePath(lang, `grammar/${c.id}`)}>
+                {c.pattern}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+    {lessons.length > 0 && (
+      <section class="lesson-block">
+        <h2 class="lesson-block-title">{t('grammar.videos')}</h2>
+        <ul class="file-list">
+          {lessons.map((l) => (
+            <li>
+              <a class="file-link" href={localizePath(lang, `lessons/${l.id}`)}>
+                <span>{l.title}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+</BaseLayout>

@@ -8,6 +8,8 @@ const PAGES = [
   '/lessons/',
   '/ko/lessons/',
   '/grammar/',
+  '/grammar/ge/',
+  '/ko/grammar/ge/',
   '/practice/',
   '/ko/practice/',
   '/materials/',

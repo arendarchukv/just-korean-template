@@ -4,5 +4,6 @@ youtube: RvBFVpgYfWQ
 series: grammar
 date: 2025-10-10
 level: intermediate
+grammar: [go-itda]
 summary: A state that continues, or an action in progress.
 ---

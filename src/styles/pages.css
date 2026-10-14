@@ -291,4 +291,88 @@
       transform: translate(-50%, -50%);
     }
   }
+
+  /* Grammar reference: ruled list of patterns; the filter appears only with JS. */
+  .grammar-search {
+    margin-top: 1.5rem;
+    max-width: 28rem;
+  }
+  .grammar-search[hidden],
+  [data-grammar-group][hidden],
+  .pattern-list li[hidden] {
+    display: none;
+  }
+  .grammar-status {
+    min-height: 1.5em;
+    margin: 0.5rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .page-section-title + .pattern-list {
+    margin-top: 1.25rem;
+  }
+  .pattern-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--color-text);
+  }
+  .pattern-link {
+    display: grid;
+    gap: 0.2rem 1.5rem;
+    min-height: 44px;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: inherit;
+    text-decoration: none;
+  }
+  @media (min-width: 40rem) {
+    .pattern-link {
+      grid-template-columns: minmax(8rem, 14rem) 1fr;
+      align-items: baseline;
+    }
+  }
+  .pattern-name {
+    font-family: var(--font-korean);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-brand);
+  }
+  .pattern-meaning {
+    color: var(--color-muted);
+  }
+  .pattern-link:hover .pattern-meaning {
+    color: var(--color-text);
+  }
+
+  /* Pattern page. */
+  /* Left-aligned with the header like other pages; the reading width is kept per child. */
+  .grammar-page {
+    padding-block: 2rem 3rem;
+  }
+  .grammar-page > * {
+    max-width: 48rem;
+  }
+  .grammar-pattern {
+    margin: 0.5rem 0;
+    font-family: var(--font-korean);
+    font-size: clamp(2.5rem, 7vw, 4rem);
+    line-height: 1.1;
+    font-weight: 700;
+  }
+  .grammar-meaning {
+    margin: 0;
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+  }
+  .grammar-formation {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-left: 3px solid var(--color-teal);
+    font-family: var(--font-korean);
+    font-size: var(--text-lg);
+  }
+  .grammar-page .prose:not(:empty) {
+    margin-top: 2.5rem;
+  }
 }

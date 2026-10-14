@@ -1,0 +1,86 @@
+---
+/** Grammar reference: patterns by level with a client-side filter (the full list without JS). */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getGrammar } from '@/content/queries';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+import { groupByLevel } from '@/lib/site-logic';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const groups = groupByLevel(await getGrammar());
+---
+
+<BaseLayout title={t('page.grammar.title')}>
+  <div class="container-page page-head">
+    <h1 class="page-title">{t('page.grammar.title')}</h1>
+    <p class="page-lead">{t('grammar.lead')}</p>
+    <div class="grammar-search" data-grammar-search hidden>
+      <label for="grammar-q" class="sr-only">
+        {t('grammar.search')}
+      </label>
+      <input
+        id="grammar-q"
+        type="search"
+        class="field"
+        placeholder={t('grammar.searchHint')}
+        autocomplete="off"
+      />
+      <p role="status" class="grammar-status" data-no-results={t('grammar.noResults')}></p>
+    </div>
+  </div>
+  {groups.map((g) => (
+    <section
+      class="container-page page-section"
+      data-grammar-group
+      aria-labelledby={`level-${g.level}`}
+    >
+      <h2 id={`level-${g.level}`} class="page-section-title">
+        {t(`grammar.level.${g.level}` as UIKey)}
+      </h2>
+      <ul class="pattern-list">
+        {g.items.map((p) => (
+          <li data-search={`${p.pattern} ${p.meaning}`.toLowerCase()}>
+            <a
+              href={localizePath(lang, `grammar/${p.id}`)}
+              class="pattern-link"
+              aria-label={p.pattern}
+            >
+              <span class="pattern-name" lang="ko">
+                {p.pattern}
+              </span>
+              <span class="pattern-meaning">{p.meaning}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+  <script is:inline>
+    (() => {
+      const box = document.querySelector('[data-grammar-search]');
+      if (!box) return;
+      box.hidden = false;
+      const input = box.querySelector('input');
+      const status = box.querySelector('[role="status"]');
+      input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase();
+        let total = 0;
+        for (const group of document.querySelectorAll('[data-grammar-group]')) {
+          let shown = 0;
+          for (const li of group.querySelectorAll('[data-search]')) {
+            const match = !q || li.dataset.search.includes(q);
+            li.hidden = !match;
+            if (match) shown += 1;
+          }
+          group.hidden = shown === 0;
+          total += shown;
+        }
+        status.textContent = total === 0 ? status.dataset.noResults : '';
+      });
+    })();
+  </script>
+</BaseLayout>

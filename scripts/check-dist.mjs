@@ -293,7 +293,8 @@ for (const [page, prefix] of [
   const html = read(page);
   for (const file of contentFiles('lessons')) {
     const id = file.replace(/\.md$/, '');
-    if (!html.includes(`href="${prefix}/lessons/${id}/"`)) problems.push(`${page}: no link to ${id}`);
+    if (!html.includes(`href="${prefix}/lessons/${id}/"`))
+      problems.push(`${page}: no link to ${id}`);
   }
   if (!/<ol[^>]*class="[^"]*course-list/.test(html)) {
     problems.push(`${page}: course is not a numbered list`);
@@ -322,6 +323,27 @@ const deadLinks = (html) => {
   if (/data-video-facade/.test(read('lessons/korean-numbers/index.html'))) {
     problems.push('lesson without video shows a player');
   }
+}
+
+// --- Grammar: index lists every pattern; each pattern page exists in both languages ---
+for (const [prefix, dir] of [
+  ['', ''],
+  ['/ko', 'ko/'],
+]) {
+  const index = read(`${dir}grammar/index.html`);
+  for (const file of contentFiles('grammar')) {
+    const id = file.replace(/\.md$/, '');
+    if (!index.includes(`href="${prefix}/grammar/${id}/"`)) {
+      problems.push(`${dir}grammar: no link to ${id}`);
+    }
+    if (!exists(`${dir}grammar/${id}/index.html`)) problems.push(`missing ${dir}grammar/${id}/`);
+  }
+}
+if (exists('grammar/ge/index.html')) {
+  const ge = read('grammar/ge/index.html');
+  if (!/href="\/lessons\/ge-vs-dorok\/"/.test(ge))
+    problems.push('grammar/ge lacks its video lesson');
+  for (const href of deadLinks(ge)) problems.push(`grammar/ge links to missing ${href}`);
 }
 
 if (problems.length) {

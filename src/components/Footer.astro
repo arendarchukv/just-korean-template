@@ -1,6 +1,7 @@
 ---
 import Logo from '@/components/Logo.astro';
-import { SITE, SOCIAL_LINKS, type SocialKey } from '@/config';
+import { SITE } from '@/config';
+import { getSite } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -10,12 +11,14 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+const site = await getSite();
 
-const LINKS: { key: SocialKey; label: UIKey }[] = [
-  { key: 'youtube', label: 'footer.youtube' },
-  { key: 'instagram', label: 'footer.instagram' },
-  { key: 'contact', label: 'footer.contact' },
-  { key: 'kofi', label: 'footer.kofi' },
+// Links are edited in Pages CMS (Site settings); empty ones render as inert links.
+const LINKS: { href: string; label: UIKey }[] = [
+  { href: site.social.youtube, label: 'footer.youtube' },
+  { href: site.social.instagram, label: 'footer.instagram' },
+  { href: site.contactForm, label: 'footer.contact' },
+  { href: site.social.kofi, label: 'footer.kofi' },
 ];
 
 const year = new Date().getFullYear();
@@ -38,8 +41,7 @@ const year = new Date().getFullYear();
             {t('footer.about')}
           </a>
         </li>
-        {LINKS.map(({ key, label }) => {
-          const href = SOCIAL_LINKS[key];
+        {LINKS.map(({ href, label }) => {
           const external = href.startsWith('http');
           return (
             <li>

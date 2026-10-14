@@ -166,6 +166,14 @@ if (!preloads.some((tag) => /as="font"/.test(tag) && /outfit-latin-wght-normal/.
   problems.push('Outfit latin font is not preloaded');
 }
 
+// --- Footer links come from settings/site.yml: the YouTube link is set in demo content ---
+for (const page of ['index.html', 'ko/index.html']) {
+  const footer = /<footer[\s\S]*<\/footer>/.exec(read(page))?.[0] ?? '';
+  if (!footer.includes('href="https://www.youtube.com/@JustKorean"')) {
+    problems.push(`${page}: footer YouTube link does not come from site settings`);
+  }
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

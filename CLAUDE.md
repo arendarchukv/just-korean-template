@@ -6,26 +6,31 @@ discussed with the site owner — do not build it yet.
 ## Status — read this first (updated 2026-10-14)
 
 **Content direction is set:** a lesson-centred library built on her YouTube channel, edited in
-Pages CMS. Spec: `docs/superpowers/specs/2026-10-14-content-model-and-home-design.md` (content
-model, CMS rules, home page). Built: content collections + `.pages.yml`, real demo content, the
-new home page (notice strip, about, classes, 목차, new lessons), placeholder lesson pages.
+Pages CMS. Specs: `docs/superpowers/specs/2026-10-14-content-model-and-home-design.md` (content
+model, CMS, home) and `docs/superpowers/specs/2026-10-14-demo-pages-design.md` (content pages).
+**Feature checklist (her wishes → where they live, status): `docs/features.md`** — update it at
+the end of every cycle.
 
-Next cycles, each with its own spec (from the spec's "Out of scope"): 1. lesson page and series
-library, 2. grammar reference, 3. materials page, 4. flashcards, 5. quizzes with Tally results, 6. dictionary search and pronunciation, 7. Korean news reading (RSS). Also later: daily rebuild on
-the host, an R2 upload page, content translations.
+Built: content collections + `.pages.yml`, demo content, home page (notice strip, about, classes,
+목차, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
+search + pattern pages, Materials, Classes (timetable + FAQ), Practice (decks and quizzes listed,
+krdict search, pronunciation link). Navigation: Lessons · Grammar · Materials · Practice · Classes.
+
+Next cycles, each with its own spec: 1. interactive flashcards (study mode, progress), 2. quizzes with results via Tally, 3. Korean news reading (RSS), 4. site search (Pagefind).
+Also later: daily rebuild on the host, an R2 upload page, content translations.
 
 Done earlier (content-independent):
 
 - Foundation: Astro 7 static, Tailwind v4, strict TS, i18n EN (`/`) + KO (`/ko/`), sitemap,
-  theme toggle (light/dark), header/footer, placeholder pages (Learn, Materials, Classes, News,
-  About), 404s.
+  theme toggle (light/dark), header/footer, About page, 404s.
 - Design system "Paper & cut-outs" (spec `docs/superpowers/specs/2026-10-11-design-system-design.md`),
   shown on `/styleguide` (dev page, noindex).
 - Long-form typography (`.prose`), print styles, app icons + share image (`npm run icons`),
   `robots.txt`, web manifest.
 - Polish: mobile menu behaviour, heading anchors, page transitions, finishing details.
 - Quality gates: `npm test` (unit), `npm run check`, `npm run build` + `npm run check:dist`,
-  `npm run test:browser` (axe a11y, print, UI, performance budget in local Chrome).
+  `npm run test:browser` (axe a11y, print, UI, then the performance budget on its own with one
+  worker so parallel tests do not skew the throttled timings; local Chrome).
 
 Waiting on the owner (do not guess these):
 
@@ -241,7 +246,11 @@ Data decisions already made:
 - Serif display font (Gowun Batang 700) is loaded only for the glyphs in
   `src/lib/display-text.ts`: after changing that text run `npm run fonts` (regenerates
   `src/styles/display-font.css`; a unit test fails until you do). Home block styles:
-  `src/styles/home.css`. Notice strip hides notices outside their dates in the browser; tones
+  `src/styles/home.css`; content pages: `src/styles/pages.css`. Pure page logic (series order,
+  neighbours, grammar lookups, materials sections, krdict and embed URLs): `src/lib/site-logic.ts`.
+  Video facade (`VideoFacade.astro`): local thumbnail, youtube-nocookie iframe only after a click;
+  without JS a link to YouTube. Grammar filter is a small inline script; without JS the full list.
+  Notice strip hides notices outside their dates in the browser; tones
   `important` (red) / `news` (green) / `info` (blue) set order and the colour of the type word and
   dates, on one continuous striped band; up to three show, rows have equal height;
   `pinned` notices have no close button.

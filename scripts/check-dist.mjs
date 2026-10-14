@@ -349,9 +349,9 @@ if (exists('grammar/ge/index.html')) {
 // --- Materials: chips match sections, every file link is https, no empty section ---
 for (const page of ['materials/index.html', 'ko/materials/index.html']) {
   const html = read(page);
-  const chips = [...html.matchAll(/<a[^>]*class="[^"]*section-chip[^"]*"[^>]*href="#([\w-]+)"/g)].map(
-    (m) => m[1],
-  );
+  const chips = [
+    ...html.matchAll(/<a[^>]*class="[^"]*section-chip[^"]*"[^>]*href="#([\w-]+)"/g),
+  ].map((m) => m[1]);
   const sections = [...html.matchAll(/<section[^>]*id="([\w-]+)"[^>]*data-material-section/g)].map(
     (m) => m[1],
   );
@@ -384,7 +384,9 @@ for (const page of ['practice/index.html', 'ko/practice/index.html']) {
       if (!html.includes(`id="${id}"`)) problems.push(`${page}: no anchor for ${dir}/${id}`);
     }
   }
-  if (!/<form[^>]*action="https:\/\/krdict\.korean\.go\.kr\/eng\/dicMarinerSearch\/search"/.test(html)) {
+  if (
+    !/<form[^>]*action="https:\/\/krdict\.korean\.go\.kr\/eng\/dicMarinerSearch\/search"/.test(html)
+  ) {
     problems.push(`${page}: dictionary form does not target krdict`);
   }
   if (!/name="mainSearchWord"/.test(html)) problems.push(`${page}: dictionary field name`);

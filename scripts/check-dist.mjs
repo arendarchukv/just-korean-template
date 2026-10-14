@@ -259,7 +259,7 @@ for (const [page, prefix] of LOCALES) {
   }
   const lessonLinks = [...block.matchAll(/<a[^>]*href="([^"]+)"/g)]
     .map((m) => m[1])
-    .filter((h) => h.startsWith(`${prefix}/lessons/`));
+    .filter((h) => h.startsWith(`${prefix}/lessons/`) && h !== `${prefix}/lessons/`);
   if (lessonLinks.length !== expectedNewLessons) {
     problems.push(`${page}: ${lessonLinks.length} lesson links, expected ${expectedNewLessons}`);
   }
@@ -269,6 +269,22 @@ for (const [page, prefix] of LOCALES) {
     }
   }
 }
+// --- Navigation: five sections, no /learn/ ---
+for (const [page, prefix] of LOCALES) {
+  const html = read(page);
+  const nav = /<nav[^>]*aria-label="[^"]*"[^>]*>[\s\S]*?<\/nav>/.exec(html)?.[0] ?? '';
+  for (const path of ['lessons', 'grammar', 'materials', 'practice', 'classes']) {
+    if (!nav.includes(`href="${prefix}/${path}/"`)) problems.push(`${page}: nav lacks ${path}`);
+  }
+  if (/\/learn\//.test(html)) problems.push(`${page}: still links to /learn/`);
+}
+for (const path of ['lessons', 'grammar', 'practice']) {
+  for (const prefix of ['', 'ko/']) {
+    if (!exists(`${prefix}${path}/index.html`))
+      problems.push(`missing ${prefix}${path}/index.html`);
+  }
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

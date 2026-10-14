@@ -5,8 +5,11 @@ import { expect, test } from '@playwright/test';
 const PAGES = [
   '/',
   '/ko/',
-  '/learn/',
-  '/ko/learn/',
+  '/lessons/',
+  '/ko/lessons/',
+  '/grammar/',
+  '/practice/',
+  '/ko/practice/',
   '/materials/',
   '/classes/',
   '/news/',

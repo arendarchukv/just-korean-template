@@ -16,10 +16,10 @@ const t = useTranslations(lang);
 
 // Korean terms are set in the serif display font: they live in display-text.ts with the font list.
 const PATHS: Record<keyof typeof CONTENTS_TERMS, string> = {
-  lessons: 'learn',
+  lessons: 'lessons',
   materials: 'materials',
-  practice: 'learn',
-  speaking: 'learn',
+  practice: 'practice',
+  speaking: 'practice',
   news: 'news',
 };
 const ITEMS = (Object.keys(PATHS) as (keyof typeof CONTENTS_TERMS)[]).map((k) => ({

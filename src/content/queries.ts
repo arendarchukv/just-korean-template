@@ -1,4 +1,4 @@
-import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
 
 /**
  * The only module that reads content. Pages never call getCollection directly, so content
@@ -67,4 +67,47 @@ export async function validateReferences(): Promise<void> {
       if (e.data.lesson) await resolve('lessons', e.data.lesson, `${name}/${e.id}: lesson`);
     }
   }
+}
+
+/** Adds the linked lesson's id and title to a material, deck or quiz (checked: it must exist). */
+async function withLesson<T extends { lesson?: string }>(data: T, from: string) {
+  if (!data.lesson) return { ...data, lessonEntry: undefined };
+  const entry = await resolve('lessons', data.lesson, `${from}: lesson`);
+  return { ...data, lessonEntry: { id: entry.id, title: entry.data.title } };
+}
+
+export async function getSeries() {
+  return (await getCollection('series')).map((s) => ({ ...s.data, id: s.id }));
+}
+
+export async function getGrammar() {
+  return (await getCollection('grammar')).map((g) => ({ ...g.data, id: g.id }));
+}
+
+export async function getMaterials() {
+  const entries = await getCollection('materials');
+  return Promise.all(
+    entries.map(async (m) => ({ ...(await withLesson(m.data, `materials/${m.id}`)), id: m.id })),
+  );
+}
+
+export async function getDecks() {
+  const entries = await getCollection('decks');
+  return Promise.all(
+    entries.map(async (d) => ({ ...(await withLesson(d.data, `decks/${d.id}`)), id: d.id })),
+  );
+}
+
+export async function getQuizzes() {
+  const entries = await getCollection('quizzes');
+  return Promise.all(
+    entries.map(async (q) => ({ ...(await withLesson(q.data, `quizzes/${q.id}`)), id: q.id })),
+  );
+}
+
+/** Rendered Markdown body of a lesson or grammar entry. */
+export async function renderBody(collection: 'lessons' | 'grammar', id: string) {
+  const entry = await getEntry(collection, id);
+  if (!entry) throw new Error(`${collection}/${id} not found`);
+  return (await render(entry)).Content;
 }

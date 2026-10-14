@@ -14,10 +14,11 @@ const { lang, showLanguageSwitch = true } = Astro.props;
 const t = useTranslations(lang);
 
 const NAV: { path: string; key: UIKey }[] = [
-  { path: 'learn', key: 'nav.learn' },
+  { path: 'lessons', key: 'nav.lessons' },
+  { path: 'grammar', key: 'nav.grammar' },
   { path: 'materials', key: 'nav.materials' },
+  { path: 'practice', key: 'nav.practice' },
   { path: 'classes', key: 'nav.classes' },
-  { path: 'news', key: 'nav.news' },
 ];
 
 const current = stripLocale(Astro.url.pathname);

@@ -27,7 +27,7 @@ async function revealedWithTransition(page: Page) {
 
 test('navigating between pages uses a cross-document view transition', async ({ page }) => {
   await recordReveal(page);
-  await page.goto('/learn/');
+  await page.goto('/lessons/');
   await page.locator('header nav').getByRole('link', { name: 'Classes' }).click();
   await page.waitForURL('**/classes/');
   expect(await revealedWithTransition(page)).toBe(true);
@@ -43,7 +43,7 @@ test('the header keeps its place during the transition', async ({ page }) => {
 test('no transition when the visitor prefers reduced motion', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await recordReveal(page);
-  await page.goto('/learn/');
+  await page.goto('/lessons/');
   await page.locator('header nav').getByRole('link', { name: 'Classes' }).click();
   await page.waitForURL('**/classes/');
   expect(await revealedWithTransition(page)).toBe(false);

@@ -19,10 +19,11 @@ const en = {
   'a11y.footerNav': 'Footer',
   'a11y.menu': 'Menu',
 
-  'nav.learn': 'Learn',
+  'nav.lessons': 'Lessons',
+  'nav.grammar': 'Grammar',
+  'nav.practice': 'Practice',
   'nav.materials': 'Materials',
   'nav.classes': 'Classes',
-  'nav.news': 'News',
   'nav.bookClass': 'Book a class',
 
   'lang.switchTo': 'Switch to English',
@@ -73,7 +74,9 @@ const en = {
   'placeholder.body': 'This section is being built. Meanwhile, the lessons are on YouTube.',
   'placeholder.backHome': 'Back to home',
 
-  'page.learn.title': 'Learn',
+  'page.lessons.title': 'Lessons',
+  'page.grammar.title': 'Grammar',
+  'page.practice.title': 'Practice',
   'page.materials.title': 'Materials',
   'page.classes.title': 'Classes',
   'page.news.title': 'News',
@@ -99,10 +102,11 @@ const ko: Partial<Record<UIKey, string>> = {
   'a11y.footerNav': '하단 메뉴',
   'a11y.menu': '메뉴',
 
-  'nav.learn': '배우기',
+  'nav.lessons': '강의',
+  'nav.grammar': '문법',
+  'nav.practice': '연습',
   'nav.materials': '자료',
   'nav.classes': '수업',
-  'nav.news': '소식',
   'nav.bookClass': '수업 예약',
 
   'lang.switchTo': '한국어로 보기',
@@ -152,7 +156,9 @@ const ko: Partial<Record<UIKey, string>> = {
   'placeholder.body': '이 페이지는 준비 중이에요. 그동안 유튜브에서 강의를 볼 수 있어요.',
   'placeholder.backHome': '홈으로',
 
-  'page.learn.title': '배우기',
+  'page.lessons.title': '강의',
+  'page.grammar.title': '문법',
+  'page.practice.title': '연습',
   'page.materials.title': '자료',
   'page.classes.title': '수업',
   'page.news.title': '소식',

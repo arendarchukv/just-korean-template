@@ -76,7 +76,14 @@ content:
       - name: grammar
         type: reference
         description: Grammar patterns explained in this lesson.
-        options: { collection: grammar, multiple: true, search: pattern, value: '{name}', label: '{pattern}' }
+        options:
+          {
+            collection: grammar,
+            multiple: true,
+            search: pattern,
+            value: '{name}',
+            label: '{pattern}',
+          }
       - name: summary
         type: text
         description: One or two sentences for cards and search results.
@@ -159,7 +166,14 @@ content:
       - name: compare
         type: reference
         description: Similar patterns students confuse with this one.
-        options: { collection: grammar, multiple: true, search: pattern, value: '{name}', label: '{pattern}' }
+        options:
+          {
+            collection: grammar,
+            multiple: true,
+            search: pattern,
+            value: '{name}',
+            label: '{pattern}',
+          }
       - name: body
         type: rich-text
         label: Notes

@@ -1,97 +1,19 @@
 ---
-/** Placeholder home page, shared by `/` and `/ko/`. */
+/** Home page, shared by `/` and `/ko/`. Content comes from src/content; copy from i18n. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SectionHeading from '@/components/SectionHeading.astro';
-import Collage from '@/components/shapes/Collage.astro';
-import Shape, { type ShapeName, type ShapeTone } from '@/components/shapes/Shape.astro';
-import type { Lang, UIKey } from '@/i18n/ui';
-import { localizePath, useTranslations } from '@/i18n/utils';
+import NoticeStrip from '@/components/home/NoticeStrip.astro';
+import { validateReferences } from '@/content/queries';
+import type { Lang } from '@/i18n/ui';
 
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
-const t = useTranslations(lang);
-
-// Courses, grammar and practice live under Learn for now; update the paths when those pages exist.
-const FEATURES: {
-  title: UIKey;
-  body: UIKey;
-  path: string;
-  shape: ShapeName;
-  tone: ShapeTone;
-}[] = [
-  {
-    title: 'home.feature.courses.title',
-    body: 'home.feature.courses.body',
-    path: 'learn',
-    shape: 'arch',
-    tone: 'teal',
-  },
-  {
-    title: 'home.feature.grammar.title',
-    body: 'home.feature.grammar.body',
-    path: 'learn',
-    shape: 'grid',
-    tone: 'brand',
-  },
-  {
-    title: 'home.feature.practice.title',
-    body: 'home.feature.practice.body',
-    path: 'learn',
-    shape: 'blob',
-    tone: 'teal',
-  },
-  {
-    title: 'home.feature.materials.title',
-    body: 'home.feature.materials.body',
-    path: 'materials',
-    shape: 'zigzag',
-    tone: 'brand',
-  },
-];
+// The home page always builds, so this is where broken references stop the build.
+await validateReferences();
 ---
 
 <BaseLayout>
-  <section class="container-page grid items-center gap-10 pt-14 pb-12 md:grid-cols-[1.15fr_1fr] md:pt-20 md:pb-16">
-    <div>
-      <p class="eyebrow mb-4">{t('home.eyebrow')}</p>
-      <h1 class="text-3xl leading-tight font-bold tracking-tight md:text-4xl">{t('home.title')}</h1>
-      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted md:text-xl">{t('home.lead')}</p>
-      <div class="mt-10 flex flex-wrap gap-3">
-        <a href={localizePath(lang, 'learn')} class="btn btn-primary">
-          {t('home.ctaStart')}
-        </a>
-        <a href={localizePath(lang, 'classes')} class="btn btn-ghost">
-          {t('home.ctaClasses')}
-        </a>
-      </div>
-    </div>
-    <Collage variant="hero" class="mx-auto max-w-md md:max-w-none" />
-  </section>
-
-  <section class="container-page py-12" aria-labelledby="features-title">
-    <SectionHeading id="features-title">{t('home.featuresTitle')}</SectionHeading>
-    <ul class="mt-8 grid gap-4 sm:grid-cols-2">
-      {FEATURES.map((f) => (
-        <li>
-          <a
-            href={localizePath(lang, f.path)}
-            class="card card-interactive block h-full bg-surface"
-          >
-            <Shape
-              name={f.shape}
-              tone={f.tone}
-              texture="hatch"
-              class="card-shape absolute -top-4 -right-4 w-20 opacity-90"
-            />
-            <h3 class="relative text-lg font-semibold">{t(f.title)}</h3>
-            <p class="relative mt-2 max-w-[34ch] text-muted">{t(f.body)}</p>
-            <p class="badge relative mt-4">{t('placeholder.comingSoon')}</p>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </section>
+  <NoticeStrip lang={lang} slot="before-main" />
 </BaseLayout>

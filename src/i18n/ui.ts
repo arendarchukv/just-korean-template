@@ -37,23 +37,9 @@ const en = {
   'footer.kofi': 'Support on Ko-fi',
   'footer.rights': 'All rights reserved.',
 
-  'home.eyebrow': 'Learning companion for the Just Korean channel',
-  'home.title': 'Learn Korean, one clear lesson at a time',
-  'home.lead':
-    'Short, clear lessons from the Just Korean channel, organised into courses, with notes, practice and materials for every video.',
-  'home.ctaStart': 'Start learning',
-  'home.ctaClasses': 'Book a class',
-  'home.featuresTitle': 'What you will find here',
-  'home.feature.courses.title': 'Courses in order',
-  'home.feature.courses.body':
-    'Follow a series from the first video to the last and keep track of what you have watched.',
-  'home.feature.grammar.title': 'Grammar reference',
-  'home.feature.grammar.body':
-    'Look up a pattern such as 아/어 봤자 and find its meaning, formation, examples and video.',
-  'home.feature.practice.title': 'Practice',
-  'home.feature.practice.body': 'Key expressions, quizzes and flashcards for each lesson.',
-  'home.feature.materials.title': 'Materials',
-  'home.feature.materials.body': 'PDF notes, transcripts and audio attached to the videos.',
+  'notice.label': 'Notices',
+  'notice.details': 'Details',
+  'notice.dismiss': 'Dismiss notice',
 
   'placeholder.comingSoon': 'Coming soon',
   'placeholder.body': 'This section is being built. Meanwhile, the lessons are on YouTube.',
@@ -102,21 +88,9 @@ const ko: Partial<Record<UIKey, string>> = {
   'footer.contact': '문의',
   'footer.kofi': 'Ko-fi로 후원하기',
 
-  'home.eyebrow': 'Just Korean 채널의 학습 도우미',
-  'home.title': '한 번에 하나씩, 명확하게 배우는 한국어',
-  'home.lead':
-    'Just Korean 채널의 짧고 명확한 강의를 코스별로 정리했어요. 영상마다 노트, 연습 문제, 자료가 함께 있어요.',
-  'home.ctaStart': '공부 시작하기',
-  'home.ctaClasses': '수업 예약',
-  'home.featuresTitle': '이곳에서 할 수 있는 것',
-  'home.feature.courses.title': '순서대로 보는 코스',
-  'home.feature.courses.body': '시리즈를 처음부터 끝까지 따라가고, 본 영상을 기록해요.',
-  'home.feature.grammar.title': '문법 사전',
-  'home.feature.grammar.body': '아/어 봤자 같은 문법을 찾아 의미, 활용, 예문, 영상을 확인해요.',
-  'home.feature.practice.title': '연습',
-  'home.feature.practice.body': '강의마다 핵심 표현, 퀴즈, 단어 카드가 있어요.',
-  'home.feature.materials.title': '자료',
-  'home.feature.materials.body': '영상에 딸린 PDF 노트, 대본, 오디오를 받아요.',
+  'notice.label': '공지',
+  'notice.details': '자세히',
+  'notice.dismiss': '공지 닫기',
 
   'placeholder.comingSoon': '준비 중',
   'placeholder.body': '이 페이지는 준비 중이에요. 그동안 유튜브에서 강의를 볼 수 있어요.',

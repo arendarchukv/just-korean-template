@@ -1,0 +1,53 @@
+/*
+ * Home page blocks. Each block has its own form (tape strip, cut-out photo, timetable, 목차,
+ * thumbnails) instead of one repeated card; semantic tokens only.
+ */
+@layer components {
+  /* Notice strip: a band of paper tape under the header, not a card. */
+  .notice-strip {
+    border-bottom: 1px solid var(--color-border);
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        transparent 0 6px,
+        color-mix(in oklab, var(--color-brand) 7%, transparent) 6px 7px
+      ),
+      var(--color-surface);
+  }
+  .notice-strip ul {
+    display: grid;
+    margin-block: 0;
+    padding-block: 0.25rem;
+    list-style: none;
+  }
+  .notice-strip li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1rem;
+    padding-block: 0.375rem;
+  }
+  .notice-strip li + li {
+    border-top: 1px dashed var(--color-border);
+  }
+  .notice-strip li[hidden],
+  .notice-strip[hidden] {
+    display: none;
+  }
+  .notice-strip p {
+    flex: 1 1 18rem;
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+  .notice-dates {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .notice-strip li[data-tone='important'] .notice-dates {
+    color: var(--color-brand-strong);
+  }
+}

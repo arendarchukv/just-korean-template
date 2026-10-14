@@ -59,20 +59,6 @@ for (const page of ['index.html', 'ko/index.html', 'styleguide/index.html']) {
   }
 }
 
-// Home feature cards are links with the hover effect, in both languages.
-for (const [page, prefix] of [
-  ['index.html', ''],
-  ['ko/index.html', '/ko'],
-]) {
-  const cards = [...read(page).matchAll(/<a[^>]*class="[^"]*\bcard-interactive\b[^"]*"[^>]*>/g)];
-  const hrefs = cards.map(([a]) => /href="([^"]+)"/.exec(a)?.[1]);
-  if (cards.length !== 4)
-    problems.push(`${page}: ${cards.length} linked feature cards, expected 4`);
-  if (hrefs.some((h) => !h?.startsWith(`${prefix}/`))) {
-    problems.push(`${page}: feature card links leave the ${prefix || 'en'} locale: ${hrefs}`);
-  }
-}
-
 // --- About page exists in both languages, is in the sitemap and linked from the footer ---
 for (const [page, href] of [
   ['index.html', '/about/'],
@@ -171,6 +157,18 @@ for (const page of ['index.html', 'ko/index.html']) {
   const footer = /<footer[\s\S]*<\/footer>/.exec(read(page))?.[0] ?? '';
   if (!footer.includes('href="https://www.youtube.com/@JustKorean"')) {
     problems.push(`${page}: footer YouTube link does not come from site settings`);
+  }
+}
+
+// --- Home: notice strip carries dates so the browser can hide expired notices ---
+for (const page of ['index.html', 'ko/index.html']) {
+  const html = read(page);
+  const notices = [...html.matchAll(/<li[^>]*data-notice="([^"]+)"[^>]*>/g)];
+  if (notices.length === 0) problems.push(`${page}: no notices rendered`);
+  for (const [tag, id] of notices) {
+    if (!/data-from="\d{4}-\d{2}-\d{2}"/.test(tag) || !/data-to="\d{4}-\d{2}-\d{2}"/.test(tag)) {
+      problems.push(`${page}: notice ${id} lacks data-from/data-to`);
+    }
   }
 }
 

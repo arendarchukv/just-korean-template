@@ -1,0 +1,113 @@
+---
+import { getNotices } from '@/content/queries';
+import { isNoticeActive, selectNotices, toDay } from '@/lib/content-logic';
+import type { Lang } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+/**
+ * Strip of paper tape under the header with current notices. Rendered at build with every
+ * not-yet-expired notice; the inline script re-checks the dates in the visitor's browser, so a
+ * notice appears and disappears on its days without a rebuild. Dismissed notices are remembered
+ * per id. At most two notices show at once.
+ */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const buildDay = toDay(new Date());
+const notices = selectNotices(await getNotices(), buildDay);
+const MAX = 2;
+const formatter = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
+  day: 'numeric',
+  month: 'short',
+});
+const href = (link: string) =>
+  link.startsWith('http') ? link : localizePath(lang, link.replace(/^\/|\/$/g, ''));
+let shown = 0;
+---
+
+{notices.length > 0 && (
+  <section
+    class="notice-strip"
+    aria-label={t('notice.label')}
+    data-home-block="notices"
+    data-print="hide"
+  >
+    <ul class="container-page" data-notice-list>
+      {notices.map((n) => {
+        const visible = isNoticeActive(n, buildDay) && shown++ < MAX;
+        return (
+          <li
+            data-notice={n.id}
+            data-from={toDay(n.from)}
+            data-to={toDay(n.to)}
+            data-tone={n.tone}
+            hidden={!visible}
+          >
+            <span class="notice-dates">
+              {formatter.format(n.from)} – {formatter.format(n.to)}
+            </span>
+            <p>
+              <strong>{n.title}.</strong> {n.text}
+              {n.link && (
+                <>
+                  {' '}
+                  <a class="link" href={href(n.link)}>
+                    {t('notice.details')}
+                  </a>
+                </>
+              )}
+            </p>
+            <button type="button" class="icon-btn" data-dismiss aria-label={t('notice.dismiss')}>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+)}
+
+<script is:inline define:vars={{ MAX }}>
+  (() => {
+    const list = document.querySelector('[data-notice-list]');
+    if (!list) return;
+    const KEY = 'dismissed-notices';
+    let dismissed = [];
+    try {
+      dismissed = JSON.parse(localStorage.getItem(KEY) || '[]');
+    } catch {}
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const update = () => {
+      let shown = 0;
+      for (const li of list.querySelectorAll('[data-notice]')) {
+        const active = li.dataset.from <= today && today <= li.dataset.to;
+        const show = active && !dismissed.includes(li.dataset.notice) && shown < MAX;
+        li.hidden = !show;
+        if (show) shown += 1;
+      }
+      list.closest('section').hidden = shown === 0;
+    };
+    list.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-dismiss]');
+      if (!button) return;
+      dismissed.push(button.closest('[data-notice]').dataset.notice);
+      try {
+        localStorage.setItem(KEY, JSON.stringify(dismissed));
+      } catch {}
+      update();
+    });
+    update();
+  })();
+</script>

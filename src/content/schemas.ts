@@ -152,7 +152,10 @@ export const siteSchema = z.object({
   contactForm: optionalUrl,
   quizResultsForm: optionalUrl,
   filesBaseUrl: optionalUrl,
-  social: z.object({ youtube: optionalUrl, instagram: optionalUrl, kofi: optionalUrl }),
+  // Pages CMS drops an object whose fields are all empty, so the key may be missing entirely.
+  social: z
+    .object({ youtube: optionalUrl, instagram: optionalUrl, kofi: optionalUrl })
+    .prefault({}),
 });
 
 /** Collection name → schema; used by content.config.ts and the .pages.yml drift test. */

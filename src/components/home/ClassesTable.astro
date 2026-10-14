@@ -11,7 +11,9 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const { formats } = await getClasses();
-const booking = (await getSite()).tidycal;
+// Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
+const tidycal = (await getSite()).tidycal;
+const booking = tidycal || localizePath(lang, 'classes');
 ---
 
 <section
@@ -45,10 +47,10 @@ const booking = (await getSite()).tidycal;
   <div class="home-actions">
     <a
       class="btn btn-primary"
-      href={booking || '#'}
-      aria-disabled={booking ? undefined : 'true'}
-      target={booking ? '_blank' : undefined}
-      rel={booking ? 'noopener noreferrer' : undefined}
+      data-book-class
+      href={booking}
+      target={tidycal ? '_blank' : undefined}
+      rel={tidycal ? 'noopener noreferrer' : undefined}
     >
       {t('home.bookClass')}
     </a>

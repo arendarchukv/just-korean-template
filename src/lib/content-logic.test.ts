@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isNoticeActive, selectNewLessons, selectNotices, toDay, toEntryId } from './content-logic';
+import { isNoticeActive, selectNewLessons, sortNotices, toDay, toEntryId } from './content-logic';
 
 const d = (s: string) => new Date(`${s}T00:00:00`);
 
@@ -10,6 +10,10 @@ describe('toEntryId', () => {
     ['src/content/grammar/ge.md', 'ge'],
     ['src\\content\\series\\crash-course.yml', 'crash-course'],
     ['content/decks/food.yaml', 'food'],
+    // Astro slugs file names (github-slugger); a reference must resolve to the same id.
+    ['Ge-Vs-Dorok.md', 'ge-vs-dorok'],
+    ['My First Lesson.md', 'my-first-lesson'],
+    ['src/content/lessons/Grammar/Ge.md', 'grammar/ge'],
   ])('%s -> %s', (input, id) => {
     expect(toEntryId(input)).toBe(id);
   });
@@ -34,14 +38,14 @@ describe('notices', () => {
     expect(isNoticeActive(n('a', '2026-10-12', '2026-12-18'), '2026-10-11')).toBe(false);
   });
 
-  it('keeps current and upcoming notices, important first', () => {
+  it('orders every notice important first, then by start; the browser hides the expired ones', () => {
     const list = [
       n('old', '2026-01-01', '2026-10-13'),
       n('info', '2026-10-01', '2026-12-18'),
       n('soon', '2026-12-19', '2027-01-01', 'important'),
       n('now', '2026-10-10', '2026-10-20', 'important'),
     ];
-    expect(selectNotices(list, '2026-10-14').map((x) => x.id)).toEqual(['now', 'soon', 'info']);
+    expect(sortNotices(list).map((x) => x.id)).toEqual(['now', 'soon', 'old', 'info']);
   });
 });
 

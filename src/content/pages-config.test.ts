@@ -11,6 +11,9 @@ type Field = {
   fields?: Field[];
   blocks?: { name: string; fields?: Field[]; component?: string }[];
   blockKey?: string;
+  pattern?: { regex: string; message?: string };
+  options?: { min?: number; max?: number };
+  list?: boolean | { min?: number };
 };
 type Entry = { name: string; type: string; path: string; fields: Field[] };
 
@@ -40,6 +43,14 @@ function core(schema: any): any {
   }
 }
 
+/** Whether a schema is a URL field (possibly optional, or a union with the empty string). */
+function isUrl(schema: any): boolean {
+  if (!schema) return false;
+  const c = core(schema);
+  if (c._zod.def.type === 'union') return c._zod.def.options.some(isUrl);
+  return c._zod.def.format === 'url';
+}
+
 function compare(fields: Field[], schema: any, where: string) {
   const obj = core(schema);
   expect(obj._zod.def.type, `${where} is an object`).toBe('object');
@@ -47,6 +58,11 @@ function compare(fields: Field[], schema: any, where: string) {
   const cms = fields.map(expand).filter((f) => f.name !== 'body');
   expect(cms.map((f) => f.name).sort(), `${where} fields`).toEqual(Object.keys(shape).sort());
   for (const f of cms) {
+    // A link the schema requires to be https:// must be checked in the form too, so the editor
+    // sees the error before saving instead of a failed build.
+    if (isUrl(shape[f.name])) {
+      expect(f.pattern?.regex, `${where}.${f.name} has an https pattern`).toBe('^https://');
+    }
     if (f.fields) compare(f.fields, shape[f.name], `${where}.${f.name}`);
     if (f.blocks) {
       const key = f.blockKey ?? '_block';
@@ -75,6 +91,36 @@ describe('.pages.yml', () => {
       compare(entry.fields, SCHEMAS[entry.name as keyof typeof SCHEMAS], entry.name);
     });
   }
+
+  it('the form enforces the limits the schema enforces', () => {
+    const field = (path: string): Field => {
+      // Walks field names; a block name steps into that block's fields.
+      const [entry, ...names] = path.split('.');
+      let fields = config.content.find((e) => e.name === entry)!.fields;
+      let blocks: NonNullable<Field['blocks']> = [];
+      let found: Field | undefined;
+      for (const name of names) {
+        const block = blocks.find((b) => b.name === name);
+        if (block) {
+          fields = block.fields ?? [];
+          blocks = [];
+          continue;
+        }
+        found = fields.map(expand).find((f) => f.name === name);
+        fields = found?.fields ?? [];
+        blocks = found?.blocks ?? [];
+      }
+      return found!;
+    };
+    expect(field('home.newLessonsCount').options).toMatchObject({ min: 1, max: 6 });
+    expect(field('lessons.episode').options).toMatchObject({ min: 1 });
+    expect(field('quizzes.questions').list).toMatchObject({ min: 1 });
+    expect(field('quizzes.questions.fill.sentence').pattern?.regex).toBe('___');
+    const youtube = new RegExp(field('lessons.youtube').pattern!.regex);
+    expect(youtube.test('https://youtu.be/_lgDjyWiheU')).toBe(true);
+    expect(youtube.test('_lgDjyWiheU')).toBe(true);
+    expect(youtube.test('https://www.instagram.com/justkorean')).toBe(false);
+  });
 
   it('every field has a hint for the editor', () => {
     const missing: string[] = [];

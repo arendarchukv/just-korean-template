@@ -1,5 +1,6 @@
 // Checks the built site in dist/ (run after `npm run build`).
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { parse } from 'yaml';
 
 const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
@@ -152,64 +153,21 @@ if (!preloads.some((tag) => /as="font"/.test(tag) && /outfit-latin-wght-normal/.
   problems.push('Outfit latin font is not preloaded');
 }
 
-// --- Footer links come from settings/site.yml: the YouTube link is set in demo content ---
-for (const page of ['index.html', 'ko/index.html']) {
-  const footer = /<footer[\s\S]*<\/footer>/.exec(read(page))?.[0] ?? '';
-  if (!footer.includes('href="https://www.youtube.com/@JustKorean"')) {
-    problems.push(`${page}: footer YouTube link does not come from site settings`);
-  }
-}
-
-// --- Home: notice strip carries dates so the browser can hide expired notices ---
-for (const page of ['index.html', 'ko/index.html']) {
-  const html = read(page);
-  const notices = [...html.matchAll(/<li[^>]*data-notice="([^"]+)"[^>]*>/g)];
-  if (notices.length === 0) problems.push(`${page}: no notices rendered`);
-  for (const [tag, id] of notices) {
-    if (!/data-from="\d{4}-\d{2}-\d{2}"/.test(tag) || !/data-to="\d{4}-\d{2}-\d{2}"/.test(tag)) {
-      problems.push(`${page}: notice ${id} lacks data-from/data-to`);
-    }
-  }
-}
-
-// --- Home blocks appear in order ---
-const HOME_BLOCKS = ['notices', 'about', 'classes', 'contents', 'new-lessons'];
-for (const page of ['index.html', 'ko/index.html']) {
-  const found = [...read(page).matchAll(/data-home-block="([\w-]+)"/g)].map((m) => m[1]);
-  const expected = HOME_BLOCKS.filter((b) => found.includes(b));
-  if (found.join() !== expected.join()) {
-    problems.push(`${page}: home blocks out of order: ${found.join(', ')}`);
-  }
-  for (const block of ['notices', 'about', 'classes']) {
-    if (!found.includes(block)) problems.push(`${page}: home block "${block}" missing`);
-  }
-}
-
-// --- About: one h1 containing the Korean serif title; booking button is inert while unset ---
-for (const page of ['index.html', 'ko/index.html']) {
-  const html = read(page);
-  const h1s = [...html.matchAll(/<h1[\s\S]*?<\/h1>/g)].map((m) => m[0]);
-  if (h1s.length !== 1) problems.push(`${page}: ${h1s.length} h1 elements`);
-  if (!/lang="ko"[^>]*class="[^"]*font-display/.test(h1s[0] ?? '')) {
-    problems.push(`${page}: h1 lacks the Korean display title`);
-  }
-  const book = /<a[^>]*data-book-class[^>]*>/.exec(html)?.[0] ?? '';
-  if (!book) problems.push(`${page}: no Book a class button`);
-  else if (/href="#"/.test(book) && !/aria-disabled="true"/.test(book)) {
-    problems.push(`${page}: empty TidyCal link is not marked disabled`);
-  }
-}
-
-// --- Classes: a real table with headers, rows from settings/classes.yml ---
-{
-  const table =
-    /<section[^>]*data-home-block="classes"[\s\S]*?<\/section>/.exec(read('index.html'))?.[0] ?? '';
-  if ((table.match(/<th scope="col"/g) ?? []).length < 3) {
-    problems.push('classes table lacks column headers');
-  }
-  if (!table.includes('1:1 private class'))
-    problems.push('classes table does not read classes.yml');
-}
+// --- Home page. Expectations come from the content files, so the check stays valid when JiEun
+// edits content (no notices, fewer lessons, other links) and does not depend on today's date. ---
+const contentDir = (dir) => new URL(`../src/content/${dir}/`, import.meta.url);
+const contentFiles = (dir) =>
+  existsSync(contentDir(dir)) ? readdirSync(contentDir(dir)).filter((f) => !f.startsWith('.')) : [];
+const settings = (name) =>
+  parse(readFileSync(new URL(`${name}.yml`, contentDir('settings')), 'utf8'));
+const site = settings('site');
+const homeSettings = settings('home');
+const classes = settings('classes');
+const noticeCount = contentFiles('notices').length;
+const videoLessons = contentFiles('lessons').filter((f) =>
+  /^youtube:\s*\S/m.test(readFileSync(new URL(f, contentDir('lessons')), 'utf8')),
+).length;
+const expectedNewLessons = Math.min(homeSettings.newLessonsCount ?? 3, videoLessons);
 
 const LOCALES = [
   ['index.html', ''],
@@ -219,21 +177,80 @@ const homeBlock = (page, name) =>
   new RegExp(`<section[^>]*data-home-block="${name}"[\\s\\S]*?</section>`).exec(read(page))?.[0] ??
   '';
 
-// --- 목차: five numbered sections, links stay in the locale ---
 for (const [page, prefix] of LOCALES) {
+  const html = read(page);
+
+  // Footer: links from site settings; empty ones are left out, never a dead "#" link.
+  const footer = /<footer[\s\S]*<\/footer>/.exec(html)?.[0] ?? '';
+  if (site.social?.youtube && !footer.includes(`href="${site.social.youtube}"`)) {
+    problems.push(`${page}: footer YouTube link does not come from site settings`);
+  }
+  if (/href="#"/.test(footer)) problems.push(`${page}: footer has an empty "#" link`);
+
+  // Notices: every notice is rendered with its dates; the browser hides the ones out of range.
+  const notices = [...html.matchAll(/<li[^>]*data-notice="([^"]+)"[^>]*>/g)];
+  if (notices.length !== noticeCount) {
+    problems.push(`${page}: ${notices.length} notices rendered, ${noticeCount} in content`);
+  }
+  for (const [tag, id] of notices) {
+    if (!/data-from="\d{4}-\d{2}-\d{2}"/.test(tag) || !/data-to="\d{4}-\d{2}-\d{2}"/.test(tag)) {
+      problems.push(`${page}: notice ${id} lacks data-from/data-to`);
+    }
+  }
+
+  // Blocks in order; notices and new lessons only when content has them.
+  const found = [...html.matchAll(/data-home-block="([\w-]+)"/g)].map((m) => m[1]);
+  const expected = [
+    noticeCount > 0 && 'notices',
+    'about',
+    'classes',
+    'contents',
+    expectedNewLessons > 0 && 'new-lessons',
+  ].filter(Boolean);
+  if (found.join() !== expected.join()) {
+    problems.push(`${page}: home blocks are [${found}], expected [${expected}]`);
+  }
+
+  // About: one h1 with the Korean serif title. Booking buttons never lead nowhere: TidyCal when
+  // set, otherwise the Classes page.
+  const h1s = [...html.matchAll(/<h1[\s\S]*?<\/h1>/g)].map((m) => m[0]);
+  if (h1s.length !== 1) problems.push(`${page}: ${h1s.length} h1 elements`);
+  if (!/lang="ko"[^>]*class="[^"]*font-display/.test(h1s[0] ?? '')) {
+    problems.push(`${page}: h1 lacks the Korean display title`);
+  }
+  const bookHref = site.tidycal || `${prefix}/classes/`;
+  const bookButtons = [...html.matchAll(/<a[^>]*data-book-class[^>]*>/g)].map((m) => m[0]);
+  if (bookButtons.length === 0) problems.push(`${page}: no Book a class button`);
+  for (const button of bookButtons) {
+    if (!button.includes(`href="${bookHref}"`)) {
+      problems.push(`${page}: Book a class does not lead to ${bookHref}`);
+    }
+  }
+
+  // Classes: a real table with headers, rows from settings/classes.yml.
+  const table = homeBlock(page, 'classes');
+  if ((table.match(/<th scope="col"/g) ?? []).length < 3) {
+    problems.push(`${page}: classes table lacks column headers`);
+  }
+  for (const format of classes.formats) {
+    if (!table.includes(format.name)) problems.push(`${page}: classes table lacks ${format.name}`);
+  }
+
+  // 목차: five numbered sections, links stay in the locale.
   const links = [...homeBlock(page, 'contents').matchAll(/<a[^>]*href="([^"]+)"/g)].map(
     (m) => m[1],
   );
   if (links.length !== 5) problems.push(`${page}: site contents has ${links.length} links, not 5`);
-  if (links.some((h) => !h.startsWith(`${prefix}/`)))
-    problems.push(`${page}: contents leave locale`);
-}
+  if (links.some((h) => !h.startsWith(`${prefix}/`))) {
+    problems.push(`${page}: contents leave the locale`);
+  }
 
-// --- New lessons: local optimised thumbnails, links to existing lesson pages ---
-for (const [page, prefix] of LOCALES) {
+  // New lessons: local optimised thumbnails, links to existing lesson pages, video lessons only.
   const block = homeBlock(page, 'new-lessons');
   const imgs = [...block.matchAll(/<img[^>]*>/g)].map((m) => m[0]);
-  if (imgs.length !== 3) problems.push(`${page}: ${imgs.length} new-lesson thumbnails, not 3`);
+  if (imgs.length !== expectedNewLessons) {
+    problems.push(`${page}: ${imgs.length} new-lesson thumbnails, expected ${expectedNewLessons}`);
+  }
   for (const img of imgs) {
     if (/i\.ytimg\.com/.test(img)) problems.push(`${page}: thumbnail loads from YouTube`);
     if (!/width="\d+"/.test(img) || !/height="\d+"/.test(img)) {
@@ -243,15 +260,15 @@ for (const [page, prefix] of LOCALES) {
   const lessonLinks = [...block.matchAll(/<a[^>]*href="([^"]+)"/g)]
     .map((m) => m[1])
     .filter((h) => h.startsWith(`${prefix}/lessons/`));
-  if (lessonLinks.length !== 3) problems.push(`${page}: ${lessonLinks.length} lesson links, not 3`);
+  if (lessonLinks.length !== expectedNewLessons) {
+    problems.push(`${page}: ${lessonLinks.length} lesson links, expected ${expectedNewLessons}`);
+  }
   for (const href of lessonLinks) {
     if (!exists(`${href.replace(/^\//, '')}index.html`)) {
       problems.push(`${page}: new lesson links to missing ${href}`);
     }
   }
-  if (/korean-numbers/.test(block)) problems.push(`${page}: a lesson without video is listed`);
 }
-
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

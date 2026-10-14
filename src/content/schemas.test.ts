@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { download, lessonSchema, noticeSchema } from './schemas';
+import { download, lessonSchema, noticeSchema, siteSchema } from './schemas';
 
 describe('lessonSchema', () => {
   const base = { title: 'Korean Grammar : 게 vs 도록', date: '2026-09-23', level: 'intermediate' };
@@ -45,6 +45,13 @@ describe('download', () => {
     expect(
       download.safeParse({ label: 'Notes', kind: 'pdf', url: 'https://x.example/a.pdf' }).success,
     ).toBe(true);
+  });
+});
+
+describe('siteSchema', () => {
+  it('accepts a file without social links (Pages CMS drops an all-empty object)', () => {
+    const r = siteSchema.parse({ tidycal: '' });
+    expect(r.social).toEqual({ youtube: '', instagram: '', kofi: '' });
   });
 });
 

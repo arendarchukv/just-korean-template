@@ -1,13 +1,14 @@
 ---
 import { getNotices } from '@/content/queries';
-import { isNoticeActive, selectNotices, toDay } from '@/lib/content-logic';
+import { isNoticeActive, sortNotices, toDay } from '@/lib/content-logic';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
 /**
- * Strip of paper tape under the header with current notices. Rendered at build with every
- * not-yet-expired notice; the inline script re-checks the dates in the visitor's browser, so a
- * notice appears and disappears on its days without a rebuild. Dismissed notices are remembered
+ * Strip of paper tape under the header with current notices. Every notice is rendered with its
+ * dates (hidden unless active at build); the inline script re-checks them in the visitor's
+ * browser, so a notice appears and disappears on its days without a rebuild, and the built page
+ * does not depend on the build date. Delete old notices in the CMS to keep the page lean. Dismissed notices are remembered
  * per id. At most two notices show at once.
  */
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const buildDay = toDay(new Date());
-const notices = selectNotices(await getNotices(), buildDay);
+const notices = sortNotices(await getNotices());
 const MAX = 2;
 const formatter = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
   day: 'numeric',

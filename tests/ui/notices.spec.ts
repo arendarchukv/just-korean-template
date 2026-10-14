@@ -31,10 +31,27 @@ test('a dismissed notice stays hidden after reload', async ({ page }) => {
   await expect(strip(page).getByText('Spain timetable')).toBeVisible();
 });
 
-test('without JavaScript, notices active at build time still show', async ({ browser }) => {
+test('without JavaScript, exactly the notices active at build time show', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/');
-  await expect(page.getByText('Winter break')).toBeVisible();
+  // The site was built moments ago, so "today" for the build is the real today.
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const items = await page.locator('[data-notice]').evaluateAll((els) =>
+    (els as HTMLElement[]).map((el) => ({
+      from: el.dataset.from!,
+      to: el.dataset.to!,
+      hidden: el.hidden,
+    })),
+  );
+  expect(items.length).toBeGreaterThan(0);
+  let shown = 0;
+  for (const item of items) {
+    const active = item.from <= today && today <= item.to && shown < 2;
+    if (active) shown += 1;
+    expect(item.hidden, JSON.stringify(item)).toBe(!active);
+  }
   await context.close();
 });

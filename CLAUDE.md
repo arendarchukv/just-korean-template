@@ -224,7 +224,8 @@ Data decisions already made:
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
 - Links (TidyCal, Tally forms, social, R2 base URL) live in `src/content/settings/site.yml`,
-  editable in Pages CMS; empty ones render as inert, `aria-disabled` links.
+  editable in Pages CMS. Empty footer links are left out; "Book a class" falls back to the Classes
+  page until the TidyCal link is set. Form fields carry the same limits as the schemas (tested).
 
 ## Decisions from the content cycle (2026-10-14)
 

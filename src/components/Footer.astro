@@ -13,7 +13,7 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const site = await getSite();
 
-// Links are edited in Pages CMS (Site settings); empty ones render as inert links.
+// Links are edited in Pages CMS (Site settings); empty ones are left out, as the CMS hint says.
 const LINKS: { href: string; label: UIKey }[] = [
   { href: site.social.youtube, label: 'footer.youtube' },
   { href: site.social.instagram, label: 'footer.instagram' },
@@ -41,13 +41,12 @@ const year = new Date().getFullYear();
             {t('footer.about')}
           </a>
         </li>
-        {LINKS.map(({ href, label }) => {
+        {LINKS.filter(({ href }) => href).map(({ href, label }) => {
           const external = href.startsWith('http');
           return (
             <li>
               <a
-                href={href || '#'}
-                aria-disabled={href ? undefined : 'true'}
+                href={href}
                 target={external ? '_blank' : undefined}
                 rel={external ? 'noopener noreferrer' : undefined}
                 class="nav-link text-sm"

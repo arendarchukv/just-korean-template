@@ -58,6 +58,8 @@ content:
       - name: youtube
         type: string
         description: Paste the YouTube link (or the 11-character video id). Leave empty for a lesson without a video.
+        pattern:
+          { regex: '(youtube\.com/|youtu\.be/|^[\w-]{11}$)', message: Paste a YouTube video link }
       - name: series
         type: reference
         description: The playlist or series this lesson belongs to.
@@ -65,6 +67,7 @@ content:
       - name: episode
         type: number
         description: Position in an ordered series (course). Leave empty otherwise.
+        options: { min: 1 }
       - name: date
         type: date
         required: true
@@ -124,6 +127,7 @@ content:
       - name: youtubePlaylist
         type: string
         description: Link to the YouTube playlist (optional).
+        pattern: { regex: '^https://', message: The link must start with https:// }
       - name: order
         type: number
         description: Display order on the site; smaller numbers come first.
@@ -284,7 +288,7 @@ content:
       - name: questions
         type: block
         description: Add questions; each can be multiple choice or fill in the gap.
-        list: true
+        list: { min: 1 }
         blockKey: type
         blocks:
           - name: choice
@@ -316,6 +320,7 @@ content:
                 type: string
                 required: true
                 description: Sentence with the gap written as ___ (three underscores).
+                pattern: { regex: '___', message: Mark the gap with ___ (three underscores) }
               - name: answer
                 type: string
                 required: true
@@ -383,6 +388,7 @@ content:
       - name: photo
         type: string
         description: Your photo. Upload it to R2 and paste the https:// link; a paper shape shows until then.
+        pattern: { regex: '^https://', message: The link must start with https:// }
       - name: photoAlt
         type: string
         description: Short description of the photo for screen readers.
@@ -393,6 +399,7 @@ content:
       - name: newLessonsCount
         type: number
         description: How many new lessons the home page shows (1 to 6).
+        options: { min: 1, max: 6 }
 
   - name: classes
     label: Classes
@@ -440,15 +447,19 @@ content:
       - name: tidycal
         type: string
         description: Your TidyCal booking link; "Book a class" buttons open it.
+        pattern: { regex: '^https://', message: The link must start with https:// }
       - name: contactForm
         type: string
         description: Tally contact form link.
+        pattern: { regex: '^https://', message: The link must start with https:// }
       - name: quizResultsForm
         type: string
         description: Tally form that receives quiz results.
+        pattern: { regex: '^https://', message: The link must start with https:// }
       - name: filesBaseUrl
         type: string
         description: Public address of the R2 bucket, e.g. https://files.example.com.
+        pattern: { regex: '^https://', message: The link must start with https:// }
       - name: social
         type: object
         description: Links in the footer. Leave empty to hide.
@@ -456,9 +467,12 @@ content:
           - name: youtube
             type: string
             description: YouTube channel link.
+            pattern: { regex: '^https://', message: The link must start with https:// }
           - name: instagram
             type: string
             description: Instagram profile link.
+            pattern: { regex: '^https://', message: The link must start with https:// }
           - name: kofi
             type: string
             description: Ko-fi page link.
+            pattern: { regex: '^https://', message: The link must start with https:// }

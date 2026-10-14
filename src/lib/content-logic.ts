@@ -1,7 +1,18 @@
-/** Entry id from a reference value; Pages CMS may store a path or a filename with extension. */
+import { slug } from 'github-slugger';
+
+/**
+ * Entry id from a reference value, slugged the way Astro's glob loader slugs file paths.
+ * Pages CMS may store a bare name, a filename with extension, or a path under src/content.
+ */
 export function toEntryId(value: string): string {
-  const last = value.replaceAll('\\', '/').split('/').pop() ?? value;
-  return last.replace(/\.(md|ya?ml)$/i, '');
+  const parts = value.replaceAll('\\', '/').split('/');
+  const content = parts.lastIndexOf('content');
+  // Keep only the path inside the collection folder (src/content/<collection>/...).
+  const inside = content >= 0 ? parts.slice(content + 2) : parts.slice(-1);
+  return inside
+    .map((part, i) => (i === inside.length - 1 ? part.replace(/\.(md|ya?ml)$/i, '') : part))
+    .map((part) => slug(part))
+    .join('/');
 }
 
 /** Local calendar day as YYYY-MM-DD. */
@@ -16,15 +27,16 @@ export function isNoticeActive(n: { from: Date; to: Date }, today: string): bool
 
 export type NoticeLike = { id: string; from: Date; to: Date; tone: 'important' | 'info' };
 
-/** Notices not yet expired: important first, then the earliest start. */
-export function selectNotices<T extends NoticeLike>(notices: T[], today: string): T[] {
-  return notices
-    .filter((n) => toDay(n.to) >= today)
-    .sort(
-      (a, b) =>
-        Number(b.tone === 'important') - Number(a.tone === 'important') ||
-        a.from.getTime() - b.from.getTime(),
-    );
+/**
+ * Every notice, important first, then the earliest start. Expired ones are rendered too (hidden):
+ * the browser decides by its own date, so the built page does not depend on the build date.
+ */
+export function sortNotices<T extends NoticeLike>(notices: T[]): T[] {
+  return [...notices].sort(
+    (a, b) =>
+      Number(b.tone === 'important') - Number(a.tone === 'important') ||
+      a.from.getTime() - b.from.getTime(),
+  );
 }
 
 /** Latest lessons that have a YouTube video, newest first. */

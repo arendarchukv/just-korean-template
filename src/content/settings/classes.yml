@@ -1,0 +1,11 @@
+formats:
+  - name: 1:1 private class
+    forWhom: Any level, any goal
+    how: A level test first, then materials chosen for you.
+  - name: Small group
+    forWhom: Two or three friends who learn together
+    how: A plan shaped around your group's level and goals.
+  - name: Group class
+    forWhom: Learners at the same level
+    how: A fixed curriculum by level and topic; join when a new class opens.
+faq: []

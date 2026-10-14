@@ -88,6 +88,11 @@ const en = {
   'materials.section.from-lessons': 'From lessons',
   'materials.lesson': 'Open the lesson',
 
+  'classes.lead':
+    'Live online classes with JiEun: one to one, in a small group, or in a group by level.',
+  'classes.faq': 'Questions before booking',
+  'classes.contact': 'Ask a question',
+
   'lesson.watchOnYouTube': 'Watch on YouTube',
   'lesson.play': 'Play video',
   'lesson.grammar': 'Grammar in this lesson',
@@ -209,6 +214,10 @@ const ko: Partial<Record<UIKey, string>> = {
   'materials.section.extra-notes': '추가 노트',
   'materials.section.from-lessons': '강의 자료',
   'materials.lesson': '강의 보기',
+
+  'classes.lead': '지은 선생님과 함께하는 온라인 수업: 1:1, 소그룹, 레벨별 그룹 수업이 있어요.',
+  'classes.faq': '예약 전에 자주 묻는 질문',
+  'classes.contact': '문의하기',
 
   'lesson.watchOnYouTube': '유튜브에서 보기',
   'lesson.play': '영상 재생',

@@ -1,0 +1,68 @@
+---
+/** Classes: formats timetable, FAQ, and booking (TidyCal) or contact. */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Timetable from '@/components/Timetable.astro';
+import { getClasses, getSite } from '@/content/queries';
+import type { Lang } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const { faq } = await getClasses();
+const site = await getSite();
+---
+
+<BaseLayout title={t('page.classes.title')}>
+  <div class="container-page page-head">
+    <h1 class="page-title" id="classes-page-title">
+      {t('page.classes.title')}
+    </h1>
+    <p class="page-lead">{t('classes.lead')}</p>
+  </div>
+  <section class="container-page page-section" aria-labelledby="classes-page-title">
+    <Timetable lang={lang} labelledBy="classes-page-title" />
+    {(site.tidycal || site.contactForm) && (
+      <div class="home-actions">
+        {site.tidycal && (
+          <a
+            class="btn btn-primary"
+            data-book-class
+            href={site.tidycal}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('home.bookClass')}
+          </a>
+        )}
+        {site.contactForm && (
+          <a
+            class="btn btn-ghost"
+            href={site.contactForm}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('classes.contact')}
+          </a>
+        )}
+      </div>
+    )}
+  </section>
+  {faq.length > 0 && (
+    <section class="container-page page-section" aria-labelledby="faq-title">
+      <h2 id="faq-title" class="page-section-title">
+        {t('classes.faq')}
+      </h2>
+      <div class="faq-list">
+        {faq.map((item) => (
+          <details class="faq-item">
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

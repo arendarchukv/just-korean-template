@@ -363,6 +363,18 @@ for (const page of ['materials/index.html', 'ko/materials/index.html']) {
   for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
 }
 
+// --- Classes page: timetable, FAQ from content ---
+for (const page of ['classes/index.html', 'ko/classes/index.html']) {
+  const html = read(page);
+  if (!/class="timetable"/.test(html)) problems.push(`${page}: no timetable`);
+  for (const item of classes.faq) {
+    if (!html.includes(item.question)) problems.push(`${page}: FAQ lacks "${item.question}"`);
+  }
+  if ((html.match(/<details class="faq-item"/g) ?? []).length !== classes.faq.length) {
+    problems.push(`${page}: FAQ count differs from classes.yml`);
+  }
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

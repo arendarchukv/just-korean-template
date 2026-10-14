@@ -1,16 +1,16 @@
 ---
-import { getClasses, getSite } from '@/content/queries';
+import Timetable from '@/components/Timetable.astro';
+import { getSite } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
-/** Class formats as a ruled timetable: one row per format, read from settings/classes.yml. */
+/** Home block: the classes timetable and booking. */
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const { formats } = await getClasses();
 // Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
 const tidycal = (await getSite()).tidycal;
 const booking = tidycal || localizePath(lang, 'classes');
@@ -24,26 +24,7 @@ const booking = tidycal || localizePath(lang, 'classes');
   <h2 id="classes-title" class="home-section-title">
     {t('home.classes.title')}
   </h2>
-  <div class="table-scroll" tabindex="0" role="region" aria-labelledby="classes-title">
-    <table class="timetable">
-      <thead>
-        <tr>
-          <th scope="col">{t('home.classes.format')}</th>
-          <th scope="col">{t('home.classes.forWhom')}</th>
-          <th scope="col">{t('home.classes.how')}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {formats.map((f) => (
-          <tr>
-            <th scope="row">{f.name}</th>
-            <td data-label={t('home.classes.forWhom')}>{f.forWhom}</td>
-            <td data-label={t('home.classes.how')}>{f.how}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
+  <Timetable lang={lang} labelledBy="classes-title" />
   <div class="home-actions">
     <a
       class="btn btn-primary"

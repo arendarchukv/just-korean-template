@@ -93,6 +93,20 @@ const en = {
   'classes.faq': 'Questions before booking',
   'classes.contact': 'Ask a question',
 
+  'practice.lead': 'Check what you learned in the lessons. No sign-up needed.',
+  'practice.decks': 'Flashcards',
+  'practice.quizzes': 'Quizzes',
+  'practice.soon': 'Interactive practice is coming soon.',
+  'practice.dictionary': 'Dictionary',
+  'practice.dictionaryHint':
+    'Look up a word in the Basic Korean Dictionary of the National Institute of Korean Language, with English meanings.',
+  'practice.dictionaryField': 'Korean word',
+  'practice.dictionaryGo': 'Look up',
+  'practice.pronunciation': 'Pronunciation',
+  'practice.pronunciationBody':
+    'Practise the sounds of Korean with the King Sejong Institute, then watch the pronunciation lessons.',
+  'practice.pronunciationLink': 'Open pronunciation practice',
+
   'lesson.watchOnYouTube': 'Watch on YouTube',
   'lesson.play': 'Play video',
   'lesson.grammar': 'Grammar in this lesson',
@@ -218,6 +232,19 @@ const ko: Partial<Record<UIKey, string>> = {
   'classes.lead': '지은 선생님과 함께하는 온라인 수업: 1:1, 소그룹, 레벨별 그룹 수업이 있어요.',
   'classes.faq': '예약 전에 자주 묻는 질문',
   'classes.contact': '문의하기',
+
+  'practice.lead': '강의에서 배운 내용을 확인해 보세요. 가입은 필요 없어요.',
+  'practice.decks': '단어 카드',
+  'practice.quizzes': '퀴즈',
+  'practice.soon': '곧 직접 풀어 볼 수 있어요.',
+  'practice.dictionary': '사전',
+  'practice.dictionaryHint': '국립국어원 한국어기초사전에서 단어를 영어 뜻과 함께 찾아보세요.',
+  'practice.dictionaryField': '한국어 단어',
+  'practice.dictionaryGo': '찾기',
+  'practice.pronunciation': '발음',
+  'practice.pronunciationBody':
+    '세종학당 발음 연습으로 한국어 소리를 연습하고, 발음 강의도 봐 보세요.',
+  'practice.pronunciationLink': '발음 연습 열기',
 
   'lesson.watchOnYouTube': '유튜브에서 보기',
   'lesson.play': '영상 재생',

@@ -375,6 +375,22 @@ for (const page of ['classes/index.html', 'ko/classes/index.html']) {
   }
 }
 
+// --- Practice: decks and quizzes have anchors used by lesson pages; dictionary form targets krdict ---
+for (const page of ['practice/index.html', 'ko/practice/index.html']) {
+  const html = read(page);
+  for (const dir of ['decks', 'quizzes']) {
+    for (const file of contentFiles(dir)) {
+      const id = file.replace(/\.ya?ml$/, '');
+      if (!html.includes(`id="${id}"`)) problems.push(`${page}: no anchor for ${dir}/${id}`);
+    }
+  }
+  if (!/<form[^>]*action="https:\/\/krdict\.korean\.go\.kr\/eng\/dicMarinerSearch\/search"/.test(html)) {
+    problems.push(`${page}: dictionary form does not target krdict`);
+  }
+  if (!/name="mainSearchWord"/.test(html)) problems.push(`${page}: dictionary field name`);
+  for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

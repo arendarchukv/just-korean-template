@@ -488,4 +488,48 @@
     margin: 0 0 1rem;
     color: var(--color-muted);
   }
+
+  /* Practice: two columns of lists, then the tools. */
+  .practice-grid {
+    display: grid;
+    gap: 2.5rem;
+    padding-block: 1.5rem;
+  }
+  @media (min-width: 48rem) {
+    .practice-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .practice-block .page-section-title + .file-list {
+    margin-top: 1rem;
+  }
+  .practice-item {
+    display: grid;
+    gap: 0.25rem;
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--color-border);
+    scroll-margin-top: 5rem;
+  }
+  .practice-item:target {
+    padding-inline: 0.75rem;
+    background-color: var(--color-teal-tint);
+  }
+  .practice-soon {
+    margin: 0.75rem 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .practice-tool {
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+  }
+  .dictionary-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .dictionary-form .field {
+    flex: 1 1 12rem;
+  }
 }

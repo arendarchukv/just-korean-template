@@ -5,7 +5,8 @@
  */
 import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Collage from '@/components/shapes/Collage.astro';
+// Illustrated portrait (cut-paper style, generated with agy from her channel photo; JiEun to approve).
+import portrait from '@/assets/teacher-portrait.png';
 import { getSite } from '@/content/queries';
 import { TEACHER } from '@/data/teacher';
 import type { Lang } from '@/i18n/ui';
@@ -42,7 +43,14 @@ const { social } = await getSite();
           class="about-photo"
         />
       ) : (
-        <Collage variant="hero" />
+        <Image
+          src={portrait}
+          alt={t('about.portraitAlt')}
+          widths={[360, 560, 840]}
+          sizes="(min-width: 48rem) 40vw, 100vw"
+          class="about-portrait"
+          loading="eager"
+        />
       )}
       <div class="about-credentials grid-paper">
         <h2 class="sr-only">{t('home.credentials')}</h2>

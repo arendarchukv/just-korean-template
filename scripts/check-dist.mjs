@@ -94,6 +94,20 @@ for (const page of ['about/index.html', 'ko/about/index.html']) {
   for (const p of TEACHER.principles) {
     if (!html.includes(p.title)) problems.push(`${page}: principle "${p.title}" missing`);
   }
+  // Illustrated portrait: a local optimised image with a description, not the paper collage.
+  const portrait = /<img[^>]*class="[^"]*about-portrait[^"]*"[^>]*>/.exec(html)?.[0] ?? '';
+  if (!portrait) problems.push(`${page}: no portrait`);
+  else {
+    if (!/src="\/_astro\/[^"]+\.webp"/.test(portrait))
+      problems.push(`${page}: portrait not optimised`);
+    if (!/alt="[^"]+"/.test(portrait)) problems.push(`${page}: portrait has no alt text`);
+    if (!/width="\d+"/.test(portrait) || !/height="\d+"/.test(portrait)) {
+      problems.push(`${page}: portrait without size`);
+    }
+  }
+  if (/class="collage/.test(/<section[^>]*about-page[\s\S]*?<\/section>/.exec(html)?.[0] ?? '')) {
+    problems.push(`${page}: collage still shown instead of the portrait`);
+  }
 }
 if (!/<loc>https:\/\/[^<]+\/about\/<\/loc>/.test(read('sitemap-0.xml'))) {
   problems.push('about page is not in the sitemap');

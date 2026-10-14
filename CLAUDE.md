@@ -39,7 +39,8 @@ Done earlier (content-independent):
 
 Waiting on the owner (do not guess these):
 
-- Her photo and bio wording (`src/data/teacher.ts`, drafted; photo link + R2 domain in `image.domains`), TidyCal and Tally URLs,
+- Her approval of the illustrated portrait on About (`src/assets/teacher-portrait.png`, made with agy
+  from her channel photo); her photo and bio wording (`src/data/teacher.ts`, drafted; photo link + R2 domain in `image.domains`), TidyCal and Tally URLs,
   the R2 public domain (`site.yml`; add it to `image.domains` in `astro.config.mjs` for the photo).
 - Domain (placeholder `https://just-korean.example` in `astro.config.mjs`) and hosting/deploy
   (Cloudflare Workers is planned; no deploy until asked).

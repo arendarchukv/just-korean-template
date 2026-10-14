@@ -38,7 +38,7 @@ let shown = 0;
     data-home-block="notices"
     data-print="hide"
   >
-    <ul class="container-page" data-notice-list>
+    <ul data-notice-list>
       {notices.map((n) => {
         const visible = isNoticeActive(n, buildDay) && shown++ < MAX;
         return (
@@ -50,35 +50,42 @@ let shown = 0;
             data-pinned={n.pinned ? '' : undefined}
             hidden={!visible}
           >
-            <span class="notice-meta">
-              <span class="notice-tone">{t(`notice.tone.${n.tone}`)}</span>
-              <span class="notice-dates">
-                {formatter.format(n.from)} – {formatter.format(n.to)}
+            <div class="container-page notice-row">
+              <span class="notice-meta">
+                <span class="notice-tone">{t(`notice.tone.${n.tone}`)}</span>
+                <span class="notice-dates">
+                  {formatter.format(n.from)} – {formatter.format(n.to)}
+                </span>
               </span>
-            </span>
-            <p>
-              <strong>{n.title}.</strong> {n.text}
-              {n.link && (
-                <>
-                  {' '}
-                  <a class="link" href={href(n.link)}>
-                    {t('notice.details')}
-                  </a>
-                </>
+              <p>
+                <strong>{n.title}.</strong> {n.text}
+                {n.link && (
+                  <>
+                    {' '}
+                    <a class="link" href={href(n.link)}>
+                      {t('notice.details')}
+                    </a>
+                  </>
+                )}
+              </p>
+              {!n.pinned && (
+                <button
+                  type="button"
+                  class="icon-btn"
+                  data-dismiss
+                  aria-label={t('notice.dismiss')}
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+                    <path
+                      d="M6 6l12 12M18 6L6 18"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </button>
               )}
-            </p>
-            {!n.pinned && (
-              <button type="button" class="icon-btn" data-dismiss aria-label={t('notice.dismiss')}>
-                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-                  <path
-                    d="M6 6l12 12M18 6L6 18"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
-            )}
+            </div>
           </li>
         );
       })}

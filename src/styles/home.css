@@ -3,56 +3,72 @@
  * thumbnails) instead of one repeated card; semantic tokens only.
  */
 @layer components {
-  /* Notice strip: a band of paper tape under the header, not a card. */
+  /*
+   * Notice strip: bands of paper tape under the header, one per notice, stacked without gaps.
+   * Every band has the same diagonal stripes on paper; only the stripe colour follows the tone.
+   */
   .notice-strip {
     border-bottom: 1px solid var(--color-border);
+  }
+  .notice-strip ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .notice-strip li {
+    --stripe: var(--color-brand);
+    --stripe-strength: 14%;
     background:
       repeating-linear-gradient(
         -45deg,
         transparent 0 6px,
-        color-mix(in oklab, var(--color-brand) 7%, transparent) 6px 7px
+        color-mix(in oklab, var(--stripe) var(--stripe-strength), transparent) 6px 7.5px
       ),
       var(--color-surface);
   }
-  .notice-strip ul {
-    display: grid;
-    margin-block: 0;
-    padding-block: 0.25rem;
-    list-style: none;
-  }
-  /* Dates and text stack on phones; the dismiss button always stays on the right. */
-  .notice-strip li {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    column-gap: 1rem;
-    padding-block: 0.375rem;
-  }
-  .notice-strip li .icon-btn {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-  }
-  @media (min-width: 48rem) {
-    .notice-strip li {
-      grid-template-columns: auto 1fr auto;
-    }
-    .notice-strip li p {
-      grid-column: 2;
-      grid-row: 1;
-    }
-    .notice-strip li .icon-btn {
-      grid-column: 3;
-      grid-row: 1;
-    }
-  }
   .notice-strip li + li {
     border-top: 1px dashed var(--color-border);
+  }
+  .notice-strip li[data-tone='important'] {
+    --stripe: var(--color-danger);
+    --stripe-strength: 22%;
+  }
+  .notice-strip li[data-tone='news'] {
+    /* The paper-shape teal: the text teal is too dark to read as green in thin stripes. */
+    --stripe: var(--shape-teal);
+    --stripe-strength: 40%;
   }
   .notice-strip li[hidden],
   .notice-strip[hidden] {
     display: none;
   }
-  .notice-strip p {
+  /* Dates and text stack on phones; the dismiss button always stays on the right. */
+  .notice-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 1rem;
+    min-height: 2.75rem;
+    padding-block: 0.375rem;
+  }
+  .notice-row .icon-btn {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  @media (min-width: 48rem) {
+    .notice-row {
+      grid-template-columns: auto 1fr auto;
+    }
+    .notice-row p {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .notice-row .icon-btn {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+  .notice-row p {
     margin: 0;
     font-size: var(--text-sm);
   }
@@ -65,37 +81,17 @@
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--color-brand);
     font-variant-numeric: tabular-nums;
   }
   .notice-tone {
     font-weight: 700;
-  }
-  /* Important (red) and news (green) rows get their tint across the full width of the strip. */
-  .notice-strip li[data-tone='important'],
-  .notice-strip li[data-tone='news'] {
-    box-shadow: 0 0 0 100vmax var(--row-tint);
-    clip-path: inset(0 -100vmax);
-    background: var(--row-tint);
-  }
-  .notice-strip li[data-tone='important'] {
-    --row-tint: var(--color-danger-tint);
-  }
-  .notice-strip li[data-tone='news'] {
-    --row-tint: var(--color-teal-tint);
   }
   .notice-strip li[data-tone='important'] .notice-meta {
     color: var(--color-danger);
   }
   .notice-strip li[data-tone='news'] .notice-meta {
     color: var(--color-teal);
-  }
-  .notice-strip li[data-tone='info'] .notice-meta {
-    color: var(--color-brand);
-  }
-  .notice-strip li[data-tone='important'] + li,
-  .notice-strip li[data-tone='news'] + li {
-    border-top-color: transparent;
   }
 
   .home-actions {

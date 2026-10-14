@@ -87,3 +87,16 @@ test('without JavaScript, exactly the notices active at build time show', async 
   }
   await context.close();
 });
+
+test('on a phone, a pinned notice keeps its text under its label, like the others', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.clock.setFixedTime(new Date('2026-10-20T10:00:00'));
+  await page.goto('/');
+  const pinned = strip(page).getByRole('listitem').filter({ hasText: 'Winter break' });
+  const label = await pinned.locator('.notice-meta').boundingBox();
+  const text = await pinned.locator('p').boundingBox();
+  expect(Math.abs(label!.x - text!.x)).toBeLessThan(2);
+  expect(text!.y).toBeGreaterThan(label!.y);
+});

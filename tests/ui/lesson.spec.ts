@@ -34,3 +34,15 @@ test('a course lesson links to its neighbours', async ({ page }) => {
     '/lessons/location-particles/',
   );
 });
+
+test('the play button shows a focus ring that is not clipped by the frame', async ({ page }) => {
+  await page.goto('/lessons/ge-vs-dorok/');
+  const link = page.getByRole('link', { name: /play video/i });
+  await link.focus();
+  const clipped = await link.evaluate((el) => {
+    const frame = el.closest('[data-video-facade]')!;
+    const offset = parseFloat(getComputedStyle(el).outlineOffset);
+    return getComputedStyle(frame).overflow === 'hidden' && offset >= 0;
+  });
+  expect(clipped).toBe(false);
+});

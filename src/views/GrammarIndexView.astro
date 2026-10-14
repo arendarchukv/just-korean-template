@@ -44,11 +44,7 @@ const groups = groupByLevel(await getGrammar());
       <ul class="pattern-list">
         {g.items.map((p) => (
           <li data-search={`${p.pattern} ${p.meaning}`.toLowerCase()}>
-            <a
-              href={localizePath(lang, `grammar/${p.id}`)}
-              class="pattern-link"
-              aria-label={p.pattern}
-            >
+            <a href={localizePath(lang, `grammar/${p.id}`)} class="pattern-link">
               <span class="pattern-name" lang="ko">
                 {p.pattern}
               </span>

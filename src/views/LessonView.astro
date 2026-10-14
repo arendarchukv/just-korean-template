@@ -89,7 +89,7 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
           <ul class="file-list">
             {deck && (
               <li>
-                <a class="file-link" href={`${localizePath(lang, 'practice')}#${deck.id}`}>
+                <a class="file-link" href={`${localizePath(lang, 'practice')}#deck-${deck.id}`}>
                   <span class="file-kind">{t('lesson.deck')}</span>
                   <span>
                     {deck.title} · {deck.cards.length} {t('lesson.cards')}
@@ -99,7 +99,7 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
             )}
             {quiz && (
               <li>
-                <a class="file-link" href={`${localizePath(lang, 'practice')}#${quiz.id}`}>
+                <a class="file-link" href={`${localizePath(lang, 'practice')}#quiz-${quiz.id}`}>
                   <span class="file-kind">{t('lesson.quiz')}</span>
                   <span>
                     {quiz.title} · {quiz.questions.length} {t('lesson.questions')}

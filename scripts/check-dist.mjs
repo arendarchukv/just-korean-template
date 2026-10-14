@@ -378,10 +378,14 @@ for (const page of ['classes/index.html', 'ko/classes/index.html']) {
 // --- Practice: decks and quizzes have anchors used by lesson pages; dictionary form targets krdict ---
 for (const page of ['practice/index.html', 'ko/practice/index.html']) {
   const html = read(page);
-  for (const dir of ['decks', 'quizzes']) {
+  // Prefixed ids: a deck and a quiz may share a file name (both named after their lesson).
+  for (const [dir, prefix] of [
+    ['decks', 'deck'],
+    ['quizzes', 'quiz'],
+  ]) {
     for (const file of contentFiles(dir)) {
-      const id = file.replace(/\.ya?ml$/, '');
-      if (!html.includes(`id="${id}"`)) problems.push(`${page}: no anchor for ${dir}/${id}`);
+      const id = `${prefix}-${file.replace(/\.ya?ml$/, '')}`;
+      if (!html.includes(`id="${id}"`)) problems.push(`${page}: no anchor ${id}`);
     }
   }
   if (
@@ -391,6 +395,33 @@ for (const page of ['practice/index.html', 'ko/practice/index.html']) {
   }
   if (!/name="mainSearchWord"/.test(html)) problems.push(`${page}: dictionary field name`);
   for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
+}
+
+// --- No duplicate ids on any built page ---
+const htmlPages = (dir = '') =>
+  readdirSync(new URL(`../dist/${dir}`, import.meta.url), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory()
+      ? e.name.startsWith('_')
+        ? []
+        : htmlPages(`${dir}${e.name}/`)
+      : e.name.endsWith('.html')
+        ? [`${dir}${e.name}`]
+        : [],
+  );
+for (const page of htmlPages()) {
+  const pageIds = [...read(page).matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  const twice = [...new Set(pageIds.filter((id, i) => pageIds.indexOf(id) !== i))];
+  if (twice.length) problems.push(`${page}: duplicate ids ${twice.join(', ')}`);
+}
+
+// --- Lesson player thumbnail is sharp: at least 640px wide (sddefault), not an upscaled 480px ---
+{
+  const img = /<div class="video-facade"[\s\S]*?<img[^>]*>/.exec(
+    read('lessons/ge-vs-dorok/index.html'),
+  )?.[0];
+  const width = Number(/width="(\d+)"/.exec(img ?? '')?.[1] ?? 0);
+  if (width < 640) problems.push(`lesson player thumbnail is ${width}px wide`);
+  if (!/sddefault/.test(img ?? '')) problems.push('lesson player does not use the 640px thumbnail');
 }
 
 if (problems.length) {

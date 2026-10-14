@@ -7,7 +7,7 @@ import { Image } from 'astro:assets';
 import type { Lang } from '@/i18n/ui';
 import { useTranslations } from '@/i18n/utils';
 import { youtubeEmbedUrl } from '@/lib/site-logic';
-import { youtubeThumbnail } from '@/lib/youtube';
+import { youtubeThumbnailLarge } from '@/lib/youtube';
 
 interface Props {
   id: string;
@@ -21,10 +21,10 @@ const t = useTranslations(lang);
 <div class="video-facade" data-video-facade data-embed={youtubeEmbedUrl(id)} data-title={title}>
   <a class="video-play" href={`https://www.youtube.com/watch?v=${id}`} data-play>
     <Image
-      src={youtubeThumbnail(id)}
+      src={youtubeThumbnailLarge(id)}
       alt=""
-      width={960}
-      height={540}
+      width={640}
+      height={360}
       fit="cover"
       loading="eager"
       class="video-thumb"

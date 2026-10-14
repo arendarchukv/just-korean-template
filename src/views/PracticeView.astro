@@ -29,7 +29,7 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
       </h2>
       <ul class="file-list">
         {decks.map((d) => (
-          <li id={d.id} class="practice-item">
+          <li id={`deck-${d.id}`} class="practice-item">
             <span class="material-title">{d.title}</span>
             <span class="material-meta">
               {level(d.level)} · {d.cards.length} {t('lesson.cards')}
@@ -51,7 +51,7 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
       </h2>
       <ul class="file-list">
         {quizzes.map((q) => (
-          <li id={q.id} class="practice-item">
+          <li id={`quiz-${q.id}`} class="practice-item">
             <span class="material-title">{q.title}</span>
             <span class="material-meta">
               {level(q.level)} · {q.questions.length} {t('lesson.questions')}

@@ -131,7 +131,6 @@ const en = {
   'practice.lead': 'Check what you learned in the lessons. No sign-up needed.',
   'practice.decks': 'Flashcards',
   'practice.quizzes': 'Quizzes',
-  'practice.soon': 'Interactive practice is coming soon.',
   'practice.dictionary': 'Dictionary',
   'practice.dictionaryHint':
     'Look up a word in the Basic Korean Dictionary of the National Institute of Korean Language, with English meanings.',
@@ -329,7 +328,6 @@ const ko: Partial<Record<UIKey, string>> = {
   'practice.lead': '강의에서 배운 내용을 확인해 보세요. 가입은 필요 없어요.',
   'practice.decks': '단어 카드',
   'practice.quizzes': '퀴즈',
-  'practice.soon': '곧 직접 풀어 볼 수 있어요.',
   'practice.dictionary': '사전',
   'practice.dictionaryHint': '국립국어원 한국어기초사전에서 단어를 영어 뜻과 함께 찾아보세요.',
   'practice.dictionaryField': '한국어 단어',

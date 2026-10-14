@@ -1,0 +1,14 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getGrammar } from '@/content/queries';
+import GrammarView from '@/views/GrammarView.astro';
+
+export const getStaticPaths = (async () =>
+  (await getGrammar()).map((pattern) => ({
+    params: { id: pattern.id },
+    props: { pattern },
+  }))) satisfies GetStaticPaths;
+const { pattern } = Astro.props;
+---
+
+<GrammarView lang="en" pattern={pattern} />

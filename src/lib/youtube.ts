@@ -25,3 +25,8 @@ export function parseYouTubeId(input: string): string | null {
 export function youtubeThumbnail(id: string): string {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
+
+/** 640×480 thumbnail (always present), cropped to 16:9 for the lesson player. */
+export function youtubeThumbnailLarge(id: string): string {
+  return `https://i.ytimg.com/vi/${id}/sddefault.jpg`;
+}

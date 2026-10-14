@@ -259,7 +259,7 @@ for (const [page, prefix] of LOCALES) {
   }
   const lessonLinks = [...block.matchAll(/<a[^>]*href="([^"]+)"/g)]
     .map((m) => m[1])
-    .filter((h) => h.startsWith(`${prefix}/lessons/`));
+    .filter((h) => h.startsWith(`${prefix}/lessons/`) && h !== `${prefix}/lessons/`);
   if (lessonLinks.length !== expectedNewLessons) {
     problems.push(`${page}: ${lessonLinks.length} lesson links, expected ${expectedNewLessons}`);
   }
@@ -269,6 +269,161 @@ for (const [page, prefix] of LOCALES) {
     }
   }
 }
+// --- Navigation: five sections, no /learn/ ---
+for (const [page, prefix] of LOCALES) {
+  const html = read(page);
+  const nav = /<nav[^>]*aria-label="[^"]*"[^>]*>[\s\S]*?<\/nav>/.exec(html)?.[0] ?? '';
+  for (const path of ['lessons', 'grammar', 'materials', 'practice', 'classes']) {
+    if (!nav.includes(`href="${prefix}/${path}/"`)) problems.push(`${page}: nav lacks ${path}`);
+  }
+  if (/\/learn\//.test(html)) problems.push(`${page}: still links to /learn/`);
+}
+for (const path of ['lessons', 'grammar', 'practice']) {
+  for (const prefix of ['', 'ko/']) {
+    if (!exists(`${prefix}${path}/index.html`))
+      problems.push(`missing ${prefix}${path}/index.html`);
+  }
+}
+
+// --- Lessons library: every lesson linked, a course as a numbered list, in both languages ---
+for (const [page, prefix] of [
+  ['lessons/index.html', ''],
+  ['ko/lessons/index.html', '/ko'],
+]) {
+  const html = read(page);
+  for (const file of contentFiles('lessons')) {
+    const id = file.replace(/\.md$/, '');
+    if (!html.includes(`href="${prefix}/lessons/${id}/"`))
+      problems.push(`${page}: no link to ${id}`);
+  }
+  if (!/<ol[^>]*class="[^"]*course-list/.test(html)) {
+    problems.push(`${page}: course is not a numbered list`);
+  }
+}
+
+/** Internal links inside <main> that do not lead to a built page. */
+const deadLinks = (html) => {
+  const main = /<main[\s\S]*?<\/main>/.exec(html)?.[0] ?? '';
+  return [...main.matchAll(/href="(\/[^"#]*)"/g)]
+    .map((m) => m[1])
+    .filter((href) => {
+      const path = href.replace(/^\//, '');
+      return !exists(`${path}index.html`) && !exists(path) && !exists(`${path}/index.html`);
+    });
+};
+
+// --- Lesson page: player only after a click, real content, links resolve ---
+{
+  const html = read('lessons/ge-vs-dorok/index.html');
+  if (/<iframe/.test(html)) problems.push('lesson page loads a YouTube iframe before a click');
+  if (!/data-video-facade/.test(html)) problems.push('lesson page has no video facade');
+  if (!/href="\/grammar\/ge\/"/.test(html)) problems.push('lesson page does not link its grammar');
+  if (!/class="prose"/.test(html)) problems.push('lesson body is not rendered in .prose');
+  for (const href of deadLinks(html)) problems.push(`lesson page links to missing ${href}`);
+  if (/data-video-facade/.test(read('lessons/korean-numbers/index.html'))) {
+    problems.push('lesson without video shows a player');
+  }
+}
+
+// --- Grammar: index lists every pattern; each pattern page exists in both languages ---
+for (const [prefix, dir] of [
+  ['', ''],
+  ['/ko', 'ko/'],
+]) {
+  const index = read(`${dir}grammar/index.html`);
+  for (const file of contentFiles('grammar')) {
+    const id = file.replace(/\.md$/, '');
+    if (!index.includes(`href="${prefix}/grammar/${id}/"`)) {
+      problems.push(`${dir}grammar: no link to ${id}`);
+    }
+    if (!exists(`${dir}grammar/${id}/index.html`)) problems.push(`missing ${dir}grammar/${id}/`);
+  }
+}
+if (exists('grammar/ge/index.html')) {
+  const ge = read('grammar/ge/index.html');
+  if (!/href="\/lessons\/ge-vs-dorok\/"/.test(ge))
+    problems.push('grammar/ge lacks its video lesson');
+  for (const href of deadLinks(ge)) problems.push(`grammar/ge links to missing ${href}`);
+}
+
+// --- Materials: chips match sections, every file link is https, no empty section ---
+for (const page of ['materials/index.html', 'ko/materials/index.html']) {
+  const html = read(page);
+  const chips = [
+    ...html.matchAll(/<a[^>]*class="[^"]*section-chip[^"]*"[^>]*href="#([\w-]+)"/g),
+  ].map((m) => m[1]);
+  const sections = [...html.matchAll(/<section[^>]*id="([\w-]+)"[^>]*data-material-section/g)].map(
+    (m) => m[1],
+  );
+  if (sections.length === 0) problems.push(`${page}: no material sections`);
+  if (chips.join() !== sections.join()) problems.push(`${page}: chips [${chips}] vs [${sections}]`);
+  for (const [, url] of html.matchAll(/class="file-link"[^>]*href="([^"]+)"/g)) {
+    if (!url.startsWith('https://')) problems.push(`${page}: file link ${url} is not https`);
+  }
+  for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
+}
+
+// --- Classes page: timetable, FAQ from content ---
+for (const page of ['classes/index.html', 'ko/classes/index.html']) {
+  const html = read(page);
+  if (!/class="timetable"/.test(html)) problems.push(`${page}: no timetable`);
+  for (const item of classes.faq) {
+    if (!html.includes(item.question)) problems.push(`${page}: FAQ lacks "${item.question}"`);
+  }
+  if ((html.match(/<details class="faq-item"/g) ?? []).length !== classes.faq.length) {
+    problems.push(`${page}: FAQ count differs from classes.yml`);
+  }
+}
+
+// --- Practice: decks and quizzes have anchors used by lesson pages; dictionary form targets krdict ---
+for (const page of ['practice/index.html', 'ko/practice/index.html']) {
+  const html = read(page);
+  // Prefixed ids: a deck and a quiz may share a file name (both named after their lesson).
+  for (const [dir, prefix] of [
+    ['decks', 'deck'],
+    ['quizzes', 'quiz'],
+  ]) {
+    for (const file of contentFiles(dir)) {
+      const id = `${prefix}-${file.replace(/\.ya?ml$/, '')}`;
+      if (!html.includes(`id="${id}"`)) problems.push(`${page}: no anchor ${id}`);
+    }
+  }
+  if (
+    !/<form[^>]*action="https:\/\/krdict\.korean\.go\.kr\/eng\/dicMarinerSearch\/search"/.test(html)
+  ) {
+    problems.push(`${page}: dictionary form does not target krdict`);
+  }
+  if (!/name="mainSearchWord"/.test(html)) problems.push(`${page}: dictionary field name`);
+  for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
+}
+
+// --- No duplicate ids on any built page ---
+const htmlPages = (dir = '') =>
+  readdirSync(new URL(`../dist/${dir}`, import.meta.url), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory()
+      ? e.name.startsWith('_')
+        ? []
+        : htmlPages(`${dir}${e.name}/`)
+      : e.name.endsWith('.html')
+        ? [`${dir}${e.name}`]
+        : [],
+  );
+for (const page of htmlPages()) {
+  const pageIds = [...read(page).matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  const twice = [...new Set(pageIds.filter((id, i) => pageIds.indexOf(id) !== i))];
+  if (twice.length) problems.push(`${page}: duplicate ids ${twice.join(', ')}`);
+}
+
+// --- Lesson player thumbnail is sharp: at least 640px wide (sddefault), not an upscaled 480px ---
+{
+  const img = /<div class="video-facade"[\s\S]*?<img[^>]*>/.exec(
+    read('lessons/ge-vs-dorok/index.html'),
+  )?.[0];
+  const width = Number(/width="(\d+)"/.exec(img ?? '')?.[1] ?? 0);
+  if (width < 640) problems.push(`lesson player thumbnail is ${width}px wide`);
+  if (!/sddefault/.test(img ?? '')) problems.push('lesson player does not use the 640px thumbnail');
+}
+
 if (problems.length) {
   console.error(`dist check failed:\n- ${problems.join('\n- ')}`);
   process.exit(1);

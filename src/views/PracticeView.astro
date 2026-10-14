@@ -1,0 +1,113 @@
+---
+/** Practice: decks and quizzes (interactive versions later), krdict search, pronunciation link. */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getDecks, getQuizzes } from '@/content/queries';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+import { KRDICT } from '@/lib/site-logic';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const decks = await getDecks();
+const quizzes = await getQuizzes();
+const level = (l: string) => t(`grammar.level.${l}` as UIKey);
+---
+
+<BaseLayout title={t('page.practice.title')}>
+  <div class="container-page page-head">
+    <h1 class="page-title">{t('page.practice.title')}</h1>
+    <p class="page-lead">{t('practice.lead')}</p>
+  </div>
+
+  <div class="container-page practice-grid">
+    <section class="practice-block" aria-labelledby="decks-title">
+      <h2 id="decks-title" class="page-section-title">
+        {t('practice.decks')}
+      </h2>
+      <ul class="file-list">
+        {decks.map((d) => (
+          <li id={`deck-${d.id}`} class="practice-item">
+            <span class="material-title">{d.title}</span>
+            <span class="material-meta">
+              {level(d.level)} · {d.cards.length} {t('lesson.cards')}
+              {d.lessonEntry && (
+                <a class="link" href={localizePath(lang, `lessons/${d.lessonEntry.id}`)}>
+                  {d.lessonEntry.title}
+                </a>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p class="practice-soon">{t('practice.soon')}</p>
+    </section>
+
+    <section class="practice-block" aria-labelledby="quizzes-title">
+      <h2 id="quizzes-title" class="page-section-title">
+        {t('practice.quizzes')}
+      </h2>
+      <ul class="file-list">
+        {quizzes.map((q) => (
+          <li id={`quiz-${q.id}`} class="practice-item">
+            <span class="material-title">{q.title}</span>
+            <span class="material-meta">
+              {level(q.level)} · {q.questions.length} {t('lesson.questions')}
+              {q.lessonEntry && (
+                <a class="link" href={localizePath(lang, `lessons/${q.lessonEntry.id}`)}>
+                  {q.lessonEntry.title}
+                </a>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p class="practice-soon">{t('practice.soon')}</p>
+    </section>
+  </div>
+
+  <div class="container-page practice-grid">
+    <section class="practice-block practice-tool grid-paper" aria-labelledby="dictionary-title">
+      <h2 id="dictionary-title" class="page-section-title">
+        {t('practice.dictionary')}
+      </h2>
+      <p class="page-section-lead">{t('practice.dictionaryHint')}</p>
+      <form class="dictionary-form" action={KRDICT.action} method="get" target="_blank">
+        {Object.entries(KRDICT.hidden).map(([name, value]) => (
+          <input type="hidden" name={name} value={value} />
+        ))}
+        <label for="dict-q" class="sr-only">
+          {t('practice.dictionaryField')}
+        </label>
+        <input
+          id="dict-q"
+          class="field"
+          type="search"
+          name={KRDICT.field}
+          lang="ko"
+          required
+          placeholder="사랑"
+        />
+        <button type="submit" class="btn btn-primary">
+          {t('practice.dictionaryGo')}
+        </button>
+      </form>
+    </section>
+    <section class="practice-block practice-tool" aria-labelledby="pron-title">
+      <h2 id="pron-title" class="page-section-title">
+        {t('practice.pronunciation')}
+      </h2>
+      <p class="page-section-lead">{t('practice.pronunciationBody')}</p>
+      <a
+        class="btn btn-ghost"
+        href="https://nuri.iksi.or.kr/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {t('practice.pronunciationLink')}
+      </a>
+    </section>
+  </div>
+</BaseLayout>

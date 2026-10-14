@@ -89,7 +89,7 @@ async function measure(page: import('@playwright/test').Page, path: string): Pro
   return { ...metrics, css, scripts, fontBytes };
 }
 
-for (const path of ['/', '/ko/', '/styleguide/']) {
+for (const path of ['/', '/ko/', '/styleguide/', '/lessons/ge-vs-dorok/']) {
   test(`${path} stays within the performance budget`, async ({ page }) => {
     const m = await measure(page, path);
     const report = JSON.stringify(m);

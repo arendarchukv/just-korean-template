@@ -1,0 +1,84 @@
+---
+/** Materials: anchor chips, then one ruled list per section; lesson downloads in "From lessons". */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getLessons, getMaterials } from '@/content/queries';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+import { materialSections } from '@/lib/site-logic';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const sections = materialSections(
+  (await getMaterials()).map((m) => ({ ...m, lesson: m.lessonEntry })),
+  await getLessons(),
+);
+const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+---
+
+<BaseLayout title={t('page.materials.title')}>
+  <div class="container-page page-head">
+    <h1 class="page-title">{t('page.materials.title')}</h1>
+    <p class="page-lead">{t('materials.lead')}</p>
+    <ul class="chip-list section-chips">
+      {sections.map((s) => (
+        <li>
+          <a class="pattern-chip section-chip" href={`#${s.id}`}>
+            {t(`materials.section.${s.id}` as UIKey)}{' '}
+            <span class="chip-count">{s.items.length}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+  {sections.map((s) => (
+    <section
+      id={s.id}
+      data-material-section
+      class="container-page page-section"
+      aria-labelledby={`${s.id}-title`}
+    >
+      <h2 id={`${s.id}-title`} class="page-section-title">
+        {t(`materials.section.${s.id}` as UIKey)}
+      </h2>
+      <ul class="material-list">
+        {s.items.map((item) => (
+          <li class="material-row">
+            <div class="material-info">
+              <span class="material-title">{item.title}</span>
+              <span class="material-meta">
+                <time datetime={item.date.toISOString().slice(0, 10)}>
+                  {dateFormat.format(item.date)}
+                </time>
+                {item.tags.map((tag) => (
+                  <span class="material-tag">{tag}</span>
+                ))}
+                {item.lesson && (
+                  <a class="link" href={localizePath(lang, `lessons/${item.lesson.id}`)}>
+                    {t('materials.lesson')}
+                  </a>
+                )}
+              </span>
+            </div>
+            <ul class="material-files">
+              {item.files.map((f) => (
+                <li>
+                  <a class="file-link" href={f.url} target="_blank" rel="noopener noreferrer">
+                    <span class="file-kind">{t(`lesson.kind.${f.kind}` as UIKey)}</span>
+                    <span>{f.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>

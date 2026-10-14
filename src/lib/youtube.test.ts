@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseYouTubeId, youtubeThumbnail } from './youtube';
+import { parseYouTubeId, youtubeThumbnail, youtubeThumbnailLarge } from './youtube';
 
 describe('parseYouTubeId', () => {
   it.each([
@@ -30,6 +30,14 @@ describe('youtubeThumbnail', () => {
   it('builds the hqdefault URL', () => {
     expect(youtubeThumbnail('_lgDjyWiheU')).toBe(
       'https://i.ytimg.com/vi/_lgDjyWiheU/hqdefault.jpg',
+    );
+  });
+});
+
+describe('youtubeThumbnailLarge', () => {
+  it('builds the 640px sddefault URL for the lesson player', () => {
+    expect(youtubeThumbnailLarge('_lgDjyWiheU')).toBe(
+      'https://i.ytimg.com/vi/_lgDjyWiheU/sddefault.jpg',
     );
   });
 });

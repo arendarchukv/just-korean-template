@@ -76,3 +76,14 @@ describe('noticeSchema', () => {
     expect(r.success).toBe(false);
   });
 });
+
+describe('notice link', () => {
+  const notice = { title: 'T', text: 'x', from: '2026-10-01', to: '2026-10-02', tone: 'info' };
+  it('accepts a site path or a full https link', () => {
+    expect(noticeSchema.safeParse({ ...notice, link: '/classes/' }).success).toBe(true);
+    expect(noticeSchema.safeParse({ ...notice, link: 'https://tidycal.com/x' }).success).toBe(true);
+  });
+  it('rejects a bare domain, which would become a broken internal link', () => {
+    expect(noticeSchema.safeParse({ ...notice, link: 'www.example.com' }).success).toBe(false);
+  });
+});

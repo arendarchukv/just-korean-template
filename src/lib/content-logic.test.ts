@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { isNoticeActive, selectNewLessons, sortNotices, toDay, toEntryId } from './content-logic';
+import {
+  contentDay,
+  isNoticeActive,
+  selectNewLessons,
+  sortNotices,
+  toDay,
+  toEntryId,
+} from './content-logic';
 
 const d = (s: string) => new Date(`${s}T00:00:00`);
+/** A date as YAML gives it: UTC midnight. */
+const yamlDate = (s: string) => new Date(`${s}T00:00:00Z`);
 
 describe('toEntryId', () => {
   it.each([
@@ -27,8 +36,8 @@ describe('notices', () => {
     tone: 'important' | 'news' | 'info' = 'info',
   ) => ({
     id,
-    from: d(from),
-    to: d(to),
+    from: yamlDate(from),
+    to: yamlDate(to),
     tone,
   });
 
@@ -78,5 +87,12 @@ describe('selectNewLessons', () => {
 
   it('returns fewer when there are not enough', () => {
     expect(selectNewLessons([l('No video', '2026-10-10')], 3)).toEqual([]);
+  });
+});
+
+describe('contentDay', () => {
+  it('reads a YAML date (UTC midnight) as the same calendar day in any time zone', () => {
+    // 2026-12-18 from YAML is 2026-12-18T00:00:00Z; west of UTC that is still Dec 17 locally.
+    expect(contentDay(new Date('2026-12-18T00:00:00Z'))).toBe('2026-12-18');
   });
 });

@@ -1,8 +1,11 @@
 ---
-/** Classes: formats timetable, FAQ, and booking (TidyCal) or contact. */
+/**
+ * Classes: what each format is like (facts at a glance), how to start, FAQ, and a calm closing
+ * block to book or ask. Content is hardcoded in src/data/classes.ts (this page changes rarely).
+ */
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Timetable from '@/components/Timetable.astro';
-import { getClasses, getSite } from '@/content/queries';
+import { getHome, getSite } from '@/content/queries';
+import { FAQ, FORMATS, STEPS } from '@/data/classes';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -11,55 +14,111 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const { faq } = await getClasses();
 const site = await getSite();
+const { credentials } = await getHome();
+// Tally form when set; until then the demo contact page.
+const contact = site.contactForm || localizePath(lang, 'contact');
+const external = (href: string) =>
+  href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 ---
 
 <BaseLayout title={t('page.classes.title')}>
   <div class="container-page page-head">
-    <h1 class="page-title" id="classes-page-title">
-      {t('page.classes.title')}
-    </h1>
+    <h1 class="page-title">{t('page.classes.title')}</h1>
     <p class="page-lead">{t('classes.lead')}</p>
-  </div>
-  <section class="container-page page-section" aria-labelledby="classes-page-title">
-    <Timetable lang={lang} labelledBy="classes-page-title" />
-    <div class="home-actions">
-      {site.tidycal && (
-        <a
-          class="btn btn-primary"
-          data-book-class
-          href={site.tidycal}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {t('home.bookClass')}
+    {credentials.length > 0 && (
+      <p class="classes-teacher">
+        <span>{credentials.slice(0, 3).join(' · ')}</span>
+        <a class="link" href={localizePath(lang, 'about')}>
+          {t('classes.aboutTeacher')}
         </a>
-      )}
-      {/* Tally form when set; until then the demo contact page. */}
-      <a
-        class="btn btn-ghost"
-        href={site.contactForm || localizePath(lang, 'contact')}
-        target={site.contactForm ? '_blank' : undefined}
-        rel={site.contactForm ? 'noopener noreferrer' : undefined}
-      >
-        {t('classes.contact')}
-      </a>
+      </p>
+    )}
+  </div>
+
+  <section class="container-page page-section" aria-labelledby="formats-title">
+    <h2 id="formats-title" class="sr-only">
+      {t('classes.formats')}
+    </h2>
+    <div class="formats">
+      {FORMATS.map((format, i) => (
+        <article class="format" aria-labelledby={`format-${i}`}>
+          <h3 id={`format-${i}`} class="format-name">
+            {format.name}
+          </h3>
+          <p class="format-for">{format.forWhom}</p>
+          <dl class="format-facts">
+            {format.facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p class="format-how">{format.how}</p>
+        </article>
+      ))}
     </div>
   </section>
-  {faq.length > 0 && (
-    <section class="container-page page-section" aria-labelledby="faq-title">
-      <h2 id="faq-title" class="page-section-title">
-        {t('classes.faq')}
-      </h2>
-      <div class="faq-list">
-        {faq.map((item) => (
-          <details class="faq-item">
-            <summary>{item.question}</summary>
-            <p>{item.answer}</p>
-          </details>
-        ))}
+
+  <section class="container-page page-section" aria-labelledby="steps-title">
+    <h2 id="steps-title" class="page-section-title">
+      {t('classes.steps')}
+    </h2>
+    <ol class="steps">
+      {STEPS.map((step, i) => (
+        <li class="step">
+          <span class="step-number" aria-hidden="true">
+            {i + 1}
+          </span>
+          <h3 class="step-title">{step.title}</h3>
+          <p class="step-text">{step.text}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="container-page page-section" aria-labelledby="faq-title">
+    <h2 id="faq-title" class="page-section-title">
+      {t('classes.faq')}
+    </h2>
+    <div class="faq-list">
+      {FAQ.map((item) => (
+        <details class="faq-item">
+          <summary>{item.question}</summary>
+          <p>{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="container-page page-section" aria-labelledby="cta-title">
+    <div class="classes-cta grid-paper" data-classes-cta>
+      <div>
+        <h2 id="cta-title" class="page-section-title">
+          {t('classes.ready')}
+        </h2>
+        <p class="classes-cta-text">{t('classes.readyText')}</p>
       </div>
-    </section>
-  )}
+      <div class="home-actions">
+        {site.tidycal && (
+          <a
+            class="btn btn-primary"
+            data-book-class
+            href={site.tidycal}
+            {...external(site.tidycal)}
+          >
+            {t('home.bookClass')}
+          </a>
+        )}
+        <a
+          class:list={['btn', site.tidycal ? 'btn-ghost' : 'btn-primary']}
+          href={contact}
+          {...external(contact)}
+        >
+          {t('classes.contact')}
+        </a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>

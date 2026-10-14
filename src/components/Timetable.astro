@@ -1,10 +1,10 @@
 ---
-import { getClasses } from '@/content/queries';
+import { FORMATS } from '@/data/classes';
 import type { Lang } from '@/i18n/ui';
 import { useTranslations } from '@/i18n/utils';
 
 /**
- * Class formats as a ruled timetable, one row per format from settings/classes.yml. Used on the
+ * Class formats as a ruled timetable, one row per format from src/data/classes.ts. Used on the
  * home page and the Classes page; on phones the rows stack into labelled blocks (home.css).
  */
 interface Props {
@@ -15,7 +15,6 @@ interface Props {
 
 const { lang, labelledBy } = Astro.props;
 const t = useTranslations(lang);
-const { formats } = await getClasses();
 ---
 
 <div class="table-scroll" tabindex="0" role="region" aria-labelledby={labelledBy}>
@@ -28,7 +27,7 @@ const { formats } = await getClasses();
       </tr>
     </thead>
     <tbody>
-      {formats.map((f) => (
+      {FORMATS.map((f) => (
         <tr>
           <th scope="row">{f.name}</th>
           <td data-label={t('home.classes.forWhom')}>{f.forWhom}</td>

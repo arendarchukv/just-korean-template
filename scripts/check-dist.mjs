@@ -1,6 +1,8 @@
 // Checks the built site in dist/ (run after `npm run build`).
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { parse } from 'yaml';
+// Classes data is hardcoded (not CMS); Node runs the TS module directly.
+import { FAQ, FORMATS, STEPS } from '../src/data/classes.ts';
 
 const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
@@ -162,7 +164,6 @@ const settings = (name) =>
   parse(readFileSync(new URL(`${name}.yml`, contentDir('settings')), 'utf8'));
 const site = settings('site');
 const homeSettings = settings('home');
-const classes = settings('classes');
 const noticeCount = contentFiles('notices').length;
 const videoLessons = contentFiles('lessons').filter((f) =>
   /^youtube:\s*\S/m.test(readFileSync(new URL(f, contentDir('lessons')), 'utf8')),
@@ -232,12 +233,12 @@ for (const [page, prefix] of LOCALES) {
     }
   }
 
-  // Classes: a real table with headers, rows from settings/classes.yml.
+  // Classes: a real table with headers, rows from src/data/classes.ts.
   const table = homeBlock(page, 'classes');
   if ((table.match(/<th scope="col"/g) ?? []).length < 3) {
     problems.push(`${page}: classes table lacks column headers`);
   }
-  for (const format of classes.formats) {
+  for (const format of FORMATS) {
     if (!table.includes(format.name)) problems.push(`${page}: classes table lacks ${format.name}`);
   }
 
@@ -368,16 +369,33 @@ for (const page of ['materials/index.html', 'ko/materials/index.html']) {
   for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
 }
 
-// --- Classes page: timetable, FAQ from content ---
+// --- Classes page: formats with their facts, steps to start, FAQ, a closing call to act ---
 for (const page of ['classes/index.html', 'ko/classes/index.html']) {
   const html = read(page);
-  if (!/class="timetable"/.test(html)) problems.push(`${page}: no timetable`);
-  for (const item of classes.faq) {
+  const formats = [...html.matchAll(/<article[^>]*class="format"[\s\S]*?<\/article>/g)].map(
+    (m) => m[0],
+  );
+  if (formats.length !== FORMATS.length) {
+    problems.push(`${page}: ${formats.length} formats, expected ${FORMATS.length}`);
+  }
+  FORMATS.forEach((format, i) => {
+    const block = formats[i] ?? '';
+    if (!block.includes(format.name))
+      problems.push(`${page}: format ${i + 1} is not ${format.name}`);
+    if ((block.match(/<dt/g) ?? []).length !== format.facts.length) {
+      problems.push(`${page}: ${format.name} facts are not a definition list`);
+    }
+  });
+  const steps = /<ol[^>]*class="steps"[\s\S]*?<\/ol>/.exec(html)?.[0] ?? '';
+  if ((steps.match(/<li/g) ?? []).length !== STEPS.length) problems.push(`${page}: steps to start`);
+  for (const item of FAQ) {
     if (!html.includes(item.question)) problems.push(`${page}: FAQ lacks "${item.question}"`);
   }
-  if ((html.match(/<details class="faq-item"/g) ?? []).length !== classes.faq.length) {
-    problems.push(`${page}: FAQ count differs from classes.yml`);
+  if ((html.match(/<details class="faq-item"/g) ?? []).length !== FAQ.length) {
+    problems.push(`${page}: FAQ count differs from src/data/classes.ts`);
   }
+  if (!/data-classes-cta/.test(html)) problems.push(`${page}: no closing block to book or ask`);
+  for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
 }
 
 // --- Practice: decks and quizzes have anchors used by lesson pages; dictionary form targets krdict ---

@@ -15,6 +15,5 @@ export const collections = {
   quizzes: defineCollection({ loader: many('quizzes', 'yml'), schema: SCHEMAS.quizzes }),
   notices: defineCollection({ loader: many('notices', 'yml'), schema: SCHEMAS.notices }),
   home: defineCollection({ loader: one('home'), schema: SCHEMAS.home }),
-  classes: defineCollection({ loader: one('classes'), schema: SCHEMAS.classes }),
   site: defineCollection({ loader: one('site'), schema: SCHEMAS.site }),
 };

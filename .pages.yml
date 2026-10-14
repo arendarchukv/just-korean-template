@@ -405,43 +405,6 @@ content:
         description: How many new lessons the home page shows (1 to 6).
         options: { min: 1, max: 6 }
 
-  - name: classes
-    label: Classes
-    type: file
-    path: src/content/settings/classes.yml
-    format: yaml
-    fields:
-      - name: formats
-        type: object
-        description: Class formats, shown on the home page and the Classes page.
-        list: { min: 1, collapsible: { collapsed: true, summary: '{name}' } }
-        fields:
-          - name: name
-            type: string
-            required: true
-            description: Format name, e.g. "1:1 private class".
-          - name: forWhom
-            type: string
-            required: true
-            description: Who it suits, in a few words.
-          - name: how
-            type: text
-            required: true
-            description: How it works, in one sentence.
-      - name: faq
-        type: object
-        description: Questions students ask before booking.
-        list: { collapsible: { collapsed: true, summary: '{question}' } }
-        fields:
-          - name: question
-            type: string
-            required: true
-            description: The question.
-          - name: answer
-            type: text
-            required: true
-            description: The answer.
-
   - name: site
     label: Site settings
     type: file

@@ -4,9 +4,9 @@
  */
 @layer components {
   /*
-   * Notice strip: one band of paper tape under the header with the original diagonal stripes,
-   * running unbroken under all notices. Notices stack inside it in order; important and news
-   * lay a nearly transparent wash of their colour over the stripes, info adds none.
+   * Notice strip: one band of paper tape under the header with diagonal stripes, running unbroken
+   * under all notices. Notices stack inside it in order; only the colour of the type label and
+   * dates differs: important red, info blue, news green.
    */
   .notice-strip {
     border-bottom: 1px solid var(--color-border);
@@ -29,12 +29,6 @@
   }
   .notice-strip li + li {
     border-top-color: var(--color-border);
-  }
-  .notice-strip li[data-tone='important'] {
-    background: color-mix(in oklab, var(--color-danger) 7%, transparent);
-  }
-  .notice-strip li[data-tone='news'] {
-    background: color-mix(in oklab, var(--color-teal) 8%, transparent);
   }
   .notice-strip li[hidden],
   .notice-strip[hidden] {

@@ -207,4 +207,5 @@ export const uk: Dictionary = {
   'deck.keyFlip': 'перевернути',
   'deck.keySpace': 'Пробіл',
   'practice.topics': 'Тематичні',
+  'deck.korean': 'Корейською',
 };

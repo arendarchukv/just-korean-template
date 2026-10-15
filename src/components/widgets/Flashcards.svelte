@@ -13,6 +13,7 @@
   type Card = { front: string; back: string; example?: string };
   type Labels = {
     flipHint: string;
+    korean: string;
     meaning: string;
     know: string;
     again: string;
@@ -165,14 +166,19 @@
       onclick={() => (flipped = !flipped)}
     >
       <span class="flashcard-inner">
+        <!-- Both faces share one layout (label, main text centred, line below), so the main text
+             stays in the same place when the card turns over. -->
         <span class="flashcard-face flashcard-face-front">
-          <span class="flashcard-front" lang="ko">{card.front}</span>
-          <span class="flashcard-hint" class:sr-only={flipped}>{labels.flipHint}</span>
+          <span class="flashcard-label">{labels.korean}</span>
+          <span class="flashcard-main flashcard-front" lang="ko">{card.front}</span>
+          <span class="flashcard-foot flashcard-hint" class:sr-only={flipped}
+            >{labels.flipHint}</span
+          >
         </span>
         <span class="flashcard-face flashcard-face-back" aria-hidden="true">
           <span class="flashcard-label">{labels.meaning}</span>
-          <span class="flashcard-meaning">{card.back}</span>
-          {#if card.example}<span class="flashcard-example" lang="ko">{card.example}</span>{/if}
+          <span class="flashcard-main flashcard-meaning">{card.back}</span>
+          <span class="flashcard-foot flashcard-example" lang="ko">{card.example ?? ''}</span>
         </span>
       </span>
     </button>

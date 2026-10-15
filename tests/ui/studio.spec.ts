@@ -144,3 +144,17 @@ test.describe('flashcards toolbar', () => {
     await expect(page.locator('.flashcard')).toHaveAttribute('data-flipped', 'false');
   });
 });
+
+test('the main text sits at the same height on both faces of the card', async ({ page }) => {
+  // A card with an example on the back, the case that used to shift the meaning.
+  await page.goto('/practice/deck/greetings/');
+  await hydrated(page);
+  const middle = (selector: string) =>
+    page.locator(selector).evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top + r.height / 2;
+    });
+  const front = await middle('.flashcard-face-front .flashcard-main');
+  const back = await middle('.flashcard-face-back .flashcard-main');
+  expect(Math.abs(front - back)).toBeLessThan(2);
+});

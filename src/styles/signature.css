@@ -343,6 +343,11 @@
     font-weight: 600;
     color: var(--brand);
   }
+  .badge-small {
+    gap: 0.3rem;
+    padding: 0.05rem 0.5rem;
+    font-size: var(--text-xs);
+  }
   .level-bars {
     display: inline-flex;
     align-items: flex-end;

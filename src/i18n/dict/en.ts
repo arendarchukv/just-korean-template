@@ -226,6 +226,7 @@ export const en = {
   'deck.keyFlip': 'flip',
   'deck.keySpace': 'Space',
   'practice.topics': 'By topic',
+  'deck.korean': 'Korean',
 } as const;
 
 export type UIKey = keyof typeof en;

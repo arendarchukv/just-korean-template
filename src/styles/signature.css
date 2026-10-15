@@ -295,6 +295,21 @@
   .field:focus-visible {
     border-color: var(--focus);
   }
+  /* Select: our own thin chevron at the same inset as the text; the browser arrow
+     hugged the right edge, off-centre. */
+  select.field {
+    appearance: none;
+    padding-right: 2.5rem;
+    /* Muted ink of each theme (theme.css holds only colours, so the arrow lives here). */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a5170' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+    background-position: right 0.75rem center;
+    background-size: 1rem 1rem;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+  [data-theme='dark'] select.field {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3adcf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+  }
 
   .card {
     position: relative;

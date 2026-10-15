@@ -1,15 +1,12 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { getQuizzes } from '@/content/queries';
+import { langItemPaths } from '@/i18n/routes';
 import QuizView from '@/views/QuizView.astro';
 
 export const getStaticPaths = (async () =>
-  (await getQuizzes()).map((quiz) => ({
-    params: { id: quiz.id },
-    props: { quiz },
-  }))) satisfies GetStaticPaths;
-
-const { quiz } = Astro.props;
+  langItemPaths(await getQuizzes(), 'quiz')) satisfies GetStaticPaths;
+const { lang, quiz } = Astro.props;
 ---
 
-<QuizView lang="ko" quiz={quiz} />
+<QuizView lang={lang} quiz={quiz} />

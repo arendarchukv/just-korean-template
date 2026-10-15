@@ -9,7 +9,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHead from '@/components/PageHead.astro';
 import { getMaterialTabs } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
-import { localizePath, useTranslations } from '@/i18n/utils';
+import { dateFormat, localizePath, useTranslations } from '@/i18n/utils';
 import type { MaterialType } from '@/lib/site-logic';
 
 interface Props {
@@ -20,12 +20,7 @@ const t = useTranslations(lang);
 const tabs = await getMaterialTabs();
 const TYPES: MaterialType[] = ['reading', 'writing', 'listening', 'vocabulary', 'video'];
 const type = (k: string) => t(`materials.type.${k}` as UIKey);
-const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
+const dates = dateFormat(lang);
 ---
 
 <BaseLayout title={t('page.materials.title')}>
@@ -128,7 +123,7 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
                 </td>
                 <td class="mat-date">
                   <time datetime={item.date.toISOString().slice(0, 10)}>
-                    {dateFormat.format(item.date)}
+                    {dates.format(item.date)}
                   </time>
                 </td>
               </tr>

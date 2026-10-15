@@ -15,7 +15,7 @@ the end of every cycle.
 
 Built: content collections + `.pages.yml` (Lessons with their own words / quiz / files, Words,
 Quizzes, Materials, Notices, Site settings), demo content, home page (notice strip with tinted type pills, hero with credentials row, study-tool cards (the dictionary card searches krdict right away), new-lesson cards, class cards + bar to Classes; sections open with `SectionHead`: eyebrow, title, lead; line icons in `Icon.astro`; class cards are `FormatCard.astro`, shared with Classes; lesson cards `LessonCard.astro`, shared with Lessons). Content pages open with `PageHead` (eyebrow, h1, lead): Lessons (playlist sections with `SectionHead`, card grid, numbered course list), Practice (entry cards), Grammar, Materials, Classes, About (credentials row, principle cards); the lesson page shows its playlist as an eyebrow beside a framed playlist panel, Lessons library, Lesson page (click-to-load player), Grammar (tags typed on lessons, each with its lessons; search), Materials (tabs over dense
-tables, type filter, title search), Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (two entry cards to the Flashcards and Quizzes studios, plus a muted "TOPIK mock test · Coming soon" block: the list of every deck/quiz on the left, the open one on the right (on phones the list sits below the card), `PracticeStudio.astro`; each deck/quiz keeps its own page; 3D flip card), demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Materials · Practice · Classes; grammar pages are reached from lessons; full menu from 1024px, the menu button below. Header right: language, theme, "Support" (Ko-fi, from Site settings; Instagram and Ko-fi links taken from her old site), Book a class. Language menu: a `<details>` list of every locale in its own name (Ukrainian planned at launch: add it to `languages` + a dictionary; Outfit and Pretendard have no Cyrillic, so add a Cyrillic font then).
+tables, type filter, title search), Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (two entry cards to the Flashcards and Quizzes studios, plus a muted "TOPIK mock test · Coming soon" block: the list of every deck/quiz on the left, the open one on the right (on phones the list sits below the card), `PracticeStudio.astro`; each deck/quiz keeps its own page; 3D flip card), demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Materials · Practice · Classes; grammar pages are reached from lessons; full menu from 1024px, the menu button below. Header right: language, theme, "Support" (Ko-fi, from Site settings; Instagram and Ko-fi links taken from her old site), Book a class. **Languages: English, 한국어, Español, Bahasa Indonesia, Українська** (spec `docs/superpowers/specs/2026-10-16-multilingual-design.md`): one list in `src/i18n/locales.ts` drives routes (`src/pages/[lang]/`), menu, hreflang, sitemap, 404s, dates and checks; dictionaries per language in `src/i18n/dict/` (es, id, uk machine-drafted, `TODO(<lang>-review)`); Manrope covers Cyrillic. Language menu: a `<details>` list of every locale in its own name.
 
 Next cycles, each with its own spec: 1. polish from reviews + visual pass, 2. quiz results via Tally (needs her form), 3. site search (Pagefind).
 Also later: an R2 upload page, content translations.
@@ -26,7 +26,7 @@ pronunciation, OhmyNews news) are plain links in `src/data/links.ts`; never rely
 
 Done earlier (content-independent):
 
-- Foundation: Astro 7 static, Tailwind v4, strict TS, i18n EN (`/`) + KO (`/ko/`), sitemap,
+- Foundation: Astro 7 static, Tailwind v4, strict TS, i18n (EN at `/`, other languages prefixed), sitemap,
   theme toggle (light/dark), header/footer, About page, 404s.
 - Design system "Paper & cut-outs" (spec `docs/superpowers/specs/2026-10-11-design-system-design.md`),
   shown on `/styleguide` (dev page, noindex).
@@ -260,10 +260,10 @@ Data decisions already made:
 - Files (PDF, audio, photo) live in Cloudflare R2; content stores `https://` links only.
   `npm run check:links` checks them (skips the `.example` placeholder domain); run before deploy.
 - Pages CMS content is single-language (English with Korean examples). Everything else is
-  translated: the UI dictionary (`src/i18n/ui.ts`) and the hardcoded content (`src/data/teacher.ts`,
-  `classes.ts`, `playlists.ts`), stored as `{ en, ko }` (`Localized`, read with `pick(data, lang)` /
-  `playlistText`). `src/data/translations.test.ts` fails when a language lacks an item; a new
-  interface language needs its version there too.
+  translated: the UI dictionaries (`src/i18n/dict/<lang>.ts`, complete: `dictionaries.test.ts`) and
+  the hardcoded content (`src/data/teacher.ts`, `classes.ts`, `playlists.ts`), stored as
+  `{ en, ko, es, id, uk }` (`Localized`, read with `pick(data, lang)` / `playlistText`).
+  `src/data/translations.test.ts` fails when a language lacks an item. Dates: `dateFormat(lang)`.
 - Practice widgets (spec `docs/superpowers/specs/2026-10-14-widgets-design.md`): Svelte 5 islands
   in `src/components/widgets/` (`Flashcards`, `Quiz`), one per page on `/practice/deck/<id>/` and
   `/practice/quiz/<id>/` (separate entries and lessons' own; `/practice/flashcards/` and
@@ -286,14 +286,14 @@ Data decisions already made:
   `important` (red) / `news` (green) / `info` (blue) set order and the colour of the type word and
   dates, on one continuous striped band; up to three show, rows have equal height;
   `pinned` notices have no close button.
-- Korean UI strings are machine-drafted for design testing and marked
-  `// TODO(ko-review)` — JiEun should review them before launch.
+- Korean, Spanish, Indonesian and Ukrainian UI strings are machine-drafted and marked
+  `TODO(<lang>-review)` — a native speaker should review them before launch (Korean: JiEun).
 - Theme toggle is a small vanilla script, not a Svelte island (zero-JS default).
 - Page transitions: browser-native cross-document View Transitions (`@view-transition` in
   `signature.css`), header pinned via `view-transition-name`; off under reduced motion. No JS router.
-- Page bodies live in `src/views/`; `src/pages/` and `src/pages/ko/` hold thin route files.
-- `localized404()` in `astro.config.mjs` moves `ko/404/index.html` to `ko/404.html`
-  so Cloudflare serves it for missing `/ko/...` URLs.
+- Page bodies live in `src/views/`; `src/pages/` (English) and `src/pages/[lang]/` (every other language) hold thin route files.
+- `localized404()` in `astro.config.mjs` moves each `<lang>/404/index.html` to `<lang>/404.html`
+  so Cloudflare serves it for missing `/<lang>/...` URLs.
 - Wrangler (Cloudflare CLI) is a devDependency: `npm run deploy` builds and uploads `dist/`.
 - Git commits: no co-author trailer. No remote yet.
 

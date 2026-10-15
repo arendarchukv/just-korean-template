@@ -104,6 +104,183 @@ export const TEACHER: Localized<TeacherText> = {
       { value: '54', label: '문법 영상' },
     ],
   },
+  // TODO(es-review): machine-drafted.
+  es: {
+    greeting: 'Hola, soy JiEun',
+    intro:
+      'Enseño coreano real y cotidiano en YouTube y en clases en directo. Lecciones cortas y claras que explican no solo qué decir, sino por qué.',
+    photoAlt: 'JiEun, profesora de Just Korean',
+    credentials: [
+      'Máster en Enseñanza del Coreano',
+      'Profesora de coreano certificada',
+      'Ha enseñado en Hong Kong, los Países Bajos y España',
+      'Más de 26 000 suscriptores en YouTube',
+    ],
+    story: [
+      'Empecé Just Korean para compartir el coreano que la gente habla de verdad: las pequeñas diferencias entre dos terminaciones, cómo suena una frase en una cafetería y no en un libro de texto.',
+      'A lo largo de los años he enseñado a estudiantes en Hong Kong, los Países Bajos y España, en línea y en persona. Los vídeos del canal nacieron de las preguntas que me hacían en clase.',
+    ],
+    principles: [
+      {
+        title: 'Lado a lado',
+        text: 'Las estructuras que se parecen se explican juntas, para que sepas cuál usar y cuándo.',
+      },
+      {
+        title: 'Frases reales',
+        text: 'Los ejemplos vienen de la vida diaria, dichos como los dicen los coreanos.',
+      },
+      {
+        title: 'Pasos pequeños',
+        text: 'Lecciones cortas que puedes ver en un descanso y practicar enseguida.',
+      },
+    ],
+    timeline: [
+      {
+        place: 'Hong Kong',
+        text: 'Clases de coreano para adultos.',
+      },
+      {
+        place: 'Países Bajos',
+        text: 'Clases particulares y en grupo.',
+      },
+      {
+        place: 'España',
+        text: 'Clases y, hoy, el canal Just Korean.',
+      },
+    ],
+    channel: [
+      {
+        value: '234',
+        label: 'videolecciones',
+      },
+      {
+        value: '26K+',
+        label: 'suscriptores',
+      },
+      {
+        value: '54',
+        label: 'vídeos de gramática',
+      },
+    ],
+  },
+  // TODO(id-review): machine-drafted.
+  id: {
+    greeting: 'Halo, saya JiEun',
+    intro:
+      'Saya mengajar bahasa Korea sehari-hari yang nyata di YouTube dan di kelas langsung. Pelajaran singkat dan jelas yang menjelaskan bukan hanya apa yang harus dikatakan, tetapi juga alasannya.',
+    photoAlt: 'JiEun, guru Just Korean',
+    credentials: [
+      'Magister Pendidikan Bahasa Korea',
+      'Guru bahasa Korea bersertifikat',
+      'Pernah mengajar di Hong Kong, Belanda, dan Spanyol',
+      'Lebih dari 26 ribu pelanggan di YouTube',
+    ],
+    story: [
+      'Saya memulai Just Korean untuk berbagi bahasa Korea yang benar-benar dipakai orang: perbedaan kecil antara dua akhiran, bagaimana sebuah kalimat terdengar di kafe, bukan di buku pelajaran.',
+      'Selama bertahun-tahun saya mengajar murid di Hong Kong, Belanda, dan Spanyol, secara daring maupun tatap muka. Video di kanal ini lahir dari pertanyaan yang mereka ajukan di kelas.',
+    ],
+    principles: [
+      {
+        title: 'Berdampingan',
+        text: 'Pola yang mirip dijelaskan bersama, supaya kamu tahu mana yang dipakai dan kapan.',
+      },
+      {
+        title: 'Kalimat nyata',
+        text: 'Contoh diambil dari kehidupan sehari-hari, diucapkan seperti orang Korea mengucapkannya.',
+      },
+      {
+        title: 'Langkah kecil',
+        text: 'Pelajaran singkat yang bisa ditonton saat istirahat dan langsung dilatih.',
+      },
+    ],
+    timeline: [
+      {
+        place: 'Hong Kong',
+        text: 'Kelas bahasa Korea untuk pelajar dewasa.',
+      },
+      {
+        place: 'Belanda',
+        text: 'Kelas privat dan kelompok.',
+      },
+      {
+        place: 'Spanyol',
+        text: 'Kelas dan kanal Just Korean saat ini.',
+      },
+    ],
+    channel: [
+      {
+        value: '234',
+        label: 'video pelajaran',
+      },
+      {
+        value: '26K+',
+        label: 'pelanggan',
+      },
+      {
+        value: '54',
+        label: 'video tata bahasa',
+      },
+    ],
+  },
+  // TODO(uk-review): machine-drafted.
+  uk: {
+    greeting: 'Привіт, я JiEun',
+    intro:
+      'Я навчаю справжньої повсякденної корейської на YouTube і на живих заняттях. Короткі зрозумілі уроки, які пояснюють не лише що сказати, а й чому.',
+    photoAlt: 'JiEun, викладачка Just Korean',
+    credentials: [
+      'Магістерський ступінь з викладання корейської',
+      'Сертифікована викладачка корейської',
+      'Викладала в Гонконзі, Нідерландах та Іспанії',
+      'Понад 26 тис. підписників на YouTube',
+    ],
+    story: [
+      'Я створила Just Korean, щоб ділитися корейською, якою люди справді розмовляють: дрібними відмінностями між двома закінченнями, тим, як речення звучить у кав’ярні, а не в підручнику.',
+      'За ці роки я навчала студентів у Гонконзі, Нідерландах та Іспанії, онлайн і наживо. Відео на каналі виросли з питань, які вони ставили мені на заняттях.',
+    ],
+    principles: [
+      {
+        title: 'Поруч',
+        text: 'Схожі конструкції пояснюю разом, щоб ви знали, яку вживати і коли.',
+      },
+      {
+        title: 'Справжні речення',
+        text: 'Приклади беру з повсякденного життя, так, як їх кажуть корейці.',
+      },
+      {
+        title: 'Маленькі кроки',
+        text: 'Короткі уроки, які можна подивитися на перерві й одразу потренувати.',
+      },
+    ],
+    timeline: [
+      {
+        place: 'Гонконг',
+        text: 'Корейська для дорослих.',
+      },
+      {
+        place: 'Нідерланди',
+        text: 'Індивідуальні та групові заняття.',
+      },
+      {
+        place: 'Іспанія',
+        text: 'Заняття і, сьогодні, канал Just Korean.',
+      },
+    ],
+    channel: [
+      {
+        value: '234',
+        label: 'відеоуроки',
+      },
+      {
+        value: '26K+',
+        label: 'підписників',
+      },
+      {
+        value: '54',
+        label: 'відео з граматики',
+      },
+    ],
+  },
 };
 
 /** How many lessons the home page shows under "New lessons". */

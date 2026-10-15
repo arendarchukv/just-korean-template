@@ -9,7 +9,14 @@ test.describe('language menu', () => {
     await button.click();
 
     const items = menu.getByRole('link');
-    await expect(items).toHaveText(['English', '한국어']);
+    // Every language in its own name, in the order of locales.ts.
+    await expect(items).toHaveText([
+      'English',
+      '한국어',
+      'Español',
+      'Bahasa Indonesia',
+      'Українська',
+    ]);
     await expect(items.first()).toHaveAttribute('aria-current', 'true');
     await expect(menu.getByRole('link', { name: '한국어' })).toHaveAttribute(
       'href',

@@ -20,8 +20,9 @@ describe('hardcoded content is translated', () => {
     });
     it(`playlists in ${lang}`, () => {
       for (const p of PLAYLISTS) {
-        expect(p.text[lang], p.id).toBeDefined();
-        expect(sameShape(p.text.en, p.text[lang]), p.id).toEqual([]);
+        const text = p.text as Record<string, unknown>;
+        expect(text[lang], p.id).toBeDefined();
+        expect(sameShape(text.en, text[lang]), p.id).toEqual([]);
       }
     });
   }

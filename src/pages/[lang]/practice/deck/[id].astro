@@ -1,15 +1,12 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { getDecks } from '@/content/queries';
+import { langItemPaths } from '@/i18n/routes';
 import DeckView from '@/views/DeckView.astro';
 
 export const getStaticPaths = (async () =>
-  (await getDecks()).map((deck) => ({
-    params: { id: deck.id },
-    props: { deck },
-  }))) satisfies GetStaticPaths;
-
-const { deck } = Astro.props;
+  langItemPaths(await getDecks(), 'deck')) satisfies GetStaticPaths;
+const { lang, deck } = Astro.props;
 ---
 
-<DeckView lang="ko" deck={deck} />
+<DeckView lang={lang} deck={deck} />

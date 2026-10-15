@@ -26,6 +26,7 @@
     "@astrojs/markdown-satteri": "^0.4.3",
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/svelte": "^9.0.1",
+    "@fontsource-variable/manrope": "^5.3.0",
     "@fontsource-variable/outfit": "^5.3.0",
     "@fontsource/gowun-batang": "^5.3.0",
     "@tailwindcss/vite": "^4.3.3",

@@ -159,4 +159,285 @@ export const CLASSES: Localized<ClassesText> = {
       },
     ],
   },
+  // TODO(es-review): machine-drafted.
+  es: {
+    formats: [
+      {
+        name: 'Clase particular 1:1',
+        people: 1,
+        action: 'book',
+        forWhom: 'Cualquier nivel, cualquier objetivo',
+        how: 'Primero una prueba de nivel y después materiales elegidos para ti.',
+        facts: [
+          {
+            label: 'Duración',
+            value: '50 minutos',
+          },
+          {
+            label: 'Nivel',
+            value: 'Cualquiera',
+          },
+          {
+            label: 'Materiales',
+            value: 'Elegidos tras una prueba de nivel',
+          },
+        ],
+      },
+      {
+        name: 'Grupo pequeño',
+        people: 3,
+        action: 'ask',
+        forWhom: 'Dos o tres amigos que aprenden juntos',
+        how: 'Un plan pensado para el nivel y los objetivos de tu grupo.',
+        facts: [
+          {
+            label: 'Duración',
+            value: '60 minutos',
+          },
+          {
+            label: 'Nivel',
+            value: 'El mismo para todo el grupo',
+          },
+          {
+            label: 'Materiales',
+            value: 'Según los objetivos del grupo',
+          },
+        ],
+      },
+      {
+        name: 'Clase en grupo',
+        people: 6,
+        action: 'ask',
+        forWhom: 'Estudiantes del mismo nivel',
+        how: 'Un programa fijo por nivel y tema; únete cuando se abra un grupo nuevo.',
+        facts: [
+          {
+            label: 'Duración',
+            value: '60 minutos',
+          },
+          {
+            label: 'Nivel',
+            value: 'Definido para cada grupo',
+          },
+          {
+            label: 'Materiales',
+            value: 'Un programa de curso',
+          },
+        ],
+      },
+    ],
+    steps: [
+      {
+        title: 'Reserva o escribe',
+        text: 'Elige una hora para una clase particular o envía una pregunta si no sabes qué formato te conviene.',
+      },
+      {
+        title: 'Una breve prueba de nivel',
+        text: 'Unos minutos de conversación y preguntas para empezar en el punto justo.',
+      },
+      {
+        title: 'Tu primera clase',
+        text: 'Recibes un plan y materiales para tu nivel, y empezamos.',
+      },
+    ],
+    faq: [
+      {
+        question: '¿Puedo unirme a una clase en grupo que ya ha empezado?',
+        answer:
+          'Las clases en grupo siguen un programa, así que unirse a mitad está limitado. Se abren grupos nuevos con regularidad.',
+      },
+      {
+        question: '¿En qué zona horaria son las clases?',
+        answer:
+          'El horario cambia durante el año; las horas actuales aparecen en los avisos de la parte superior del sitio.',
+      },
+    ],
+  },
+  // TODO(id-review): machine-drafted.
+  id: {
+    formats: [
+      {
+        name: 'Kelas privat 1:1',
+        people: 1,
+        action: 'book',
+        forWhom: 'Semua level, semua tujuan',
+        how: 'Tes level dulu, lalu materi dipilih khusus untukmu.',
+        facts: [
+          {
+            label: 'Durasi',
+            value: '50 menit',
+          },
+          {
+            label: 'Level',
+            value: 'Semua level',
+          },
+          {
+            label: 'Materi',
+            value: 'Dipilih setelah tes level',
+          },
+        ],
+      },
+      {
+        name: 'Kelompok kecil',
+        people: 3,
+        action: 'ask',
+        forWhom: 'Dua atau tiga teman yang belajar bersama',
+        how: 'Rencana belajar yang disesuaikan dengan level dan tujuan kelompokmu.',
+        facts: [
+          {
+            label: 'Durasi',
+            value: '60 menit',
+          },
+          {
+            label: 'Level',
+            value: 'Sama untuk semua anggota',
+          },
+          {
+            label: 'Materi',
+            value: 'Sesuai tujuan kelompok',
+          },
+        ],
+      },
+      {
+        name: 'Kelas grup',
+        people: 6,
+        action: 'ask',
+        forWhom: 'Pelajar dengan level yang sama',
+        how: 'Kurikulum tetap per level dan topik; bergabunglah saat kelas baru dibuka.',
+        facts: [
+          {
+            label: 'Durasi',
+            value: '60 menit',
+          },
+          {
+            label: 'Level',
+            value: 'Ditentukan untuk tiap grup',
+          },
+          {
+            label: 'Materi',
+            value: 'Kurikulum kursus',
+          },
+        ],
+      },
+    ],
+    steps: [
+      {
+        title: 'Pesan atau kirim pesan',
+        text: 'Pilih waktu untuk kelas privat, atau kirim pertanyaan jika belum yakin format mana yang cocok.',
+      },
+      {
+        title: 'Tes level singkat',
+        text: 'Beberapa menit percakapan dan pertanyaan, supaya pelajaran dimulai dari titik yang tepat.',
+      },
+      {
+        title: 'Kelas pertamamu',
+        text: 'Kamu mendapat rencana dan materi sesuai levelmu, lalu kita mulai belajar.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Bisakah saya bergabung dengan kelas grup yang sudah dimulai?',
+        answer:
+          'Kelas grup mengikuti kurikulum, jadi bergabung di tengah jalan terbatas. Kelas baru dibuka secara rutin.',
+      },
+      {
+        question: 'Kelas memakai zona waktu apa?',
+        answer:
+          'Jadwal berubah sepanjang tahun; waktu terbaru ada di pengumuman di bagian atas situs.',
+      },
+    ],
+  },
+  // TODO(uk-review): machine-drafted.
+  uk: {
+    formats: [
+      {
+        name: 'Індивідуальне заняття 1:1',
+        people: 1,
+        action: 'book',
+        forWhom: 'Будь-який рівень, будь-яка мета',
+        how: 'Спершу тест рівня, далі матеріали, дібрані саме для вас.',
+        facts: [
+          {
+            label: 'Тривалість',
+            value: '50 хвилин',
+          },
+          {
+            label: 'Рівень',
+            value: 'Будь-який',
+          },
+          {
+            label: 'Матеріали',
+            value: 'Добираються після тесту рівня',
+          },
+        ],
+      },
+      {
+        name: 'Мала група',
+        people: 3,
+        action: 'ask',
+        forWhom: 'Двоє-троє друзів, які вчаться разом',
+        how: 'План під рівень і цілі вашої групи.',
+        facts: [
+          {
+            label: 'Тривалість',
+            value: '60 хвилин',
+          },
+          {
+            label: 'Рівень',
+            value: 'Однаковий для всієї групи',
+          },
+          {
+            label: 'Матеріали',
+            value: 'Під цілі групи',
+          },
+        ],
+      },
+      {
+        name: 'Групові заняття',
+        people: 6,
+        action: 'ask',
+        forWhom: 'Учні одного рівня',
+        how: 'Фіксована програма за рівнем і темою; приєднуйтеся, коли відкривається нова група.',
+        facts: [
+          {
+            label: 'Тривалість',
+            value: '60 хвилин',
+          },
+          {
+            label: 'Рівень',
+            value: 'Свій для кожної групи',
+          },
+          {
+            label: 'Матеріали',
+            value: 'Програма курсу',
+          },
+        ],
+      },
+    ],
+    steps: [
+      {
+        title: 'Запишіться або напишіть',
+        text: 'Оберіть час для індивідуального заняття або надішліть питання, якщо не впевнені, який формат підійде.',
+      },
+      {
+        title: 'Короткий тест рівня',
+        text: 'Кілька хвилин розмови й запитань, щоб почати з правильного місця.',
+      },
+      {
+        title: 'Перше заняття',
+        text: 'Ви отримуєте план і матеріали для свого рівня, і ми починаємо.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Чи можна приєднатися до групи, яка вже почала навчання?',
+        answer:
+          'Групові заняття йдуть за програмою, тож приєднатися посередині можна не завжди. Нові групи відкриваються регулярно.',
+      },
+      {
+        question: 'За яким часовим поясом проходять заняття?',
+        answer: 'Розклад змінюється протягом року; актуальний час — в оголошеннях угорі сайту.',
+      },
+    ],
+  },
 };

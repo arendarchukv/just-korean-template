@@ -1,0 +1,12 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getLessons } from '@/content/queries';
+import { langItemPaths } from '@/i18n/routes';
+import LessonView from '@/views/LessonView.astro';
+
+export const getStaticPaths = (async () =>
+  langItemPaths(await getLessons(), 'lesson')) satisfies GetStaticPaths;
+const { lang, lesson } = Astro.props;
+---
+
+<LessonView lang={lang} lesson={lesson} />

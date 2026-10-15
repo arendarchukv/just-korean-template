@@ -278,8 +278,8 @@ for (const [page, prefix] of LOCALES) {
     noticeCount > 0 && 'notices',
     'about',
     'links',
-    'classes',
     expectedNewLessons > 0 && 'new-lessons',
+    'classes',
   ].filter(Boolean);
   if (found.join() !== expected.join()) {
     problems.push(`${page}: home blocks are [${found}], expected [${expected}]`);

@@ -1,0 +1,29 @@
+---
+/**
+ * Section heading in three steps: a small label (eyebrow), the title, one line of explanation;
+ * optionally a link on the right ("All lessons →"). Gives every block a clear entry point.
+ */
+interface Props {
+  id: string;
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  link?: { href: string; label: string };
+}
+const { id, eyebrow, title, lead, link } = Astro.props;
+---
+
+<div class="section-head">
+  <div>
+    <p class="section-eyebrow">{eyebrow}</p>
+    <h2 id={id} class="section-title">
+      {title}
+    </h2>
+    {lead && <p class="section-lead">{lead}</p>}
+  </div>
+  {link && (
+    <a class="link section-link" href={link.href}>
+      {link.label}
+    </a>
+  )}
+</div>

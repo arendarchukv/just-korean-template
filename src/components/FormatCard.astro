@@ -1,0 +1,53 @@
+---
+/**
+ * One class format as a paper card: accent colour, dots for the number of people, name, who it is
+ * for, a few facts and its own button (book a private class, ask about a group). Used on the
+ * Classes page and the home page.
+ */
+import type { ClassFormat } from '@/data/classes';
+
+interface Props {
+  format: ClassFormat;
+  /** Position (1-3): sets the accent colour. */
+  index: number;
+  href: string;
+  label: string;
+  /** Marks the TidyCal booking button (checked by check:dist). */
+  book?: boolean;
+  headingLevel?: 'h2' | 'h3';
+}
+const { format, index, href, label, book = false, headingLevel: Heading = 'h3' } = Astro.props;
+const external = href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+const id = `format-${index}`;
+---
+
+<article class="format" data-format={index} aria-labelledby={id}>
+  {/* People taking part, as dots: decorative, the line below says it in words. */}
+  <span class="format-people" aria-hidden="true">
+    {Array.from({ length: format.people }, () => (
+      <i />
+    ))}
+  </span>
+  <Heading id={id} class="format-name">
+    {format.name}
+  </Heading>
+  <p class="format-for">{format.forWhom}</p>
+  <dl class="format-facts">
+    {format.facts.map((fact) => (
+      <div>
+        <dt>{fact.label}</dt>
+        <dd>{fact.value}</dd>
+      </div>
+    ))}
+  </dl>
+  <p class="format-how">{format.how}</p>
+  <a
+    class:list={['btn', format.action === 'book' ? 'btn-primary' : 'btn-ghost', 'format-action']}
+    href={href}
+    {...external}
+    data-book-class={book ? '' : undefined}
+  >
+    {label}
+    <span class="sr-only">: {format.name}</span>
+  </a>
+</article>

@@ -42,16 +42,36 @@ const en = {
   'home.bookClass': 'Book a class',
   'home.watchLessons': 'Watch lessons',
   'home.credentials': 'About the teacher',
-  'home.classes.title': 'Classes',
+  'home.classes.eyebrow': 'Live classes',
+  'home.classes.title': 'Study directly with JiEun',
+  'home.classes.lead': 'Online classes shaped around your level and goals.',
+  'home.classes.ctaText':
+    'Prices, schedules and answers to common questions are on the Classes page.',
   'home.classes.forWhom': 'For whom',
   'home.classes.more': 'Classes, prices and FAQ',
-  'home.links.title': 'Useful sites',
+  'home.links.eyebrow': 'Free study tools',
+  'home.links.title': 'Study tools I recommend',
+  'home.links.lead': 'Free sites I use with my students between lessons.',
   'home.links.dictionary': 'Dictionary',
+  'home.links.dictionary.text':
+    'The Basic Korean Dictionary by the National Institute of Korean Language, with English meanings and examples.',
+  'home.links.dictionary.tag': 'Vocabulary',
+  'home.links.dictionary.action': 'Look up a word',
   'home.links.pronunciation': 'Pronunciation practice',
+  'home.links.pronunciation.text':
+    'Nuri-Sejong Hakdang: listen to the sounds of Korean and repeat them.',
+  'home.links.pronunciation.tag': 'Sounds',
+  'home.links.pronunciation.action': 'Practise sounds',
   'home.links.news': 'Korean news',
+  'home.links.news.text': 'Real news in Korean from OhmyNews, to practise reading.',
+  'home.links.news.tag': 'Reading',
+  'home.links.news.action': 'Read the news',
   'home.links.newTab': 'opens in a new tab',
+  'home.newLessons.eyebrow': 'From the channel',
   'home.newLessons.title': 'New lessons',
+  'home.newLessons.lead': 'The newest videos, with notes and practice here on the site.',
   'home.newLessons.all': 'All lessons',
+  'home.newLessons.watch': 'Watch',
 
   'lessons.lead':
     'Every lesson from the channel, grouped the way it is on YouTube. Courses are meant to be watched in order.',
@@ -231,16 +251,33 @@ const ko: Partial<Record<UIKey, string>> = {
   'home.bookClass': '수업 예약',
   'home.watchLessons': '강의 보기',
   'home.credentials': '선생님 소개',
-  'home.classes.title': '수업',
+  'home.classes.eyebrow': '실시간 수업', // TODO(ko-review)
+  'home.classes.title': '지은 선생님과 직접 공부해요', // TODO(ko-review)
+  'home.classes.lead': '레벨과 목표에 맞춘 온라인 수업이에요.', // TODO(ko-review)
+  'home.classes.ctaText': '수업료, 시간표, 자주 묻는 질문은 수업 페이지에서 볼 수 있어요.', // TODO(ko-review)
   'home.classes.forWhom': '대상',
   'home.classes.more': '수업 안내와 자주 묻는 질문',
-  'home.links.title': '유용한 사이트', // TODO(ko-review)
+  'home.links.eyebrow': '무료 학습 도구', // TODO(ko-review)
+  'home.links.title': '추천 학습 도구', // TODO(ko-review)
+  'home.links.lead': '수업 사이에 학생들과 함께 쓰는 무료 사이트예요.', // TODO(ko-review)
   'home.links.dictionary': '사전', // TODO(ko-review)
+  'home.links.dictionary.text': '국립국어원 한국어기초사전이에요. 영어 뜻과 예문을 볼 수 있어요.', // TODO(ko-review)
+  'home.links.dictionary.tag': '어휘', // TODO(ko-review)
+  'home.links.dictionary.action': '단어 찾기', // TODO(ko-review)
   'home.links.pronunciation': '발음 연습', // TODO(ko-review)
+  'home.links.pronunciation.text': '누리-세종학당에서 한국어 소리를 듣고 따라 해 보세요.', // TODO(ko-review)
+  'home.links.pronunciation.tag': '발음', // TODO(ko-review)
+  'home.links.pronunciation.action': '발음 연습하기', // TODO(ko-review)
   'home.links.news': '한국어 뉴스', // TODO(ko-review)
+  'home.links.news.text': '오마이뉴스의 진짜 한국어 뉴스로 읽기를 연습해요.', // TODO(ko-review)
+  'home.links.news.tag': '읽기', // TODO(ko-review)
+  'home.links.news.action': '뉴스 읽기', // TODO(ko-review)
   'home.links.newTab': '새 탭에서 열림', // TODO(ko-review)
+  'home.newLessons.eyebrow': '채널에서', // TODO(ko-review)
   'home.newLessons.title': '새 강의',
+  'home.newLessons.lead': '새 영상과 함께 사이트에서 노트와 연습 문제를 볼 수 있어요.', // TODO(ko-review)
   'home.newLessons.all': '모든 강의',
+  'home.newLessons.watch': '보기', // TODO(ko-review)
 
   'lessons.lead':
     '강의는 유튜브 채널과 같은 방식으로 정리했어요. 코스는 순서대로 보는 걸 추천해요.',

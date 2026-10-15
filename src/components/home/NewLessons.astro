@@ -5,8 +5,9 @@ import { NEW_LESSONS_COUNT } from '@/data/teacher';
 import { selectNewLessons } from '@/lib/content-logic';
 import { youtubeThumbnail } from '@/lib/youtube';
 import { playlistText } from '@/data/playlists';
-import type { Lang } from '@/i18n/ui';
+import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
+import SectionHead from '@/components/SectionHead.astro';
 
 /** Latest lessons with a video: thumbnails fetched and optimised at build (no requests to Google). */
 interface Props {
@@ -30,18 +31,17 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
     data-home-block="new-lessons"
     aria-labelledby="new-lessons-title"
   >
-    <div class="home-section-head">
-      <h2 id="new-lessons-title" class="home-section-title">
-        {t('home.newLessons.title')}
-      </h2>
-      <a class="link" href={localizePath(lang, 'lessons')}>
-        {t('home.newLessons.all')}
-      </a>
-    </div>
+    <SectionHead
+      id="new-lessons-title"
+      eyebrow={t('home.newLessons.eyebrow')}
+      title={t('home.newLessons.title')}
+      lead={t('home.newLessons.lead')}
+      link={{ href: localizePath(lang, 'lessons'), label: t('home.newLessons.all') }}
+    />
     <ul class="lesson-row">
       {lessons.map((l) => (
         <li>
-          <a class="lesson-tile" href={localizePath(lang, `lessons/${l.id}`)}>
+          <a class="lesson-card" href={localizePath(lang, `lessons/${l.id}`)}>
             <Image
               src={youtubeThumbnail(l.youtube!)}
               alt=""
@@ -50,11 +50,21 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
               fit="cover"
               class="lesson-thumb"
             />
-            <span class="lesson-meta">
-              {l.playlistEntry && `${playlistText(l.playlistEntry, lang).title} · `}
-              <time datetime={l.date.toISOString().slice(0, 10)}>{dateFormat.format(l.date)}</time>
+            <span class="lesson-card-body">
+              <span class="lesson-meta">
+                {l.playlistEntry && `${playlistText(l.playlistEntry, lang).title} · `}
+                <time datetime={l.date.toISOString().slice(0, 10)}>
+                  {dateFormat.format(l.date)}
+                </time>
+              </span>
+              <span class="lesson-title">{l.title}</span>
+              <span class="lesson-foot">
+                <span>{t(`grammar.level.${l.level}` as UIKey)}</span>
+                <span class="lesson-watch" aria-hidden="true">
+                  {t('home.newLessons.watch')} →
+                </span>
+              </span>
             </span>
-            <span class="lesson-title">{l.title}</span>
           </a>
         </li>
       ))}

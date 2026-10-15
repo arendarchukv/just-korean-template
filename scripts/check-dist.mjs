@@ -361,6 +361,17 @@ for (const [page, prefix] of LOCALES) {
       problems.push(`${page}: header booking buttons do not open TidyCal`);
     }
   }
+  // Ko-fi: when its link is set, the header offers it (icon on desktop, link in the phone menu).
+  if (site.social?.kofi) {
+    const header = /<header[\s\S]*?<\/header>/.exec(html)?.[0] ?? '';
+    const kofi = [...header.matchAll(/<a[^>]*data-kofi[^>]*>/g)].map((m) => m[0]);
+    if (kofi.length !== 2 || kofi.some((a) => !a.includes(`href="${site.social.kofi}"`))) {
+      problems.push(`${page}: header does not offer Ko-fi`);
+    }
+    if (kofi.some((a) => !/target="_blank"/.test(a) || !/rel="noopener noreferrer"/.test(a))) {
+      problems.push(`${page}: Ko-fi does not open safely in a new tab`);
+    }
+  }
   if (/\/learn\//.test(html)) problems.push(`${page}: still links to /learn/`);
 }
 for (const path of ['lessons', 'grammar', 'practice']) {

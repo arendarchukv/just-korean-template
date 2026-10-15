@@ -16,7 +16,7 @@ the end of every cycle.
 Built: content collections + `.pages.yml` (Lessons with their own words / quiz / files, Words,
 Quizzes, Materials, Notices, Site settings), demo content, home page (notice strip, about, useful-site buttons, classes in one line each, new lessons), Lessons library, Lesson page (click-to-load player), Grammar (tags typed on lessons, each with its lessons; search), Materials (tabs over dense
 tables, type filter, title search), Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (deck and quiz pages with Svelte widgets,
-krdict search, pronunciation link), demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Materials · Practice · Classes; grammar pages are reached from lessons; full menu from 1024px, the menu button below. Language menu: a `<details>` list of every locale in its own name (Ukrainian planned at launch: add it to `languages` + a dictionary; Outfit and Pretendard have no Cyrillic, so add a Cyrillic font then).
+krdict search, pronunciation link), demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Materials · Practice · Classes; grammar pages are reached from lessons; full menu from 1024px, the menu button below. Header right: language, theme, "Support" (Ko-fi, from Site settings; Instagram and Ko-fi links taken from her old site), Book a class. Language menu: a `<details>` list of every locale in its own name (Ukrainian planned at launch: add it to `languages` + a dictionary; Outfit and Pretendard have no Cyrillic, so add a Cyrillic font then).
 
 Next cycles, each with its own spec: 1. polish from reviews + visual pass, 2. quiz results via Tally (needs her form), 3. site search (Pagefind).
 Also later: an R2 upload page, content translations.
@@ -46,7 +46,7 @@ Waiting on the owner (do not guess these):
 - Domain (placeholder `https://just-korean.example` in `astro.config.mjs`) and hosting/deploy
   (Cloudflare Workers is planned; no deploy until asked).
 - Brand: final colour (#5C7EBE vs #68ACF9), logo variant A/B/C, wordmark font.
-- Instagram/Ko-fi links (`src/content/settings/site.yml`), Korean UI strings review (`TODO(ko-review)`), About text.
+- Korean UI strings review (`TODO(ko-review)`), About text.
 - Privacy page and analytics (needed once Tally forms or analytics are added).
 
 When resuming: run the quality gates above first; `npx astro dev --background` for the dev

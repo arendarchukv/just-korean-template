@@ -4,6 +4,7 @@
  * to start, FAQ, and a closing block for those not sure which format fits. Content is hardcoded in src/data/classes.ts (this page changes rarely).
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import FormatCard from '@/components/FormatCard.astro';
 import { getSite } from '@/content/queries';
 import { CLASSES } from '@/data/classes';
 import { pick } from '@/i18n/localized';
@@ -35,42 +36,15 @@ const external = (href: string) =>
     </h2>
     <div class="formats">
       {FORMATS.map((format, i) => {
-        const href = format.action === 'book' && site.tidycal ? site.tidycal : contact;
+        const book = format.action === 'book' && Boolean(site.tidycal);
         return (
-          <article class="format" data-format={i + 1} aria-labelledby={`format-${i}`}>
-            {/* People taking part, as dots: decorative, the line below says it in words. */}
-            <span class="format-people" aria-hidden="true">
-              {Array.from({ length: format.people }, () => (
-                <i />
-              ))}
-            </span>
-            <h3 id={`format-${i}`} class="format-name">
-              {format.name}
-            </h3>
-            <p class="format-for">{format.forWhom}</p>
-            <dl class="format-facts">
-              {format.facts.map((fact) => (
-                <div>
-                  <dt>{fact.label}</dt>
-                  <dd>{fact.value}</dd>
-                </div>
-              ))}
-            </dl>
-            <p class="format-how">{format.how}</p>
-            <a
-              class:list={[
-                'btn',
-                format.action === 'book' ? 'btn-primary' : 'btn-ghost',
-                'format-action',
-              ]}
-              href={href}
-              {...external(href)}
-              data-book-class={format.action === 'book' && site.tidycal ? '' : undefined}
-            >
-              {format.action === 'book' ? t('home.bookClass') : t('classes.ask')}
-              <span class="sr-only">: {format.name}</span>
-            </a>
-          </article>
+          <FormatCard
+            format={format}
+            index={i + 1}
+            href={book ? site.tidycal : contact}
+            label={format.action === 'book' ? t('home.bookClass') : t('classes.ask')}
+            book={book}
+          />
         );
       })}
     </div>

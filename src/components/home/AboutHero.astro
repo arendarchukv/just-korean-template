@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Collage from '@/components/shapes/Collage.astro';
+import Icon, { type IconName } from '@/components/Icon.astro';
 import { SITE_NAME_KO } from '@/lib/display-text';
 import { getSite } from '@/content/queries';
 import { TEACHER, TEACHER_PHOTO } from '@/data/teacher';
@@ -16,6 +17,8 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const home = pick(TEACHER, lang);
+// Degree, certificate, countries, channel: in the order of the credentials in teacher.ts.
+const FACT_ICONS: IconName[] = ['cap', 'badge', 'globe', 'play'];
 // Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
 const tidycal = (await getSite()).tidycal;
 const booking = tidycal || localizePath(lang, 'classes');
@@ -44,6 +47,19 @@ const booking = tidycal || localizePath(lang, 'classes');
         {t('home.watchLessons')}
       </a>
     </div>
+    {home.credentials.length > 0 && (
+      <div class="hero-facts">
+        <h2 class="sr-only">{t('home.credentials')}</h2>
+        <ul>
+          {home.credentials.map((c, i) => (
+            <li>
+              <Icon name={FACT_ICONS[i % FACT_ICONS.length]!} />
+              <span>{c}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
   </div>
 
   <div class="about-side">
@@ -58,16 +74,6 @@ const booking = tidycal || localizePath(lang, 'classes');
       />
     ) : (
       <Collage variant="hero" />
-    )}
-    {home.credentials.length > 0 && (
-      <div class="about-credentials grid-paper">
-        <h2 class="sr-only">{t('home.credentials')}</h2>
-        <ul>
-          {home.credentials.map((c) => (
-            <li>{c}</li>
-          ))}
-        </ul>
-      </div>
     )}
   </div>
 </section>

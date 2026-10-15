@@ -1,20 +1,23 @@
 ---
+import FormatCard from '@/components/FormatCard.astro';
+import SectionHead from '@/components/SectionHead.astro';
 import { CLASSES } from '@/data/classes';
-import { pick } from '@/i18n/localized';
 import { getSite } from '@/content/queries';
+import { pick } from '@/i18n/localized';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
-/** Home block: the class formats in one line each, and booking (TidyCal). */
+/** Home block: the three class formats as cards (the same as on Classes), then a bar to the page. */
 interface Props {
   lang: Lang;
 }
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+const site = await getSite();
 // Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
-const tidycal = (await getSite()).tidycal;
-const booking = tidycal || localizePath(lang, 'classes');
+const contact = site.contactForm || localizePath(lang, 'contact');
+const classesPage = localizePath(lang, 'classes');
 ---
 
 <section
@@ -22,29 +25,30 @@ const booking = tidycal || localizePath(lang, 'classes');
   data-home-block="classes"
   aria-labelledby="classes-title"
 >
-  <h2 id="classes-title" class="home-section-title">
-    {t('home.classes.title')}
-  </h2>
-  <ul class="class-lines">
-    {pick(CLASSES, lang).formats.map((f) => (
-      <li>
-        <span class="class-line-name">{f.name}</span>
-        <span class="class-line-text">{f.forWhom}</span>
-      </li>
-    ))}
-  </ul>
-  <div class="home-actions">
-    <a
-      class="btn btn-primary"
-      data-book-class
-      href={booking}
-      target={tidycal ? '_blank' : undefined}
-      rel={tidycal ? 'noopener noreferrer' : undefined}
-    >
-      {t('home.bookClass')}
-    </a>
-    <a class="btn btn-link" href={localizePath(lang, 'classes')}>
-      {t('home.classes.more')}
+  <SectionHead
+    id="classes-title"
+    eyebrow={t('home.classes.eyebrow')}
+    title={t('home.classes.title')}
+    lead={t('home.classes.lead')}
+  />
+  <div class="formats">
+    {pick(CLASSES, lang).formats.map((format, i) => {
+      const book = format.action === 'book';
+      return (
+        <FormatCard
+          format={format}
+          index={i + 1}
+          href={book ? site.tidycal || classesPage : contact}
+          label={book ? t('home.bookClass') : t('classes.ask')}
+          book={book}
+        />
+      );
+    })}
+  </div>
+  <div class="classes-bar">
+    <p>{t('home.classes.ctaText')}</p>
+    <a class="btn btn-ghost" href={classesPage}>
+      {t('home.classes.more')} →
     </a>
   </div>
 </section>

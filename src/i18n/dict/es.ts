@@ -214,4 +214,5 @@ export const es: Dictionary = {
   'deck.keyFlip': 'girar',
   'deck.keySpace': 'Espacio',
   'practice.topics': 'Por tema',
+  'deck.korean': 'Coreano',
 };

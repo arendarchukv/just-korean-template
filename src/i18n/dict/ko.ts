@@ -224,4 +224,5 @@ export const ko: Dictionary = {
   'deck.keyFlip': '뒤집기', // TODO(ko-review)
   'deck.keySpace': 'Space', // TODO(ko-review)
   'practice.topics': '주제별', // TODO(ko-review)
+  'deck.korean': '한국어', // TODO(ko-review)
 };

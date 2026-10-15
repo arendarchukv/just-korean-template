@@ -824,10 +824,10 @@
     font-variant-numeric: tabular-nums;
   }
   .studio-badge-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
     margin: 0.75rem 0 0;
-  }
-  .studio-badge-line .section-eyebrow {
-    margin: 0;
   }
   /* Phones and tablets: the card first, the list of decks below it as a plain vertical list. */
   @media (max-width: 63.99rem) {

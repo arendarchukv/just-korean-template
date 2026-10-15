@@ -208,4 +208,5 @@ export const id: Dictionary = {
   'deck.keyFlip': 'balik',
   'deck.keySpace': 'Spasi',
   'practice.topics': 'Per topik',
+  'deck.korean': 'Bahasa Korea',
 };

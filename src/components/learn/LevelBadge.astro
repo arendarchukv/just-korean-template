@@ -1,12 +1,21 @@
 ---
+/**
+ * Level badge from the design system: a pill with three rising bars, filled up to the level.
+ * Takes the content level name (beginner / intermediate / advanced) or its number (1-3).
+ */
+type LevelName = 'beginner' | 'intermediate' | 'advanced';
 interface Props {
-  level: 1 | 2 | 3;
+  level: 1 | 2 | 3 | LevelName;
   label: string;
+  /** Smaller, for lists. */
+  small?: boolean;
 }
-const { level, label } = Astro.props;
+const NUMBERS: Record<LevelName, 1 | 2 | 3> = { beginner: 1, intermediate: 2, advanced: 3 };
+const { level, label, small = false } = Astro.props;
+const n = typeof level === 'number' ? level : NUMBERS[level];
 ---
 
-<span class="badge badge-level" data-level={level}>
+<span class:list={['badge', 'badge-level', { 'badge-small': small }]} data-level={n}>
   <span class="level-bars" aria-hidden="true">
     <i></i>
     <i></i>

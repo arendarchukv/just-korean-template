@@ -60,11 +60,14 @@
   .flashcard[data-flipped='true'] .flashcard-inner {
     transform: rotateY(180deg);
   }
+  /* Each face: label at the top, the main text centred, one line at the bottom. The rows are the
+     same on both faces, so the main text does not jump when the card turns. */
   .flashcard-face {
     grid-area: 1 / 1;
     display: grid;
-    place-items: center;
-    align-content: center;
+    grid-template-rows: 1.25rem 1fr 3.5rem;
+    justify-items: center;
+    align-items: center;
     gap: 0.75rem;
     padding: 2rem 1.5rem;
     border: 1px solid var(--color-border);
@@ -103,6 +106,20 @@
   .flashcard:focus-visible .flashcard-face {
     outline: 3px solid var(--color-focus);
     outline-offset: 3px;
+  }
+  .flashcard-main {
+    align-self: center;
+  }
+  /* Room for two lines on both faces, so a longer example still fits and nothing moves. */
+  .flashcard-foot {
+    align-self: start;
+    max-width: 100%;
+    line-height: 1.75rem;
+    text-align: center;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
   .flashcard-front {
     font-family: var(--font-korean);

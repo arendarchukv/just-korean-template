@@ -1,4 +1,5 @@
 ---
+import LevelBadge from '@/components/learn/LevelBadge.astro';
 /**
  * Practice "studio": the list of every deck (or quiz) on the left, the open one on the right.
  * Choosing another is a plain link to its own page (each keeps its address, lesson links and
@@ -93,7 +94,11 @@ const searchLabel = t(kind === 'deck' ? 'practice.searchDecks' : 'practice.searc
                 >
                   <span class="studio-item-title">{u.title}</span>
                   <span class="studio-item-meta">
-                    <span>{t(`grammar.level.${u.level}` as UIKey)}</span>
+                    <LevelBadge
+                      level={u.level as 'beginner' | 'intermediate' | 'advanced'}
+                      label={t(`grammar.level.${u.level}` as UIKey)}
+                      small
+                    />
                     <span class="studio-badge">{unitLabel(u.count)}</span>
                   </span>
                 </a>

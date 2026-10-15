@@ -1,4 +1,5 @@
 ---
+import LevelBadge from '@/components/learn/LevelBadge.astro';
 /**
  * One lesson as a framed card: thumbnail (fetched and optimised at build; a paper placeholder for
  * a lesson without a video), playlist and date, title, then level and "Watch". Home and Lessons.
@@ -41,7 +42,7 @@ const dates = dateFormat(lang);
     </span>
     <span class="lesson-title">{l.title}</span>
     <span class="lesson-foot">
-      <span>{t(`grammar.level.${l.level}` as UIKey)}</span>
+      <LevelBadge level={l.level} label={t(`grammar.level.${l.level}` as UIKey)} small />
       <span class="lesson-watch" aria-hidden="true">
         {l.youtube ? t('home.newLessons.watch') : t('lessons.read')} →
       </span>

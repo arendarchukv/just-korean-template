@@ -26,13 +26,22 @@ const labels = {
   done: t('deck.done'),
   rest: t('deck.rest'),
   restart: t('deck.restart'),
+  shuffle: t('deck.shuffle'),
+  learningCount: t('deck.learningCount'),
+  keys: t('deck.keys'),
+  keyFlip: t('deck.keyFlip'),
+  keySpace: t('deck.keySpace'),
 };
 ---
 
 <BaseLayout title={deck.title} description={deck.description}>
   <PracticeStudio
     kind="deck"
-    units={decks.map((d) => ({ ...d, count: d.cards.length }))}
+    units={decks.map((d) => ({
+      ...d,
+      count: d.cards.length,
+      search: [d.title, ...d.cards.flatMap((c) => [c.front, c.back])].join(' '),
+    }))}
     currentId={deck.id}
     lang={lang}
   >
@@ -41,7 +50,12 @@ const labels = {
         <a class="link" href={localizePath(lang, 'practice')}>
           {t('page.practice.title')}
         </a>{' '}
-        · {t('practice.decks')} · {t(`grammar.level.${deck.level}` as UIKey)}
+        · {t('practice.decks')}
+      </p>
+      <p class="studio-badge-line">
+        <span class="section-eyebrow">
+          {t(`grammar.level.${deck.level}` as UIKey)} · {deck.cards.length} {t('lesson.cards')}
+        </span>
       </p>
       <h1 class="studio-title">{deck.title}</h1>
       {deck.description && <p class="studio-lead">{deck.description}</p>}

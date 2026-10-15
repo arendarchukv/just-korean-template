@@ -215,4 +215,13 @@ export const ko: Dictionary = {
 
   'notFound.title': '페이지를 찾을 수 없어요',
   'notFound.body': '찾으시는 페이지가 없거나 이동되었어요.',
+  'practice.searchDecks': '카드 묶음이나 단어 검색', // TODO(ko-review)
+  'practice.searchQuizzes': '퀴즈 검색', // TODO(ko-review)
+  'practice.noMatch': '찾는 결과가 없어요.', // TODO(ko-review)
+  'deck.shuffle': '섞기', // TODO(ko-review)
+  'deck.learningCount': '남은 카드 {k}장', // TODO(ko-review)
+  'deck.keys': '단축키:', // TODO(ko-review)
+  'deck.keyFlip': '뒤집기', // TODO(ko-review)
+  'deck.keySpace': 'Space', // TODO(ko-review)
+  'practice.topics': '주제별', // TODO(ko-review)
 };

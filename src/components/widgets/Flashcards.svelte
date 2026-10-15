@@ -1,6 +1,7 @@
 <script lang="ts">
   /**
-   * Flashcards: one card at a time, show the meaning, "I know it" or "Again".
+   * Flashcards: one card at a time, show the meaning, "I know it" or "Again"; progress bar and
+   * counts, shuffle and start over, keys (Space, 1, 2).
    * Keeps only the fronts of known cards in this browser (jk:deck:<id>). Stands alone.
    * The card turns over in 3D (front: Korean; back: meaning and example); under reduced motion it
    * simply swaps. Accessibility: the card button keeps its name (aria-expanded shows the state);
@@ -20,6 +21,11 @@
     done: string; // "You know {k} of {n} cards"
     rest: string;
     restart: string;
+    shuffle: string;
+    learningCount: string; // "{k} to learn"
+    keys: string;
+    keyFlip: string;
+    keySpace: string;
   };
 
   let { deckId, cards, labels }: { deckId: string; cards: Card[]; labels: Labels } = $props();
@@ -41,6 +47,7 @@
   // Only cards still in the deck count (a card may have been renamed or removed in the CMS).
   const knownCount = $derived(cards.filter((c) => known.has(c.front)).length);
   const allKnown = $derived(cards.length > 0 && knownCount === cards.length);
+  const learningCount = $derived(cards.length - knownCount);
 
   function start(onlyUnknown: boolean) {
     const rest = remainingCards(cards, known);
@@ -83,6 +90,36 @@
     focusNext();
   }
 
+  /** Same cards, new random order, from the first. */
+  function shuffle() {
+    const next = [...queue];
+    for (let i = next.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [next[i], next[j]] = [next[j], next[i]];
+    }
+    queue = next;
+    index = 0;
+    flipped = false;
+    finished = false;
+    focusNext();
+  }
+
+  /**
+   * Keys: Space turns the card over, 1 = again, 2 = I know it. Ignored while typing in a field,
+   * and Space on a button or link keeps its own meaning (it presses that control).
+   */
+  function onKey(event: KeyboardEvent) {
+    if (finished || !card || event.altKey || event.ctrlKey || event.metaKey) return;
+    const target = event.target as HTMLElement;
+    if (target.closest('input, textarea, select, [contenteditable]')) return;
+    if (event.key === ' ') {
+      if (target.closest('button, a')) return;
+      event.preventDefault();
+      flipped = !flipped;
+    } else if (event.key === '1') answer(false);
+    else if (event.key === '2') answer(true);
+  }
+
   function restart() {
     known = new Set();
     writeStore(key, []);
@@ -90,12 +127,32 @@
   }
 </script>
 
+<svelte:window onkeydown={onKey} />
+
 <div class="widget flashcards">
   {#if !finished && card}
-    <p class="widget-progress">
-      <span>{fill(labels.position, { n: index + 1, total: queue.length })}</span>
-      <span>{fill(labels.knownCount, { k: knownCount })}</span>
-    </p>
+    <div class="flashcards-bar">
+      <p class="widget-progress">
+        <span>{fill(labels.position, { n: index + 1, total: queue.length })}</span>
+        <span class="flashcards-counts">
+          <span class="count-learning">{fill(labels.learningCount, { k: learningCount })}</span>
+          <span class="count-known">{fill(labels.knownCount, { k: knownCount })}</span>
+        </span>
+      </p>
+      <progress
+        value={index + 1}
+        max={queue.length}
+        aria-label={fill(labels.position, { n: index + 1, total: queue.length })}
+      ></progress>
+      <div class="flashcards-tools">
+        <button type="button" class="btn btn-ghost btn-small" onclick={shuffle}>
+          {labels.shuffle}
+        </button>
+        <button type="button" class="btn btn-ghost btn-small" onclick={restart}>
+          {labels.restart}
+        </button>
+      </div>
+    </div>
     <!-- A real card with two faces that turns over. The front stays the button's name; the back is
          hidden from screen readers, which hear the meaning from the live region below instead. -->
     <button
@@ -122,16 +179,21 @@
     <p id={backId} class="sr-only" aria-live="polite">
       {#if flipped}{`${labels.meaning}: ${card.back}${card.example ? `. ${card.example}` : ''}`}{/if}
     </p>
-    {#if flipped}
-      <div class="widget-actions">
-        <button type="button" class="btn btn-ghost" onclick={() => answer(false)}
-          >{labels.again}</button
-        >
-        <button type="button" class="btn btn-primary" onclick={() => answer(true)}
-          >{labels.know}</button
-        >
-      </div>
-    {/if}
+    <div class="widget-actions">
+      <button type="button" class="btn btn-ghost" onclick={() => answer(false)}>
+        {labels.again}
+      </button>
+      <button type="button" class="btn btn-primary" onclick={() => answer(true)}>
+        {labels.know}
+      </button>
+    </div>
+    <p class="flashcards-keys" aria-hidden="true">
+      {labels.keys}
+      <kbd>{labels.keySpace}</kbd>
+      {labels.keyFlip} · <kbd>1</kbd>
+      {labels.again} · <kbd>2</kbd>
+      {labels.know}
+    </p>
   {/if}
   <p class="widget-summary" role="status">
     {#if finished}{fill(labels.done, { k: knownCount, n: cards.length })}{/if}

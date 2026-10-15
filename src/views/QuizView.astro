@@ -34,7 +34,14 @@ const labels = {
 <BaseLayout title={quiz.title}>
   <PracticeStudio
     kind="quiz"
-    units={quizzes.map((q) => ({ ...q, count: q.questions.length }))}
+    units={quizzes.map((q) => ({
+      ...q,
+      count: q.questions.length,
+      search: [
+        q.title,
+        ...q.questions.map((x) => (x.type === 'choice' ? x.prompt : x.sentence)),
+      ].join(' '),
+    }))}
     currentId={quiz.id}
     lang={lang}
   >

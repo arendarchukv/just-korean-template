@@ -198,4 +198,13 @@ export const uk: Dictionary = {
   'page.about.title': 'Про мене',
   'notFound.title': 'Сторінку не знайдено',
   'notFound.body': 'Сторінки, яку ви шукаєте, не існує, або її перенесено.',
+  'practice.searchDecks': 'Пошук колод або слів',
+  'practice.searchQuizzes': 'Пошук тестів',
+  'practice.noMatch': 'Нічого не знайдено.',
+  'deck.shuffle': 'Перемішати',
+  'deck.learningCount': 'Ще вчити: {k}',
+  'deck.keys': 'Клавіші:',
+  'deck.keyFlip': 'перевернути',
+  'deck.keySpace': 'Пробіл',
+  'practice.topics': 'Тематичні',
 };

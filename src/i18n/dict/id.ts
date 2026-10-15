@@ -199,4 +199,13 @@ export const id: Dictionary = {
   'page.about.title': 'Tentang saya',
   'notFound.title': 'Halaman tidak ditemukan',
   'notFound.body': 'Halaman yang kamu cari tidak ada atau sudah dipindahkan.',
+  'practice.searchDecks': 'Cari set kartu atau kata',
+  'practice.searchQuizzes': 'Cari kuis',
+  'practice.noMatch': 'Tidak ditemukan.',
+  'deck.shuffle': 'Acak',
+  'deck.learningCount': '{k} belum hafal',
+  'deck.keys': 'Tombol:',
+  'deck.keyFlip': 'balik',
+  'deck.keySpace': 'Spasi',
+  'practice.topics': 'Per topik',
 };

@@ -1,0 +1,10 @@
+---
+import type { Lang } from '@/i18n/locales';
+import { langPaths } from '@/i18n/routes';
+import GrammarIndexView from '@/views/GrammarIndexView.astro';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+---
+
+<GrammarIndexView lang={lang} />

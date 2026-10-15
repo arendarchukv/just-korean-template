@@ -1,5 +1,8 @@
 ---
 import '@fontsource-variable/outfit';
+// Cyrillic (Ukrainian): Outfit has no Cyrillic. Each subset loads only for the glyphs it covers, so
+// Latin pages never download it (Outfit covers Latin first in the font stack).
+import '@fontsource-variable/manrope';
 import outfitLatinUrl from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 // Korean serif (명조): only the slices holding the display glyphs (npm run fonts).
@@ -10,6 +13,7 @@ import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import ThemeScript from '@/components/ThemeScript.astro';
 import { SITE } from '@/config';
+import { LOCALES } from '@/i18n/locales';
 import { defaultLang, languages, type Lang } from '@/i18n/ui';
 import { getLangFromUrl, switchLocalePath, useTranslations } from '@/i18n/utils';
 
@@ -42,7 +46,7 @@ const alternates = (Object.keys(languages) as Lang[]).map((l) => ({
   href: new URL(switchLocalePath(Astro.url, l), site).href,
 }));
 const xDefault = alternates.find((a) => a.lang === defaultLang)!.href;
-const ogLocale = lang === 'ko' ? 'ko_KR' : 'en_US';
+const ogLocale = LOCALES[lang].og;
 // Default share image, rendered by `npm run icons`.
 const ogImage = new URL('/og-default.png', site).href;
 ---

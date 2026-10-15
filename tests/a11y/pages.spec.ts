@@ -34,6 +34,17 @@ const PAGES = [
   '/styleguide/',
   '/missing-page/',
   '/ko/missing-page/',
+  // The other languages: their home, a content page, a studio and their 404.
+  '/es/',
+  '/es/classes/',
+  '/es/practice/flashcards/',
+  '/id/',
+  '/id/materials/',
+  '/id/lessons/ge-vs-dorok/',
+  '/uk/',
+  '/uk/about/',
+  '/uk/practice/quizzes/',
+  '/uk/missing-page/',
 ];
 
 const THEMES = ['light', 'dark'] as const;

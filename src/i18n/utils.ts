@@ -1,8 +1,9 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { defaultLang, languages, ui, type Lang, type UIKey } from './ui';
+import { LOCALES } from './locales';
+import { defaultLang, ui, type Lang, type UIKey } from './ui';
 
 export function isLang(value: string | undefined): value is Lang {
-  return value !== undefined && Object.hasOwn(languages, value);
+  return value !== undefined && Object.hasOwn(LOCALES, value);
 }
 
 /** Locale from the first path segment; unprefixed paths are the default locale. */
@@ -34,4 +35,12 @@ export function localizePath(lang: Lang, path = ''): string {
 /** The current page in another locale. */
 export function switchLocalePath(url: URL, target: Lang): string {
   return localizePath(target, stripLocale(url.pathname));
+}
+
+/** Dates in the page language (format from locales.ts). Content dates are UTC days. */
+export function dateFormat(
+  lang: Lang,
+  options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' },
+): Intl.DateTimeFormat {
+  return new Intl.DateTimeFormat(LOCALES[lang].intl, { timeZone: 'UTC', ...options });
 }

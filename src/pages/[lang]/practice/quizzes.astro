@@ -1,0 +1,13 @@
+---
+/** The practice studio opened on the first quiz (each one also has its own page). */
+import type { Lang } from '@/i18n/locales';
+import { getQuizzes } from '@/content/queries';
+import { langPaths } from '@/i18n/routes';
+import QuizView from '@/views/QuizView.astro';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+const [quiz] = await getQuizzes();
+---
+
+{quiz && <QuizView lang={lang} quiz={quiz} />}

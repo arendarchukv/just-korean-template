@@ -65,7 +65,8 @@ test('on a tablet the header fits its width in both languages, the menu holding 
 }) => {
   for (const width of [768, 900, 1024]) {
     await page.setViewportSize({ width, height: 800 });
-    for (const path of ['/', '/ko/']) {
+    // Every language: Spanish and Indonesian labels are the longest.
+    for (const path of ['/', '/ko/', '/es/', '/id/', '/uk/']) {
       await page.goto(path);
       const row = page.locator('header > .container-page');
       const { scroll, client } = await row.evaluate((el) => ({

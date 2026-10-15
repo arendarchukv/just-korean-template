@@ -3,13 +3,24 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 // Classes data is hardcoded (not CMS); Node runs the TS module directly.
 import { CLASSES } from '../src/data/classes.ts';
+import { LANGS, defaultLang } from '../src/i18n/locales.ts';
 import { NEW_LESSONS_COUNT, TEACHER as TEACHER_TEXT } from '../src/data/teacher.ts';
 
 const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
 const problems = [];
 /** Hardcoded content is translated: a page is checked against the text of its own language. */
-const langOf = (page) => (page.startsWith('ko/') ? 'ko' : 'en');
+/** Every language: its folder in dist/ ('' for English) and URL prefix ('' or '/ko'). */
+const LOCALE_DIRS = LANGS.map((lang) =>
+  lang === defaultLang
+    ? { lang, dir: '', prefix: '' }
+    : { lang, dir: `${lang}/`, prefix: `/${lang}` },
+);
+const langOf = (page) =>
+  LANGS.find((l) => l !== defaultLang && page.startsWith(`${l}/`)) ?? defaultLang;
+const prefixOf = (page) => LOCALE_DIRS.find((d) => d.lang === langOf(page)).prefix;
+/** The same page in every language, e.g. inAll('about/index.html'). */
+const inAll = (path) => LOCALE_DIRS.map(({ dir }) => `${dir}${path}`);
 
 // --- Styleguide: English-only, unindexed, not in the sitemap ---
 {
@@ -62,22 +73,22 @@ for (const [, id, href] of anchored) {
 if (read('sitemap-0.xml').includes('/styleguide')) problems.push('styleguide listed in sitemap');
 
 // --- Interactive cards must be links (hover feedback promises a click) ---
-for (const page of ['index.html', 'ko/index.html', 'styleguide/index.html']) {
+for (const page of [...inAll('index.html'), 'styleguide/index.html']) {
   for (const [, tag] of read(page).matchAll(/<(\w+)[^>]*class="[^"]*\bcard-interactive\b/g)) {
     if (tag !== 'a') problems.push(`${page}: card-interactive on <${tag}>, not a link`);
   }
 }
 
 // --- About page exists in both languages, is in the sitemap and linked from the footer ---
-for (const [page, href] of [
-  ['index.html', '/about/'],
-  ['ko/index.html', '/ko/about/'],
-]) {
+for (const [page, href] of LOCALE_DIRS.map(({ dir, prefix }) => [
+  `${dir}index.html`,
+  `${prefix}/about/`,
+])) {
   const footer = /<footer[\s\S]*<\/footer>/.exec(read(page))?.[0] ?? '';
   if (!footer.includes(`href="${href}"`)) problems.push(`${page}: footer does not link to ${href}`);
 }
 // About content comes from src/data/teacher.ts: story, principles, timeline, channel numbers.
-for (const page of ['about/index.html', 'ko/about/index.html']) {
+for (const page of inAll('about/index.html')) {
   if (!exists(page)) {
     problems.push(`missing ${page}`);
     continue;
@@ -174,7 +185,7 @@ if (exists('site.webmanifest')) {
 }
 
 expectPng('og-default.png', 1200, 630);
-for (const page of ['index.html', 'ko/index.html']) {
+for (const page of inAll('index.html')) {
   const html = read(page);
   const og = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1];
   if (!og?.startsWith('https://')) problems.push(`${page}: og:image is not an absolute URL`);
@@ -238,10 +249,7 @@ const videoLessons = contentFiles('lessons').filter((f) =>
 ).length;
 const expectedNewLessons = Math.min(NEW_LESSONS_COUNT, videoLessons);
 
-const LOCALES = [
-  ['index.html', ''],
-  ['ko/index.html', '/ko'],
-];
+const LOCALES = LOCALE_DIRS.map(({ dir, prefix }) => [`${dir}index.html`, prefix]);
 const homeBlock = (page, name) =>
   new RegExp(`<section[^>]*data-home-block="${name}"[\\s\\S]*?</section>`).exec(read(page))?.[0] ??
   '';
@@ -388,17 +396,17 @@ for (const [page, prefix] of LOCALES) {
   if (/\/learn\//.test(html)) problems.push(`${page}: still links to /learn/`);
 }
 for (const path of ['lessons', 'grammar', 'practice']) {
-  for (const prefix of ['', 'ko/']) {
+  for (const prefix of LOCALE_DIRS.map((d) => d.dir)) {
     if (!exists(`${prefix}${path}/index.html`))
       problems.push(`missing ${prefix}${path}/index.html`);
   }
 }
 
 // --- Lessons library: every lesson linked, a course as a numbered list, in both languages ---
-for (const [page, prefix] of [
-  ['lessons/index.html', ''],
-  ['ko/lessons/index.html', '/ko'],
-]) {
+for (const [page, prefix] of LOCALE_DIRS.map(({ dir, prefix }) => [
+  `${dir}lessons/index.html`,
+  prefix,
+])) {
   const html = read(page);
   for (const file of contentFiles('lessons')) {
     const id = file.replace(/\.md$/, '');
@@ -437,10 +445,7 @@ const deadLinks = (html) => {
 }
 
 // --- Grammar: built from the tags on lessons; each tag links the lessons that explain it ---
-for (const [prefix, dir] of [
-  ['', ''],
-  ['/ko', 'ko/'],
-]) {
+for (const [prefix, dir] of LOCALE_DIRS.map(({ dir, prefix }) => [prefix, dir])) {
   const index = read(`${dir}grammar/index.html`);
   for (const { id, data } of lessonEntries) {
     for (const tag of data.grammar ?? []) {
@@ -468,7 +473,7 @@ for (const [prefix, dir] of [
     .filter((section) => materials.some((m) => m.data.section === section))
     .map((section) => `mat-${section}`);
   if (lessonEntries.some((l) => (l.data.files ?? []).length > 0)) expected.push('mat-from-lessons');
-  for (const page of ['materials/index.html', 'ko/materials/index.html']) {
+  for (const page of inAll('materials/index.html')) {
     const html = read(page);
     const tabs = [...html.matchAll(/<button[^>]*role="tab"[^>]*>/g)].map(
       (m) => /aria-controls="([\w-]+)"/.exec(m[0])?.[1],
@@ -494,7 +499,7 @@ for (const [prefix, dir] of [
 }
 
 // --- Classes page: formats with their facts, steps to start, FAQ, a closing call to act ---
-for (const page of ['classes/index.html', 'ko/classes/index.html']) {
+for (const page of inAll('classes/index.html')) {
   const html = read(page);
   const { formats: FORMATS, steps: STEPS, faq: FAQ } = CLASSES[langOf(page)];
   const formats = [...html.matchAll(/<article[^>]*class="format"[\s\S]*?<\/article>/g)].map(
@@ -511,7 +516,7 @@ for (const page of ['classes/index.html', 'ko/classes/index.html']) {
       problems.push(`${page}: ${format.name} facts are not a definition list`);
     }
     // Each card has its own way on: book a private class (TidyCal), ask about a group (contact).
-    const contact = site.contactForm || (page.startsWith('ko/') ? '/ko/contact/' : '/contact/');
+    const contact = site.contactForm || `${prefixOf(page)}/contact/`;
     const target = format.action === 'book' ? site.tidycal || contact : contact;
     if (!block.includes(`href="${target}"`)) {
       problems.push(`${page}: ${format.name} has no button to ${target}`);
@@ -530,10 +535,10 @@ for (const page of ['classes/index.html', 'ko/classes/index.html']) {
 }
 
 // --- Practice: the two studios, and the TOPIK mock test announced as coming soon ---
-for (const page of ['practice/index.html', 'ko/practice/index.html']) {
+for (const page of inAll('practice/index.html')) {
   const html = read(page);
   // Two ways in: the Flashcards and Quizzes pages (each lists every deck or quiz beside the widget).
-  const prefix = page.startsWith('ko/') ? '/ko' : '';
+  const prefix = prefixOf(page);
   for (const kind of ['flashcards', 'quizzes']) {
     if (!html.includes(`href="${prefix}/practice/${kind}/"`)) {
       problems.push(`${page}: no link to ${prefix}/practice/${kind}/`);
@@ -545,7 +550,7 @@ for (const page of ['practice/index.html', 'ko/practice/index.html']) {
 }
 
 // --- Contact (demo): labelled fields, nothing is sent anywhere ---
-for (const page of ['contact/index.html', 'ko/contact/index.html']) {
+for (const page of inAll('contact/index.html')) {
   if (!exists(page)) {
     problems.push(`missing ${page}`);
     continue;
@@ -565,12 +570,12 @@ for (const page of ['contact/index.html', 'ko/contact/index.html']) {
 }
 
 // --- News page removed: the home quick link goes straight to OhmyNews ---
-for (const page of ['news/index.html', 'ko/news/index.html']) {
+for (const page of inAll('news/index.html')) {
   if (exists(page)) problems.push(`${page} still exists`);
 }
 
 // --- Deck pages: the widget, and every card readable without JavaScript ---
-for (const dir of ['', 'ko/']) {
+for (const dir of LOCALE_DIRS.map((d) => d.dir)) {
   for (const deck of allDecks) {
     const page = `${dir}practice/deck/${deck.id}/index.html`;
     if (!exists(page)) {
@@ -587,7 +592,7 @@ for (const dir of ['', 'ko/']) {
 }
 
 // --- Quiz pages: the widget, and every question readable without JavaScript ---
-for (const dir of ['', 'ko/']) {
+for (const dir of LOCALE_DIRS.map((d) => d.dir)) {
   for (const quiz of allQuizzes) {
     const page = `${dir}practice/quiz/${quiz.id}/index.html`;
     if (!exists(page)) {
@@ -604,10 +609,7 @@ for (const dir of ['', 'ko/']) {
 }
 
 // --- Flashcards and Quizzes pages: a widget beside a list of every deck / quiz ---
-for (const [dir, prefix] of [
-  ['', ''],
-  ['ko/', '/ko'],
-]) {
+for (const [dir, prefix] of LOCALE_DIRS.map(({ dir, prefix }) => [dir, prefix])) {
   for (const [kind, units, unit, widget] of [
     ['flashcards', allDecks, 'deck', 'Flashcards'],
     ['quizzes', allQuizzes, 'quiz', 'Quiz'],
@@ -636,10 +638,7 @@ for (const [dir, prefix] of [
     }
   }
 }
-for (const [prefix, dir] of [
-  ['', ''],
-  ['/ko', 'ko/'],
-]) {
+for (const [prefix, dir] of LOCALE_DIRS.map(({ dir, prefix }) => [prefix, dir])) {
   const deckLesson = read(`${dir}lessons/negative-form/index.html`);
   if (!deckLesson.includes(`href="${prefix}/practice/deck/negative-form/"`)) {
     problems.push(`${dir}lesson page does not link its deck page`);

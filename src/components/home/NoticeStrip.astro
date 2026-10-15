@@ -2,7 +2,7 @@
 import { getNotices } from '@/content/queries';
 import { contentDay, isNoticeActive, sortNotices, toDay } from '@/lib/content-logic';
 import type { Lang } from '@/i18n/ui';
-import { localizePath, useTranslations } from '@/i18n/utils';
+import { dateFormat, localizePath, useTranslations } from '@/i18n/utils';
 
 /**
  * Strip of paper tape under the header with current notices. Every notice is rendered with its
@@ -22,12 +22,8 @@ const t = useTranslations(lang);
 const buildDay = toDay(new Date());
 const notices = sortNotices(await getNotices());
 const MAX = 3;
-const formatter = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
-  day: 'numeric',
-  month: 'short',
-  // Content dates are calendar days (UTC midnight from YAML): format them as such.
-  timeZone: 'UTC',
-});
+// Content dates are calendar days (UTC midnight from YAML): dateFormat formats them as such.
+const formatter = dateFormat(lang, { day: 'numeric', month: 'short' });
 const href = (link: string) =>
   link.startsWith('http') ? link : localizePath(lang, link.replace(/^\/|\/$/g, ''));
 let shown = 0;

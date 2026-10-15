@@ -8,13 +8,14 @@ import { headingAnchorsPlugin } from './src/lib/heading-anchors-plugin.ts';
 import { wrapTablesPlugin } from './src/lib/wrap-tables-plugin.ts';
 
 import { rename, rmdir } from 'node:fs/promises';
+import { LANGS, PREFIXED_LANGS, defaultLang } from './src/i18n/locales.ts';
 import { fileURLToPath } from 'node:url';
 
 // Placeholder until the domain is chosen (TBD). Pages read it as Astro.site.
 const SITE_URL = 'https://just-korean.example';
 
 /**
- * Astro only emits the root 404 as `404.html`; other locales get `ko/404/index.html`.
+ * Astro only emits the root 404 as `404.html`; other locales get `<lang>/404/index.html`.
  * Cloudflare's `not_found_handling: "404-page"` serves the nearest `404.html`, so move it.
  * @returns {import('astro').AstroIntegration}
  */
@@ -23,9 +24,11 @@ function localized404() {
     name: 'localized-404',
     hooks: {
       'astro:build:done': async ({ dir }) => {
-        const dirPath = fileURLToPath(new URL('ko/404/', dir));
-        await rename(`${dirPath}index.html`, fileURLToPath(new URL('ko/404.html', dir)));
-        await rmdir(dirPath);
+        for (const lang of PREFIXED_LANGS) {
+          const dirPath = fileURLToPath(new URL(`${lang}/404/`, dir));
+          await rename(`${dirPath}index.html`, fileURLToPath(new URL(`${lang}/404.html`, dir)));
+          await rmdir(dirPath);
+        }
       },
     },
   };
@@ -37,8 +40,8 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'ignore',
   i18n: {
-    locales: ['en', 'ko'],
-    defaultLocale: 'en',
+    locales: LANGS,
+    defaultLocale: defaultLang,
     routing: {
       prefixDefaultLocale: false,
     },
@@ -58,8 +61,8 @@ export default defineConfig({
     sitemap({
       filter: (page) => !new URL(page).pathname.startsWith('/styleguide'),
       i18n: {
-        defaultLocale: 'en',
-        locales: { en: 'en', ko: 'ko' },
+        defaultLocale: defaultLang,
+        locales: Object.fromEntries(LANGS.map((l) => [l, l])),
       },
     }),
     localized404(),

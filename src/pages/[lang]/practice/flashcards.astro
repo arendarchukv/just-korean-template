@@ -1,0 +1,13 @@
+---
+/** The practice studio opened on the first deck (each one also has its own page). */
+import type { Lang } from '@/i18n/locales';
+import { getDecks } from '@/content/queries';
+import { langPaths } from '@/i18n/routes';
+import DeckView from '@/views/DeckView.astro';
+
+export const getStaticPaths = langPaths;
+const { lang } = Astro.props as { lang: Lang };
+const [deck] = await getDecks();
+---
+
+{deck && <DeckView lang={lang} deck={deck} />}

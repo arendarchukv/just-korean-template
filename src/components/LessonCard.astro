@@ -7,7 +7,7 @@ import { Image } from 'astro:assets';
 import type { Lesson } from '@/content/queries';
 import { playlistText } from '@/data/playlists';
 import type { Lang, UIKey } from '@/i18n/ui';
-import { localizePath, useTranslations } from '@/i18n/utils';
+import { dateFormat, localizePath, useTranslations } from '@/i18n/utils';
 import { youtubeThumbnail } from '@/lib/youtube';
 
 interface Props {
@@ -18,12 +18,7 @@ interface Props {
 }
 const { lesson: l, lang, showPlaylist = true } = Astro.props;
 const t = useTranslations(lang);
-const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  timeZone: 'UTC',
-});
+const dates = dateFormat(lang);
 ---
 
 <a class="lesson-card" href={localizePath(lang, `lessons/${l.id}`)}>
@@ -42,7 +37,7 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
   <span class="lesson-card-body">
     <span class="lesson-meta">
       {showPlaylist && l.playlistEntry && `${playlistText(l.playlistEntry, lang).title} · `}
-      <time datetime={l.date.toISOString().slice(0, 10)}>{dateFormat.format(l.date)}</time>
+      <time datetime={l.date.toISOString().slice(0, 10)}>{dates.format(l.date)}</time>
     </span>
     <span class="lesson-title">{l.title}</span>
     <span class="lesson-foot">

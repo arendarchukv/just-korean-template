@@ -9,23 +9,15 @@ const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url),
 const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
 const problems = [];
 
-// --- Site info (DEMO ONLY: content map + design system): English-only, unindexed ---
-for (const page of ['site-info/index.html', 'site-info/design/index.html']) {
-  const doc = read(page);
-  if (/hreflang=/.test(doc)) problems.push(`${page} emits hreflang links`);
-  if (/href="\/ko\/site-info/.test(doc)) problems.push(`${page} links to /ko/site-info`);
-  if (!/name="robots" content="noindex"/.test(doc)) problems.push(`${page} missing noindex`);
-}
-// Every Pages CMS form has its card on the content map.
-const forms = parse(readFileSync(new URL('../.pages.yml', import.meta.url), 'utf8')).content;
-for (const { name } of forms) {
-  if (!read('site-info/index.html').includes(`id="unit-${name}"`)) {
-    problems.push(`site-info has no card for the ${name} form`);
-  }
+// --- Styleguide: English-only, unindexed, not in the sitemap ---
+{
+  const doc = read('styleguide/index.html');
+  if (/hreflang=/.test(doc)) problems.push('styleguide emits hreflang links');
+  if (!/name="robots" content="noindex"/.test(doc)) problems.push('styleguide missing noindex');
 }
 
 // --- Design system samples: clean shapes, accessible samples ---
-const html = read('site-info/design/index.html');
+const html = read('styleguide/index.html');
 
 const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
 const dupes = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
@@ -65,10 +57,10 @@ for (const [, id, href] of anchored) {
   if (id !== href) problems.push(`heading #${id} anchors to #${href}`);
 }
 
-if (read('sitemap-0.xml').includes('/site-info')) problems.push('site info listed in sitemap');
+if (read('sitemap-0.xml').includes('/styleguide')) problems.push('styleguide listed in sitemap');
 
 // --- Interactive cards must be links (hover feedback promises a click) ---
-for (const page of ['index.html', 'ko/index.html', 'site-info/design/index.html']) {
+for (const page of ['index.html', 'ko/index.html', 'styleguide/index.html']) {
   for (const [, tag] of read(page).matchAll(/<(\w+)[^>]*class="[^"]*\bcard-interactive\b/g)) {
     if (tag !== 'a') problems.push(`${page}: card-interactive on <${tag}>, not a link`);
   }
@@ -211,6 +203,33 @@ const settings = (name) =>
   parse(readFileSync(new URL(`${name}.yml`, contentDir('settings')), 'utf8'));
 const site = settings('site');
 const noticeCount = contentFiles('notices').length;
+/** Lessons with their front matter (the YAML between the first two --- lines). */
+const lessonEntries = contentFiles('lessons').map((f) => {
+  const text = readFileSync(new URL(f, contentDir('lessons')), 'utf8');
+  const front = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text)?.[1] ?? '';
+  return { id: f.replace(/\.md$/, ''), data: parse(front) ?? {} };
+});
+const yamlEntries = (dir) =>
+  contentFiles(dir).map((f) => ({
+    id: f.replace(/\.ya?ml$/, ''),
+    data: parse(readFileSync(new URL(f, contentDir(dir)), 'utf8')),
+  }));
+// Every deck and quiz page: the separate entries, then lessons that carry their own.
+const allDecks = [
+  ...yamlEntries('decks').map((e) => ({
+    id: e.id,
+    fronts: e.data.cards.map((c) => String(c.front)),
+  })),
+  ...lessonEntries
+    .filter((l) => (l.data.words ?? []).length > 0)
+    .map((l) => ({ id: l.id, fronts: l.data.words.map((w) => String(w.front)) })),
+];
+const allQuizzes = [
+  ...yamlEntries('quizzes').map((e) => ({ id: e.id, count: e.data.questions.length })),
+  ...lessonEntries
+    .filter((l) => (l.data.quiz ?? []).length > 0)
+    .map((l) => ({ id: l.id, count: l.data.quiz.length })),
+];
 const videoLessons = contentFiles('lessons').filter((f) =>
   /^youtube:\s*\S/m.test(readFileSync(new URL(f, contentDir('lessons')), 'utf8')),
 ).length;
@@ -383,7 +402,9 @@ const deadLinks = (html) => {
   const html = read('lessons/ge-vs-dorok/index.html');
   if (/<iframe/.test(html)) problems.push('lesson page loads a YouTube iframe before a click');
   if (!/data-video-facade/.test(html)) problems.push('lesson page has no video facade');
-  if (!/href="\/grammar\/ge\/"/.test(html)) problems.push('lesson page does not link its grammar');
+  if (!/href="\/grammar\/#g-[^"]+"/.test(html)) {
+    problems.push('lesson page does not link its grammar tags');
+  }
   if (!/class="prose"/.test(html)) problems.push('lesson body is not rendered in .prose');
   for (const href of deadLinks(html)) problems.push(`lesson page links to missing ${href}`);
   if (/data-video-facade/.test(read('lessons/korean-numbers/index.html'))) {
@@ -391,42 +412,61 @@ const deadLinks = (html) => {
   }
 }
 
-// --- Grammar: index lists every pattern; each pattern page exists in both languages ---
+// --- Grammar: built from the tags on lessons; each tag links the lessons that explain it ---
 for (const [prefix, dir] of [
   ['', ''],
   ['/ko', 'ko/'],
 ]) {
   const index = read(`${dir}grammar/index.html`);
-  for (const file of contentFiles('grammar')) {
-    const id = file.replace(/\.md$/, '');
-    if (!index.includes(`href="${prefix}/grammar/${id}/"`)) {
-      problems.push(`${dir}grammar: no link to ${id}`);
+  for (const { id, data } of lessonEntries) {
+    for (const tag of data.grammar ?? []) {
+      if (!index.includes(String(tag).trim())) problems.push(`${dir}grammar: no tag ${tag}`);
+      if (!index.includes(`href="${prefix}/lessons/${id}/"`)) {
+        problems.push(`${dir}grammar: tag ${tag} does not link ${id}`);
+      }
     }
-    if (!exists(`${dir}grammar/${id}/index.html`)) problems.push(`missing ${dir}grammar/${id}/`);
   }
+  if (exists(`${dir}grammar/ge/index.html`)) problems.push(`${dir}grammar/ge/ still exists`);
 }
-if (exists('grammar/ge/index.html')) {
-  const ge = read('grammar/ge/index.html');
-  if (!/href="\/lessons\/ge-vs-dorok\/"/.test(ge))
-    problems.push('grammar/ge lacks its video lesson');
-  for (const href of deadLinks(ge)) problems.push(`grammar/ge links to missing ${href}`);
+// A lesson's grammar links land on an anchor that exists.
+{
+  const index = read('grammar/index.html');
+  const links = read('lessons/ge-vs-dorok/index.html').matchAll(/href="\/grammar\/#([^"]+)"/g);
+  for (const [, anchor] of links) {
+    if (!index.includes(`id="${anchor}"`)) problems.push(`grammar link #${anchor} has no target`);
+  }
 }
 
-// --- Materials: chips match sections, every file link is https, no empty section ---
-for (const page of ['materials/index.html', 'ko/materials/index.html']) {
-  const html = read(page);
-  const chips = [
-    ...html.matchAll(/<a[^>]*class="[^"]*section-chip[^"]*"[^>]*href="#([\w-]+)"/g),
-  ].map((m) => m[1]);
-  const sections = [...html.matchAll(/<section[^>]*id="([\w-]+)"[^>]*data-material-section/g)].map(
-    (m) => m[1],
-  );
-  if (sections.length === 0) problems.push(`${page}: no material sections`);
-  if (chips.join() !== sections.join()) problems.push(`${page}: chips [${chips}] vs [${sections}]`);
-  for (const [, url] of html.matchAll(/class="file-link"[^>]*href="([^"]+)"/g)) {
-    if (!url.startsWith('https://')) problems.push(`${page}: file link ${url} is not https`);
+// --- Materials: a tab per non-empty section (lesson files last), every material listed ---
+{
+  const materials = yamlEntries('materials');
+  const expected = ['class', 'podcast', 'self-study']
+    .filter((section) => materials.some((m) => m.data.section === section))
+    .map((section) => `mat-${section}`);
+  if (lessonEntries.some((l) => (l.data.files ?? []).length > 0)) expected.push('mat-from-lessons');
+  for (const page of ['materials/index.html', 'ko/materials/index.html']) {
+    const html = read(page);
+    const tabs = [...html.matchAll(/<button[^>]*role="tab"[^>]*>/g)].map(
+      (m) => /aria-controls="([\w-]+)"/.exec(m[0])?.[1],
+    );
+    const panels = [...html.matchAll(/<section[^>]*id="([\w-]+)"[^>]*data-mat-panel/g)].map(
+      (m) => m[1],
+    );
+    if (panels.join() !== expected.join()) {
+      problems.push(`${page}: panels [${panels}], expected [${expected}]`);
+    }
+    if (tabs.join() !== panels.join()) problems.push(`${page}: tabs [${tabs}] vs [${panels}]`);
+    for (const { data } of materials) {
+      if (!html.includes(data.title)) problems.push(`${page}: material "${data.title}" missing`);
+    }
+    for (const [, url] of html.matchAll(/class="mat-file"[^>]*href="([^"]+)"/g)) {
+      if (!url.startsWith('https://')) problems.push(`${page}: file link ${url} is not https`);
+    }
+    if (!/<table class="mat-table">[\s\S]*?<th scope="col"/.test(html)) {
+      problems.push(`${page}: materials are not a table with column headers`);
+    }
+    for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
   }
-  for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
 }
 
 // --- Classes page: formats with their facts, steps to start, FAQ, a closing call to act ---
@@ -461,14 +501,14 @@ for (const page of ['classes/index.html', 'ko/classes/index.html']) {
 // --- Practice: decks and quizzes have anchors used by lesson pages; dictionary form targets krdict ---
 for (const page of ['practice/index.html', 'ko/practice/index.html']) {
   const html = read(page);
-  // Prefixed ids: a deck and a quiz may share a file name (both named after their lesson).
-  for (const [dir, prefix] of [
-    ['decks', 'deck'],
-    ['quizzes', 'quiz'],
+  // Prefixed ids: a lesson's deck and quiz share the lesson's id.
+  for (const [units, prefix] of [
+    [allDecks, 'deck'],
+    [allQuizzes, 'quiz'],
   ]) {
-    for (const file of contentFiles(dir)) {
-      const id = `${prefix}-${file.replace(/\.ya?ml$/, '')}`;
-      if (!html.includes(`id="${id}"`)) problems.push(`${page}: no anchor ${id}`);
+    for (const { id } of units) {
+      if (!html.includes(`id="${prefix}-${id}"`))
+        problems.push(`${page}: no anchor ${prefix}-${id}`);
     }
   }
   if (
@@ -507,9 +547,8 @@ for (const page of ['news/index.html', 'ko/news/index.html']) {
 
 // --- Deck pages: the widget, and every card readable without JavaScript ---
 for (const dir of ['', 'ko/']) {
-  for (const file of contentFiles('decks')) {
-    const id = file.replace(/\.ya?ml$/, '');
-    const page = `${dir}practice/deck/${id}/index.html`;
+  for (const deck of allDecks) {
+    const page = `${dir}practice/deck/${deck.id}/index.html`;
     if (!exists(page)) {
       problems.push(`missing ${page}`);
       continue;
@@ -517,10 +556,7 @@ for (const dir of ['', 'ko/']) {
     const html = read(page);
     if (!/<astro-island[^>]*Flashcards/.test(html)) problems.push(`${page}: no flashcards widget`);
     const fallback = /<noscript>[\s\S]*?<\/noscript>/.exec(html)?.[0] ?? '';
-    // Parsed as YAML, so quoted values work too.
-    const deckData = parse(readFileSync(new URL(file, contentDir('decks')), 'utf8'));
-    const fronts = (deckData.cards ?? []).map((c) => String(c.front));
-    for (const front of fronts) {
+    for (const front of deck.fronts) {
       if (!fallback.includes(front)) problems.push(`${page}: card "${front}" missing without JS`);
     }
   }
@@ -528,9 +564,8 @@ for (const dir of ['', 'ko/']) {
 
 // --- Quiz pages: the widget, and every question readable without JavaScript ---
 for (const dir of ['', 'ko/']) {
-  for (const file of contentFiles('quizzes')) {
-    const id = file.replace(/\.ya?ml$/, '');
-    const page = `${dir}practice/quiz/${id}/index.html`;
+  for (const quiz of allQuizzes) {
+    const page = `${dir}practice/quiz/${quiz.id}/index.html`;
     if (!exists(page)) {
       problems.push(`missing ${page}`);
       continue;
@@ -538,10 +573,7 @@ for (const dir of ['', 'ko/']) {
     const html = read(page);
     if (!/<astro-island[^>]*Quiz/.test(html)) problems.push(`${page}: no quiz widget`);
     const fallback = /<noscript>[\s\S]*?<\/noscript>/.exec(html)?.[0] ?? '';
-    const count = (
-      readFileSync(new URL(file, contentDir('quizzes')), 'utf8').match(/- type:/g) ?? []
-    ).length;
-    if ((fallback.match(/<li/g) ?? []).length < count) {
+    if ((fallback.match(/<li/g) ?? []).length < quiz.count) {
       problems.push(`${page}: questions missing without JS`);
     }
   }
@@ -553,12 +585,12 @@ for (const [page, prefix] of [
   ['ko/practice/index.html', '/ko'],
 ]) {
   const html = read(page);
-  for (const [dir, kind] of [
-    ['decks', 'deck'],
-    ['quizzes', 'quiz'],
+  for (const [units, kind] of [
+    [allDecks, 'deck'],
+    [allQuizzes, 'quiz'],
   ]) {
-    for (const file of contentFiles(dir)) {
-      const href = `${prefix}/practice/${kind}/${file.replace(/\.ya?ml$/, '')}/`;
+    for (const { id } of units) {
+      const href = `${prefix}/practice/${kind}/${id}/`;
       if (!html.includes(`href="${href}"`)) problems.push(`${page}: no link to ${href}`);
     }
   }

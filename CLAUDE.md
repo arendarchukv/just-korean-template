@@ -6,16 +6,17 @@ discussed with the site owner — do not build it yet.
 ## Status — read this first (updated 2026-10-14)
 
 **Content direction is set:** a lesson-centred library built on her YouTube channel, edited in
-Pages CMS. Specs: `docs/superpowers/specs/2026-10-14-content-model-and-home-design.md` (content
-model, CMS, home) and `docs/superpowers/specs/2026-10-14-demo-pages-design.md` (content pages).
+Pages CMS. **Current content model: `docs/superpowers/specs/2026-10-15-simple-content-design.md`**
+(six forms, no references between them; it replaces the forms of the 2026-10-14 specs and the
+Materials page of `2026-10-14-demo-pages-design.md`). Older specs:
+`2026-10-14-content-model-and-home-design.md` (home), `2026-10-14-demo-pages-design.md` (pages).
 **Feature checklist (her wishes → where they live, status): `docs/features.md`** — update it at
 the end of every cycle.
 
-Built: content collections + `.pages.yml`, demo content, home page (notice strip, about, useful-site buttons, classes in one line each, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
-search + pattern pages, Materials, Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (deck and quiz pages with Svelte widgets,
-krdict search, pronunciation link), demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Materials · Practice · Classes · Site info (demo); grammar pages are reached from lessons; full menu from 1024px, the menu button below. Language menu: a `<details>` list of every locale in its own name (Ukrainian planned at launch: add it to `languages` + a dictionary; Outfit and Pretendard have no Cyrillic, so add a Cyrillic font then).
-
-**Site info is DEMO ONLY** (`/site-info/` content map + `/site-info/design/` design system, English-only, noindex): explains the content units for review. The content tab reads the real forms from `.pages.yml` (`src/lib/cms-forms.ts`), descriptions in `src/data/site-info.ts`. Before launch delete `src/pages/site-info/`, `src/views/site-info/`, `src/data/site-info*`, `src/lib/cms-forms*`, `src/styles/site-info.css`, the `nav.siteInfo` item in `Header.astro` and its tests (`tests/ui/language.spec.ts` site info block, check-dist and a11y entries); keep the design system somewhere if still wanted.
+Built: content collections + `.pages.yml` (Lessons with their own words / quiz / files, Words,
+Quizzes, Materials, Notices, Site settings), demo content, home page (notice strip, about, useful-site buttons, classes in one line each, new lessons), Lessons library, Lesson page (click-to-load player), Grammar (tags typed on lessons, each with its lessons; search), Materials (tabs over dense
+tables, type filter, title search), Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (deck and quiz pages with Svelte widgets,
+krdict search, pronunciation link), demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Materials · Practice · Classes; grammar pages are reached from lessons; full menu from 1024px, the menu button below. Language menu: a `<details>` list of every locale in its own name (Ukrainian planned at launch: add it to `languages` + a dictionary; Outfit and Pretendard have no Cyrillic, so add a Cyrillic font then).
 
 Next cycles, each with its own spec: 1. polish from reviews + visual pass, 2. quiz results via Tally (needs her form), 3. site search (Pagefind).
 Also later: an R2 upload page, content translations.
@@ -29,7 +30,7 @@ Done earlier (content-independent):
 - Foundation: Astro 7 static, Tailwind v4, strict TS, i18n EN (`/`) + KO (`/ko/`), sitemap,
   theme toggle (light/dark), header/footer, About page, 404s.
 - Design system "Paper & cut-outs" (spec `docs/superpowers/specs/2026-10-11-design-system-design.md`),
-  shown on `/site-info/design/` (demo page, noindex).
+  shown on `/styleguide` (dev page, noindex).
 - Long-form typography (`.prose`), print styles, app icons + share image (`npm run icons`),
   `robots.txt`, web manifest.
 - Polish: mobile menu behaviour, heading anchors, page transitions, finishing details.
@@ -134,7 +135,7 @@ Rules:
   intro) is the second color, used for learning moments (key-expression marks, "correct",
   progress, focus ring). Muted red only for errors / "wrong". White text never on teal-400/500.
 - Design system "Paper & cut-outs": see `docs/superpowers/specs/2026-10-11-design-system-design.md`
-  and `/site-info/design/` (demo reference page, noindex). Signature details: hatch link underline,
+  and `/styleguide` (dev reference page, noindex). Signature details: hatch link underline,
   key-expression hatch mark, 원고지 grid paper for examples, cut-paper shapes (collage only in
   hero / 404 / empty states). Tokens: `src/styles/theme.css`; classes: `src/styles/signature.css`.
 - `npm test` checks every semantic text/background pair for WCAG AA in both themes.
@@ -231,7 +232,7 @@ Data decisions already made:
   throttled phone (`tests/perf`: LCP < 2 s, CLS < 0.1, one render-blocking CSS < 25 KB brotli, no
   external JS, fonts ≤ 300 KB on the English home). Recheck real numbers with PageSpeed Insights after hosting. Add new page templates to
   `tests/a11y/pages.spec.ts`.
-- Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: Site info pages are English-only and unindexed with a card per CMS form, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
+- Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
 - Links (TidyCal, Tally forms, social, R2 base URL) live in `src/content/settings/site.yml`,
@@ -240,24 +241,29 @@ Data decisions already made:
 
 ## Decisions from the content cycle (2026-10-14)
 
-- **Pages CMS holds only the main, frequently changing content** (lessons, grammar, materials,
-  decks, quizzes, notices) plus the Site settings links. Pages that change rarely
-  are hardcoded: the teacher text (home about block, About, Classes) in `src/data/teacher.ts`;
-  Classes formats, facts, steps and FAQ in `src/data/classes.ts` (also used by
-  the home timetable). We are not building a full CMS clone; ask "will she edit this often?"
-  before adding a collection or field.
+- **Pages CMS holds only the main, frequently changing content**: Lessons, Words (separate decks,
+  folder `decks`), Quizzes, Materials, Notices, Site settings. **No form points at another**: a
+  lesson carries its own `words`, `quiz` and `files` (shared CMS components `word`, `question`,
+  `file`, the same fields as the separate forms). Practice and Materials gather both
+  (`practiceUnits`, `materialTabs` in `src/lib/site-logic.ts`); a lesson's deck/quiz page uses the
+  lesson id, and a separate entry with that id fails the build. Playlists are hardcoded in
+  `src/data/playlists.ts` (a lesson picks one; a course is ordered by date). Grammar patterns are
+  free-text tags on lessons (`grammarTags`, anchors via `tagSlug`). Rarely changing pages are
+  hardcoded too: teacher text in `src/data/teacher.ts`; Classes in `src/data/classes.ts`. We are
+  not building a full CMS clone; ask "will she edit this often?" before adding a form or field.
 - Content lives in `src/content/` (one file per entry; Markdown for long text, YAML for data).
   Schemas: `src/content/schemas.ts` (the source of truth). Pages read content **only** through
-  `src/content/queries.ts`, which resolves references; the home page calls
-  `validateReferences()`, so a reference to a missing entry fails the build.
+  `src/content/queries.ts`; the home page calls `validateContent()`, so colliding practice pages
+  fail the build.
 - `.pages.yml` mirrors the schemas; `src/content/pages-config.test.ts` fails when a form and its
-  schema disagree, or a field has no hint. Change both together.
+  schema disagree (choices included, e.g. playlist ids), or a field has no hint. Change both
+  together.
 - Files (PDF, audio, photo) live in Cloudflare R2; content stores `https://` links only.
   `npm run check:links` checks them (skips the `.example` placeholder domain); run before deploy.
 - Content is single-language (English with Korean examples); only the UI is translated.
 - Practice widgets (spec `docs/superpowers/specs/2026-10-14-widgets-design.md`): Svelte 5 islands
   in `src/components/widgets/` (`Flashcards`, `Quiz`), one per page on `/practice/deck/<id>/` and
-  `/practice/quiz/<id>/`, hydrated `client:visible`. **Minimal by design**: each stands alone,
+  `/practice/quiz/<id>/` (separate entries and lessons' own), hydrated `client:visible`. **Minimal by design**: each stands alone,
   keeps only its own progress in `localStorage` (`jk:deck:<id>`, `jk:quiz:<id>`, read after mount,
   never throws), no links between widgets. UI copy is passed in as `labels`. Without JS a
   `<noscript>` list shows the content. `check:dist` fails if any other page loads a JS file;
@@ -265,10 +271,11 @@ Data decisions already made:
 - Serif display font (Gowun Batang 700) is loaded only for the glyphs in
   `src/lib/display-text.ts`: after changing that text run `npm run fonts` (regenerates
   `src/styles/display-font.css`; a unit test fails until you do). Home block styles:
-  `src/styles/home.css`; content pages: `src/styles/pages.css`. Pure page logic (series order,
-  neighbours, grammar lookups, materials sections, krdict and embed URLs): `src/lib/site-logic.ts`.
+  `src/styles/home.css`; content pages: `src/styles/pages.css`. Pure page logic (playlist order,
+  neighbours, practice units, grammar tags, material tabs, krdict and embed URLs):
+  `src/lib/site-logic.ts`.
   Video facade (`VideoFacade.astro`): local thumbnail, youtube-nocookie iframe only after a click;
-  without JS a link to YouTube. Grammar filter is a small inline script; without JS the full list.
+  without JS a link to YouTube. Grammar filter and Materials tabs/filter are small inline scripts; without JS the full lists.
   Notice strip hides notices outside their dates in the browser; tones
   `important` (red) / `news` (green) / `info` (blue) set order and the colour of the type word and
   dates, on one continuous striped band; up to three show, rows have equal height;

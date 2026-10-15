@@ -39,37 +39,3 @@ test.describe('language menu', () => {
     await expect(menu).not.toHaveAttribute('open', '');
   });
 });
-
-test.describe('site info (demo)', () => {
-  test('is in the main menu in both languages', async ({ page }) => {
-    for (const path of ['/', '/ko/']) {
-      await page.goto(path);
-      // Desktop bar and phone menu each carry it.
-      await expect(page.locator('header nav a[href="/site-info/"]')).toHaveCount(2);
-    }
-  });
-
-  test('shows every Pages CMS form, and a box in the map jumps to its form', async ({ page }) => {
-    await page.goto('/site-info/');
-    await expect(page.getByRole('link', { name: 'Content', exact: true })).toHaveAttribute(
-      'aria-current',
-      'page',
-    );
-    await expect(page.locator('article.unit')).toHaveCount(8);
-
-    const lessons = page.locator('#unit-lessons');
-    await expect(lessons.getByText('Lesson text')).toBeVisible();
-    await expect(lessons.getByText('Link to Series')).toBeVisible();
-
-    await page.locator('.diagram [data-node="quizzes"]').click();
-    await expect(page).toHaveURL(/#unit-quizzes$/);
-    await expect(page.locator('#unit-quizzes')).toBeInViewport();
-  });
-
-  test('has the design system as its second tab', async ({ page }) => {
-    await page.goto('/site-info/');
-    await page.getByRole('link', { name: 'Design system' }).click();
-    await expect(page).toHaveURL(/\/site-info\/design\/$/);
-    await expect(page.getByRole('heading', { name: 'Paper & cut-outs' })).toBeVisible();
-  });
-});

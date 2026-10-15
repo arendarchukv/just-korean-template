@@ -1,39 +1,38 @@
 /** Pure helpers for the content pages: ordering, grouping and links. No Astro imports. */
+import { slug } from 'github-slugger';
 
-export type SeriesKind = 'course' | 'library' | 'podcast';
-type Dated = { title: string; date: Date; episode?: number };
+export type PlaylistKind = 'course' | 'library' | 'podcast';
+type Dated = { title: string; date: Date };
 
 const newestFirst = (a: Dated, b: Dated) =>
   b.date.getTime() - a.date.getTime() || a.title.localeCompare(b.title);
 
-/** Course: by episode (unnumbered last), then date. Library and podcast: newest first. */
-export function sortInSeries<L extends Dated>(lessons: L[], kind: SeriesKind): L[] {
+/** Course: oldest first, so it is watched in order. Library and podcast: newest first. */
+export function sortInPlaylist<L extends Dated>(lessons: L[], kind: PlaylistKind): L[] {
   return [...lessons].sort(
     kind === 'course'
-      ? (a, b) =>
-          (a.episode ?? Infinity) - (b.episode ?? Infinity) || a.date.getTime() - b.date.getTime()
+      ? (a, b) => a.date.getTime() - b.date.getTime() || a.title.localeCompare(b.title)
       : newestFirst,
   );
 }
 
-/** Series in CMS order with their lessons; lessons without a known series form a last group. */
-export function groupBySeries<
-  L extends Dated & { id: string; series?: string },
-  S extends { id: string; title: string; kind: SeriesKind; order: number },
->(lessons: L[], series: S[]): { series?: S; lessons: L[] }[] {
-  const known = new Set(series.map((s) => s.id));
-  const groups: { series?: S; lessons: L[] }[] = [...series]
-    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
-    .map((s) => ({
-      series: s,
-      lessons: sortInSeries(
-        lessons.filter((l) => l.series === s.id),
-        s.kind,
+/** Playlists in their code order with their lessons; lessons without a playlist form a last group. */
+export function groupByPlaylist<
+  L extends Dated & { id: string; playlist?: string },
+  P extends { id: string; title: string; kind: PlaylistKind },
+>(lessons: L[], playlists: readonly P[]): { playlist?: P; lessons: L[] }[] {
+  const groups: { playlist?: P; lessons: L[] }[] = playlists
+    .map((p) => ({
+      playlist: p,
+      lessons: sortInPlaylist(
+        lessons.filter((l) => l.playlist === p.id),
+        p.kind,
       ),
     }))
     .filter((g) => g.lessons.length > 0);
-  const loose = lessons.filter((l) => !l.series || !known.has(l.series));
-  if (loose.length > 0) groups.push({ lessons: sortInSeries(loose, 'library') });
+  const known = new Set(playlists.map((p) => p.id));
+  const loose = lessons.filter((l) => !l.playlist || !known.has(l.playlist));
+  if (loose.length > 0) groups.push({ lessons: sortInPlaylist(loose, 'library') });
   return groups;
 }
 
@@ -48,81 +47,115 @@ export function neighbours<L extends { id: string }>(
   };
 }
 
-export function lessonsForPattern<L extends Dated & { grammar: string[] }>(
+type Level = 'beginner' | 'intermediate' | 'advanced';
+type LessonLike = Dated & { id: string; level: Level };
+
+/**
+ * Decks or quizzes for the Practice page: the separate entries, then one per lesson that has its
+ * own (named after the lesson, same id, linked back). An id used twice would make two pages
+ * collide, so it stops the build.
+ */
+export function practiceUnits<
+  U extends { id: string; title: string; level: Level },
+  L extends LessonLike,
+  Part extends object,
+>(
+  separate: U[],
   lessons: L[],
-  pattern: string,
-): L[] {
-  return lessons.filter((l) => l.grammar.includes(pattern)).sort(newestFirst);
+  part: (lesson: L) => Part,
+  has: (lesson: L) => boolean,
+): (Omit<U, keyof Part> & Part & { lessonEntry?: { id: string; title: string } })[] {
+  type Unit = Omit<U, keyof Part> & Part & { lessonEntry?: { id: string; title: string } };
+  const own = lessons.filter(has);
+  for (const l of own) {
+    if (separate.some((s) => s.id === l.id)) {
+      throw new Error(`"${l.id}" is both a separate entry and a lesson with its own; rename one`);
+    }
+  }
+  const fromLessons = own.map(
+    (l) =>
+      ({
+        id: l.id,
+        title: l.title,
+        level: l.level,
+        ...part(l),
+        lessonEntry: { id: l.id, title: l.title },
+      }) as unknown as Unit,
+  );
+  return [...(separate as unknown as Unit[]), ...fromLessons];
 }
 
-const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
+/** Tags are typed by hand: spaces are trimmed and collapsed so "-게 " and "-게" are one tag. */
+const normalTag = (tag: string) => tag.trim().replace(/\s+/g, ' ');
 
-export function groupByLevel<G extends { level: (typeof LEVELS)[number]; pattern: string }>(
-  items: G[],
-): { level: G['level']; items: G[] }[] {
-  return LEVELS.map((level) => ({
-    level,
-    items: items
-      .filter((i) => i.level === level)
-      .sort((a, b) => a.pattern.localeCompare(b.pattern, 'ko')),
-  })).filter((g) => g.items.length > 0);
+/** Anchor id for a grammar tag on the grammar page (Korean letters kept). */
+export function tagSlug(tag: string): string {
+  return `g-${slug(normalTag(tag)).replace(/^-+/, '')}`;
 }
 
-export type MaterialSection = 'class-helper' | 'podcast' | 'extra-notes' | 'from-lessons';
+/** Every grammar tag once, in Korean order, with the lessons that explain it (newest first). */
+export function grammarTags<L extends Dated & { id: string; grammar: string[] }>(
+  lessons: L[],
+): { tag: string; slug: string; lessons: L[] }[] {
+  const byTag = new Map<string, L[]>();
+  for (const l of lessons) {
+    for (const tag of new Set(l.grammar.map(normalTag).filter(Boolean))) {
+      byTag.set(tag, [...(byTag.get(tag) ?? []), l]);
+    }
+  }
+  return [...byTag]
+    .sort(([a], [b]) => a.localeCompare(b, 'ko'))
+    .map(([tag, list]) => ({ tag, slug: tagSlug(tag), lessons: list.sort(newestFirst) }));
+}
+
+export type MaterialTab = 'class' | 'podcast' | 'self-study' | 'from-lessons';
+export type MaterialType = 'reading' | 'writing' | 'listening' | 'vocabulary' | 'video';
 type File = { label: string; kind: string; url: string };
 export type MaterialItem = {
   key: string;
   title: string;
+  /** Separate materials have a type; files from a lesson do not. */
+  type?: MaterialType;
   date: Date;
-  tags: string[];
   files: File[];
   lesson?: { id: string; title: string };
 };
 
-/** Materials page sections in a fixed order; lesson downloads form "from-lessons". */
-export function materialSections(
+/** Materials page tabs in a fixed order, newest first; files added to lessons form the last tab. */
+export function materialTabs(
   materials: {
     id: string;
     title: string;
-    category: Exclude<MaterialSection, 'from-lessons'> | string;
-    tags: string[];
+    section: Exclude<MaterialTab, 'from-lessons'>;
+    type: MaterialType;
     date: Date;
     files: File[];
-    lesson?: { id: string; title: string };
   }[],
-  lessons: { id: string; title: string; date: Date; downloads: File[] }[],
-): { id: MaterialSection; items: MaterialItem[] }[] {
+  lessons: { id: string; title: string; date: Date; files: File[] }[],
+): { id: MaterialTab; items: MaterialItem[] }[] {
   const byDate = (a: MaterialItem, b: MaterialItem) => b.date.getTime() - a.date.getTime();
-  const own = (id: MaterialSection): MaterialItem[] =>
+  const own = (id: MaterialTab): MaterialItem[] =>
     materials
-      .filter((m) => m.category === id)
-      .map((m) => ({
-        key: m.id,
-        title: m.title,
-        date: m.date,
-        tags: m.tags,
-        files: m.files,
-        lesson: m.lesson,
-      }))
+      .filter((m) => m.section === id)
+      .map((m) => ({ key: m.id, title: m.title, type: m.type, date: m.date, files: m.files }))
       .sort(byDate);
   const fromLessons: MaterialItem[] = lessons
-    .filter((l) => l.downloads.length > 0)
+    .filter((l) => l.files.length > 0)
     .map((l) => ({
       key: `lesson-${l.id}`,
       title: l.title,
       date: l.date,
-      tags: [],
-      files: l.downloads,
+      files: l.files,
       lesson: { id: l.id, title: l.title },
     }))
     .sort(byDate);
-  const sections: { id: MaterialSection; items: MaterialItem[] }[] = [
-    { id: 'class-helper', items: own('class-helper') },
+  const tabs: { id: MaterialTab; items: MaterialItem[] }[] = [
+    { id: 'class', items: own('class') },
     { id: 'podcast', items: own('podcast') },
-    { id: 'extra-notes', items: own('extra-notes') },
+    { id: 'self-study', items: own('self-study') },
     { id: 'from-lessons', items: fromLessons },
   ];
-  return sections.filter((s) => s.items.length > 0);
+  return tabs.filter((t) => t.items.length > 0);
 }
 
 export const KRDICT = {

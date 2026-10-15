@@ -1,11 +1,11 @@
 ---
-/** Lessons library: series in CMS order; a course as a numbered table of contents, others as a grid. */
+/** Lessons library: playlists in code order; a course as a numbered table of contents, others as a grid. */
 import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getLessons, getSeries } from '@/content/queries';
+import { getLessons, getPlaylists } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
-import { groupBySeries } from '@/lib/site-logic';
+import { groupByPlaylist } from '@/lib/site-logic';
 import { youtubeThumbnail } from '@/lib/youtube';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const groups = groupBySeries(await getLessons(), await getSeries());
+const groups = groupByPlaylist(await getLessons(), getPlaylists());
 const href = (id: string) => localizePath(lang, `lessons/${id}`);
 ---
 
@@ -25,26 +25,26 @@ const href = (id: string) => localizePath(lang, `lessons/${id}`);
   {groups.map((g, i) => (
     <section
       class="container-page page-section"
-      aria-labelledby={`series-${g.series?.id ?? 'other'}`}
+      aria-labelledby={`series-${g.playlist?.id ?? 'other'}`}
     >
       <div class="page-section-head">
-        <h2 id={`series-${g.series?.id ?? 'other'}`} class="page-section-title">
-          {g.series?.title ?? t('lessons.other')}
+        <h2 id={`series-${g.playlist?.id ?? 'other'}`} class="page-section-title">
+          {g.playlist?.title ?? t('lessons.other')}
         </h2>
-        {g.series?.youtubePlaylist && (
-          <a class="link" href={g.series.youtubePlaylist} target="_blank" rel="noopener noreferrer">
+        {g.playlist?.youtube && (
+          <a class="link" href={g.playlist.youtube} target="_blank" rel="noopener noreferrer">
             {t('lessons.playlist')}
           </a>
         )}
       </div>
-      {g.series?.description && <p class="page-section-lead">{g.series.description}</p>}
-      {g.series?.kind === 'course' ? (
+      {g.playlist?.description && <p class="page-section-lead">{g.playlist.description}</p>}
+      {g.playlist?.kind === 'course' ? (
         <ol class="course-list">
-          {g.lessons.map((l) => (
+          {g.lessons.map((l, i) => (
             <li>
               <a href={href(l.id)} class="course-link">
                 <span class="course-number" aria-hidden="true">
-                  {l.episode ? String(l.episode).padStart(2, '0') : '·'}
+                  {String(i + 1).padStart(2, '0')}
                 </span>
                 <span class="course-title">{l.title}</span>
                 {l.summary && <span class="course-summary">{l.summary}</span>}

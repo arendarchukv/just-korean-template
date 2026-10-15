@@ -1,0 +1,21 @@
+title: '에 or 에서?'
+level: beginner
+questions:
+  - type: choice
+    prompt: '학교___ 공부해요.'
+    options:
+      - text: 에서
+        correct: true
+      - text: 에
+    explanation: 에서 marks the place where an action happens.
+  - type: choice
+    prompt: '고양이가 집___ 있어요.'
+    options:
+      - text: 에
+        correct: true
+      - text: 에서
+    explanation: 에 marks the place where something is.
+  - type: fill
+    sentence: '도서관___ 책을 읽어요.'
+    answer: 에서
+    explanation: Reading is an action, so the place takes 에서.

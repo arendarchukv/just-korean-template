@@ -17,7 +17,7 @@ function luminance(rgb: string): number {
 for (const theme of ['light', 'dark'] as const) {
   test(`prints dark ink on white paper (${theme} theme on screen)`, async ({ page }) => {
     await page.addInitScript((t) => localStorage.setItem('theme', t), theme);
-    await page.goto('/site-info/design/');
+    await page.goto('/styleguide/');
     await page.emulateMedia({ media: 'print' });
 
     const [bg, text] = await page.evaluate(() => {
@@ -65,7 +65,7 @@ test('gives text the full width where a collage was, and drops empty decoration'
     .locator('.about-hero')
     .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length);
   expect(columns).toBe(1);
-  await page.goto('/site-info/design/');
+  await page.goto('/styleguide/');
   const eyebrowMark = await page
     .locator('.eyebrow')
     .first()
@@ -78,7 +78,7 @@ test('gives text the full width where a collage was, and drops empty decoration'
 });
 
 test('marks key expressions with an underline (backgrounds are not printed)', async ({ page }) => {
-  await page.goto('/site-info/design/');
+  await page.goto('/styleguide/');
   await page.emulateMedia({ media: 'print' });
   const decoration = await page
     .locator('.key-mark')
@@ -88,7 +88,7 @@ test('marks key expressions with an underline (backgrounds are not printed)', as
 });
 
 test('prints the content of closed <details>', async ({ page }) => {
-  await page.goto('/site-info/design/');
+  await page.goto('/styleguide/');
   await page.emulateMedia({ media: 'print' });
   const details = page.locator('.prose details');
   await expect(details).not.toHaveAttribute('open', /.*/);
@@ -96,7 +96,7 @@ test('prints the content of closed <details>', async ({ page }) => {
 });
 
 test('shows the address after external links in long-form text', async ({ page }) => {
-  await page.goto('/site-info/design/');
+  await page.goto('/styleguide/');
   await page.emulateMedia({ media: 'print' });
   const after = await page
     .locator('.prose a[href^="https://"]')
@@ -106,7 +106,7 @@ test('shows the address after external links in long-form text', async ({ page }
 });
 
 test('keeps tables, quotes and examples in one piece across pages', async ({ page }) => {
-  await page.goto('/site-info/design/');
+  await page.goto('/styleguide/');
   await page.emulateMedia({ media: 'print' });
   for (const selector of ['.prose table', '.prose blockquote', '.pair', '.callout']) {
     const breakInside = await page

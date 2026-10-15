@@ -1,20 +1,24 @@
 ---
-/** Materials: anchor chips, then one ruled list per section; lesson downloads in "From lessons". */
+/**
+ * Materials, after the logic of her old site: tabs (Class materials · Podcast · Self-study · From
+ * lessons), each a dense ruled table, newest first: type · title · files · date, with a type filter
+ * and a title search above. Without JS every tab shows one after another with its full table; the
+ * inline script turns them into tabs and adds the filter.
+ */
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getLessons, getMaterials } from '@/content/queries';
+import { getMaterialTabs } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
-import { materialSections } from '@/lib/site-logic';
+import type { MaterialType } from '@/lib/site-logic';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const sections = materialSections(
-  (await getMaterials()).map((m) => ({ ...m, lesson: m.lessonEntry })),
-  await getLessons(),
-);
+const tabs = await getMaterialTabs();
+const TYPES: MaterialType[] = ['reading', 'writing', 'listening', 'vocabulary', 'video'];
+const type = (k: string) => t(`materials.type.${k}` as UIKey);
 const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
   day: 'numeric',
   month: 'short',
@@ -27,61 +31,179 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
   <div class="container-page page-head">
     <h1 class="page-title">{t('page.materials.title')}</h1>
     <p class="page-lead">{t('materials.lead')}</p>
-    <ul class="chip-list section-chips">
-      {sections.map((s) => (
-        <li>
-          <a class="pattern-chip section-chip" href={`#${s.id}`}>
-            {t(`materials.section.${s.id}` as UIKey)}{' '}
-            <span class="chip-count">{s.items.length}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
   </div>
-  {sections.map((s) => (
-    <section
-      id={s.id}
-      data-material-section
-      class="container-page page-section"
-      aria-labelledby={`${s.id}-title`}
-    >
-      <h2 id={`${s.id}-title`} class="page-section-title">
-        {t(`materials.section.${s.id}` as UIKey)}
-      </h2>
-      <ul class="material-list">
-        {s.items.map((item) => (
-          <li class="material-row">
-            <div class="material-info">
-              <span class="material-title">{item.title}</span>
-              <span class="material-meta">
-                <time datetime={item.date.toISOString().slice(0, 10)}>
-                  {dateFormat.format(item.date)}
-                </time>
-                {item.tags.map((tag) => (
-                  <span class="material-tag">{tag}</span>
-                ))}
-                {item.lesson && (
-                  <a class="link" href={localizePath(lang, `lessons/${item.lesson.id}`)}>
-                    {t('materials.lesson')}
-                    {/* Unique link names in a screen reader's list of links. */}
-                    <span class="sr-only">: {item.lesson.title}</span>
-                  </a>
-                )}
-              </span>
-            </div>
-            <ul class="material-files">
-              {item.files.map((f) => (
-                <li>
-                  <a class="file-link" href={f.url} target="_blank" rel="noopener noreferrer">
-                    <span class="file-kind">{t(`lesson.kind.${f.kind}` as UIKey)}</span>
-                    <span>{f.label}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))}
+
+  <div class="container-page materials" data-materials>
+    <div class="mat-tabs" role="tablist" aria-label={t('page.materials.title')} hidden>
+      {tabs.map((tab, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`mat-tab-${tab.id}`}
+          aria-controls={`mat-${tab.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          class="mat-tab"
+        >
+          {t(`materials.tab.${tab.id}` as UIKey)}
+          <span class="mat-tab-count">{tab.items.length}</span>
+        </button>
+      ))}
+    </div>
+
+    <div class="mat-tools" data-mat-tools hidden>
+      <label class="mat-tool">
+        <span class="sr-only">{t('materials.filterType')}</span>
+        <select class="field" data-mat-type>
+          <option value="">{t('materials.allTypes')}</option>
+          {TYPES.map((k) => (
+            <option value={k}>{type(k)}</option>
+          ))}
+        </select>
+      </label>
+      <label class="mat-tool mat-search">
+        <span class="sr-only">{t('materials.search')}</span>
+        <input
+          type="search"
+          class="field"
+          placeholder={t('materials.search')}
+          autocomplete="off"
+          data-mat-search
+        />
+      </label>
+      <p role="status" class="mat-status" data-mat-status data-none={t('materials.noResults')}></p>
+    </div>
+
+    {tabs.map((tab) => (
+      <section
+        id={`mat-${tab.id}`}
+        class="mat-panel"
+        data-mat-panel
+        aria-labelledby={`mat-title-${tab.id}`}
+      >
+        <h2 id={`mat-title-${tab.id}`} class="page-section-title mat-panel-title">
+          {t(`materials.tab.${tab.id}` as UIKey)}
+        </h2>
+        <table class="mat-table">
+          <thead>
+            <tr>
+              <th scope="col">{t('materials.col.type')}</th>
+              <th scope="col">{t('materials.col.title')}</th>
+              <th scope="col">{t('materials.col.files')}</th>
+              <th scope="col">{t('materials.col.date')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tab.items.map((item) => (
+              <tr data-mat-row data-type={item.type ?? ''} data-search={item.title.toLowerCase()}>
+                <td class="mat-type">
+                  <span class="mat-badge">
+                    {item.type ? type(item.type) : t('materials.type.lesson')}
+                  </span>
+                </td>
+                <th scope="row" class="mat-title">
+                  {item.lesson ? (
+                    <a class="link" href={localizePath(lang, `lessons/${item.lesson.id}`)}>
+                      {item.title}
+                    </a>
+                  ) : (
+                    item.title
+                  )}
+                </th>
+                <td>
+                  <ul class="mat-files">
+                    {item.files.map((f) => (
+                      <li>
+                        <a class="mat-file" href={f.url} target="_blank" rel="noopener noreferrer">
+                          <span class="file-kind">{t(`lesson.kind.${f.kind}` as UIKey)}</span>
+                          <span>{f.label}</span>
+                          {/* Unique link names in a screen reader's list of links. */}
+                          <span class="sr-only">: {item.title}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+                <td class="mat-date">
+                  <time datetime={item.date.toISOString().slice(0, 10)}>
+                    {dateFormat.format(item.date)}
+                  </time>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    ))}
+  </div>
+
+  <script is:inline>
+    (() => {
+      const root = document.querySelector('[data-materials]');
+      if (!root) return;
+      const tablist = root.querySelector('[role="tablist"]');
+      const tabs = [...root.querySelectorAll('[role="tab"]')];
+      const panels = [...root.querySelectorAll('[data-mat-panel]')];
+      const tools = root.querySelector('[data-mat-tools]');
+      const typeSelect = root.querySelector('[data-mat-type]');
+      const search = root.querySelector('[data-mat-search]');
+      const status = root.querySelector('[data-mat-status]');
+      root.classList.add('is-tabbed');
+      tablist.hidden = false;
+      tools.hidden = false;
+
+      let current = tabs[0];
+      const filter = () => {
+        const type = typeSelect.value;
+        const q = search.value.trim().toLowerCase();
+        const panel = document.getElementById(current.getAttribute('aria-controls'));
+        let shown = 0;
+        for (const row of panel.querySelectorAll('[data-mat-row]')) {
+          const match =
+            (!type || row.dataset.type === type) && (!q || row.dataset.search.includes(q));
+          row.hidden = !match;
+          if (match) shown += 1;
+        }
+        status.textContent = shown === 0 ? status.dataset.none : '';
+      };
+      const select = (tab, focus) => {
+        current = tab;
+        for (const t of tabs) {
+          const on = t === tab;
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+        }
+        if (focus) tab.focus();
+        filter();
+      };
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => {
+          select(tab, false);
+          history.replaceState(null, '', `#${tab.getAttribute('aria-controls')}`);
+        });
+        tab.addEventListener('keydown', (event) => {
+          const step = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+          if (step) select(tabs[(i + step + tabs.length) % tabs.length], true);
+          else if (event.key === 'Home') select(tabs[0], true);
+          else if (event.key === 'End') select(tabs[tabs.length - 1], true);
+          else return;
+          event.preventDefault();
+        });
+      });
+      typeSelect.addEventListener('change', filter);
+      search.addEventListener('input', (event) => {
+        if (!event.isComposing) filter();
+      });
+      search.addEventListener('compositionend', filter);
+      // Open the tab named in the address (#mat-podcast), e.g. from a shared link.
+      const fromHash = tabs.find((t) => `#${t.getAttribute('aria-controls')}` === location.hash);
+      select(fromHash ?? tabs[0], false);
+      for (const p of panels) {
+        p.setAttribute('role', 'tabpanel');
+        p.setAttribute('aria-labelledby', `mat-tab-${p.id.replace(/^mat-/, '')}`);
+      }
+      window.addEventListener('pageshow', filter);
+    })();
+  </script>
 </BaseLayout>

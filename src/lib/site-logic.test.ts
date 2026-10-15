@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
-  groupByLevel,
-  groupBySeries,
+  grammarTags,
+  groupByPlaylist,
   krdictUrl,
-  lessonsForPattern,
-  materialSections,
+  materialTabs,
   neighbours,
-  sortInSeries,
+  practiceUnits,
+  sortInPlaylist,
+  tagSlug,
   youtubeEmbedUrl,
 } from './site-logic';
 
@@ -15,44 +16,43 @@ const lesson = (id: string, date: string, extra: Record<string, unknown> = {}) =
   id,
   title: id,
   date: d(date),
+  level: 'beginner' as const,
   grammar: [] as string[],
-  downloads: [] as { label: string; kind: string; url: string }[],
+  files: [] as { label: string; kind: string; url: string }[],
   ...extra,
 });
+/** Words of a test lesson (the helper's extra fields are untyped). */
+const wordsOf = (l: object) => (l as { words: { front: string; back: string }[] }).words;
+const file = (label: string) => ({ label, kind: 'pdf', url: `https://f.example/${label}.pdf` });
 
-describe('sortInSeries', () => {
-  it('orders a course by episode, unnumbered last', () => {
-    const list = [
-      lesson('c', '2022-01-03', { episode: 3 }),
-      lesson('x', '2022-01-01'),
-      lesson('a', '2022-01-05', { episode: 1 }),
-    ];
-    expect(sortInSeries(list, 'course').map((l) => l.id)).toEqual(['a', 'c', 'x']);
+describe('sortInPlaylist', () => {
+  it('orders a course oldest first (watch in order)', () => {
+    const list = [lesson('c', '2022-01-03'), lesson('a', '2022-01-01'), lesson('b', '2022-01-02')];
+    expect(sortInPlaylist(list, 'course').map((l) => l.id)).toEqual(['a', 'b', 'c']);
   });
   it('orders a library newest first', () => {
     const list = [lesson('old', '2021-01-01'), lesson('new', '2026-01-01')];
-    expect(sortInSeries(list, 'library').map((l) => l.id)).toEqual(['new', 'old']);
+    expect(sortInPlaylist(list, 'library').map((l) => l.id)).toEqual(['new', 'old']);
   });
 });
 
-describe('groupBySeries', () => {
-  const series = [
-    { id: 'grammar', title: 'Grammar', kind: 'library' as const, order: 2 },
-    { id: 'crash', title: 'Crash', kind: 'course' as const, order: 1 },
-    { id: 'empty', title: 'Empty', kind: 'library' as const, order: 3 },
+describe('groupByPlaylist', () => {
+  const playlists = [
+    { id: 'crash', title: 'Crash', kind: 'course' as const },
+    { id: 'grammar', title: 'Grammar', kind: 'library' as const },
+    { id: 'empty', title: 'Empty', kind: 'library' as const },
   ];
-  it('keeps CMS order, drops empty series, puts loose lessons last', () => {
-    const groups = groupBySeries(
+  it('keeps the playlist order, drops empty ones, puts lessons without a playlist last', () => {
+    const groups = groupByPlaylist(
       [
-        lesson('g1', '2026-01-01', { series: 'grammar' }),
-        lesson('c1', '2022-01-01', { series: 'crash', episode: 1 }),
+        lesson('g1', '2026-01-01', { playlist: 'grammar' }),
+        lesson('c1', '2022-01-01', { playlist: 'crash' }),
         lesson('loose', '2026-02-01'),
-        lesson('orphan', '2026-03-01', { series: 'deleted' }),
       ],
-      series,
+      playlists,
     );
-    expect(groups.map((g) => g.series?.id ?? 'other')).toEqual(['crash', 'grammar', 'other']);
-    expect(groups.at(-1)!.lessons.map((l) => l.id)).toEqual(['orphan', 'loose']);
+    expect(groups.map((g) => g.playlist?.id ?? 'other')).toEqual(['crash', 'grammar', 'other']);
+    expect(groups.at(-1)!.lessons.map((l) => l.id)).toEqual(['loose']);
   });
 });
 
@@ -68,56 +68,105 @@ describe('neighbours', () => {
   });
 });
 
-describe('lessonsForPattern', () => {
-  it('lists lessons that teach a pattern, newest first', () => {
-    const list = [
-      lesson('old', '2021-01-01', { grammar: ['ge'] }),
-      lesson('new', '2026-01-01', { grammar: ['ge', 'dorok'] }),
-      lesson('other', '2026-02-01', { grammar: ['dorok'] }),
-    ];
-    expect(lessonsForPattern(list, 'ge').map((l) => l.id)).toEqual(['new', 'old']);
-  });
-});
-
-describe('groupByLevel', () => {
-  it('groups beginner to advanced and drops empty levels', () => {
-    const groups = groupByLevel([
-      { level: 'intermediate' as const, pattern: '-게' },
-      { level: 'beginner' as const, pattern: '-고' },
-      { level: 'intermediate' as const, pattern: '-도록' },
+describe('practiceUnits', () => {
+  const words = [{ front: '안 가요', back: "I don't go" }];
+  it('adds the words of each lesson as a unit named after the lesson, separate ones first', () => {
+    const units = practiceUnits(
+      [{ id: 'food', title: 'Food', level: 'beginner' as const, cards: words }],
+      [
+        lesson('neg', '2022-01-01', { title: 'Negative form', words }),
+        lesson('none', '2022-01-02', { words: [] }),
+      ],
+      (l) => ({ cards: wordsOf(l) }),
+      (l) => wordsOf(l).length > 0,
+    );
+    expect(units.map((u) => [u.id, u.title, u.lessonEntry?.id])).toEqual([
+      ['food', 'Food', undefined],
+      ['neg', 'Negative form', 'neg'],
     ]);
-    expect(groups.map((g) => g.level)).toEqual(['beginner', 'intermediate']);
-    expect(groups[1].items.map((i) => i.pattern)).toEqual(['-게', '-도록']);
+    expect(units[1]).toMatchObject({ level: 'beginner', cards: words });
+  });
+  it('refuses a separate entry with the same id as a lesson that has its own', () => {
+    expect(() =>
+      practiceUnits(
+        [{ id: 'neg', title: 'Neg', level: 'beginner' as const, cards: words }],
+        [lesson('neg', '2022-01-01', { words })],
+        (l) => ({ cards: wordsOf(l) }),
+        () => true,
+      ),
+    ).toThrow(/"neg"/);
   });
 });
 
-describe('materialSections', () => {
-  const file = { label: 'Worksheet', kind: 'pdf', url: 'https://x.example/a.pdf' };
-  it('orders sections, drops empty ones, and adds lesson downloads', () => {
-    const sections = materialSections(
+describe('grammarTags', () => {
+  it('lists each tag once, in Korean order, with its lessons newest first', () => {
+    const tags = grammarTags([
+      lesson('old', '2021-01-01', { grammar: ['-게'] }),
+      lesson('new', '2026-01-01', { grammar: ['-게', '-도록'] }),
+      lesson('plain', '2026-02-01'),
+    ]);
+    expect(tags.map((t) => t.tag)).toEqual(['-게', '-도록']);
+    expect(tags[0]!.lessons.map((l) => l.id)).toEqual(['new', 'old']);
+  });
+  it('merges tags that differ only in spaces', () => {
+    const tags = grammarTags([
+      lesson('a', '2021-01-01', { grammar: ['-아/어 봤자'] }),
+      lesson('b', '2022-01-01', { grammar: [' -아/어  봤자 '] }),
+    ]);
+    expect(tags).toHaveLength(1);
+    expect(tags[0]!.lessons).toHaveLength(2);
+  });
+  it('gives every tag a stable anchor', () => {
+    expect(tagSlug('-아/어 봤자')).toBe(tagSlug(' -아/어  봤자'));
+    expect(tagSlug('-게')).not.toBe(tagSlug('-도록'));
+    expect(tagSlug('-게')).toMatch(/^g-/);
+  });
+});
+
+describe('materialTabs', () => {
+  it('orders tabs, drops empty ones, newest first, and adds lesson files last', () => {
+    const tabs = materialTabs(
       [
         {
-          id: 'p1',
-          title: 'Podcast 1',
-          category: 'podcast',
-          tags: [],
+          id: 'old',
+          title: 'Old',
+          section: 'class',
+          type: 'vocabulary',
           date: d('2026-01-01'),
-          files: [file],
+          files: [file('o')],
         },
         {
-          id: 'c1',
-          title: 'Family',
-          category: 'class-helper',
-          tags: ['vocabulary'],
-          date: d('2026-06-19'),
-          files: [file],
+          id: 'new',
+          title: 'New',
+          section: 'class',
+          type: 'reading',
+          date: d('2026-06-01'),
+          files: [file('n')],
+        },
+        {
+          id: 'pod',
+          title: 'Pod',
+          section: 'podcast',
+          type: 'listening',
+          date: d('2026-02-01'),
+          files: [file('p')],
         },
       ],
-      [lesson('l1', '2026-03-01', { downloads: [file] }), lesson('l2', '2026-04-01')],
+      [
+        lesson('l1', '2026-03-01', { title: 'Numbers', files: [file('w')] }),
+        lesson('l2', '2026-04-01'),
+      ],
     );
-    expect(sections.map((s) => s.id)).toEqual(['class-helper', 'podcast', 'from-lessons']);
-    expect(sections.at(-1)!.items).toHaveLength(1);
-    expect(sections.at(-1)!.items[0].lesson).toEqual({ id: 'l1', title: 'l1' });
+    expect(tabs.map((t) => t.id)).toEqual(['class', 'podcast', 'from-lessons']);
+    expect(tabs[0]!.items.map((i) => i.key)).toEqual(['new', 'old']);
+    expect(tabs[2]!.items).toEqual([
+      expect.objectContaining({
+        key: 'lesson-l1',
+        title: 'Numbers',
+        lesson: { id: 'l1', title: 'Numbers' },
+      }),
+    ]);
+    expect(tabs[2]!.items[0]!.type).toBeUndefined();
   });
 });
 

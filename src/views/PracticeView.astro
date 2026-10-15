@@ -1,7 +1,7 @@
 ---
 /** Practice: links to deck and quiz pages, krdict search, pronunciation practice and lessons. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getDecks, getQuizzes, getSeries } from '@/content/queries';
+import { getDecks, getPlaylists, getQuizzes } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 import { KRDICT } from '@/lib/site-logic';
@@ -13,8 +13,8 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const decks = await getDecks();
 const quizzes = await getQuizzes();
-// The pronunciation lessons, once a series with the id "pronunciation" exists in the CMS.
-const pronunciation = (await getSeries()).find((s) => s.id === 'pronunciation');
+// The pronunciation lessons, once a playlist with the id "pronunciation" is added in code.
+const pronunciation = getPlaylists().find((p) => (p.id as string) === 'pronunciation');
 const level = (l: string) => t(`grammar.level.${l}` as UIKey);
 ---
 

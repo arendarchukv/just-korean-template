@@ -59,3 +59,16 @@ test('Ctrl+click on play opens YouTube normally instead of the embedded player',
   });
   expect(swapped).toBe(false);
 });
+
+test('a lesson with its own words links to their flashcards page, named after the lesson', async ({
+  page,
+}) => {
+  await page.goto('/lessons/negative-form/');
+  await page.getByRole('link', { name: /flashcards/i }).click();
+  await expect(page).toHaveURL(/\/practice\/deck\/negative-form\/$/);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Negative Form');
+  await expect(page.getByRole('link', { name: /Negative Form/ })).toHaveAttribute(
+    'href',
+    '/lessons/negative-form/',
+  );
+});

@@ -1,5 +1,7 @@
 # Pages CMS forms. Keep in step with src/content/schemas.ts (checked by pages-config.test.ts).
 # Files (PDF, audio, photos) live in Cloudflare R2: upload there, paste the public link here.
+# Simple on purpose: no form points at another. A lesson carries its own words, quiz and files;
+# the same parts can also be added on their own (Words, Quizzes, Materials) with the same fields.
 
 components:
   level:
@@ -11,7 +13,7 @@ components:
         - { name: beginner, label: Beginner }
         - { name: intermediate, label: Intermediate }
         - { name: advanced, label: Advanced }
-  download:
+  file:
     type: object
     label: File
     description: Upload the file to R2 in the Cloudflare dashboard, then paste its public link.
@@ -19,11 +21,11 @@ components:
       - name: label
         type: string
         required: true
-        description: What students see, e.g. "Lesson notes" or "Transcript".
+        description: What students see, e.g. "Worksheet" or "Transcript".
       - name: kind
         type: select
         required: true
-        description: Shown as a small label next to the download button.
+        description: Shown as a small label on the download button.
         options:
           values:
             - { name: pdf, label: PDF }
@@ -37,6 +39,72 @@ components:
         pattern:
           regex: '^https://'
           message: The link must start with https://
+  word:
+    type: object
+    label: Word
+    description: One flashcard. Korean on the front, meaning on the back.
+    fields:
+      - name: front
+        label: Korean
+        type: string
+        required: true
+        description: Korean word or phrase.
+      - name: back
+        label: Meaning
+        type: string
+        required: true
+        description: What it means.
+      - name: example
+        label: Example
+        type: string
+        description: Example sentence (optional).
+  question:
+    type: block
+    label: Question
+    description: Multiple choice or fill in the gap.
+    blockKey: type
+    blocks:
+      - name: choice
+        label: Multiple choice
+        fields:
+          - name: prompt
+            type: string
+            required: true
+            description: The question or sentence.
+          - name: options
+            type: object
+            description: Answer options; tick the correct one.
+            list: { min: 2 }
+            fields:
+              - name: text
+                type: string
+                required: true
+                description: Option text.
+              - name: correct
+                type: boolean
+                description: Tick if this option is correct.
+          - name: explanation
+            type: text
+            description: Shown after answering (optional).
+      - name: fill
+        label: Fill in the gap
+        fields:
+          - name: sentence
+            type: string
+            required: true
+            description: Sentence with the gap written as ___ (three underscores).
+            pattern: { regex: '___', message: Mark the gap with ___ (three underscores) }
+          - name: answer
+            type: string
+            required: true
+            description: The correct answer.
+          - name: alternatives
+            type: string
+            list: true
+            description: Other accepted answers (optional).
+          - name: explanation
+            type: text
+            description: Shown after answering (optional).
 
 content:
   - name: lessons
@@ -46,7 +114,7 @@ content:
     format: yaml-frontmatter
     filename: { template: '{primary}.md', field: create }
     view:
-      fields: [title, date, series]
+      fields: [title, date, playlist]
       primary: title
       search: [title, summary]
       sort: [date, title]
@@ -62,14 +130,13 @@ content:
         description: Paste the YouTube link (or the 11-character video id). Leave empty for a lesson without a video.
         pattern:
           { regex: '(youtube\.com/|youtu\.be/|^[\w-]{11}$)', message: Paste a YouTube video link }
-      - name: series
-        type: reference
-        description: The playlist or series this lesson belongs to.
-        options: { collection: series, search: title, value: '{name}', label: '{title}' }
-      - name: episode
-        type: number
-        description: Position in an ordered series (course). Leave empty otherwise.
-        options: { min: 1 }
+      - name: playlist
+        type: select
+        description: The playlist it belongs to (optional). A course is shown in date order.
+        options:
+          values:
+            - { name: crash-course, label: Beginner Korean Crash Course }
+            - { name: grammar, label: Grammar }
       - name: date
         type: date
         required: true
@@ -78,162 +145,36 @@ content:
       - name: level
         component: level
         required: true
-      - name: grammar
-        type: reference
-        description: Grammar patterns explained in this lesson.
-        options:
-          {
-            collection: grammar,
-            multiple: true,
-            search: pattern,
-            value: '{name}',
-            label: '{pattern}',
-          }
       - name: summary
         type: text
         description: One or two sentences for cards and search results.
-      - name: downloads
-        component: download
+      - name: grammar
+        label: Grammar patterns
+        type: string
+        list: true
+        description: Patterns this lesson explains, as students search for them, e.g. "-게". The Grammar page lists them.
+      - name: words
+        component: word
+        label: Words
+        description: Flashcards for this lesson (optional). They also appear on the Practice page.
+        list: { collapsible: { collapsed: true, summary: '{front}' } }
+      - name: quiz
+        component: question
+        label: Quiz
+        description: Questions for this lesson (optional). They also appear on the Practice page.
+        list: true
+      - name: files
+        component: file
         label: Files
-        description: Files for this lesson (notes, transcript, audio). Upload to R2 first.
+        description: Notes, transcript or audio for this lesson (optional). They also appear on the Materials page.
         list: { collapsible: { collapsed: true, summary: '{label}' } }
       - name: body
         type: rich-text
         label: Lesson text
         description: Explanation or transcript shown on the lesson page.
 
-  - name: series
-    label: Series
-    type: collection
-    path: src/content/series
-    format: yaml
-    filename: { template: '{primary}.yml', field: create }
-    view: { fields: [title, kind, order], primary: title, default: { sort: order, order: asc } }
-    fields:
-      - name: title
-        type: string
-        required: true
-        description: Series name, e.g. "Beginner Korean Crash Course".
-      - name: description
-        type: text
-        description: One or two sentences about the series.
-      - name: kind
-        type: select
-        required: true
-        description: Course = watch in order (shows progress). Library = any order. Podcast = episodes.
-        options:
-          values:
-            - { name: course, label: Course (in order) }
-            - { name: library, label: Library }
-            - { name: podcast, label: Podcast }
-      - name: youtubePlaylist
-        label: YouTube playlist
-        type: string
-        description: Link to the YouTube playlist (optional).
-        pattern: { regex: '^https://', message: The link must start with https:// }
-      - name: order
-        type: number
-        description: Display order on the site; smaller numbers come first.
-
-  - name: grammar
-    label: Grammar
-    type: collection
-    path: src/content/grammar
-    format: yaml-frontmatter
-    filename: { template: '{primary}.md', field: create }
-    view: { fields: [pattern, meaning, level], primary: pattern, search: [pattern, meaning] }
-    fields:
-      - name: pattern
-        type: string
-        required: true
-        description: The pattern as students search for it, e.g. "-아/어 봤자".
-      - name: meaning
-        type: string
-        required: true
-        description: Meaning in one short English line.
-      - name: level
-        component: level
-        required: true
-      - name: formation
-        type: text
-        description: How the pattern is formed, e.g. "Verb stem + 아/어 봤자".
-      - name: examples
-        type: object
-        description: Example sentences with a translation.
-        list: { collapsible: { collapsed: true, summary: '{ko}' } }
-        fields:
-          - name: ko
-            label: Korean
-            type: string
-            required: true
-            description: Example in Korean.
-          - name: en
-            label: English
-            type: string
-            required: true
-            description: English translation.
-      - name: compare
-        type: reference
-        description: Similar patterns students confuse with this one.
-        options:
-          {
-            collection: grammar,
-            multiple: true,
-            search: pattern,
-            value: '{name}',
-            label: '{pattern}',
-          }
-      - name: body
-        type: rich-text
-        label: Notes
-        description: Longer explanation (optional).
-
-  - name: materials
-    label: Materials
-    type: collection
-    path: src/content/materials
-    format: yaml
-    filename: { template: '{primary}.yml', field: create }
-    view:
-      fields: [title, category, date]
-      primary: title
-      search: [title, tags]
-      default: { sort: date, order: desc }
-    fields:
-      - name: title
-        type: string
-        required: true
-        description: Title students see in the materials list.
-      - name: category
-        type: select
-        required: true
-        description: Section of the materials page.
-        options:
-          values:
-            - { name: class-helper, label: Class Helper }
-            - { name: podcast, label: Podcast }
-            - { name: extra-notes, label: Extra Notes }
-      - name: tags
-        type: string
-        list: true
-        description: Short topics for filtering, e.g. "vocabulary", "reading".
-      - name: date
-        type: date
-        required: true
-        description: Date the material was added.
-        options: { format: yyyy-MM-dd }
-      - name: files
-        component: download
-        label: Files
-        description: One or more files. Upload to R2 first, then paste the links.
-        list: { min: 1, collapsible: { collapsed: true, summary: '{label}' } }
-      - name: lesson
-        type: reference
-        description: Lesson this material belongs to (optional).
-        options: { collection: lessons, search: title, value: '{name}', label: '{title}' }
-
   - name: decks
-    label: Flashcards
+    label: Words
     type: collection
     path: src/content/decks
     format: yaml
@@ -243,33 +184,18 @@ content:
       - name: title
         type: string
         required: true
-        description: Deck name, e.g. "Food and snacks".
+        description: Deck name, e.g. "Winter snacks".
       - name: level
         component: level
         required: true
       - name: description
         type: text
         description: One sentence about the deck (optional).
-      - name: lesson
-        type: reference
-        description: Lesson or podcast episode this deck goes with (optional).
-        options: { collection: lessons, search: title, value: '{name}', label: '{title}' }
       - name: cards
-        type: object
-        description: The cards. Korean on the front, meaning on the back.
+        component: word
+        label: Words
+        description: The flashcards. Korean on the front, meaning on the back.
         list: { min: 1, collapsible: { collapsed: true, summary: '{front}' } }
-        fields:
-          - name: front
-            type: string
-            required: true
-            description: Korean word or phrase.
-          - name: back
-            type: string
-            required: true
-            description: Meaning.
-          - name: example
-            type: string
-            description: Example sentence (optional).
 
   - name: quizzes
     label: Quizzes
@@ -286,57 +212,60 @@ content:
       - name: level
         component: level
         required: true
-      - name: lesson
-        type: reference
-        description: Lesson this quiz checks (optional).
-        options: { collection: lessons, search: title, value: '{name}', label: '{title}' }
       - name: questions
-        type: block
+        component: question
+        label: Questions
         description: Add questions; each can be multiple choice or fill in the gap.
         list: { min: 1 }
-        blockKey: type
-        blocks:
-          - name: choice
-            label: Multiple choice
-            fields:
-              - name: prompt
-                type: string
-                required: true
-                description: The question or sentence.
-              - name: options
-                type: object
-                description: Answer options; tick the correct one.
-                list: { min: 2 }
-                fields:
-                  - name: text
-                    type: string
-                    required: true
-                    description: Option text.
-                  - name: correct
-                    type: boolean
-                    description: Tick if this option is correct.
-              - name: explanation
-                type: text
-                description: Shown after answering (optional).
-          - name: fill
-            label: Fill in the gap
-            fields:
-              - name: sentence
-                type: string
-                required: true
-                description: Sentence with the gap written as ___ (three underscores).
-                pattern: { regex: '___', message: Mark the gap with ___ (three underscores) }
-              - name: answer
-                type: string
-                required: true
-                description: The correct answer.
-              - name: alternatives
-                type: string
-                list: true
-                description: Other accepted answers (optional).
-              - name: explanation
-                type: text
-                description: Shown after answering (optional).
+
+  - name: materials
+    label: Materials
+    type: collection
+    path: src/content/materials
+    format: yaml
+    filename: { template: '{primary}.yml', field: create }
+    view:
+      {
+        fields: [title, section, date],
+        primary: title,
+        search: [title],
+        default: { sort: date, order: desc },
+      }
+    fields:
+      - name: title
+        type: string
+        required: true
+        description: Title students see in the materials table.
+      - name: section
+        type: select
+        required: true
+        description: The tab on the Materials page.
+        options:
+          values:
+            - { name: class, label: Class materials (수업 보조 자료) }
+            - { name: podcast, label: Podcast (팟캐스트 자료) }
+            - { name: self-study, label: Self-study (공부 자료) }
+      - name: type
+        type: select
+        required: true
+        description: What kind of material it is; students can filter by it.
+        options:
+          values:
+            - { name: reading, label: Reading (읽기) }
+            - { name: writing, label: Writing (쓰기) }
+            - { name: listening, label: Listening (듣기) }
+            - { name: vocabulary, label: Vocabulary (단어) }
+            - { name: video, label: Video (영상) }
+      - name: date
+        type: date
+        required: true
+        description: Date the material was added; newest first.
+        options: { format: yyyy-MM-dd }
+      - name: files
+        component: file
+        label: Files
+        description: One or more files. Upload to R2 first, then paste the links.
+        list: { min: 1, collapsible: { collapsed: true, summary: '{label}' } }
 
   - name: notices
     label: Notices

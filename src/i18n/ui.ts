@@ -24,6 +24,7 @@ const en = {
   'nav.materials': 'Materials',
   'nav.classes': 'Classes',
   'nav.bookClass': 'Book a class',
+  'nav.support': 'Support',
 
   'lang.switchTo': 'Switch to English',
   'lang.label': 'Language',
@@ -214,6 +215,7 @@ const ko: Partial<Record<UIKey, string>> = {
   'nav.materials': '자료',
   'nav.classes': '수업',
   'nav.bookClass': '수업 예약',
+  'nav.support': '후원하기',
 
   'lang.switchTo': '한국어로 보기',
   'lang.label': '언어', // TODO(ko-review)

@@ -255,6 +255,8 @@
     }
   }
   .tool-card {
+    position: relative;
+    overflow: hidden;
     display: grid;
     grid-template-rows: auto auto 1fr auto;
     gap: 0.6rem;
@@ -267,15 +269,21 @@
     text-decoration: none;
     transition: border-color 150ms ease;
   }
-  .tool-card:hover {
-    border-color: var(--color-brand);
+  /* The cut-paper shape peeking from the corner (design system); on link cards it nudges on
+     hover (.card-interactive .card-shape). */
+  .tool-shape {
+    position: absolute;
+    top: -0.9rem;
+    right: -0.9rem;
+    width: 5rem;
+    pointer-events: none;
+  }
+  .tool-card > :not(.tool-shape) {
+    position: relative;
   }
   /* The dictionary card holds a search form instead of being one big link. */
   .tool-card-search {
     grid-template-rows: auto auto auto 1fr auto;
-  }
-  .tool-card-search:hover {
-    border-color: var(--color-border);
   }
   .tool-card-search .dictionary-form {
     align-self: end;
@@ -343,9 +351,9 @@
     font-weight: 600;
     color: var(--color-brand);
   }
-  .tool-card:hover .tool-out,
-  .tool-card:hover .tool-action {
-    color: var(--color-brand);
+  .tool-card.card-interactive:hover .tool-action {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   /* New lessons: framed cards with the thumbnail on top. */

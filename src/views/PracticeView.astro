@@ -3,6 +3,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHead from '@/components/PageHead.astro';
 import Icon, { type IconName } from '@/components/Icon.astro';
+import Shape, { type ShapeName, type ShapeTone } from '@/components/shapes/Shape.astro';
 import { getDecks, getQuizzes } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -19,6 +20,8 @@ const ENTRIES = [
   {
     path: 'flashcards',
     icon: 'cards',
+    shape: 'arch',
+    tone: 'teal',
     title: 'practice.decks',
     text: 'practice.decksText',
     countKey: 'practice.decksCount',
@@ -27,6 +30,8 @@ const ENTRIES = [
   {
     path: 'quizzes',
     icon: 'quiz',
+    shape: 'blob',
+    tone: 'brand',
     title: 'practice.quizzes',
     text: 'practice.quizzesText',
     countKey: 'practice.quizzesCount',
@@ -35,6 +40,8 @@ const ENTRIES = [
 ] as const satisfies readonly {
   path: string;
   icon: IconName;
+  shape: ShapeName;
+  tone: ShapeTone;
   title: UIKey;
   text: UIKey;
   countKey: UIKey;
@@ -51,7 +58,8 @@ const ENTRIES = [
 
   <div class="container-page practice-entries">
     {ENTRIES.filter((e) => e.count > 0).map((e) => (
-      <a class="practice-entry" href={localizePath(lang, `practice/${e.path}`)}>
+      <a class="practice-entry card-interactive" href={localizePath(lang, `practice/${e.path}`)}>
+        <Shape name={e.shape} tone={e.tone} texture="hatch" class="tool-shape card-shape" />
         <span class="tool-icon">
           <Icon name={e.icon} />
         </span>

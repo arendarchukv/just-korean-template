@@ -11,6 +11,9 @@ interface Props {
   link?: { href: string; label: string };
 }
 const { id, eyebrow, title, lead, link } = Astro.props;
+const external = link?.href.startsWith('http')
+  ? { target: '_blank', rel: 'noopener noreferrer' }
+  : {};
 ---
 
 <div class="section-head">
@@ -22,7 +25,7 @@ const { id, eyebrow, title, lead, link } = Astro.props;
     {lead && <p class="section-lead">{lead}</p>}
   </div>
   {link && (
-    <a class="link section-link" href={link.href}>
+    <a class="link section-link" href={link.href} {...external}>
       {link.label}
     </a>
   )}

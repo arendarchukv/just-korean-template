@@ -5,6 +5,7 @@
  */
 import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import Icon, { type IconName } from '@/components/Icon.astro';
 // Illustrated portrait (cut-paper style, generated with agy from her channel photo; JiEun to approve).
 import portrait from '@/assets/teacher-portrait.png';
 import { getSite } from '@/content/queries';
@@ -21,12 +22,14 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const { social } = await getSite();
 const teacher = pick(TEACHER, lang);
+// Degree, certificate, countries, channel: in the order of the credentials in teacher.ts.
+const FACT_ICONS: IconName[] = ['cap', 'badge', 'globe', 'play'];
 ---
 
 <BaseLayout title={t('page.about.title')} description={teacher.intro}>
   <section class="container-page about-page" aria-labelledby="about-title">
     <div class="about-page-text">
-      <p class="eyebrow mb-4">{t('page.about.title')}</p>
+      <p class="section-eyebrow">{t('page.about.title')}</p>
       <h1 id="about-title" class="page-title">
         {teacher.greeting}
       </h1>
@@ -54,11 +57,14 @@ const teacher = pick(TEACHER, lang);
           loading="eager"
         />
       )}
-      <div class="about-credentials grid-paper">
+      <div class="hero-facts">
         <h2 class="sr-only">{t('home.credentials')}</h2>
         <ul>
-          {teacher.credentials.map((c) => (
-            <li>{c}</li>
+          {teacher.credentials.map((c, i) => (
+            <li>
+              <Icon name={FACT_ICONS[i % FACT_ICONS.length]!} />
+              <span>{c}</span>
+            </li>
           ))}
         </ul>
       </div>
@@ -70,8 +76,11 @@ const teacher = pick(TEACHER, lang);
       {t('about.principles')}
     </h2>
     <ul class="principles">
-      {teacher.principles.map((p) => (
+      {teacher.principles.map((p, i) => (
         <li class="principle">
+          <span class="principle-number" aria-hidden="true">
+            {String(i + 1).padStart(2, '0')}
+          </span>
           <h3 class="step-title">{p.title}</h3>
           <p class="step-text">{p.text}</p>
         </li>

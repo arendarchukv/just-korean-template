@@ -4,6 +4,7 @@
  * to start, FAQ, and a closing block for those not sure which format fits. Content is hardcoded in src/data/classes.ts (this page changes rarely).
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
 import FormatCard from '@/components/FormatCard.astro';
 import { getSite } from '@/content/queries';
 import { CLASSES } from '@/data/classes';
@@ -25,10 +26,11 @@ const external = (href: string) =>
 ---
 
 <BaseLayout title={t('page.classes.title')}>
-  <div class="container-page page-head">
-    <h1 class="page-title">{t('page.classes.title')}</h1>
-    <p class="page-lead">{t('classes.lead')}</p>
-  </div>
+  <PageHead
+    eyebrow={t('home.classes.eyebrow')}
+    title={t('page.classes.title')}
+    lead={t('classes.lead')}
+  />
 
   <section class="container-page page-section" aria-labelledby="formats-title">
     <h2 id="formats-title" class="sr-only">

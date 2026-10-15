@@ -1,0 +1,55 @@
+---
+/**
+ * One lesson as a framed card: thumbnail (fetched and optimised at build; a paper placeholder for
+ * a lesson without a video), playlist and date, title, then level and "Watch". Home and Lessons.
+ */
+import { Image } from 'astro:assets';
+import type { Lesson } from '@/content/queries';
+import { playlistText } from '@/data/playlists';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+import { youtubeThumbnail } from '@/lib/youtube';
+
+interface Props {
+  lesson: Lesson;
+  lang: Lang;
+  /** Show the playlist name (left out inside its own playlist section). */
+  showPlaylist?: boolean;
+}
+const { lesson: l, lang, showPlaylist = true } = Astro.props;
+const t = useTranslations(lang);
+const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<a class="lesson-card" href={localizePath(lang, `lessons/${l.id}`)}>
+  {l.youtube ? (
+    <Image
+      src={youtubeThumbnail(l.youtube)}
+      alt=""
+      width={480}
+      height={270}
+      fit="cover"
+      class="lesson-thumb"
+    />
+  ) : (
+    <span class="lesson-thumb lesson-thumb-empty grid-paper">{t('lessons.noVideo')}</span>
+  )}
+  <span class="lesson-card-body">
+    <span class="lesson-meta">
+      {showPlaylist && l.playlistEntry && `${playlistText(l.playlistEntry, lang).title} · `}
+      <time datetime={l.date.toISOString().slice(0, 10)}>{dateFormat.format(l.date)}</time>
+    </span>
+    <span class="lesson-title">{l.title}</span>
+    <span class="lesson-foot">
+      <span>{t(`grammar.level.${l.level}` as UIKey)}</span>
+      <span class="lesson-watch" aria-hidden="true">
+        {l.youtube ? t('home.newLessons.watch') : t('lessons.read')} →
+      </span>
+    </span>
+  </span>
+</a>

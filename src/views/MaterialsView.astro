@@ -6,6 +6,7 @@
  * inline script turns them into tabs and adds the filter.
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
 import { getMaterialTabs } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -28,10 +29,11 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
 ---
 
 <BaseLayout title={t('page.materials.title')}>
-  <div class="container-page page-head">
-    <h1 class="page-title">{t('page.materials.title')}</h1>
-    <p class="page-lead">{t('materials.lead')}</p>
-  </div>
+  <PageHead
+    eyebrow={t('page.materials.eyebrow')}
+    title={t('page.materials.title')}
+    lead={t('materials.lead')}
+  />
 
   <div class="container-page materials" data-materials>
     <div class="mat-tabs" role="tablist" aria-label={t('page.materials.title')} hidden>

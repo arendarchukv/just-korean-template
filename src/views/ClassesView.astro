@@ -6,7 +6,8 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getSite } from '@/content/queries';
 import { TEACHER } from '@/data/teacher';
-import { FAQ, FORMATS, STEPS } from '@/data/classes';
+import { CLASSES } from '@/data/classes';
+import { pick } from '@/i18n/localized';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -16,7 +17,8 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const site = await getSite();
-const { credentials } = TEACHER;
+const { credentials } = pick(TEACHER, lang);
+const { formats: FORMATS, steps: STEPS, faq: FAQ } = pick(CLASSES, lang);
 // Tally form when set; until then the demo contact page.
 const contact = site.contactForm || localizePath(lang, 'contact');
 const external = (href: string) =>

@@ -1,5 +1,6 @@
 ---
-import { FORMATS } from '@/data/classes';
+import { CLASSES } from '@/data/classes';
+import { pick } from '@/i18n/localized';
 import { getSite } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -25,7 +26,7 @@ const booking = tidycal || localizePath(lang, 'classes');
     {t('home.classes.title')}
   </h2>
   <ul class="class-lines">
-    {FORMATS.map((f) => (
+    {pick(CLASSES, lang).formats.map((f) => (
       <li>
         <span class="class-line-name">{f.name}</span>
         <span class="class-line-text">{f.forWhom}</span>

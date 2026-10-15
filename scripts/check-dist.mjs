@@ -500,6 +500,12 @@ for (const page of ['classes/index.html', 'ko/classes/index.html']) {
     if ((block.match(/<dt/g) ?? []).length !== format.facts.length) {
       problems.push(`${page}: ${format.name} facts are not a definition list`);
     }
+    // Each card has its own way on: book a private class (TidyCal), ask about a group (contact).
+    const contact = site.contactForm || (page.startsWith('ko/') ? '/ko/contact/' : '/contact/');
+    const target = format.action === 'book' ? site.tidycal || contact : contact;
+    if (!block.includes(`href="${target}"`)) {
+      problems.push(`${page}: ${format.name} has no button to ${target}`);
+    }
   });
   const steps = /<ol[^>]*class="steps"[\s\S]*?<\/ol>/.exec(html)?.[0] ?? '';
   if ((steps.match(/<li/g) ?? []).length !== STEPS.length) problems.push(`${page}: steps to start`);

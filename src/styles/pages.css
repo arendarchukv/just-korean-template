@@ -668,54 +668,63 @@
     font-weight: 600;
   }
 
-  /* Classes: formats side by side, facts at a glance, steps, FAQ, a calm closing block. */
-  .classes-teacher {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
-    margin: 1.25rem 0 0;
-    font-size: var(--text-sm);
-    color: var(--color-muted);
-  }
+  /* Classes: three formats as distinct paper cards, each with its own colour, dots for the
+     number of people, a few facts and its own button; then steps, FAQ, a closing block. */
   .formats {
     display: grid;
-    gap: 2.5rem;
+    gap: 1.25rem;
   }
-  /* Wide screens: the three formats share rows (subgrid), so their facts line up. */
+  /* Wide screens: the cards share rows (subgrid), so facts and buttons line up. */
   @media (min-width: 56rem) {
     .formats {
       grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(4, auto);
-      gap: 0.75rem 2rem;
+      grid-template-rows: repeat(6, auto);
+      gap: 0 1.25rem;
     }
     .formats .format {
-      grid-row: span 4;
+      grid-row: span 6;
       grid-template-rows: subgrid;
     }
   }
   .format {
+    --accent: var(--color-brand);
     display: grid;
     align-content: start;
     gap: 0.75rem;
-    padding-top: 1.25rem;
-    border-top: 3px solid var(--format-line, var(--color-brand));
+    padding: 1.75rem 1.5rem 1.5rem;
+    border: 1px solid var(--color-border);
+    border-top: 6px solid var(--accent);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
   }
-  .format:nth-child(2) {
-    --format-line: var(--color-teal);
+  .format[data-format='2'] {
+    --accent: var(--color-teal);
   }
-  .format:nth-child(3) {
-    --format-line: var(--color-text);
+  .format[data-format='3'] {
+    --accent: var(--color-text);
+  }
+  .format-people {
+    display: flex;
+    gap: 0.3rem;
+    min-height: 1rem;
+  }
+  .format-people i {
+    width: 0.85rem;
+    height: 0.85rem;
+    border-radius: 50%;
+    background: var(--accent);
   }
   .format-name {
     margin: 0;
-    font-size: var(--text-xl);
-    line-height: var(--text-xl--line-height);
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
     font-weight: 700;
+    letter-spacing: -0.01em;
   }
   .format-for {
     margin: 0;
     font-size: var(--text-lg);
-    line-height: 1.5;
+    line-height: 1.45;
     color: var(--color-muted);
   }
   .format-facts {
@@ -725,9 +734,9 @@
   }
   .format-facts > div {
     display: grid;
-    grid-template-columns: 7rem 1fr;
+    grid-template-columns: 6.5rem 1fr;
     gap: 1rem;
-    padding-block: 0.6rem;
+    padding-block: 0.55rem;
     border-bottom: 1px solid var(--color-border);
   }
   .format-facts dt {
@@ -744,7 +753,13 @@
   }
   .format-how {
     margin: 0.25rem 0 0;
+    font-size: var(--text-sm);
     color: var(--color-muted);
+  }
+  .format-action {
+    justify-self: start;
+    align-self: end;
+    margin-top: 0.75rem;
   }
 
   .page-section-title + .steps {

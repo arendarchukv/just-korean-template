@@ -11,6 +11,10 @@ import type { Localized } from '../i18n/localized';
 
 export type ClassFormat = {
   name: string;
+  /** How many people take part, drawn as dots on the card (decorative; `forWhom` says it). */
+  people: number;
+  /** The card's button: book a private class (TidyCal) or ask about a group (contact). */
+  action: 'book' | 'ask';
   forWhom: string;
   how: string;
   facts: { label: string; value: string }[];
@@ -27,38 +31,38 @@ export const CLASSES: Localized<ClassesText> = {
     formats: [
       {
         name: '1:1 private class',
+        people: 1,
+        action: 'book',
         forWhom: 'Any level, any goal',
         how: 'A level test first, then materials chosen for you.',
         facts: [
-          { label: 'Group size', value: '1 student' },
           { label: 'Length', value: '50 minutes' },
           { label: 'Level', value: 'Any' },
           { label: 'Materials', value: 'Chosen after a level test' },
-          { label: 'Where', value: 'Online, video call' },
         ],
       },
       {
         name: 'Small group',
+        people: 3,
+        action: 'ask',
         forWhom: 'Two or three friends who learn together',
         how: "A plan shaped around your group's level and goals.",
         facts: [
-          { label: 'Group size', value: '2–3 students' },
           { label: 'Length', value: '60 minutes' },
           { label: 'Level', value: 'The same for the group' },
           { label: 'Materials', value: "Planned for your group's goals" },
-          { label: 'Where', value: 'Online, video call' },
         ],
       },
       {
         name: 'Group class',
+        people: 6,
+        action: 'ask',
         forWhom: 'Learners at the same level',
         how: 'A fixed curriculum by level and topic; join when a new class opens.',
         facts: [
-          { label: 'Group size', value: 'Small groups by level' },
           { label: 'Length', value: '60 minutes' },
           { label: 'Level', value: 'Set for each group' },
           { label: 'Materials', value: 'A course curriculum' },
-          { label: 'Where', value: 'Online, video call' },
         ],
       },
     ],
@@ -78,15 +82,6 @@ export const CLASSES: Localized<ClassesText> = {
     ],
     faq: [
       {
-        question: 'How do I know my level?',
-        answer:
-          'Before the first private class there is a short level test, so the lessons start at the right place.',
-      },
-      {
-        question: 'Where do the classes take place?',
-        answer: 'Online, by video call. You only need a computer or tablet with a camera.',
-      },
-      {
         question: 'Can I join a group class that has already started?',
         answer:
           'Group classes follow a curriculum, so joining in the middle is limited. New groups open regularly.',
@@ -102,38 +97,38 @@ export const CLASSES: Localized<ClassesText> = {
     formats: [
       {
         name: '1:1 개인 수업',
+        people: 1,
+        action: 'book',
         forWhom: '모든 레벨, 모든 목표',
         how: '레벨 테스트 후 나에게 맞는 교재로 진행해요.',
         facts: [
-          { label: '인원', value: '1명' },
           { label: '수업 시간', value: '50분' },
           { label: '레벨', value: '상관없음' },
           { label: '교재', value: '레벨 테스트 후 선정' },
-          { label: '장소', value: '온라인 화상 수업' },
         ],
       },
       {
         name: '소수 그룹 수업',
+        people: 3,
+        action: 'ask',
         forWhom: '함께 배우고 싶은 친구 2~3명',
         how: '그룹의 레벨과 목표에 맞춘 계획으로 진행해요.',
         facts: [
-          { label: '인원', value: '2~3명' },
           { label: '수업 시간', value: '60분' },
           { label: '레벨', value: '그룹 모두 같은 레벨' },
           { label: '교재', value: '그룹의 목표에 맞춰 계획' },
-          { label: '장소', value: '온라인 화상 수업' },
         ],
       },
       {
         name: '단체 수업',
+        people: 6,
+        action: 'ask',
         forWhom: '같은 레벨의 학습자',
         how: '레벨별·주제별로 정해진 커리큘럼으로 진행해요. 새 반이 열릴 때 신청하세요.',
         facts: [
-          { label: '인원', value: '레벨별 소규모 그룹' },
           { label: '수업 시간', value: '60분' },
           { label: '레벨', value: '반마다 정해짐' },
           { label: '교재', value: '코스 커리큘럼' },
-          { label: '장소', value: '온라인 화상 수업' },
         ],
       },
     ],
@@ -152,14 +147,6 @@ export const CLASSES: Localized<ClassesText> = {
       },
     ],
     faq: [
-      {
-        question: '제 레벨은 어떻게 알 수 있나요?',
-        answer: '첫 개인 수업 전에 짧은 레벨 테스트가 있어서 알맞은 단계에서 시작할 수 있어요.',
-      },
-      {
-        question: '수업은 어디에서 하나요?',
-        answer: '온라인 화상 수업이에요. 카메라가 있는 컴퓨터나 태블릿만 있으면 돼요.',
-      },
       {
         question: '이미 시작한 단체 수업에 들어갈 수 있나요?',
         answer:

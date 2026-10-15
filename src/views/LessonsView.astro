@@ -1,13 +1,14 @@
 ---
 /** Lessons library: playlists in code order; a course as a numbered table of contents, others as a grid. */
-import { Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import LessonCard from '@/components/LessonCard.astro';
+import PageHead from '@/components/PageHead.astro';
+import SectionHead from '@/components/SectionHead.astro';
 import { getLessons, getPlaylists } from '@/content/queries';
-import type { Lang } from '@/i18n/ui';
+import type { Lang, UIKey } from '@/i18n/ui';
 import { playlistText } from '@/data/playlists';
 import { localizePath, useTranslations } from '@/i18n/utils';
 import { groupByPlaylist } from '@/lib/site-logic';
-import { youtubeThumbnail } from '@/lib/youtube';
 
 interface Props {
   lang: Lang;
@@ -19,65 +20,51 @@ const href = (id: string) => localizePath(lang, `lessons/${id}`);
 ---
 
 <BaseLayout title={t('page.lessons.title')}>
-  <div class="container-page page-head">
-    <h1 class="page-title">{t('page.lessons.title')}</h1>
-    <p class="page-lead">{t('lessons.lead')}</p>
-  </div>
-  {groups.map((g, i) => (
-    <section
-      class="container-page page-section"
-      aria-labelledby={`series-${g.playlist?.id ?? 'other'}`}
-    >
-      <div class="page-section-head">
-        <h2 id={`series-${g.playlist?.id ?? 'other'}`} class="page-section-title">
-          {g.playlist ? playlistText(g.playlist, lang).title : t('lessons.other')}
-        </h2>
-        {g.playlist?.youtube && (
-          <a class="link" href={g.playlist.youtube} target="_blank" rel="noopener noreferrer">
-            {t('lessons.playlist')}
-          </a>
-        )}
-      </div>
-      {g.playlist && <p class="page-section-lead">{playlistText(g.playlist, lang).description}</p>}
-      {g.playlist?.kind === 'course' ? (
-        <ol class="course-list">
-          {g.lessons.map((l, i) => (
-            <li>
-              <a href={href(l.id)} class="course-link">
-                <span class="course-number" aria-hidden="true">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <span class="course-title">{l.title}</span>
-                {l.summary && <span class="course-summary">{l.summary}</span>}
-              </a>
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <ul class="lesson-row">
-          {g.lessons.map((l) => (
-            <li>
-              <a class="lesson-tile" href={href(l.id)}>
-                {l.youtube ? (
-                  <Image
-                    src={youtubeThumbnail(l.youtube)}
-                    alt=""
-                    width={480}
-                    height={270}
-                    fit="cover"
-                    class="lesson-thumb"
-                  />
-                ) : (
-                  <span class="lesson-thumb lesson-thumb-empty grid-paper">
-                    {t('lessons.noVideo')}
+  <PageHead
+    eyebrow={t('page.lessons.eyebrow')}
+    title={t('page.lessons.title')}
+    lead={t('lessons.lead')}
+  />
+  {groups.map((g) => {
+    const id = `series-${g.playlist?.id ?? 'other'}`;
+    const text = g.playlist && playlistText(g.playlist, lang);
+    return (
+      <section class="container-page page-section" aria-labelledby={id}>
+        <SectionHead
+          id={id}
+          eyebrow={g.playlist ? t(`lessons.${g.playlist.kind}` as UIKey) : t('lessons.single')}
+          title={text?.title ?? t('lessons.other')}
+          lead={text?.description}
+          link={
+            g.playlist?.youtube
+              ? { href: g.playlist.youtube, label: t('lessons.playlist') }
+              : undefined
+          }
+        />
+        {g.playlist?.kind === 'course' ? (
+          <ol class="course-list">
+            {g.lessons.map((l, i) => (
+              <li>
+                <a href={href(l.id)} class="course-link">
+                  <span class="course-number" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
                   </span>
-                )}
-                <span class="lesson-title">{l.title}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-    </section>
-  ))}
+                  <span class="course-title">{l.title}</span>
+                  {l.summary && <span class="course-summary">{l.summary}</span>}
+                </a>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <ul class="lesson-row">
+            {g.lessons.map((l) => (
+              <li>
+                <LessonCard lesson={l} lang={lang} showPlaylist={false} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    );
+  })}
 </BaseLayout>

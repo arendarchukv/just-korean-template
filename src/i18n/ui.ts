@@ -72,6 +72,7 @@ const en = {
   'home.newLessons.lead': 'The newest videos, with notes and practice here on the site.',
   'home.newLessons.all': 'All lessons',
   'home.newLessons.watch': 'Watch',
+  'lessons.read': 'Read',
 
   'lessons.lead':
     'Every lesson from the channel, grouped the way it is on YouTube. Courses are meant to be watched in order.',
@@ -203,6 +204,14 @@ const en = {
 
   'page.lessons.title': 'Lessons',
   'page.grammar.title': 'Grammar',
+  'page.lessons.eyebrow': 'From the channel',
+  'page.grammar.eyebrow': 'Patterns from the lessons',
+  'page.materials.eyebrow': 'Free downloads',
+  'page.practice.eyebrow': 'Free practice',
+  'lessons.course': 'Course · watch in order',
+  'lessons.library': 'Playlist',
+  'lessons.podcast': 'Podcast',
+  'lessons.single': 'Single lessons',
   'page.practice.title': 'Practice',
   'page.materials.title': 'Materials',
   'page.classes.title': 'Classes',
@@ -278,6 +287,7 @@ const ko: Partial<Record<UIKey, string>> = {
   'home.newLessons.lead': '새 영상과 함께 사이트에서 노트와 연습 문제를 볼 수 있어요.', // TODO(ko-review)
   'home.newLessons.all': '모든 강의',
   'home.newLessons.watch': '보기', // TODO(ko-review)
+  'lessons.read': '읽기', // TODO(ko-review)
 
   'lessons.lead':
     '강의는 유튜브 채널과 같은 방식으로 정리했어요. 코스는 순서대로 보는 걸 추천해요.',
@@ -408,6 +418,14 @@ const ko: Partial<Record<UIKey, string>> = {
 
   'page.lessons.title': '강의',
   'page.grammar.title': '문법',
+  'page.lessons.eyebrow': '채널에서', // TODO(ko-review)
+  'page.grammar.eyebrow': '강의에 나온 문법', // TODO(ko-review)
+  'page.materials.eyebrow': '무료 자료', // TODO(ko-review)
+  'page.practice.eyebrow': '무료 연습', // TODO(ko-review)
+  'lessons.course': '코스 · 순서대로 보기', // TODO(ko-review)
+  'lessons.library': '재생목록', // TODO(ko-review)
+  'lessons.podcast': '팟캐스트', // TODO(ko-review)
+  'lessons.single': '단독 강의', // TODO(ko-review)
   'page.practice.title': '연습',
   'page.materials.title': '자료',
   'page.classes.title': '수업',

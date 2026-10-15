@@ -1,6 +1,7 @@
 ---
 /** Practice: links to deck and quiz pages, krdict search, pronunciation practice and lessons. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
 import { getDecks, getPlaylists, getQuizzes } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -19,10 +20,11 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
 ---
 
 <BaseLayout title={t('page.practice.title')}>
-  <div class="container-page page-head">
-    <h1 class="page-title">{t('page.practice.title')}</h1>
-    <p class="page-lead">{t('practice.lead')}</p>
-  </div>
+  <PageHead
+    eyebrow={t('page.practice.eyebrow')}
+    title={t('page.practice.title')}
+    lead={t('practice.lead')}
+  />
 
   <div class="container-page practice-grid">
     {decks.length > 0 && (
@@ -30,23 +32,18 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
         <h2 id="decks-title" class="page-section-title">
           {t('practice.decks')}
         </h2>
-        <ul class="file-list">
+        <ul class="practice-cards">
           {decks.map((d) => (
-            <li id={`deck-${d.id}`} class="practice-item">
-              <a
-                class="material-title practice-link"
-                href={localizePath(lang, `practice/deck/${d.id}`)}
-              >
-                {d.title}
-              </a>
-              <span class="material-meta">
-                {level(d.level)} · {d.cards.length} {t('lesson.cards')}
+            <li id={`deck-${d.id}`}>
+              <a class="practice-card" href={localizePath(lang, `practice/deck/${d.id}`)}>
+                <span class="practice-card-title">{d.title}</span>
+                <span class="practice-card-meta">
+                  {level(d.level)} · {d.cards.length} {t('lesson.cards')}
+                </span>
                 {d.lessonEntry && (
-                  <a class="link" href={localizePath(lang, `lessons/${d.lessonEntry.id}`)}>
-                    {d.lessonEntry.title}
-                  </a>
+                  <span class="practice-card-lesson">{t('widget.fromLesson')}</span>
                 )}
-              </span>
+              </a>
             </li>
           ))}
         </ul>
@@ -58,23 +55,18 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
         <h2 id="quizzes-title" class="page-section-title">
           {t('practice.quizzes')}
         </h2>
-        <ul class="file-list">
+        <ul class="practice-cards">
           {quizzes.map((q) => (
-            <li id={`quiz-${q.id}`} class="practice-item">
-              <a
-                class="material-title practice-link"
-                href={localizePath(lang, `practice/quiz/${q.id}`)}
-              >
-                {q.title}
-              </a>
-              <span class="material-meta">
-                {level(q.level)} · {q.questions.length} {t('lesson.questions')}
+            <li id={`quiz-${q.id}`}>
+              <a class="practice-card" href={localizePath(lang, `practice/quiz/${q.id}`)}>
+                <span class="practice-card-title">{q.title}</span>
+                <span class="practice-card-meta">
+                  {level(q.level)} · {q.questions.length} {t('lesson.questions')}
+                </span>
                 {q.lessonEntry && (
-                  <a class="link" href={localizePath(lang, `lessons/${q.lessonEntry.id}`)}>
-                    {q.lessonEntry.title}
-                  </a>
+                  <span class="practice-card-lesson">{t('widget.fromLesson')}</span>
                 )}
-              </span>
+              </a>
             </li>
           ))}
         </ul>

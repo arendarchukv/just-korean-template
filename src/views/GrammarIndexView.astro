@@ -5,6 +5,7 @@
  * JS the full list.
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHead from '@/components/PageHead.astro';
 import { getGrammarTags } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -18,9 +19,11 @@ const tags = await getGrammarTags();
 ---
 
 <BaseLayout title={t('page.grammar.title')}>
-  <div class="container-page page-head">
-    <h1 class="page-title">{t('page.grammar.title')}</h1>
-    <p class="page-lead">{t('grammar.lead')}</p>
+  <PageHead
+    eyebrow={t('page.grammar.eyebrow')}
+    title={t('page.grammar.title')}
+    lead={t('grammar.lead')}
+  >
     <div class="grammar-search" data-grammar-search hidden>
       <label for="grammar-q" class="sr-only">
         {t('grammar.search')}
@@ -34,7 +37,7 @@ const tags = await getGrammarTags();
       />
       <p role="status" class="grammar-status" data-no-results={t('grammar.noResults')}></p>
     </div>
-  </div>
+  </PageHead>
   <section
     class="container-page page-section"
     data-grammar-group

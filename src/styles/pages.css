@@ -262,11 +262,18 @@
       align-self: start;
     }
   }
+  .lesson-aside {
+    padding: 1.25rem 1.25rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
   .series-list {
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 2px solid var(--color-text);
+  }
+  .series-list li:last-child a {
+    border-bottom: 0;
   }
   .series-list a {
     display: flex;
@@ -595,31 +602,58 @@
       grid-template-columns: 1fr 1fr;
     }
   }
-  .practice-block .page-section-title + .file-list {
-    margin-top: 1rem;
-  }
-  .practice-item {
+  .practice-cards {
     display: grid;
-    gap: 0.25rem;
-    padding-block: 0.9rem;
-    border-bottom: 1px solid var(--color-border);
+    gap: 0.75rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  @media (min-width: 40rem) {
+    .practice-cards {
+      grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    }
+  }
+  .practice-cards > li {
     scroll-margin-top: 5rem;
   }
-  .practice-item:target {
-    padding-inline: 0.75rem;
-    background-color: var(--color-teal-tint);
-  }
-  .practice-link {
+  .practice-card {
+    display: grid;
+    gap: 0.3rem;
+    height: 100%;
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-bg);
     color: inherit;
     text-decoration: none;
+    transition: border-color 150ms ease;
   }
-  .practice-link:hover {
+  .practice-card:hover {
+    border-color: var(--color-brand);
+  }
+  .practice-cards > li:target .practice-card {
+    border-color: var(--color-teal);
+    background: var(--color-teal-tint);
+  }
+  .practice-card-title {
+    font-weight: 700;
+  }
+  .practice-card:hover .practice-card-title {
     color: var(--color-brand);
+  }
+  .practice-card-meta,
+  .practice-card-lesson {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .practice-card-lesson {
+    font-size: var(--text-xs);
   }
   .practice-tool {
     padding: 1.5rem;
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: var(--radius-card);
   }
   .dictionary-form {
     display: flex;
@@ -878,8 +912,18 @@
     }
   }
   .principle {
-    padding-top: 1rem;
-    border-top: 3px solid var(--color-teal);
+    display: grid;
+    align-content: start;
+    gap: 0.4rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+  .principle-number {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-teal);
   }
   .principle .step-title {
     margin-top: 0;

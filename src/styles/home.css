@@ -167,23 +167,6 @@
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M9 13 C22 2 52 1 74 6 C93 11 99 30 97 55 C95 80 83 96 57 98 C31 100 8 92 3 66 C-1 42 0 21 9 13 Z'/%3E%3C/svg%3E")
       center / 100% 100% no-repeat;
   }
-  .about-credentials {
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    padding: 1rem 1.25rem;
-  }
-  .about-credentials ul {
-    display: grid;
-    gap: 0.4rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-size: var(--text-sm);
-  }
-  .about-credentials li::before {
-    content: '— ';
-    color: var(--color-teal);
-  }
 
   /* Section heading in three steps: a small label, the title, one line; a link on the right. */
   .section-head {
@@ -423,12 +406,6 @@
       grid-template-columns: repeat(3, 1fr);
     }
   }
-  .lesson-tile {
-    display: grid;
-    gap: 0.5rem;
-    color: inherit;
-    text-decoration: none;
-  }
   .lesson-thumb {
     width: 100%;
     height: auto;
@@ -445,8 +422,5 @@
   .lesson-title {
     font-weight: 600;
     line-height: 1.35;
-  }
-  .lesson-tile:hover .lesson-title {
-    color: var(--color-brand);
   }
 }

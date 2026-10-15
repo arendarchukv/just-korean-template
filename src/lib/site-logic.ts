@@ -19,7 +19,7 @@ export function sortInPlaylist<L extends Dated>(lessons: L[], kind: PlaylistKind
 /** Playlists in their code order with their lessons; lessons without a playlist form a last group. */
 export function groupByPlaylist<
   L extends Dated & { id: string; playlist?: string },
-  P extends { id: string; title: string; kind: PlaylistKind },
+  P extends { id: string; kind: PlaylistKind },
 >(lessons: L[], playlists: readonly P[]): { playlist?: P; lessons: L[] }[] {
   const groups: { playlist?: P; lessons: L[] }[] = playlists
     .map((p) => ({

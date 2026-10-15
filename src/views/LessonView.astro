@@ -4,6 +4,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import VideoFacade from '@/components/VideoFacade.astro';
 import { getLessons, renderBody, type Lesson } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
+import { playlistText } from '@/data/playlists';
 import { localizePath, useTranslations } from '@/i18n/utils';
 import { neighbours, sortInPlaylist, tagSlug } from '@/lib/site-logic';
 
@@ -16,6 +17,7 @@ const t = useTranslations(lang);
 const Body = await renderBody(lesson.id);
 const all = await getLessons();
 const playlist = lesson.playlistEntry;
+const playlistTitle = playlist && playlistText(playlist, lang).title;
 const seriesLessons = playlist
   ? sortInPlaylist(
       all.filter((l) => l.playlist === playlist.id),
@@ -35,7 +37,7 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
     <article class="lesson-main">
       {lesson.youtube && <VideoFacade id={lesson.youtube} title={lesson.title} lang={lang} />}
       <header class="lesson-head">
-        {playlist && <p class="lesson-series">{playlist.title}</p>}
+        {playlist && <p class="lesson-series">{playlistTitle}</p>}
         <h1 class="lesson-heading">{lesson.title}</h1>
         {lesson.summary && <p class="page-lead">{lesson.summary}</p>}
       </header>
@@ -133,7 +135,7 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
     {seriesLessons.length > 1 && (
       <aside class="lesson-aside" aria-labelledby="lesson-series-title">
         <h2 id="lesson-series-title" class="lesson-block-title">
-          {playlist!.title}
+          {playlistTitle}
         </h2>
         <ol class="series-list">
           {seriesLessons.map((l, i) => (

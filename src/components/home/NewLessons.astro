@@ -4,6 +4,7 @@ import { getLessons } from '@/content/queries';
 import { NEW_LESSONS_COUNT } from '@/data/teacher';
 import { selectNewLessons } from '@/lib/content-logic';
 import { youtubeThumbnail } from '@/lib/youtube';
+import { playlistText } from '@/data/playlists';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -50,7 +51,7 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
               class="lesson-thumb"
             />
             <span class="lesson-meta">
-              {l.playlistEntry && `${l.playlistEntry.title} · `}
+              {l.playlistEntry && `${playlistText(l.playlistEntry, lang).title} · `}
               <time datetime={l.date.toISOString().slice(0, 10)}>{dateFormat.format(l.date)}</time>
             </span>
             <span class="lesson-title">{l.title}</span>

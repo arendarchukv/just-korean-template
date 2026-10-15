@@ -3,7 +3,8 @@ import { Image } from 'astro:assets';
 import Collage from '@/components/shapes/Collage.astro';
 import { SITE_NAME_KO } from '@/lib/display-text';
 import { getSite } from '@/content/queries';
-import { TEACHER as home } from '@/data/teacher';
+import { TEACHER, TEACHER_PHOTO } from '@/data/teacher';
+import { pick } from '@/i18n/localized';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -14,6 +15,7 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+const home = pick(TEACHER, lang);
 // Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
 const tidycal = (await getSite()).tidycal;
 const booking = tidycal || localizePath(lang, 'classes');
@@ -45,9 +47,9 @@ const booking = tidycal || localizePath(lang, 'classes');
   </div>
 
   <div class="about-side">
-    {home.photo ? (
+    {TEACHER_PHOTO ? (
       <Image
-        src={home.photo}
+        src={TEACHER_PHOTO}
         alt={home.photoAlt ?? ''}
         width={560}
         height={640}

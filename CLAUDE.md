@@ -260,7 +260,11 @@ Data decisions already made:
   together.
 - Files (PDF, audio, photo) live in Cloudflare R2; content stores `https://` links only.
   `npm run check:links` checks them (skips the `.example` placeholder domain); run before deploy.
-- Content is single-language (English with Korean examples); only the UI is translated.
+- Pages CMS content is single-language (English with Korean examples). Everything else is
+  translated: the UI dictionary (`src/i18n/ui.ts`) and the hardcoded content (`src/data/teacher.ts`,
+  `classes.ts`, `playlists.ts`), stored as `{ en, ko }` (`Localized`, read with `pick(data, lang)` /
+  `playlistText`). `src/data/translations.test.ts` fails when a language lacks an item; a new
+  interface language needs its version there too.
 - Practice widgets (spec `docs/superpowers/specs/2026-10-14-widgets-design.md`): Svelte 5 islands
   in `src/components/widgets/` (`Flashcards`, `Quiz`), one per page on `/practice/deck/<id>/` and
   `/practice/quiz/<id>/` (separate entries and lessons' own), hydrated `client:visible`. **Minimal by design**: each stands alone,

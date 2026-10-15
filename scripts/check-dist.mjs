@@ -2,12 +2,14 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 // Classes data is hardcoded (not CMS); Node runs the TS module directly.
-import { FAQ, FORMATS, STEPS } from '../src/data/classes.ts';
-import { NEW_LESSONS_COUNT, TEACHER } from '../src/data/teacher.ts';
+import { CLASSES } from '../src/data/classes.ts';
+import { NEW_LESSONS_COUNT, TEACHER as TEACHER_TEXT } from '../src/data/teacher.ts';
 
 const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
 const problems = [];
+/** Hardcoded content is translated: a page is checked against the text of its own language. */
+const langOf = (page) => (page.startsWith('ko/') ? 'ko' : 'en');
 
 // --- Styleguide: English-only, unindexed, not in the sitemap ---
 {
@@ -81,6 +83,7 @@ for (const page of ['about/index.html', 'ko/about/index.html']) {
     continue;
   }
   const html = read(page);
+  const TEACHER = TEACHER_TEXT[langOf(page)];
   if (/placeholder\.comingSoon|Coming soon|준비 중/.test(html))
     problems.push(`${page}: still a placeholder`);
   if (!html.includes(TEACHER.greeting.replace("'", '&#39;')) && !html.includes(TEACHER.greeting)) {
@@ -301,7 +304,7 @@ for (const [page, prefix] of LOCALES) {
   // Classes: a short line per format from src/data/classes.ts, no table, booking via TidyCal.
   const classes = homeBlock(page, 'classes');
   if (/<table/.test(classes)) problems.push(`${page}: home classes block is still a table`);
-  for (const format of FORMATS) {
+  for (const format of CLASSES[langOf(page)].formats) {
     if (!classes.includes(format.name))
       problems.push(`${page}: classes block lacks ${format.name}`);
   }
@@ -483,6 +486,7 @@ for (const [prefix, dir] of [
 // --- Classes page: formats with their facts, steps to start, FAQ, a closing call to act ---
 for (const page of ['classes/index.html', 'ko/classes/index.html']) {
   const html = read(page);
+  const { formats: FORMATS, steps: STEPS, faq: FAQ } = CLASSES[langOf(page)];
   const formats = [...html.matchAll(/<article[^>]*class="format"[\s\S]*?<\/article>/g)].map(
     (m) => m[0],
   );

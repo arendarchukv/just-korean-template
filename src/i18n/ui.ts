@@ -56,7 +56,7 @@ const en = {
   'home.links.dictionary.text':
     'The Basic Korean Dictionary by the National Institute of Korean Language, with English meanings and examples.',
   'home.links.dictionary.tag': 'Vocabulary',
-  'home.links.dictionary.action': 'Look up a word',
+  'home.links.dictionary.action': 'Open the dictionary',
   'home.links.pronunciation': 'Pronunciation practice',
   'home.links.pronunciation.text':
     'Nuri-Sejong Hakdang: listen to the sounds of Korean and repeat them.',
@@ -156,19 +156,15 @@ const en = {
   'practice.decksCount': '{n} decks',
   'practice.quizzesCount': '{n} quizzes',
   'practice.open': 'Open',
+  'practice.topik': 'TOPIK mock test',
+  'practice.topikText':
+    'Timed practice in the format of the TOPIK exam, with your score at the end.',
+  'practice.soon': 'Coming soon',
   'practice.chooseDeck': 'Choose a deck',
   'practice.chooseQuiz': 'Choose a quiz',
   'practice.fromLessons': 'From lessons',
-  'practice.dictionary': 'Dictionary',
-  'practice.dictionaryHint':
-    'Look up a word in the Basic Korean Dictionary of the National Institute of Korean Language, with English meanings.',
   'practice.dictionaryField': 'Korean word',
   'practice.dictionaryGo': 'Look up',
-  'practice.pronunciation': 'Pronunciation',
-  'practice.pronunciationBody':
-    'Practise the sounds of Korean with the King Sejong Institute, then watch the pronunciation lessons.',
-  'practice.pronunciationLink': 'Open pronunciation practice',
-  'practice.pronunciationLessons': 'Pronunciation lessons',
 
   'contact.demo': 'Demo form, nothing is sent',
   'contact.lead': 'Questions about classes or materials? Write to JiEun here.',
@@ -281,7 +277,7 @@ const ko: Partial<Record<UIKey, string>> = {
   'home.links.dictionary': '사전', // TODO(ko-review)
   'home.links.dictionary.text': '국립국어원 한국어기초사전이에요. 영어 뜻과 예문을 볼 수 있어요.', // TODO(ko-review)
   'home.links.dictionary.tag': '어휘', // TODO(ko-review)
-  'home.links.dictionary.action': '단어 찾기', // TODO(ko-review)
+  'home.links.dictionary.action': '사전 열기', // TODO(ko-review)
   'home.links.pronunciation': '발음 연습', // TODO(ko-review)
   'home.links.pronunciation.text': '누리-세종학당에서 한국어 소리를 듣고 따라 해 보세요.', // TODO(ko-review)
   'home.links.pronunciation.tag': '발음', // TODO(ko-review)
@@ -379,18 +375,14 @@ const ko: Partial<Record<UIKey, string>> = {
   'practice.decksCount': '단어 카드 {n}개', // TODO(ko-review)
   'practice.quizzesCount': '퀴즈 {n}개', // TODO(ko-review)
   'practice.open': '열기', // TODO(ko-review)
+  'practice.topik': 'TOPIK 모의고사', // TODO(ko-review)
+  'practice.topikText': 'TOPIK 시험 형식으로 시간을 재며 연습하고, 마지막에 점수를 확인해요.', // TODO(ko-review)
+  'practice.soon': '준비 중', // TODO(ko-review)
   'practice.chooseDeck': '카드 묶음 고르기', // TODO(ko-review)
   'practice.chooseQuiz': '퀴즈 고르기', // TODO(ko-review)
   'practice.fromLessons': '강의에서', // TODO(ko-review)
-  'practice.dictionary': '사전',
-  'practice.dictionaryHint': '국립국어원 한국어기초사전에서 단어를 영어 뜻과 함께 찾아보세요.',
   'practice.dictionaryField': '한국어 단어',
   'practice.dictionaryGo': '찾기',
-  'practice.pronunciation': '발음',
-  'practice.pronunciationBody':
-    '세종학당 발음 연습으로 한국어 소리를 연습하고, 발음 강의도 봐 보세요.',
-  'practice.pronunciationLink': '발음 연습 열기',
-  'practice.pronunciationLessons': '발음 강의',
 
   'contact.demo': '데모 양식, 실제로 보내지지 않아요',
   'contact.lead': '수업이나 자료에 대해 궁금한 점이 있나요? 여기에 남겨 주세요.',

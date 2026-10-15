@@ -1,12 +1,11 @@
 ---
-/** Practice: links to deck and quiz pages, krdict search, pronunciation practice and lessons. */
+/** Practice: the Flashcards and Quizzes studios, and the TOPIK mock test announced as coming soon. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHead from '@/components/PageHead.astro';
 import Icon, { type IconName } from '@/components/Icon.astro';
-import { getDecks, getPlaylists, getQuizzes } from '@/content/queries';
+import { getDecks, getQuizzes } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
-import { KRDICT } from '@/lib/site-logic';
 
 interface Props {
   lang: Lang;
@@ -15,8 +14,6 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const decks = await getDecks();
 const quizzes = await getQuizzes();
-// The pronunciation lessons, once a playlist with the id "pronunciation" is added in code.
-const pronunciation = getPlaylists().find((p) => (p.id as string) === 'pronunciation');
 // Two ways in: the Flashcards and Quizzes studios (each lists every deck or quiz).
 const ENTRIES = [
   {
@@ -68,53 +65,16 @@ const ENTRIES = [
         </span>
       </a>
     ))}
-  </div>
-
-  <div class="container-page practice-grid">
-    <section class="practice-block practice-tool grid-paper" aria-labelledby="dictionary-title">
-      <h2 id="dictionary-title" class="page-section-title">
-        {t('practice.dictionary')}
-      </h2>
-      <p class="page-section-lead">{t('practice.dictionaryHint')}</p>
-      <form class="dictionary-form" action={KRDICT.action} method="get" target="_blank">
-        {Object.entries(KRDICT.hidden).map(([name, value]) => (
-          <input type="hidden" name={name} value={value} />
-        ))}
-        <label for="dict-q" class="sr-only">
-          {t('practice.dictionaryField')}
-        </label>
-        <input
-          id="dict-q"
-          class="field"
-          type="search"
-          name={KRDICT.field}
-          lang="ko"
-          required
-          placeholder="사랑"
-        />
-        <button type="submit" class="btn btn-primary">
-          {t('practice.dictionaryGo')}
-        </button>
-      </form>
-    </section>
-    <section class="practice-block practice-tool" aria-labelledby="pron-title">
-      <h2 id="pron-title" class="page-section-title">
-        {t('practice.pronunciation')}
-      </h2>
-      <p class="page-section-lead">{t('practice.pronunciationBody')}</p>
-      <a
-        class="btn btn-ghost"
-        href="https://nuri.iksi.or.kr/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {t('practice.pronunciationLink')}
-      </a>
-      {pronunciation && (
-        <a class="btn btn-link" href={`${localizePath(lang, 'lessons')}#series-pronunciation`}>
-          {t('practice.pronunciationLessons')}
-        </a>
-      )}
-    </section>
+    <!-- Announced, not built yet: muted and not a link. -->
+    <div class="practice-entry practice-soon" data-coming-soon>
+      <span class="tool-icon">
+        <Icon name="topik" />
+      </span>
+      <span class="practice-entry-title">
+        {t('practice.topik')}
+        <span class="soon-badge">{t('practice.soon')}</span>
+      </span>
+      <span class="practice-entry-text">{t('practice.topikText')}</span>
+    </div>
   </div>
 </BaseLayout>

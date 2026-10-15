@@ -248,7 +248,8 @@
     padding: 0;
     list-style: none;
   }
-  @media (min-width: 48rem) {
+  /* Three across only when the dictionary search still fits in its card. */
+  @media (min-width: 64rem) {
     .tool-cards {
       grid-template-columns: repeat(3, 1fr);
     }
@@ -268,6 +269,32 @@
   }
   .tool-card:hover {
     border-color: var(--color-brand);
+  }
+  /* The dictionary card holds a search form instead of being one big link. */
+  .tool-card-search {
+    grid-template-rows: auto auto auto 1fr auto;
+  }
+  .tool-card-search:hover {
+    border-color: var(--color-border);
+  }
+  .tool-card-search .dictionary-form {
+    align-self: end;
+    flex-wrap: nowrap;
+  }
+  .tool-card-search .dictionary-form .field {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .tool-card-search .dictionary-form .btn {
+    flex: none;
+    padding-inline: 1rem;
+    white-space: nowrap;
+  }
+  .tool-card-search .tool-action {
+    text-decoration: none;
+  }
+  .tool-card-search .tool-action:hover {
+    text-decoration: underline;
   }
   .tool-icon {
     display: inline-grid;

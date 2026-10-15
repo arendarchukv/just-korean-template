@@ -754,10 +754,36 @@
     max-width: 44rem;
   }
 
-  .practice-tool {
-    padding: 1.5rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
+  /* Announced, not built yet: dashed paper, muted, not a link; spans the whole row. */
+  .practice-soon {
+    grid-column: 1 / -1;
+    border-style: dashed;
+    background: transparent;
+    cursor: default;
+  }
+  .practice-soon:hover {
+    border-color: var(--color-border);
+  }
+  .practice-soon .tool-icon {
+    background: var(--color-surface);
+    color: var(--color-muted);
+  }
+  .practice-soon .practice-entry-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    color: var(--color-muted);
+  }
+  .soon-badge {
+    padding: 0.15rem 0.65rem;
+    border: 1px dashed currentColor;
+    border-radius: 999px;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-brand);
   }
   .dictionary-form {
     display: flex;

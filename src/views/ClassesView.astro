@@ -1,11 +1,10 @@
 ---
 /**
- * Classes: what each format is like (facts at a glance), how to start, FAQ, and a calm closing
- * block to book or ask. Content is hardcoded in src/data/classes.ts (this page changes rarely).
+ * Classes: the three formats as distinct cards (who it is for, a few facts, its own button), how
+ * to start, FAQ, and a closing block for those not sure which format fits. Content is hardcoded in src/data/classes.ts (this page changes rarely).
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { getSite } from '@/content/queries';
-import { TEACHER } from '@/data/teacher';
 import { CLASSES } from '@/data/classes';
 import { pick } from '@/i18n/localized';
 import type { Lang } from '@/i18n/ui';
@@ -17,7 +16,6 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const site = await getSite();
-const { credentials } = pick(TEACHER, lang);
 const { formats: FORMATS, steps: STEPS, faq: FAQ } = pick(CLASSES, lang);
 // Tally form when set; until then the demo contact page.
 const contact = site.contactForm || localizePath(lang, 'contact');
@@ -29,14 +27,6 @@ const external = (href: string) =>
   <div class="container-page page-head">
     <h1 class="page-title">{t('page.classes.title')}</h1>
     <p class="page-lead">{t('classes.lead')}</p>
-    {credentials.length > 0 && (
-      <p class="classes-teacher">
-        <span>{credentials.slice(0, 3).join(' · ')}</span>
-        <a class="link" href={localizePath(lang, 'about')}>
-          {t('classes.aboutTeacher')}
-        </a>
-      </p>
-    )}
   </div>
 
   <section class="container-page page-section" aria-labelledby="formats-title">
@@ -44,23 +34,45 @@ const external = (href: string) =>
       {t('classes.formats')}
     </h2>
     <div class="formats">
-      {FORMATS.map((format, i) => (
-        <article class="format" aria-labelledby={`format-${i}`}>
-          <h3 id={`format-${i}`} class="format-name">
-            {format.name}
-          </h3>
-          <p class="format-for">{format.forWhom}</p>
-          <dl class="format-facts">
-            {format.facts.map((fact) => (
-              <div>
-                <dt>{fact.label}</dt>
-                <dd>{fact.value}</dd>
-              </div>
-            ))}
-          </dl>
-          <p class="format-how">{format.how}</p>
-        </article>
-      ))}
+      {FORMATS.map((format, i) => {
+        const href = format.action === 'book' && site.tidycal ? site.tidycal : contact;
+        return (
+          <article class="format" data-format={i + 1} aria-labelledby={`format-${i}`}>
+            {/* People taking part, as dots: decorative, the line below says it in words. */}
+            <span class="format-people" aria-hidden="true">
+              {Array.from({ length: format.people }, () => (
+                <i />
+              ))}
+            </span>
+            <h3 id={`format-${i}`} class="format-name">
+              {format.name}
+            </h3>
+            <p class="format-for">{format.forWhom}</p>
+            <dl class="format-facts">
+              {format.facts.map((fact) => (
+                <div>
+                  <dt>{fact.label}</dt>
+                  <dd>{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+            <p class="format-how">{format.how}</p>
+            <a
+              class:list={[
+                'btn',
+                format.action === 'book' ? 'btn-primary' : 'btn-ghost',
+                'format-action',
+              ]}
+              href={href}
+              {...external(href)}
+              data-book-class={format.action === 'book' && site.tidycal ? '' : undefined}
+            >
+              {format.action === 'book' ? t('home.bookClass') : t('classes.ask')}
+              <span class="sr-only">: {format.name}</span>
+            </a>
+          </article>
+        );
+      })}
     </div>
   </section>
 
@@ -103,25 +115,9 @@ const external = (href: string) =>
         </h2>
         <p class="classes-cta-text">{t('classes.readyText')}</p>
       </div>
-      <div class="home-actions">
-        {site.tidycal && (
-          <a
-            class="btn btn-primary"
-            data-book-class
-            href={site.tidycal}
-            {...external(site.tidycal)}
-          >
-            {t('home.bookClass')}
-          </a>
-        )}
-        <a
-          class:list={['btn', site.tidycal ? 'btn-ghost' : 'btn-primary']}
-          href={contact}
-          {...external(contact)}
-        >
-          {t('classes.contact')}
-        </a>
-      </div>
+      <a class="btn btn-primary" href={contact} {...external(contact)}>
+        {t('classes.contact')}
+      </a>
     </div>
   </section>
 </BaseLayout>

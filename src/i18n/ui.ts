@@ -88,7 +88,8 @@ const en = {
   'materials.noResults': 'No materials match.',
 
   'classes.lead':
-    'Live online classes with JiEun: one to one, in a small group, or in a group by level.',
+    'Live classes with JiEun, all online by video call: one to one, in a small group, or in a group by level.',
+  'classes.ask': 'Ask about it',
   'widget.fromLesson': 'From the lesson',
   'deck.flipHint': 'Show the meaning',
   'deck.meaning': 'Meaning',
@@ -120,11 +121,9 @@ const en = {
   'about.toClasses': 'See classes',
   'classes.faq': 'Questions before booking',
   'classes.formats': 'Class formats',
-  'classes.aboutTeacher': 'About the teacher',
   'classes.steps': 'How to start',
-  'classes.ready': 'Ready to start?',
-  'classes.readyText':
-    'Book a private class, or write first if you are not sure which format suits you.',
+  'classes.ready': 'Not sure which class fits?',
+  'classes.readyText': 'Write to JiEun: she will suggest a format and a time that suit you.',
   'classes.contact': 'Ask a question',
 
   'practice.lead': 'Check what you learned in the lessons. No sign-up needed.',
@@ -277,7 +276,9 @@ const ko: Partial<Record<UIKey, string>> = {
   'materials.search': '제목으로 검색',
   'materials.noResults': '맞는 자료가 없어요.', // TODO(ko-review)
 
-  'classes.lead': '지은 선생님과 함께하는 온라인 수업: 1:1, 소그룹, 레벨별 그룹 수업이 있어요.',
+  'classes.lead':
+    '지은 선생님과 함께하는 온라인 화상 수업이에요. 1:1, 소그룹, 레벨별 그룹 수업이 있어요.', // TODO(ko-review)
+  'classes.ask': '수업 문의하기',
   'widget.fromLesson': '관련 강의',
   'deck.flipHint': '뜻 보기',
   'deck.meaning': '뜻',
@@ -309,10 +310,9 @@ const ko: Partial<Record<UIKey, string>> = {
   'about.toClasses': '수업 보기',
   'classes.faq': '예약 전에 자주 묻는 질문',
   'classes.formats': '수업 형태',
-  'classes.aboutTeacher': '선생님 소개',
   'classes.steps': '시작하는 방법',
-  'classes.ready': '시작할 준비가 되셨나요?',
-  'classes.readyText': '1:1 수업을 예약하거나, 어떤 수업이 맞을지 모르겠다면 먼저 문의해 주세요.',
+  'classes.ready': '어떤 수업이 맞을지 고민되나요?', // TODO(ko-review)
+  'classes.readyText': '지은 선생님에게 문의하면 나에게 맞는 수업과 시간을 추천해 드려요.', // TODO(ko-review)
   'classes.contact': '문의하기',
 
   'practice.lead': '강의에서 배운 내용을 확인해 보세요. 가입은 필요 없어요.',

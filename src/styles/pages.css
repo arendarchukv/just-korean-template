@@ -723,22 +723,10 @@
     font-size: var(--text-xs);
     color: var(--color-muted);
   }
-  /* Phones and tablets: the list becomes a strip that scrolls sideways above the card. */
+  /* Phones and tablets: the card first, the list of decks below it as a plain vertical list. */
   @media (max-width: 63.99rem) {
     .studio-nav {
-      grid-auto-flow: column;
-      grid-auto-columns: max-content;
-      gap: 1rem;
-      padding: 0.75rem;
-      overflow-x: auto;
-      scroll-snap-type: x proximity;
-    }
-    .studio-group ul {
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(11rem, max-content);
-    }
-    .studio-item {
-      scroll-snap-align: start;
+      order: 2;
     }
   }
   .studio-main {

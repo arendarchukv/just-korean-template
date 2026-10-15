@@ -1,17 +1,20 @@
 ---
-/** Grammar reference: patterns by level with a client-side filter (the full list without JS). */
+/**
+ * Grammar: the patterns typed as tags on lessons, A→Z in Korean order, each with the lessons that
+ * explain it. Not in the menu; lesson pages link here. The filter is a small inline script; without
+ * JS the full list.
+ */
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { getGrammar } from '@/content/queries';
-import type { Lang, UIKey } from '@/i18n/ui';
+import { getGrammarTags } from '@/content/queries';
+import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
-import { groupByLevel } from '@/lib/site-logic';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const groups = groupByLevel(await getGrammar());
+const tags = await getGrammarTags();
 ---
 
 <BaseLayout title={t('page.grammar.title')}>
@@ -32,29 +35,30 @@ const groups = groupByLevel(await getGrammar());
       <p role="status" class="grammar-status" data-no-results={t('grammar.noResults')}></p>
     </div>
   </div>
-  {groups.map((g) => (
-    <section
-      class="container-page page-section"
-      data-grammar-group
-      aria-labelledby={`level-${g.level}`}
-    >
-      <h2 id={`level-${g.level}`} class="page-section-title">
-        {t(`grammar.level.${g.level}` as UIKey)}
-      </h2>
-      <ul class="pattern-list">
-        {g.items.map((p) => (
-          <li data-search={`${p.pattern} ${p.meaning}`.toLowerCase()}>
-            <a href={localizePath(lang, `grammar/${p.id}`)} class="pattern-link">
-              <span class="pattern-name" lang="ko">
-                {p.pattern}
-              </span>
-              <span class="pattern-meaning">{p.meaning}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))}
+  <section
+    class="container-page page-section"
+    data-grammar-group
+    aria-label={t('page.grammar.title')}
+  >
+    <ul class="pattern-list">
+      {tags.map((g) => (
+        <li id={g.slug} class="pattern-row" data-search={g.tag.toLowerCase()}>
+          <span class="pattern-name" lang="ko">
+            {g.tag}
+          </span>
+          <ul class="pattern-lessons">
+            {g.lessons.map((l) => (
+              <li>
+                <a class="link" href={localizePath(lang, `lessons/${l.id}`)}>
+                  {l.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  </section>
   <script is:inline>
     (() => {
       const box = document.querySelector('[data-grammar-search]');

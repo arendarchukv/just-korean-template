@@ -1,45 +1,31 @@
 import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
+import { PLAYLISTS } from '@/data/playlists';
+import { grammarTags, materialTabs, practiceUnits } from '@/lib/site-logic';
 
 /**
  * The only module that reads content. Pages never call getCollection directly, so content
  * translations (or any other change in where content comes from) can be added here later.
+ * Forms do not point at each other: a lesson carries its own words, quiz and files, and the
+ * Practice and Materials pages gather them together with the separate entries.
  */
 
-type Referable = 'series' | 'grammar' | 'lessons';
-
-async function resolve<C extends Referable>(
-  collection: C,
-  id: string,
-  from: string,
-): Promise<CollectionEntry<C>> {
-  const entry = await getEntry(collection, id);
-  if (!entry) throw new Error(`${from} "${id}" not found`);
-  return entry as CollectionEntry<C>;
-}
+export type Playlist = (typeof PLAYLISTS)[number];
 
 export type Lesson = CollectionEntry<'lessons'>['data'] & {
   id: string;
-  seriesEntry?: CollectionEntry<'series'>;
-  grammarEntries: CollectionEntry<'grammar'>[];
+  playlistEntry?: Playlist;
 };
 
 export async function getLessons(): Promise<Lesson[]> {
-  const lessons = await getCollection('lessons');
-  return Promise.all(
-    lessons.map(async (l) => {
-      const from = `lessons/${l.id}`;
-      return {
-        ...l.data,
-        id: l.id,
-        seriesEntry: l.data.series
-          ? await resolve('series', l.data.series, `${from}: series`)
-          : undefined,
-        grammarEntries: await Promise.all(
-          l.data.grammar.map((g) => resolve('grammar', g, `${from}: grammar`)),
-        ),
-      };
-    }),
-  );
+  return (await getCollection('lessons')).map((l) => ({
+    ...l.data,
+    id: l.id,
+    playlistEntry: PLAYLISTS.find((p) => p.id === l.data.playlist),
+  }));
+}
+
+export function getPlaylists(): readonly Playlist[] {
+  return PLAYLISTS;
 }
 
 export async function getNotices() {
@@ -53,58 +39,48 @@ export async function getSite() {
   return entry.data;
 }
 
-/** Fails the build when any reference points to an entry that does not exist. */
-export async function validateReferences(): Promise<void> {
-  await getLessons();
-  for (const g of await getCollection('grammar')) {
-    for (const id of g.data.compare) await resolve('grammar', id, `grammar/${g.id}: compare`);
-  }
-  for (const name of ['materials', 'decks', 'quizzes'] as const) {
-    for (const e of await getCollection(name)) {
-      if (e.data.lesson) await resolve('lessons', e.data.lesson, `${name}/${e.id}: lesson`);
-    }
-  }
-}
-
-/** Adds the linked lesson's id and title to a material, deck or quiz (checked: it must exist). */
-async function withLesson<T extends { lesson?: string }>(data: T, from: string) {
-  if (!data.lesson) return { ...data, lessonEntry: undefined };
-  const entry = await resolve('lessons', data.lesson, `${from}: lesson`);
-  return { ...data, lessonEntry: { id: entry.id, title: entry.data.title } };
-}
-
-export async function getSeries() {
-  return (await getCollection('series')).map((s) => ({ ...s.data, id: s.id }));
-}
-
-export async function getGrammar() {
-  return (await getCollection('grammar')).map((g) => ({ ...g.data, id: g.id }));
-}
-
-export async function getMaterials() {
-  const entries = await getCollection('materials');
-  return Promise.all(
-    entries.map(async (m) => ({ ...(await withLesson(m.data, `materials/${m.id}`)), id: m.id })),
-  );
-}
-
+/** Every flashcard deck: the separate ones, then one per lesson with its own words. */
 export async function getDecks() {
-  const entries = await getCollection('decks');
-  return Promise.all(
-    entries.map(async (d) => ({ ...(await withLesson(d.data, `decks/${d.id}`)), id: d.id })),
+  const separate = (await getCollection('decks')).map((d) => ({ ...d.data, id: d.id }));
+  return practiceUnits(
+    separate,
+    await getLessons(),
+    (l) => ({ cards: l.words }),
+    (l) => l.words.length > 0,
   );
 }
 
+/** Every quiz: the separate ones, then one per lesson with its own questions. */
 export async function getQuizzes() {
-  const entries = await getCollection('quizzes');
-  return Promise.all(
-    entries.map(async (q) => ({ ...(await withLesson(q.data, `quizzes/${q.id}`)), id: q.id })),
+  const separate = (await getCollection('quizzes')).map((q) => ({ ...q.data, id: q.id }));
+  return practiceUnits(
+    separate,
+    await getLessons(),
+    (l) => ({ questions: l.quiz }),
+    (l) => l.quiz.length > 0,
   );
 }
 
-/** Rendered Markdown body of a lesson or grammar entry. */
-export async function renderBody(collection: 'lessons' | 'grammar', id: string) {
-  const entry = await getEntry(collection, id);
-  if (!entry) throw new Error(`${collection}/${id} not found`);
+/** Materials page tabs: separate materials by section, then the files added to lessons. */
+export async function getMaterialTabs() {
+  const materials = (await getCollection('materials')).map((m) => ({ ...m.data, id: m.id }));
+  return materialTabs(materials, await getLessons());
+}
+
+/** Grammar tags typed on lessons, each with the lessons that explain it. */
+export async function getGrammarTags() {
+  return grammarTags(await getLessons());
+}
+
+/** Fails the build on content that would make two pages collide (see practiceUnits). */
+export async function validateContent(): Promise<void> {
+  await getDecks();
+  await getQuizzes();
+}
+
+/** Rendered Markdown body of a lesson. */
+export async function renderBody(id: string) {
+  const entry = await getEntry('lessons', id);
+  if (!entry) throw new Error(`lessons/${id} not found`);
   return (await render(entry)).Content;
 }

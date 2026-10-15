@@ -50,7 +50,7 @@ const dateFormat = new Intl.DateTimeFormat(lang === 'ko' ? 'ko-KR' : 'en-GB', {
               class="lesson-thumb"
             />
             <span class="lesson-meta">
-              {l.seriesEntry && `${l.seriesEntry.data.title} · `}
+              {l.playlistEntry && `${l.playlistEntry.title} · `}
               <time datetime={l.date.toISOString().slice(0, 10)}>{dateFormat.format(l.date)}</time>
             </span>
             <span class="lesson-title">{l.title}</span>

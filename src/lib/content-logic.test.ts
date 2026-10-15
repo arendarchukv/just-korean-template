@@ -1,32 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import {
-  contentDay,
-  isNoticeActive,
-  selectNewLessons,
-  sortNotices,
-  toDay,
-  toEntryId,
-} from './content-logic';
+import { contentDay, isNoticeActive, selectNewLessons, sortNotices, toDay } from './content-logic';
 
 const d = (s: string) => new Date(`${s}T00:00:00`);
 /** A date as YAML gives it: UTC midnight. */
 const yamlDate = (s: string) => new Date(`${s}T00:00:00Z`);
-
-describe('toEntryId', () => {
-  it.each([
-    ['ge', 'ge'],
-    ['ge.md', 'ge'],
-    ['src/content/grammar/ge.md', 'ge'],
-    ['src\\content\\series\\crash-course.yml', 'crash-course'],
-    ['content/decks/food.yaml', 'food'],
-    // Astro slugs file names (github-slugger); a reference must resolve to the same id.
-    ['Ge-Vs-Dorok.md', 'ge-vs-dorok'],
-    ['My First Lesson.md', 'my-first-lesson'],
-    ['src/content/lessons/Grammar/Ge.md', 'grammar/ge'],
-  ])('%s -> %s', (input, id) => {
-    expect(toEntryId(input)).toBe(id);
-  });
-});
 
 describe('notices', () => {
   const n = (

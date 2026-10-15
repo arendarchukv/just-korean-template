@@ -1,20 +1,3 @@
-import { slug } from 'github-slugger';
-
-/**
- * Entry id from a reference value, slugged the way Astro's glob loader slugs file paths.
- * Pages CMS may store a bare name, a filename with extension, or a path under src/content.
- */
-export function toEntryId(value: string): string {
-  const parts = value.replaceAll('\\', '/').split('/');
-  const content = parts.lastIndexOf('content');
-  // Keep only the path inside the collection folder (src/content/<collection>/...).
-  const inside = content >= 0 ? parts.slice(content + 2) : parts.slice(-1);
-  return inside
-    .map((part, i) => (i === inside.length - 1 ? part.replace(/\.(md|ya?ml)$/i, '') : part))
-    .map((part) => slug(part))
-    .join('/');
-}
-
 /** Local calendar day as YYYY-MM-DD. */
 export function toDay(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0');

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { download, lessonSchema, noticeSchema, siteSchema } from './schemas';
+import {
+  deckSchema,
+  download,
+  lessonSchema,
+  materialSchema,
+  noticeSchema,
+  quizSchema,
+  siteSchema,
+} from './schemas';
 
 describe('lessonSchema', () => {
   const base = { title: 'Korean Grammar : 게 vs 도록', date: '2026-09-23', level: 'intermediate' };
@@ -15,25 +23,51 @@ describe('lessonSchema', () => {
     expect(JSON.stringify(r.error?.issues)).toContain('YouTube');
   });
 
-  it('allows a lesson without a video and defaults lists', () => {
+  it('allows a lesson without a video and defaults its parts to empty', () => {
     const r = lessonSchema.parse(base);
     expect(r.youtube).toBeUndefined();
-    expect(r.grammar).toEqual([]);
-    expect(r.downloads).toEqual([]);
+    expect(r).toMatchObject({ grammar: [], words: [], quiz: [], files: [] });
   });
 
-  it('turns stored reference paths into ids', () => {
+  it('takes a playlist only from the list in code', () => {
+    expect(lessonSchema.parse({ ...base, playlist: 'grammar' }).playlist).toBe('grammar');
+    expect(lessonSchema.safeParse({ ...base, playlist: 'deleted' }).success).toBe(false);
+  });
+
+  it('carries its own words, quiz and files in the same shape as separate entries', () => {
     const r = lessonSchema.parse({
       ...base,
-      series: 'src/content/series/grammar.yml',
-      grammar: ['ge.md', 'dorok'],
+      grammar: ['-게', '-도록'],
+      words: [{ front: '안 가요', back: "I don't go" }],
+      quiz: [{ type: 'fill', sentence: '늦지 않___ 가요.', answer: '게' }],
+      files: [{ label: 'Notes', kind: 'pdf', url: 'https://f.example/n.pdf' }],
     });
-    expect(r.series).toBe('grammar');
-    expect(r.grammar).toEqual(['ge', 'dorok']);
+    expect(r.grammar).toEqual(['-게', '-도록']);
+    expect(deckSchema.shape.cards.parse(r.words)).toEqual(r.words);
+    expect(quizSchema.shape.questions.parse(r.quiz)).toEqual(r.quiz);
   });
 
-  it('needs a series for an episode number', () => {
-    expect(lessonSchema.safeParse({ ...base, episode: 3 }).success).toBe(false);
+  it('rejects a broken question inside a lesson, as in a separate quiz', () => {
+    const r = lessonSchema.safeParse({
+      ...base,
+      quiz: [{ type: 'fill', sentence: 'no gap here', answer: '게' }],
+    });
+    expect(r.success).toBe(false);
+  });
+});
+
+describe('materialSchema', () => {
+  const m = {
+    title: '한국의 가족',
+    date: '2026-06-19',
+    files: [{ label: 'Worksheet', kind: 'pdf', url: 'https://f.example/w.pdf' }],
+  };
+  it('needs a section (tab) and a type, as on her old site', () => {
+    expect(materialSchema.safeParse({ ...m, section: 'class', type: 'vocabulary' }).success).toBe(
+      true,
+    );
+    expect(materialSchema.safeParse({ ...m, type: 'vocabulary' }).success).toBe(false);
+    expect(materialSchema.safeParse({ ...m, section: 'class', type: 'poem' }).success).toBe(false);
   });
 });
 

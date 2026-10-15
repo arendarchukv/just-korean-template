@@ -14,20 +14,17 @@ interface Props {
 const { lang, showLanguageSwitch = true } = Astro.props;
 const t = useTranslations(lang);
 
-const NAV: { path: string; key: UIKey; demo?: boolean }[] = [
+const NAV: { path: string; key: UIKey }[] = [
   { path: 'lessons', key: 'nav.lessons' },
   { path: 'materials', key: 'nav.materials' },
   { path: 'practice', key: 'nav.practice' },
   { path: 'classes', key: 'nav.classes' },
-  // DEMO ONLY: Site info (English-only page, so no locale prefix). Remove before launch.
-  { path: 'site-info', key: 'nav.siteInfo', demo: true },
 ];
 
 const current = stripLocale(Astro.url.pathname);
 const items = NAV.map((item) => ({
-  href: item.demo ? `/${item.path}/` : localizePath(lang, item.path),
+  href: localizePath(lang, item.path),
   label: t(item.key),
-  demo: item.demo === true,
   active: current === item.path || current.startsWith(`${item.path}/`),
 }));
 // Booking opens TidyCal in a new tab; until its link is set, the Classes page.
@@ -53,7 +50,6 @@ const book = tidycal
           <li>
             <a href={item.href} aria-current={item.active ? 'page' : undefined} class="nav-link">
               {item.label}
-              {item.demo && <span class="nav-demo">{t('nav.demo')}</span>}
             </a>
           </li>
         ))}
@@ -109,7 +105,6 @@ const book = tidycal
                   class="nav-link text-lg text-text hover:bg-surface"
                 >
                   {item.label}
-                  {item.demo && <span class="nav-demo">{t('nav.demo')}</span>}
                 </a>
               </li>
             ))}

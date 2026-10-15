@@ -1,11 +1,11 @@
 ---
-/** Lesson page: player, text, grammar, files, practice, series navigation. */
+/** Lesson page: player, text, grammar tags, its own files, words and quiz, playlist navigation. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VideoFacade from '@/components/VideoFacade.astro';
-import { getDecks, getLessons, getQuizzes, renderBody, type Lesson } from '@/content/queries';
+import { getLessons, renderBody, type Lesson } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
-import { neighbours, sortInSeries } from '@/lib/site-logic';
+import { neighbours, sortInPlaylist, tagSlug } from '@/lib/site-logic';
 
 interface Props {
   lang: Lang;
@@ -13,17 +13,19 @@ interface Props {
 }
 const { lang, lesson } = Astro.props;
 const t = useTranslations(lang);
-const Body = await renderBody('lessons', lesson.id);
+const Body = await renderBody(lesson.id);
 const all = await getLessons();
-const seriesLessons = lesson.seriesEntry
-  ? sortInSeries(
-      all.filter((l) => l.series === lesson.series),
-      lesson.seriesEntry.data.kind,
+const playlist = lesson.playlistEntry;
+const seriesLessons = playlist
+  ? sortInPlaylist(
+      all.filter((l) => l.playlist === playlist.id),
+      playlist.kind,
     )
   : [];
 const { prev, next } = neighbours(seriesLessons, lesson.id);
-const deck = (await getDecks()).find((d) => d.lessonEntry?.id === lesson.id);
-const quiz = (await getQuizzes()).find((q) => q.lessonEntry?.id === lesson.id);
+// The lesson's own words and quiz have their pages under its id (see getDecks / getQuizzes).
+const hasWords = lesson.words.length > 0;
+const hasQuiz = lesson.quiz.length > 0;
 const href = (id: string) => localizePath(lang, `lessons/${id}`);
 const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
 ---
@@ -33,12 +35,7 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
     <article class="lesson-main">
       {lesson.youtube && <VideoFacade id={lesson.youtube} title={lesson.title} lang={lang} />}
       <header class="lesson-head">
-        {lesson.seriesEntry && (
-          <p class="lesson-series">
-            {lesson.seriesEntry.data.title}
-            {lesson.episode && ` · ${t('lessons.episode')} ${lesson.episode}`}
-          </p>
-        )}
+        {playlist && <p class="lesson-series">{playlist.title}</p>}
         <h1 class="lesson-heading">{lesson.title}</h1>
         {lesson.summary && <p class="page-lead">{lesson.summary}</p>}
       </header>
@@ -46,16 +43,20 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
         <Body />
       </div>
 
-      {lesson.grammarEntries.length > 0 && (
+      {lesson.grammar.length > 0 && (
         <section class="lesson-block" aria-labelledby="lesson-grammar">
           <h2 id="lesson-grammar" class="lesson-block-title">
             {t('lesson.grammar')}
           </h2>
           <ul class="chip-list">
-            {lesson.grammarEntries.map((g) => (
+            {lesson.grammar.map((tag) => (
               <li>
-                <a class="pattern-chip" lang="ko" href={localizePath(lang, `grammar/${g.id}`)}>
-                  {g.data.pattern}
+                <a
+                  class="pattern-chip"
+                  lang="ko"
+                  href={`${localizePath(lang, 'grammar')}#${tagSlug(tag)}`}
+                >
+                  {tag}
                 </a>
               </li>
             ))}
@@ -63,13 +64,13 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
         </section>
       )}
 
-      {lesson.downloads.length > 0 && (
+      {lesson.files.length > 0 && (
         <section class="lesson-block" aria-labelledby="lesson-files">
           <h2 id="lesson-files" class="lesson-block-title">
             {t('lesson.files')}
           </h2>
           <ul class="file-list">
-            {lesson.downloads.map((f) => (
+            {lesson.files.map((f) => (
               <li>
                 <a class="file-link" href={f.url} target="_blank" rel="noopener noreferrer">
                   <span class="file-kind">{kind(f.kind)}</span>
@@ -81,28 +82,28 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
         </section>
       )}
 
-      {(deck || quiz) && (
+      {(hasWords || hasQuiz) && (
         <section class="lesson-block" aria-labelledby="lesson-practice">
           <h2 id="lesson-practice" class="lesson-block-title">
             {t('lesson.practice')}
           </h2>
           <ul class="file-list">
-            {deck && (
+            {hasWords && (
               <li>
-                <a class="file-link" href={localizePath(lang, `practice/deck/${deck.id}`)}>
+                <a class="file-link" href={localizePath(lang, `practice/deck/${lesson.id}`)}>
                   <span class="file-kind">{t('lesson.deck')}</span>
                   <span>
-                    {deck.title} · {deck.cards.length} {t('lesson.cards')}
+                    {lesson.words.length} {t('lesson.cards')}
                   </span>
                 </a>
               </li>
             )}
-            {quiz && (
+            {hasQuiz && (
               <li>
-                <a class="file-link" href={localizePath(lang, `practice/quiz/${quiz.id}`)}>
+                <a class="file-link" href={localizePath(lang, `practice/quiz/${lesson.id}`)}>
                   <span class="file-kind">{t('lesson.quiz')}</span>
                   <span>
-                    {quiz.title} · {quiz.questions.length} {t('lesson.questions')}
+                    {lesson.quiz.length} {t('lesson.questions')}
                   </span>
                 </a>
               </li>
@@ -132,14 +133,14 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
     {seriesLessons.length > 1 && (
       <aside class="lesson-aside" aria-labelledby="lesson-series-title">
         <h2 id="lesson-series-title" class="lesson-block-title">
-          {lesson.seriesEntry!.data.title}
+          {playlist!.title}
         </h2>
         <ol class="series-list">
-          {seriesLessons.map((l) => (
+          {seriesLessons.map((l, i) => (
             <li>
               <a href={href(l.id)} aria-current={l.id === lesson.id ? 'page' : undefined}>
-                {l.episode && (
-                  <span class="series-number">{String(l.episode).padStart(2, '0')}</span>
+                {playlist!.kind === 'course' && (
+                  <span class="series-number">{String(i + 1).padStart(2, '0')}</span>
                 )}
                 <span>{l.title}</span>
               </a>

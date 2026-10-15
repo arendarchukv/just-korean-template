@@ -8,8 +8,6 @@ const one = (name: string) => glob({ pattern: `${name}.yml`, base: `${base}/sett
 
 export const collections = {
   lessons: defineCollection({ loader: many('lessons', 'md'), schema: SCHEMAS.lessons }),
-  series: defineCollection({ loader: many('series', 'yml'), schema: SCHEMAS.series }),
-  grammar: defineCollection({ loader: many('grammar', 'md'), schema: SCHEMAS.grammar }),
   materials: defineCollection({ loader: many('materials', 'yml'), schema: SCHEMAS.materials }),
   decks: defineCollection({ loader: many('decks', 'yml'), schema: SCHEMAS.decks }),
   quizzes: defineCollection({ loader: many('quizzes', 'yml'), schema: SCHEMAS.quizzes }),

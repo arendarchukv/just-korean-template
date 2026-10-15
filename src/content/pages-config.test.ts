@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 import { describe, expect, it } from 'vitest';
+import { PLAYLIST_IDS } from '../data/playlists';
 import { SCHEMAS } from './schemas';
 
 type Field = {
@@ -12,7 +13,7 @@ type Field = {
   blocks?: { name: string; fields?: Field[]; component?: string }[];
   blockKey?: string;
   pattern?: { regex: string; message?: string };
-  options?: { min?: number; max?: number };
+  options?: { min?: number; max?: number; values?: { name: string }[] };
   list?: boolean | { min?: number };
 };
 type Entry = { name: string; type: string; path: string; fields: Field[] };
@@ -63,6 +64,14 @@ function compare(fields: Field[], schema: any, where: string) {
     if (isUrl(shape[f.name])) {
       expect(f.pattern?.regex, `${where}.${f.name} has an https pattern`).toBe('^https://');
     }
+    // A choice offers exactly the values the schema accepts (playlists, sections, types, tones).
+    if (f.type === 'select') {
+      const values = core(shape[f.name])._zod.def.entries;
+      expect(
+        (f.options?.values ?? []).map((v) => v.name).sort(),
+        `${where}.${f.name} choices`,
+      ).toEqual(Object.keys(values).sort());
+    }
     if (f.fields) compare(f.fields, shape[f.name], `${where}.${f.name}`);
     if (f.blocks) {
       const key = f.blockKey ?? '_block';
@@ -112,9 +121,13 @@ describe('.pages.yml', () => {
       }
       return found!;
     };
-    expect(field('lessons.episode').options).toMatchObject({ min: 1 });
     expect(field('quizzes.questions').list).toMatchObject({ min: 1 });
+    expect(field('decks.cards').list).toMatchObject({ min: 1 });
+    expect(field('materials.files').list).toMatchObject({ min: 1 });
     expect(field('quizzes.questions.fill.sentence').pattern?.regex).toBe('___');
+    // A lesson's own quiz is the same component, with the same check on the gap.
+    expect(field('lessons.quiz.fill.sentence').pattern?.regex).toBe('___');
+    expect(field('lessons.playlist').options?.values?.map((v) => v.name)).toEqual(PLAYLIST_IDS);
     const youtube = new RegExp(field('lessons.youtube').pattern!.regex);
     expect(youtube.test('https://youtu.be/_lgDjyWiheU')).toBe(true);
     expect(youtube.test('_lgDjyWiheU')).toBe(true);

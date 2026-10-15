@@ -6,7 +6,7 @@ import ClassesTable from '@/components/home/ClassesTable.astro';
 import NewLessons from '@/components/home/NewLessons.astro';
 import NoticeStrip from '@/components/home/NoticeStrip.astro';
 import QuickLinks from '@/components/home/QuickLinks.astro';
-import { validateReferences } from '@/content/queries';
+import { validateContent } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 
 interface Props {
@@ -14,8 +14,8 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-// The home page always builds, so this is where broken references stop the build.
-await validateReferences();
+// The home page always builds, so this is where colliding practice pages stop the build.
+await validateContent();
 ---
 
 <BaseLayout>

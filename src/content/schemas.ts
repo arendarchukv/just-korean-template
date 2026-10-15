@@ -1,5 +1,5 @@
 import { z } from 'astro/zod';
-import { toEntryId } from '../lib/content-logic';
+import { PLAYLIST_IDS } from '../data/playlists';
 import { parseYouTubeId } from '../lib/youtube';
 
 /**
@@ -10,8 +10,6 @@ import { parseYouTubeId } from '../lib/youtube';
 
 const httpsUrl = z.url({ protocol: /^https$/, message: 'Must be a full https:// link' });
 const day = z.coerce.date();
-/** A reference to another entry; Pages CMS may store a path, the site keeps only the id. */
-const ref = z.string().min(1).transform(toEntryId);
 
 export const level = z.enum(['beginner', 'intermediate', 'advanced']);
 
@@ -30,90 +28,69 @@ const youtube = z.string().transform((value, ctx) => {
   return id;
 });
 
-export const lessonSchema = z
-  .object({
-    title: z.string().min(1),
-    youtube: youtube.optional(),
-    series: ref.optional(),
-    episode: z.number().int().positive().optional(),
-    date: day,
-    level,
-    grammar: z.array(ref).default([]),
-    summary: z.string().optional(),
-    downloads: z.array(download).default([]),
-  })
-  .refine((l) => l.episode === undefined || l.series !== undefined, {
-    message: 'An episode number needs a series',
-    path: ['episode'],
-  });
-
-export const seriesSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().optional(),
-  kind: z.enum(['course', 'library', 'podcast']),
-  youtubePlaylist: httpsUrl.optional(),
-  order: z.number().int().default(0),
+/** One word: the same shape inside a lesson and in a separate deck. */
+export const word = z.object({
+  front: z.string().min(1),
+  back: z.string().min(1),
+  example: z.string().optional(),
 });
 
-export const grammarSchema = z.object({
-  pattern: z.string().min(1),
-  meaning: z.string().min(1),
+/** One quiz question: the same shape inside a lesson and in a separate quiz. */
+export const question = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('choice'),
+    prompt: z.string().min(1),
+    options: z
+      .array(z.object({ text: z.string().min(1), correct: z.boolean().default(false) }))
+      .min(2),
+    explanation: z.string().optional(),
+  }),
+  z.object({
+    type: z.literal('fill'),
+    sentence: z.string().includes('___', { message: 'Mark the gap with ___' }),
+    answer: z.string().min(1),
+    alternatives: z.array(z.string()).default([]),
+    explanation: z.string().optional(),
+  }),
+]);
+
+/**
+ * A lesson is a container: besides the video and text it may carry its own words, quiz and files.
+ * Nothing points to another form; the playlist comes from a fixed list in code.
+ */
+export const lessonSchema = z.object({
+  title: z.string().min(1),
+  youtube: youtube.optional(),
+  playlist: z.enum(PLAYLIST_IDS).optional(),
+  date: day,
   level,
-  formation: z.string().optional(),
-  examples: z.array(z.object({ ko: z.string().min(1), en: z.string().min(1) })).default([]),
-  compare: z.array(ref).default([]),
+  summary: z.string().optional(),
+  /** Grammar patterns as typed, e.g. "-게"; the grammar page is built from them. */
+  grammar: z.array(z.string().trim().min(1)).default([]),
+  words: z.array(word).default([]),
+  quiz: z.array(question).default([]),
+  files: z.array(download).default([]),
 });
 
 export const materialSchema = z.object({
   title: z.string().min(1),
-  category: z.enum(['class-helper', 'podcast', 'extra-notes']),
-  tags: z.array(z.string()).default([]),
+  section: z.enum(['class', 'podcast', 'self-study']),
+  type: z.enum(['reading', 'writing', 'listening', 'vocabulary', 'video']),
   date: day,
   files: z.array(download).min(1),
-  lesson: ref.optional(),
 });
 
 export const deckSchema = z.object({
   title: z.string().min(1),
   level,
   description: z.string().optional(),
-  lesson: ref.optional(),
-  cards: z
-    .array(
-      z.object({
-        front: z.string().min(1),
-        back: z.string().min(1),
-        example: z.string().optional(),
-      }),
-    )
-    .min(1),
+  cards: z.array(word).min(1),
 });
 
 export const quizSchema = z.object({
   title: z.string().min(1),
   level,
-  lesson: ref.optional(),
-  questions: z
-    .array(
-      z.discriminatedUnion('type', [
-        z.object({
-          type: z.literal('choice'),
-          prompt: z.string().min(1),
-          options: z
-            .array(z.object({ text: z.string().min(1), correct: z.boolean().default(false) }))
-            .min(2),
-          explanation: z.string().optional(),
-        }),
-        z.object({
-          type: z.literal('fill'),
-          sentence: z.string().includes('___', { message: 'Mark the gap with ___' }),
-          answer: z.string().min(1),
-          alternatives: z.array(z.string()).default([]),
-          explanation: z.string().optional(),
-        }),
-      ]),
-    )
-    .min(1),
+  questions: z.array(question).min(1),
 });
 
 export const noticeSchema = z
@@ -147,8 +124,6 @@ export const siteSchema = z.object({
 /** Collection name → schema; used by content.config.ts and the .pages.yml drift test. */
 export const SCHEMAS = {
   lessons: lessonSchema,
-  series: seriesSchema,
-  grammar: grammarSchema,
   materials: materialSchema,
   decks: deckSchema,
   quizzes: quizSchema,

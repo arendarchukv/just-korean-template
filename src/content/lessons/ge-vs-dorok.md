@@ -1,11 +1,23 @@
 ---
 title: 'Korean Grammar 한국어 문법 : 게 vs 도록'
 youtube: R3Ny_hDzKpc
-series: grammar
+playlist: grammar
 date: 2026-09-23
 level: intermediate
-grammar: [ge, dorok]
+grammar: ['-게', '-도록']
 summary: '-게 and -도록: "so that" in everyday speech and in formal Korean.'
+quiz:
+  - type: choice
+    prompt: '늦지 않___ 일찍 출발하세요.'
+    options:
+      - text: 도록
+        correct: true
+      - text: 려고
+    explanation: '-도록 states the purpose: so that you are not late.'
+  - type: fill
+    sentence: '잘 들리___ 크게 말해 주세요.'
+    answer: 게
+    alternatives: [도록]
 ---
 
 Both endings mean "so that", and in many sentences you can use either. The difference is mostly

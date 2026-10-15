@@ -1,5 +1,6 @@
 ---
 import Icon from '@/components/Icon.astro';
+import Shape from '@/components/shapes/Shape.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import { QUICK_LINKS } from '@/data/links';
 import { KRDICT } from '@/lib/site-logic';
@@ -33,6 +34,7 @@ const k = (key: string, part = '') => `home.links.${key}${part}` as UIKey;
         <li>
           <!-- The dictionary searches right here: a form to krdict (new tab), the site link below. -->
           <div class="tool-card tool-card-search">
+            <Shape name={link.shape} tone={link.tone} texture="hatch" class="tool-shape" />
             <span class="tool-icon">
               <Icon name={link.icon} />
             </span>
@@ -69,7 +71,18 @@ const k = (key: string, part = '') => `home.links.${key}${part}` as UIKey;
         </li>
       ) : (
         <li>
-          <a class="tool-card" href={link.href} target="_blank" rel="noopener noreferrer">
+          <a
+            class="tool-card card-interactive"
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Shape
+              name={link.shape}
+              tone={link.tone}
+              texture="hatch"
+              class="tool-shape card-shape"
+            />
             <span class="tool-icon">
               <Icon name={link.icon} />
             </span>

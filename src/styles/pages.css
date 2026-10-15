@@ -614,6 +614,8 @@
     }
   }
   .practice-entry {
+    position: relative;
+    overflow: hidden;
     display: grid;
     grid-template-rows: auto auto 1fr auto;
     gap: 0.6rem;
@@ -625,8 +627,12 @@
     text-decoration: none;
     transition: border-color 150ms ease;
   }
-  .practice-entry:hover {
-    border-color: var(--color-brand);
+  .practice-entry > :not(.tool-shape) {
+    position: relative;
+  }
+  .practice-entry.card-interactive:hover .practice-entry-open {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
   .practice-entry-title {
     font-size: var(--text-2xl);

@@ -691,11 +691,22 @@
     display: grid;
     align-content: start;
     gap: 0.75rem;
-    padding: 1.75rem 1.5rem 1.5rem;
+    position: relative;
+    padding: 2rem 1.5rem 1.5rem;
     border: 1px solid var(--color-border);
-    border-top: 6px solid var(--accent);
     border-radius: var(--radius-card);
     background: var(--color-surface);
+  }
+  /* Accent: a straight strip of coloured tape on the top edge, clear of the rounded corners. */
+  .format::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 1.5rem;
+    width: 3.5rem;
+    height: 5px;
+    border-radius: 0 0 2px 2px;
+    background: var(--accent);
   }
   .format[data-format='2'] {
     --accent: var(--color-teal);

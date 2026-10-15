@@ -977,6 +977,46 @@
     height: 5px;
     border-radius: 0 0 2px 2px;
     background: var(--accent);
+    transition: width 260ms cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+  /* A small, decorative response (the card itself is not a link, so no lift, shadow or border):
+     the tape strip draws out a little and the dots hop once, left to right. */
+  .format:hover::before,
+  .format:focus-within::before {
+    width: 5.5rem;
+  }
+  .format:hover .format-people i,
+  .format:focus-within .format-people i {
+    animation: format-hop 420ms ease-out both;
+  }
+  .format-people i:nth-child(2) {
+    animation-delay: 50ms;
+  }
+  .format-people i:nth-child(3) {
+    animation-delay: 100ms;
+  }
+  .format-people i:nth-child(4) {
+    animation-delay: 150ms;
+  }
+  .format-people i:nth-child(5) {
+    animation-delay: 200ms;
+  }
+  .format-people i:nth-child(6) {
+    animation-delay: 250ms;
+  }
+  @keyframes format-hop {
+    40% {
+      transform: translateY(-3px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .format::before {
+      transition: none;
+    }
+    .format:hover .format-people i,
+    .format:focus-within .format-people i {
+      animation: none;
+    }
   }
   .format[data-format='2'] {
     --accent: var(--color-teal);

@@ -321,6 +321,16 @@ for (const [page, prefix] of LOCALES) {
     problems.push(`${page}: a quick link does not open safely in a new tab`);
   }
   if (/data-home-block="contents"/.test(html)) problems.push(`${page}: still has "On this site"`);
+  // The dictionary card searches krdict right away (word field, new tab).
+  const tools = homeBlock(page, 'links');
+  if (
+    !/<form[^>]*action="https:\/\/krdict\.korean\.go\.kr\/eng\/dicMarinerSearch\/search"[^>]*target="_blank"/.test(
+      tools,
+    )
+  ) {
+    problems.push(`${page}: dictionary card has no krdict search`);
+  }
+  if (!/name="mainSearchWord"/.test(tools)) problems.push(`${page}: dictionary field name`);
 
   // New lessons: local optimised thumbnails, links to existing lesson pages, video lessons only.
   const block = homeBlock(page, 'new-lessons');
@@ -519,7 +529,7 @@ for (const page of ['classes/index.html', 'ko/classes/index.html']) {
   for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
 }
 
-// --- Practice: decks and quizzes have anchors used by lesson pages; dictionary form targets krdict ---
+// --- Practice: the two studios, and the TOPIK mock test announced as coming soon ---
 for (const page of ['practice/index.html', 'ko/practice/index.html']) {
   const html = read(page);
   // Two ways in: the Flashcards and Quizzes pages (each lists every deck or quiz beside the widget).
@@ -529,12 +539,8 @@ for (const page of ['practice/index.html', 'ko/practice/index.html']) {
       problems.push(`${page}: no link to ${prefix}/practice/${kind}/`);
     }
   }
-  if (
-    !/<form[^>]*action="https:\/\/krdict\.korean\.go\.kr\/eng\/dicMarinerSearch\/search"/.test(html)
-  ) {
-    problems.push(`${page}: dictionary form does not target krdict`);
-  }
-  if (!/name="mainSearchWord"/.test(html)) problems.push(`${page}: dictionary field name`);
+  if (!/data-coming-soon/.test(html)) problems.push(`${page}: no "coming soon" TOPIK block`);
+  if (/dictionary-form|nuri\.iksi/.test(html)) problems.push(`${page}: still has the tool blocks`);
   for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
 }
 

@@ -1,0 +1,19 @@
+title: Everyday greetings
+level: beginner
+description: The phrases you say every day, from hello to goodbye.
+cards:
+  - front: 안녕하세요
+    back: Hello
+    example: 안녕하세요, 저는 민지예요.
+  - front: 감사합니다
+    back: Thank you
+  - front: 죄송합니다
+    back: I'm sorry (polite)
+  - front: 괜찮아요
+    back: It's okay / I'm fine
+  - front: 안녕히 가세요
+    back: Goodbye (to someone who is leaving)
+  - front: 안녕히 계세요
+    back: Goodbye (when you are the one leaving)
+  - front: 만나서 반가워요
+    back: Nice to meet you

@@ -1,0 +1,23 @@
+title: Which greeting?
+level: beginner
+questions:
+  - type: choice
+    prompt: A friend leaves your home. You stay and say…
+    options:
+      - text: 안녕히 가세요
+        correct: true
+      - text: 안녕히 계세요
+    explanation: 가세요 is for the person who goes; 계세요 is for the person who stays.
+  - type: choice
+    prompt: You bump into someone on the street. You say…
+    options:
+      - text: 죄송합니다
+        correct: true
+      - text: 감사합니다
+    explanation: 죄송합니다 is a polite "I'm sorry"; 감사합니다 means "thank you".
+  - type: choice
+    prompt: You meet someone for the first time. You say…
+    options:
+      - text: 만나서 반가워요
+        correct: true
+      - text: 괜찮아요

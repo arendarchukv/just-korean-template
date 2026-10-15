@@ -1,0 +1,18 @@
+title: At a café
+level: beginner
+description: Ordering a drink in Korean.
+cards:
+  - front: 아메리카노 한 잔 주세요
+    back: One Americano, please
+  - front: 따뜻한 거
+    back: A hot one
+  - front: 아이스로 주세요
+    back: Iced, please
+  - front: 여기서 먹을게요
+    back: For here
+  - front: 포장해 주세요
+    back: To go, please
+  - front: 얼마예요?
+    back: How much is it?
+  - front: 카드로 할게요
+    back: I'll pay by card

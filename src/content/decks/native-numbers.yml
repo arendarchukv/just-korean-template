@@ -1,0 +1,26 @@
+title: Native Korean numbers 1–10
+level: beginner
+description: For counting things, people and age.
+cards:
+  - front: 하나
+    back: one
+    example: 사과 한 개 (one apple)
+  - front: 둘
+    back: two
+    example: 사과 두 개 (two apples)
+  - front: 셋
+    back: three
+  - front: 넷
+    back: four
+  - front: 다섯
+    back: five
+  - front: 여섯
+    back: six
+  - front: 일곱
+    back: seven
+  - front: 여덟
+    back: eight
+  - front: 아홉
+    back: nine
+  - front: 열
+    back: ten

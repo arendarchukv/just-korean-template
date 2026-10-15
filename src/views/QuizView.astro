@@ -1,8 +1,9 @@
 ---
-/** One quiz: title, level, linked lesson, then the widget (JS only on this page). */
+/** One quiz in the practice studio: every quiz listed on the left, this one open. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Quiz from '@/components/widgets/Quiz.svelte';
-import type { getQuizzes } from '@/content/queries';
+import { getQuizzes } from '@/content/queries';
+import PracticeStudio from '@/components/PracticeStudio.astro';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -14,6 +15,7 @@ interface Props {
 
 const { lang, quiz } = Astro.props;
 const t = useTranslations(lang);
+const quizzes = await getQuizzes();
 const labels = {
   position: t('quiz.position'),
   yourAnswer: t('quiz.yourAnswer'),
@@ -30,24 +32,29 @@ const labels = {
 ---
 
 <BaseLayout title={quiz.title}>
-  <div class="container-page page-head">
-    <p class="lesson-series">
-      <a class="link" href={localizePath(lang, 'practice')}>
-        {t('page.practice.title')}
-      </a>
-      · {t('practice.quizzes')} · {t(`grammar.level.${quiz.level}` as UIKey)}
-    </p>
-    <h1 class="page-title">{quiz.title}</h1>
-    {quiz.lessonEntry && (
-      <p class="widget-lesson">
-        {t('widget.fromLesson')}{' '}
-        <a class="link" href={localizePath(lang, `lessons/${quiz.lessonEntry.id}`)}>
-          {quiz.lessonEntry.title}
-        </a>
+  <PracticeStudio
+    kind="quiz"
+    units={quizzes.map((q) => ({ ...q, count: q.questions.length }))}
+    currentId={quiz.id}
+    lang={lang}
+  >
+    <div class="studio-head">
+      <p class="studio-crumb">
+        <a class="link" href={localizePath(lang, 'practice')}>
+          {t('page.practice.title')}
+        </a>{' '}
+        · {t('practice.quizzes')} · {t(`grammar.level.${quiz.level}` as UIKey)}
       </p>
-    )}
-  </div>
-  <section class="container-page page-section">
+      <h1 class="studio-title">{quiz.title}</h1>
+      {quiz.lessonEntry && (
+        <p class="widget-lesson">
+          {t('widget.fromLesson')}{' '}
+          <a class="link" href={localizePath(lang, `lessons/${quiz.lessonEntry.id}`)}>
+            {quiz.lessonEntry.title}
+          </a>
+        </p>
+      )}
+    </div>
     <Quiz client:visible quizId={quiz.id} questions={quiz.questions} labels={labels} />
     <noscript>
       <!-- Without JS the widget cannot work: show only the readable list. -->
@@ -66,5 +73,5 @@ const labels = {
         ))}
       </ol>
     </noscript>
-  </section>
+  </PracticeStudio>
 </BaseLayout>

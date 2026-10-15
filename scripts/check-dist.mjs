@@ -522,14 +522,11 @@ for (const page of ['classes/index.html', 'ko/classes/index.html']) {
 // --- Practice: decks and quizzes have anchors used by lesson pages; dictionary form targets krdict ---
 for (const page of ['practice/index.html', 'ko/practice/index.html']) {
   const html = read(page);
-  // Prefixed ids: a lesson's deck and quiz share the lesson's id.
-  for (const [units, prefix] of [
-    [allDecks, 'deck'],
-    [allQuizzes, 'quiz'],
-  ]) {
-    for (const { id } of units) {
-      if (!html.includes(`id="${prefix}-${id}"`))
-        problems.push(`${page}: no anchor ${prefix}-${id}`);
+  // Two ways in: the Flashcards and Quizzes pages (each lists every deck or quiz beside the widget).
+  const prefix = page.startsWith('ko/') ? '/ko' : '';
+  for (const kind of ['flashcards', 'quizzes']) {
+    if (!html.includes(`href="${prefix}/practice/${kind}/"`)) {
+      problems.push(`${page}: no link to ${prefix}/practice/${kind}/`);
     }
   }
   if (
@@ -600,22 +597,38 @@ for (const dir of ['', 'ko/']) {
   }
 }
 
-// --- Practice and lesson pages link to the widget pages ---
-for (const [page, prefix] of [
-  ['practice/index.html', ''],
-  ['ko/practice/index.html', '/ko'],
+// --- Flashcards and Quizzes pages: a widget beside a list of every deck / quiz ---
+for (const [dir, prefix] of [
+  ['', ''],
+  ['ko/', '/ko'],
 ]) {
-  const html = read(page);
-  for (const [units, kind] of [
-    [allDecks, 'deck'],
-    [allQuizzes, 'quiz'],
+  for (const [kind, units, unit, widget] of [
+    ['flashcards', allDecks, 'deck', 'Flashcards'],
+    ['quizzes', allQuizzes, 'quiz', 'Quiz'],
   ]) {
-    for (const { id } of units) {
-      const href = `${prefix}/practice/${kind}/${id}/`;
-      if (!html.includes(`href="${href}"`)) problems.push(`${page}: no link to ${href}`);
+    const index = `${dir}practice/${kind}/index.html`;
+    if (!exists(index)) {
+      problems.push(`missing ${index}`);
+      continue;
+    }
+    const html = read(index);
+    if (!new RegExp(`<astro-island[^>]*${widget}`).test(html)) problems.push(`${index}: no widget`);
+    // The list is on the index and on every unit page, with the open one marked.
+    for (const page of [
+      index,
+      ...units.map(({ id }) => `${dir}practice/${unit}/${id}/index.html`),
+    ]) {
+      const nav = /<nav[^>]*class="studio-nav"[\s\S]*?<\/nav>/.exec(read(page))?.[0] ?? '';
+      for (const { id } of units) {
+        if (!nav.includes(`href="${prefix}/practice/${unit}/${id}/"`)) {
+          problems.push(`${page}: list lacks ${unit} ${id}`);
+        }
+      }
+      if ((nav.match(/aria-current="page"/g) ?? []).length !== 1) {
+        problems.push(`${page}: the open ${unit} is not marked once in the list`);
+      }
     }
   }
-  if (/coming soon|곧 직접/i.test(html)) problems.push(`${page}: still says "coming soon"`);
 }
 for (const [prefix, dir] of [
   ['', ''],
@@ -633,7 +646,7 @@ for (const [prefix, dir] of [
 
 // --- JavaScript files load only where a widget lives ---
 {
-  const widgetPage = (p) => /(^|\/)practice\/(deck|quiz)\//.test(p);
+  const widgetPage = (p) => /(^|\/)practice\/(deck|quiz|flashcards|quizzes)\//.test(p);
   for (const page of htmlPages()) {
     const html = read(page);
     const hasJsFile = /<astro-island|<script[^>]*\ssrc=/.test(html);

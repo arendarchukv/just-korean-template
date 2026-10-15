@@ -150,6 +150,15 @@ const en = {
   'practice.lead': 'Check what you learned in the lessons. No sign-up needed.',
   'practice.decks': 'Flashcards',
   'practice.quizzes': 'Quizzes',
+  'practice.decksText':
+    'Turn each card over and say whether you knew it. Your progress stays in this browser.',
+  'practice.quizzesText': 'Short quizzes on the lessons, with the answer checked at once.',
+  'practice.decksCount': '{n} decks',
+  'practice.quizzesCount': '{n} quizzes',
+  'practice.open': 'Open',
+  'practice.chooseDeck': 'Choose a deck',
+  'practice.chooseQuiz': 'Choose a quiz',
+  'practice.fromLessons': 'From lessons',
   'practice.dictionary': 'Dictionary',
   'practice.dictionaryHint':
     'Look up a word in the Basic Korean Dictionary of the National Institute of Korean Language, with English meanings.',
@@ -365,6 +374,14 @@ const ko: Partial<Record<UIKey, string>> = {
   'practice.lead': '강의에서 배운 내용을 확인해 보세요. 가입은 필요 없어요.',
   'practice.decks': '단어 카드',
   'practice.quizzes': '퀴즈',
+  'practice.decksText': '카드를 뒤집어 보고 알았는지 표시해요. 진도는 이 브라우저에 저장돼요.', // TODO(ko-review)
+  'practice.quizzesText': '강의 내용을 짧은 퀴즈로 확인하고 바로 정답을 볼 수 있어요.', // TODO(ko-review)
+  'practice.decksCount': '단어 카드 {n}개', // TODO(ko-review)
+  'practice.quizzesCount': '퀴즈 {n}개', // TODO(ko-review)
+  'practice.open': '열기', // TODO(ko-review)
+  'practice.chooseDeck': '카드 묶음 고르기', // TODO(ko-review)
+  'practice.chooseQuiz': '퀴즈 고르기', // TODO(ko-review)
+  'practice.fromLessons': '강의에서', // TODO(ko-review)
   'practice.dictionary': '사전',
   'practice.dictionaryHint': '국립국어원 한국어기초사전에서 단어를 영어 뜻과 함께 찾아보세요.',
   'practice.dictionaryField': '한국어 단어',

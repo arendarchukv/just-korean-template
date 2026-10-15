@@ -1,0 +1,9 @@
+---
+/** Quizzes: the practice studio opened on the first quiz (each quiz also has its own page). */
+import { getQuizzes } from '@/content/queries';
+import QuizView from '@/views/QuizView.astro';
+
+const [quiz] = await getQuizzes();
+---
+
+{quiz && <QuizView lang="ko" quiz={quiz} />}

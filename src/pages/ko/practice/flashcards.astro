@@ -1,0 +1,9 @@
+---
+/** Flashcards: the practice studio opened on the first deck (each deck also has its own page). */
+import { getDecks } from '@/content/queries';
+import DeckView from '@/views/DeckView.astro';
+
+const [deck] = await getDecks();
+---
+
+{deck && <DeckView lang="ko" deck={deck} />}

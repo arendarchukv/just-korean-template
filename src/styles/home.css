@@ -1,5 +1,5 @@
 /*
- * Home page blocks. Each block has its own form (tape strip, cut-out photo, timetable, 목차,
+ * Home page blocks. Each block has its own form (tape strip, cut-out photo, quick links, class lines,
  * thumbnails) instead of one repeated card; semantic tokens only.
  */
 @layer components {
@@ -176,123 +176,83 @@
     color: var(--color-teal);
   }
 
-  /* Timetable: ruled lines, no boxes, like a printed class schedule. */
-  .timetable {
-    width: 100%;
-    border-collapse: collapse;
+  /* Classes: one ruled line per format, name then who it is for. */
+  .class-lines {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 2px solid var(--color-text);
   }
-  .timetable th,
-  .timetable td {
-    padding: 1rem 1.25rem 1rem 0;
+  .class-lines li {
+    display: grid;
+    gap: 0.15rem 1.5rem;
+    padding-block: 0.9rem;
     border-bottom: 1px solid var(--color-border);
-    text-align: left;
-    vertical-align: top;
-    min-width: 10em;
   }
-  .timetable thead th {
-    padding-block: 0.5rem;
-    border-bottom: 2px solid var(--color-text);
+  @media (min-width: 40rem) {
+    .class-lines li {
+      grid-template-columns: 14rem 1fr;
+      align-items: baseline;
+    }
+  }
+  .class-line-name {
+    font-weight: 600;
+  }
+  .class-line-text {
+    color: var(--color-muted);
+  }
+
+  /* Quick links: a compact row of outlined buttons to outside sites. */
+  .quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    padding-block: 0 1rem;
+  }
+  .quick-links-title {
+    margin: 0;
     font-size: var(--text-xs);
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--color-muted);
   }
-  .timetable tbody th {
-    font-weight: 600;
-  }
-  .timetable td {
-    color: var(--color-muted);
-  }
-  /* Phones: each format becomes a short block with its own labels instead of a sideways scroll. */
-  @media (max-width: 39.99rem) {
-    .timetable thead {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-    .timetable,
-    .timetable tbody,
-    .timetable tr,
-    .timetable th,
-    .timetable td {
-      display: block;
-    }
-    .timetable tr {
-      padding-block: 1rem;
-      border-bottom: 1px solid var(--color-border);
-    }
-    .timetable tbody tr:first-child {
-      border-top: 2px solid var(--color-text);
-    }
-    .timetable th,
-    .timetable td {
-      min-width: 0;
-      padding: 0.2rem 0;
-      border: 0;
-    }
-    .timetable td::before {
-      content: attr(data-label);
-      display: block;
-      font-size: var(--text-xs);
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-  }
-
-  /* 목차: numbered contents with ruled lines, no boxes. */
-  .toc {
+  .quick-links ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 2px solid var(--color-text);
   }
-  .toc-link {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr auto;
-    gap: 0.75rem;
-    align-items: baseline;
+  .quick-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
     min-height: 44px;
-    padding-block: 1.1rem;
-    border-bottom: 1px solid var(--color-border);
-    color: inherit;
+    padding-inline: 1rem 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-text);
     text-decoration: none;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease;
   }
-  .toc-number {
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    color: var(--color-teal);
-  }
-  .toc-body {
-    display: grid;
-    gap: 0.2rem;
-  }
-  .toc-title {
-    font-size: var(--text-lg);
-    line-height: var(--text-lg--line-height);
-    font-weight: 600;
-  }
-  .toc-term {
-    margin-right: 0.6rem;
-    color: var(--color-brand);
-  }
-  .toc-text {
+  .quick-link svg {
+    width: 1rem;
+    height: 1rem;
     color: var(--color-muted);
   }
-  .toc-arrow {
-    color: var(--color-muted);
-    transition: transform 0.2s ease;
-  }
-  .toc-link:hover .toc-title,
-  .toc-link:hover .toc-arrow {
+  .quick-link:hover {
+    border-color: var(--color-brand);
     color: var(--color-brand);
   }
-  .toc-link:hover .toc-arrow {
-    transform: translateX(4px);
+  .quick-link:hover svg {
+    color: currentColor;
   }
 
   /* New lessons: the only image-led block. */
@@ -340,11 +300,5 @@
   }
   .lesson-tile:hover .lesson-title {
     color: var(--color-brand);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .toc-link:hover .toc-arrow {
-      transform: none;
-    }
   }
 }

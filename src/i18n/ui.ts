@@ -20,7 +20,6 @@ const en = {
   'a11y.menu': 'Menu',
 
   'nav.lessons': 'Lessons',
-  'nav.grammar': 'Grammar',
   'nav.practice': 'Practice',
   'nav.materials': 'Materials',
   'nav.classes': 'Classes',
@@ -46,21 +45,13 @@ const en = {
   'home.watchLessons': 'Watch lessons',
   'home.credentials': 'About the teacher',
   'home.classes.title': 'Classes',
-  'home.classes.format': 'Format',
   'home.classes.forWhom': 'For whom',
-  'home.classes.how': 'How it works',
   'home.classes.more': 'Classes, prices and FAQ',
-  'home.contents.title': 'On this site',
-  'home.contents.lessons.title': 'Lessons and grammar',
-  'home.contents.lessons.body': 'Every video from the channel in order, with a grammar reference.',
-  'home.contents.materials.title': 'Materials',
-  'home.contents.materials.body': 'Worksheets, notes and transcripts to download.',
-  'home.contents.practice.title': 'Flashcards and quizzes',
-  'home.contents.practice.body': 'Check what you learned, at your own pace.',
-  'home.contents.speaking.title': 'Pronunciation and dictionary',
-  'home.contents.speaking.body': 'Sounds of Korean, and a quick way to look up a word.',
-  'home.contents.news.title': 'Korean news reading',
-  'home.contents.news.body': 'Real news in Korean, with words to learn.',
+  'home.links.title': 'Useful sites',
+  'home.links.dictionary': 'Dictionary',
+  'home.links.pronunciation': 'Pronunciation practice',
+  'home.links.news': 'Korean news',
+  'home.links.newTab': 'opens in a new tab',
   'home.newLessons.title': 'New lessons',
   'home.newLessons.all': 'All lessons',
 
@@ -146,15 +137,6 @@ const en = {
   'practice.pronunciationLink': 'Open pronunciation practice',
   'practice.pronunciationLessons': 'Pronunciation lessons',
 
-  'news.lead':
-    'Fresh Korean news to practise reading: a few lines from each article, then the full story on OhmyNews.',
-  'news.latest': 'Latest news',
-  'news.loading': 'Loading the latest news…',
-  'news.unavailable': 'The news could not be loaded right now. You can read it on OhmyNews.',
-  'news.noScript': 'The latest headlines need JavaScript. You can read the news on OhmyNews.',
-  'news.openSite': 'Open OhmyNews',
-  'news.source': 'Headlines and excerpts:',
-  'news.newTab': 'opens OhmyNews in a new tab',
   'contact.demo': 'Demo form, nothing is sent',
   'contact.lead': 'Questions about classes or materials? Write to JiEun here.',
   'contact.name': 'Name',
@@ -201,7 +183,6 @@ const en = {
   'page.practice.title': 'Practice',
   'page.materials.title': 'Materials',
   'page.classes.title': 'Classes',
-  'page.news.title': 'Korean news',
   'page.contact.title': 'Contact',
   'page.about.title': 'About',
 
@@ -226,7 +207,6 @@ const ko: Partial<Record<UIKey, string>> = {
   'a11y.menu': '메뉴',
 
   'nav.lessons': '강의',
-  'nav.grammar': '문법',
   'nav.practice': '연습',
   'nav.materials': '자료',
   'nav.classes': '수업',
@@ -250,21 +230,13 @@ const ko: Partial<Record<UIKey, string>> = {
   'home.watchLessons': '강의 보기',
   'home.credentials': '선생님 소개',
   'home.classes.title': '수업',
-  'home.classes.format': '수업 형태',
   'home.classes.forWhom': '대상',
-  'home.classes.how': '진행 방식',
   'home.classes.more': '수업 안내와 자주 묻는 질문',
-  'home.contents.title': '이 사이트에서',
-  'home.contents.lessons.title': '강의와 문법',
-  'home.contents.lessons.body': '채널의 모든 영상을 순서대로, 문법 사전과 함께.',
-  'home.contents.materials.title': '자료',
-  'home.contents.materials.body': '학습지, 노트, 대본을 내려받아요.',
-  'home.contents.practice.title': '단어 카드와 퀴즈',
-  'home.contents.practice.body': '배운 내용을 내 속도로 확인해요.',
-  'home.contents.speaking.title': '발음과 사전',
-  'home.contents.speaking.body': '한국어 소리, 그리고 단어를 빠르게 찾는 방법.',
-  'home.contents.news.title': '한국어 뉴스 읽기',
-  'home.contents.news.body': '배울 단어와 함께 읽는 진짜 한국어 뉴스.',
+  'home.links.title': '유용한 사이트', // TODO(ko-review)
+  'home.links.dictionary': '사전', // TODO(ko-review)
+  'home.links.pronunciation': '발음 연습', // TODO(ko-review)
+  'home.links.news': '한국어 뉴스', // TODO(ko-review)
+  'home.links.newTab': '새 탭에서 열림', // TODO(ko-review)
   'home.newLessons.title': '새 강의',
   'home.newLessons.all': '모든 강의',
 
@@ -346,15 +318,6 @@ const ko: Partial<Record<UIKey, string>> = {
   'practice.pronunciationLink': '발음 연습 열기',
   'practice.pronunciationLessons': '발음 강의',
 
-  'news.lead':
-    '읽기 연습을 위한 최신 한국어 뉴스예요. 기사 앞부분을 읽고 오마이뉴스에서 전체 기사를 보세요.',
-  'news.latest': '최신 뉴스',
-  'news.loading': '최신 뉴스를 불러오는 중…',
-  'news.unavailable': '지금은 뉴스를 불러올 수 없어요. 오마이뉴스에서 읽어 보세요.',
-  'news.noScript': '최신 뉴스를 보려면 자바스크립트가 필요해요. 오마이뉴스에서 읽어 보세요.',
-  'news.openSite': '오마이뉴스 열기',
-  'news.source': '제목과 기사 일부 출처:',
-  'news.newTab': '새 탭에서 오마이뉴스 열기',
   'contact.demo': '데모 양식, 실제로 보내지지 않아요',
   'contact.lead': '수업이나 자료에 대해 궁금한 점이 있나요? 여기에 남겨 주세요.',
   'contact.name': '이름',
@@ -401,7 +364,6 @@ const ko: Partial<Record<UIKey, string>> = {
   'page.practice.title': '연습',
   'page.materials.title': '자료',
   'page.classes.title': '수업',
-  'page.news.title': '한국어 뉴스',
   'page.contact.title': '문의',
   'page.about.title': '소개',
 

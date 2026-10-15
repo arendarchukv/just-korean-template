@@ -5,13 +5,4 @@
  */
 export const SITE_NAME_KO = '그냥 한국어';
 
-/** 목차 terms on the home page, in order. */
-export const CONTENTS_TERMS = {
-  lessons: '강의',
-  materials: '자료',
-  practice: '연습',
-  speaking: '발음 · 사전',
-  news: '뉴스',
-} as const;
-
-export const DISPLAY_TEXT = [SITE_NAME_KO, ...Object.values(CONTENTS_TERMS)];
+export const DISPLAY_TEXT = [SITE_NAME_KO];

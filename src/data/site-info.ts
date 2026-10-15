@@ -115,4 +115,8 @@ export const HARDCODED = [
   { text: 'About her: home intro, About page story and timeline', where: 'src/data/teacher.ts' },
   { text: 'Classes: formats, facts, how to start, FAQ', where: 'src/data/classes.ts' },
   { text: 'Interface text in English and Korean (menus, buttons)', where: 'src/i18n/ui.ts' },
+  {
+    text: 'Home buttons to the dictionary, pronunciation and news sites',
+    where: 'src/data/links.ts',
+  },
 ];

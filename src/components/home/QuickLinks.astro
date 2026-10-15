@@ -1,0 +1,40 @@
+---
+import { QUICK_LINKS } from '@/data/links';
+import type { Lang, UIKey } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+
+/** Home block: a compact row of buttons to the dictionary, pronunciation and Korean news sites. */
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="container-page quick-links" data-home-block="links" aria-labelledby="links-title">
+  <h2 id="links-title" class="quick-links-title">
+    {t('home.links.title')}
+  </h2>
+  <ul>
+    {QUICK_LINKS.map((link) => (
+      <li>
+        <a class="quick-link" href={link.href} target="_blank" rel="noopener noreferrer">
+          {t(`home.links.${link.key}` as UIKey)}
+          <span class="sr-only">({t('home.links.newTab')})</span>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M7 17 17 7M9 7h8v8"></path>
+          </svg>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>

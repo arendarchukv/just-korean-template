@@ -255,8 +255,8 @@ for (const [page, prefix] of LOCALES) {
   const expected = [
     noticeCount > 0 && 'notices',
     'about',
+    'links',
     'classes',
-    'contents',
     expectedNewLessons > 0 && 'new-lessons',
   ].filter(Boolean);
   if (found.join() !== expected.join()) {
@@ -279,23 +279,26 @@ for (const [page, prefix] of LOCALES) {
     }
   }
 
-  // Classes: a real table with headers, rows from src/data/classes.ts.
-  const table = homeBlock(page, 'classes');
-  if ((table.match(/<th scope="col"/g) ?? []).length < 3) {
-    problems.push(`${page}: classes table lacks column headers`);
-  }
+  // Classes: a short line per format from src/data/classes.ts, no table, booking via TidyCal.
+  const classes = homeBlock(page, 'classes');
+  if (/<table/.test(classes)) problems.push(`${page}: home classes block is still a table`);
   for (const format of FORMATS) {
-    if (!table.includes(format.name)) problems.push(`${page}: classes table lacks ${format.name}`);
+    if (!classes.includes(format.name))
+      problems.push(`${page}: classes block lacks ${format.name}`);
   }
+  if (!/data-book-class/.test(classes))
+    problems.push(`${page}: classes block has no booking button`);
 
-  // 목차: five numbered sections, links stay in the locale.
-  const links = [...homeBlock(page, 'contents').matchAll(/<a[^>]*href="([^"]+)"/g)].map(
-    (m) => m[1],
-  );
-  if (links.length !== 5) problems.push(`${page}: site contents has ${links.length} links, not 5`);
-  if (links.some((h) => !h.startsWith(`${prefix}/`))) {
-    problems.push(`${page}: contents leave the locale`);
+  // Quick links: dictionary, pronunciation and Korean news, straight to those sites in a new tab.
+  const quick = [...homeBlock(page, 'links').matchAll(/<a[^>]*>/g)].map((m) => m[0]);
+  const hosts = quick.map((a) => /href="https:\/\/([^/"]+)/.exec(a)?.[1]);
+  if (hosts.join() !== 'krdict.korean.go.kr,nuri.iksi.or.kr,www.ohmynews.com') {
+    problems.push(`${page}: quick links lead to [${hosts}]`);
   }
+  if (quick.some((a) => !/target="_blank"/.test(a) || !/rel="noopener noreferrer"/.test(a))) {
+    problems.push(`${page}: a quick link does not open safely in a new tab`);
+  }
+  if (/data-home-block="contents"/.test(html)) problems.push(`${page}: still has "On this site"`);
 
   // New lessons: local optimised thumbnails, links to existing lesson pages, video lessons only.
   const block = homeBlock(page, 'new-lessons');
@@ -321,12 +324,23 @@ for (const [page, prefix] of LOCALES) {
     }
   }
 }
-// --- Navigation: five sections, no /learn/ ---
+// --- Navigation: four sections (grammar is reached from lessons), no /learn/ ---
 for (const [page, prefix] of LOCALES) {
   const html = read(page);
   const nav = /<nav[^>]*aria-label="[^"]*"[^>]*>[\s\S]*?<\/nav>/.exec(html)?.[0] ?? '';
-  for (const path of ['lessons', 'grammar', 'materials', 'practice', 'classes']) {
+  for (const path of ['lessons', 'materials', 'practice', 'classes']) {
     if (!nav.includes(`href="${prefix}/${path}/"`)) problems.push(`${page}: nav lacks ${path}`);
+  }
+  if (/<header[\s\S]*href="[^"]*\/grammar\/"[\s\S]*<\/header>/.test(html)) {
+    problems.push(`${page}: grammar is still in the header menu`);
+  }
+  // Every "Book a class" button, header included, opens TidyCal once its link is set.
+  if (site.tidycal) {
+    const header = /<header[\s\S]*?<\/header>/.exec(html)?.[0] ?? '';
+    const headerBook = [...header.matchAll(/<a[^>]*data-book-class[^>]*>/g)].map((m) => m[0]);
+    if (headerBook.length !== 2 || headerBook.some((a) => !a.includes(`href="${site.tidycal}"`))) {
+      problems.push(`${page}: header booking buttons do not open TidyCal`);
+    }
   }
   if (/\/learn\//.test(html)) problems.push(`${page}: still links to /learn/`);
 }
@@ -486,17 +500,9 @@ for (const page of ['contact/index.html', 'ko/contact/index.html']) {
   if (!/data-demo-form/.test(form)) problems.push(`${page}: form is not marked as a demo`);
 }
 
-// --- News: loaded in the browser from the OhmyNews RSS (builds are rare), never baked in ---
+// --- News page removed: the home quick link goes straight to OhmyNews ---
 for (const page of ['news/index.html', 'ko/news/index.html']) {
-  const html = read(page);
-  if (!/data-news-feed[^>]*data-feed="https:\/\/rss\.ohmynews\.com\//.test(html)) {
-    problems.push(`${page}: no client-side news feed container`);
-  }
-  if (/<li[^>]*class="news-item"/.test(html)) problems.push(`${page}: news baked in at build time`);
-  if (!/<noscript>[\s\S]*?href="https:\/\/www\.ohmynews\.com\/"/.test(html)) {
-    problems.push(`${page}: no fallback link to OhmyNews without JavaScript`);
-  }
-  if (!/OhmyNews/.test(html)) problems.push(`${page}: no source attribution`);
+  if (exists(page)) problems.push(`${page} still exists`);
 }
 
 // --- Deck pages: the widget, and every card readable without JavaScript ---

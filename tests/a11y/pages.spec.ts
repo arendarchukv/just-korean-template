@@ -21,8 +21,6 @@ const PAGES = [
   '/ko/practice/',
   '/materials/',
   '/classes/',
-  '/news/',
-  '/ko/news/',
   '/contact/',
   '/ko/contact/',
   '/about/',

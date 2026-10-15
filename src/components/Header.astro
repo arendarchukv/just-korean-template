@@ -3,6 +3,7 @@ import Logo from '@/components/Logo.astro';
 import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
 import ThemeToggle from '@/components/ThemeToggle.astro';
 import type { Lang, UIKey } from '@/i18n/ui';
+import { getSite } from '@/content/queries';
 import { localizePath, stripLocale, useTranslations } from '@/i18n/utils';
 
 interface Props {
@@ -15,7 +16,6 @@ const t = useTranslations(lang);
 
 const NAV: { path: string; key: UIKey; demo?: boolean }[] = [
   { path: 'lessons', key: 'nav.lessons' },
-  { path: 'grammar', key: 'nav.grammar' },
   { path: 'materials', key: 'nav.materials' },
   { path: 'practice', key: 'nav.practice' },
   { path: 'classes', key: 'nav.classes' },
@@ -30,7 +30,11 @@ const items = NAV.map((item) => ({
   demo: item.demo === true,
   active: current === item.path || current.startsWith(`${item.path}/`),
 }));
-const bookHref = localizePath(lang, 'classes');
+// Booking opens TidyCal in a new tab; until its link is set, the Classes page.
+const tidycal = (await getSite()).tidycal;
+const book = tidycal
+  ? { href: tidycal, target: '_blank', rel: 'noopener noreferrer' }
+  : { href: localizePath(lang, 'classes') };
 ---
 
 <header class="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
@@ -59,7 +63,7 @@ const bookHref = localizePath(lang, 'classes');
     <div class="ml-auto flex items-center gap-1" data-print="hide">
       {showLanguageSwitch && <LanguageSwitcher lang={lang} />}
       <ThemeToggle lang={lang} />
-      <a href={bookHref} class="btn btn-primary ml-2 hidden lg:inline-flex">
+      <a {...book} data-book-class class="btn btn-primary ml-2 hidden lg:inline-flex">
         {t('nav.bookClass')}
       </a>
 
@@ -110,7 +114,7 @@ const bookHref = localizePath(lang, 'classes');
               </li>
             ))}
             <li class="pt-2">
-              <a href={bookHref} class="btn btn-primary w-full">
+              <a {...book} data-book-class class="btn btn-primary w-full">
                 {t('nav.bookClass')}
               </a>
             </li>

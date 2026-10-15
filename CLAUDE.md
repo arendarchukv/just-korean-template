@@ -11,11 +11,9 @@ model, CMS, home) and `docs/superpowers/specs/2026-10-14-demo-pages-design.md` (
 **Feature checklist (her wishes → where they live, status): `docs/features.md`** — update it at
 the end of every cycle.
 
-Built: content collections + `.pages.yml`, demo content, home page (notice strip, about, classes,
-목차, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
+Built: content collections + `.pages.yml`, demo content, home page (notice strip, about, useful-site buttons, classes in one line each, new lessons), Lessons library, Lesson page (click-to-load player), Grammar reference with
 search + pattern pages, Materials, Classes (formats with facts, how to start, FAQ), About (story, how she teaches, timeline, channel), Practice (deck and quiz pages with Svelte widgets,
-krdict search, pronunciation link), Korean news (OhmyNews RSS previews loaded in the browser),
-demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Grammar · Materials · Practice · Classes · Site info (demo); full menu from 1024px, the menu button below. Language menu: a `<details>` list of every locale in its own name (Ukrainian planned at launch: add it to `languages` + a dictionary; Outfit and Pretendard have no Cyrillic, so add a Cyrillic font then).
+krdict search, pronunciation link), demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Lessons · Materials · Practice · Classes · Site info (demo); grammar pages are reached from lessons; full menu from 1024px, the menu button below. Language menu: a `<details>` list of every locale in its own name (Ukrainian planned at launch: add it to `languages` + a dictionary; Outfit and Pretendard have no Cyrillic, so add a Cyrillic font then).
 
 **Site info is DEMO ONLY** (`/site-info/` content map + `/site-info/design/` design system, English-only, noindex): explains the content units for review. The content tab reads the real forms from `.pages.yml` (`src/lib/cms-forms.ts`), descriptions in `src/data/site-info.ts`. Before launch delete `src/pages/site-info/`, `src/views/site-info/`, `src/data/site-info*`, `src/lib/cms-forms*`, `src/styles/site-info.css`, the `nav.siteInfo` item in `Header.astro` and its tests (`tests/ui/language.spec.ts` site info block, check-dist and a11y entries); keep the design system somewhere if still wanted.
 
@@ -23,8 +21,8 @@ Next cycles, each with its own spec: 1. polish from reviews + visual pass, 2. qu
 Also later: an R2 upload page, content translations.
 
 **Builds are rare and manual** (no scheduled or daily rebuilds). Anything that depends on the date
-or on outside data runs in the browser (notices by date, news from the OhmyNews RSS) or is not
-built; never rely on a fresh build.
+or on outside data runs in the browser (notices by date) or is not built; outside sites (dictionary,
+pronunciation, OhmyNews news) are plain links in `src/data/links.ts`; never rely on a fresh build.
 
 Done earlier (content-independent):
 

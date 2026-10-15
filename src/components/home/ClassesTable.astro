@@ -1,10 +1,10 @@
 ---
-import Timetable from '@/components/Timetable.astro';
+import { FORMATS } from '@/data/classes';
 import { getSite } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
-/** Home block: the classes timetable and booking. */
+/** Home block: the class formats in one line each, and booking (TidyCal). */
 interface Props {
   lang: Lang;
 }
@@ -24,7 +24,14 @@ const booking = tidycal || localizePath(lang, 'classes');
   <h2 id="classes-title" class="home-section-title">
     {t('home.classes.title')}
   </h2>
-  <Timetable lang={lang} labelledBy="classes-title" />
+  <ul class="class-lines">
+    {FORMATS.map((f) => (
+      <li>
+        <span class="class-line-name">{f.name}</span>
+        <span class="class-line-text">{f.forWhom}</span>
+      </li>
+    ))}
+  </ul>
   <div class="home-actions">
     <a
       class="btn btn-primary"

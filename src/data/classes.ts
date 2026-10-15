@@ -1,6 +1,6 @@
 /**
  * Classes: formats, how to start, and FAQ. Hardcoded on purpose: this page changes rarely, so it
- * is not in Pages CMS (only the main content is). Used by the Classes page and the home timetable.
+ * is not in Pages CMS (only the main content is). Used by the Classes page and the home classes block.
  *
  * Draft for review: the facts (lengths, group sizes), steps and FAQ wording are placeholders based
  * on the old site; JiEun should check them before launch.

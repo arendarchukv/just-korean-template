@@ -2,8 +2,9 @@
   /**
    * Flashcards: one card at a time, show the meaning, "I know it" or "Again".
    * Keeps only the fronts of known cards in this browser (jk:deck:<id>). Stands alone.
-   * Accessibility: the card button keeps its name (aria-expanded shows the state); the meaning is
-   * read out from a live region; focus returns to the card after each answer.
+   * The card turns over in 3D (front: Korean; back: meaning and example); under reduced motion it
+   * simply swaps. Accessibility: the card button keeps its name (aria-expanded shows the state);
+   * the meaning is read out from a live region; focus returns to the card after each answer.
    */
   import { onMount, tick } from 'svelte';
   import { deckKey, readStore, remainingCards, writeStore } from '@/lib/widgets';
@@ -95,6 +96,8 @@
       <span>{fill(labels.position, { n: index + 1, total: queue.length })}</span>
       <span>{fill(labels.knownCount, { k: knownCount })}</span>
     </p>
+    <!-- A real card with two faces that turns over. The front stays the button's name; the back is
+         hidden from screen readers, which hear the meaning from the live region below instead. -->
     <button
       bind:this={cardButton}
       type="button"
@@ -104,16 +107,21 @@
       aria-controls={backId}
       onclick={() => (flipped = !flipped)}
     >
-      <span class="flashcard-front" lang="ko">{card.front}</span>
-      <span class="flashcard-hint" class:sr-only={flipped}>{labels.flipHint}</span>
+      <span class="flashcard-inner">
+        <span class="flashcard-face flashcard-face-front">
+          <span class="flashcard-front" lang="ko">{card.front}</span>
+          <span class="flashcard-hint" class:sr-only={flipped}>{labels.flipHint}</span>
+        </span>
+        <span class="flashcard-face flashcard-face-back" aria-hidden="true">
+          <span class="flashcard-label">{labels.meaning}</span>
+          <span class="flashcard-meaning">{card.back}</span>
+          {#if card.example}<span class="flashcard-example" lang="ko">{card.example}</span>{/if}
+        </span>
+      </span>
     </button>
-    <div id={backId} class="flashcard-back" aria-live="polite">
-      {#if flipped}
-        <span class="sr-only">{labels.meaning}:</span>
-        <span class="flashcard-meaning">{card.back}</span>
-        {#if card.example}<span class="flashcard-example" lang="ko">{card.example}</span>{/if}
-      {/if}
-    </div>
+    <p id={backId} class="sr-only" aria-live="polite">
+      {#if flipped}{`${labels.meaning}: ${card.back}${card.example ? `. ${card.example}` : ''}`}{/if}
+    </p>
     {#if flipped}
       <div class="widget-actions">
         <button type="button" class="btn btn-ghost" onclick={() => answer(false)}

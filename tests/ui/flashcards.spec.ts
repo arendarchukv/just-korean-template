@@ -24,7 +24,9 @@ test('cards flip, count what is known, and offer the rest at the end', async ({ 
   const second = page.getByRole('button', { name: /가지 않아요/ });
   await second.focus();
   await page.keyboard.press('Space');
-  await expect(page.getByText("I don't go (more formal)")).toBeVisible();
+  await expect(
+    page.locator('.flashcard-face-back').getByText("I don't go (more formal)"),
+  ).toBeVisible();
   await page.getByRole('button', { name: 'Again' }).click();
 
   await expect(page.getByRole('status')).toContainText('You know 1 of 2');

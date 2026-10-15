@@ -2,6 +2,7 @@
 /** Practice: links to deck and quiz pages, krdict search, pronunciation practice and lessons. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHead from '@/components/PageHead.astro';
+import Icon, { type IconName } from '@/components/Icon.astro';
 import { getDecks, getPlaylists, getQuizzes } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -16,7 +17,32 @@ const decks = await getDecks();
 const quizzes = await getQuizzes();
 // The pronunciation lessons, once a playlist with the id "pronunciation" is added in code.
 const pronunciation = getPlaylists().find((p) => (p.id as string) === 'pronunciation');
-const level = (l: string) => t(`grammar.level.${l}` as UIKey);
+// Two ways in: the Flashcards and Quizzes studios (each lists every deck or quiz).
+const ENTRIES = [
+  {
+    path: 'flashcards',
+    icon: 'cards',
+    title: 'practice.decks',
+    text: 'practice.decksText',
+    countKey: 'practice.decksCount',
+    count: decks.length,
+  },
+  {
+    path: 'quizzes',
+    icon: 'quiz',
+    title: 'practice.quizzes',
+    text: 'practice.quizzesText',
+    countKey: 'practice.quizzesCount',
+    count: quizzes.length,
+  },
+] as const satisfies readonly {
+  path: string;
+  icon: IconName;
+  title: UIKey;
+  text: UIKey;
+  countKey: UIKey;
+  count: number;
+}[];
 ---
 
 <BaseLayout title={t('page.practice.title')}>
@@ -26,52 +52,22 @@ const level = (l: string) => t(`grammar.level.${l}` as UIKey);
     lead={t('practice.lead')}
   />
 
-  <div class="container-page practice-grid">
-    {decks.length > 0 && (
-      <section class="practice-block" aria-labelledby="decks-title">
-        <h2 id="decks-title" class="page-section-title">
-          {t('practice.decks')}
-        </h2>
-        <ul class="practice-cards">
-          {decks.map((d) => (
-            <li id={`deck-${d.id}`}>
-              <a class="practice-card" href={localizePath(lang, `practice/deck/${d.id}`)}>
-                <span class="practice-card-title">{d.title}</span>
-                <span class="practice-card-meta">
-                  {level(d.level)} · {d.cards.length} {t('lesson.cards')}
-                </span>
-                {d.lessonEntry && (
-                  <span class="practice-card-lesson">{t('widget.fromLesson')}</span>
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
-
-    {quizzes.length > 0 && (
-      <section class="practice-block" aria-labelledby="quizzes-title">
-        <h2 id="quizzes-title" class="page-section-title">
-          {t('practice.quizzes')}
-        </h2>
-        <ul class="practice-cards">
-          {quizzes.map((q) => (
-            <li id={`quiz-${q.id}`}>
-              <a class="practice-card" href={localizePath(lang, `practice/quiz/${q.id}`)}>
-                <span class="practice-card-title">{q.title}</span>
-                <span class="practice-card-meta">
-                  {level(q.level)} · {q.questions.length} {t('lesson.questions')}
-                </span>
-                {q.lessonEntry && (
-                  <span class="practice-card-lesson">{t('widget.fromLesson')}</span>
-                )}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
+  <div class="container-page practice-entries">
+    {ENTRIES.filter((e) => e.count > 0).map((e) => (
+      <a class="practice-entry" href={localizePath(lang, `practice/${e.path}`)}>
+        <span class="tool-icon">
+          <Icon name={e.icon} />
+        </span>
+        <span class="practice-entry-title">{t(e.title)}</span>
+        <span class="practice-entry-text">{t(e.text)}</span>
+        <span class="practice-entry-foot">
+          <span>{t(e.countKey).replace('{n}', String(e.count))}</span>
+          <span class="practice-entry-open" aria-hidden="true">
+            {t('practice.open')} →
+          </span>
+        </span>
+      </a>
+    ))}
   </div>
 
   <div class="container-page practice-grid">

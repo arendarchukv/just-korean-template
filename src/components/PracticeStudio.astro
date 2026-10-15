@@ -1,0 +1,66 @@
+---
+/**
+ * Practice "studio": the list of every deck (or quiz) on the left, the open one on the right.
+ * Choosing another is a plain link to its own page (each keeps its address, lesson links and
+ * progress); view transitions keep the change smooth. On phones the list becomes a scrolling
+ * strip above the card. Separate entries first, then those that come with a lesson.
+ */
+import type { Lang, UIKey } from '@/i18n/ui';
+import { localizePath, useTranslations } from '@/i18n/utils';
+
+type Unit = {
+  id: string;
+  title: string;
+  level: string;
+  count: number;
+  lessonEntry?: { id: string; title: string };
+};
+interface Props {
+  kind: 'deck' | 'quiz';
+  units: Unit[];
+  currentId: string;
+  lang: Lang;
+}
+const { kind, units, currentId, lang } = Astro.props;
+const t = useTranslations(lang);
+const groups = [
+  {
+    title: t(kind === 'deck' ? 'practice.decks' : 'practice.quizzes'),
+    items: units.filter((u) => !u.lessonEntry),
+  },
+  { title: t('practice.fromLessons'), items: units.filter((u) => u.lessonEntry) },
+].filter((g) => g.items.length > 0);
+const unitLabel = (n: number) => `${n} ${t(kind === 'deck' ? 'lesson.cards' : 'lesson.questions')}`;
+---
+
+<div class="container-page studio">
+  <nav
+    class="studio-nav"
+    aria-label={t(kind === 'deck' ? 'practice.chooseDeck' : 'practice.chooseQuiz')}
+  >
+    {groups.map((g) => (
+      <div class="studio-group">
+        <p class="studio-group-title">{g.title}</p>
+        <ul>
+          {g.items.map((u) => (
+            <li>
+              <a
+                class="studio-item"
+                href={localizePath(lang, `practice/${kind}/${u.id}`)}
+                aria-current={u.id === currentId ? 'page' : undefined}
+              >
+                <span class="studio-item-title">{u.title}</span>
+                <span class="studio-item-meta">
+                  {t(`grammar.level.${u.level}` as UIKey)} · {unitLabel(u.count)}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </nav>
+  <div class="studio-main">
+    <slot />
+  </div>
+</div>

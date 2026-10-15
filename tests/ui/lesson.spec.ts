@@ -67,8 +67,10 @@ test('a lesson with its own words links to their flashcards page, named after th
   await page.getByRole('link', { name: /flashcards/i }).click();
   await expect(page).toHaveURL(/\/practice\/deck\/negative-form\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Negative Form');
-  await expect(page.getByRole('link', { name: /Negative Form/ })).toHaveAttribute(
-    'href',
-    '/lessons/negative-form/',
-  );
+  await expect(
+    page.getByRole('link', {
+      name: 'Beginner Korean Intensive Course! 4. Negative Form',
+      exact: true,
+    }),
+  ).toHaveAttribute('href', '/lessons/negative-form/');
 });

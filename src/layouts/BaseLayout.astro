@@ -1,8 +1,8 @@
 ---
 import '@fontsource-variable/outfit';
-// Cyrillic (Ukrainian): Outfit has no Cyrillic. Each subset loads only for the glyphs it covers, so
-// Latin pages never download it (Outfit covers Latin first in the font stack).
-import '@fontsource-variable/manrope';
+// Cyrillic (Ukrainian): Outfit has no Cyrillic. Only Manrope's Cyrillic file, declared inline below
+// with its unicode-range, so Latin and Korean pages never download it and the shared CSS stays small.
+import manropeCyrillicUrl from '@fontsource-variable/manrope/files/manrope-cyrillic-wght-normal.woff2?url';
 import outfitLatinUrl from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url';
 import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
 // Korean serif (명조): only the slices holding the display glyphs (npm run fonts).
@@ -59,6 +59,10 @@ const ogImage = new URL('/og-default.png', site).href;
     <ThemeScript />
     <!-- Preload the Latin UI font so text does not render in a fallback and then shift. -->
     <link rel="preload" href={outfitLatinUrl} as="font" type="font/woff2" crossorigin />
+    <style
+      is:inline
+      set:html={`@font-face{font-family:'Manrope Variable';font-style:normal;font-display:swap;font-weight:200 800;src:url(${manropeCyrillicUrl}) format('woff2-variations');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}`}
+    ></style>
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />

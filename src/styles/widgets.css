@@ -138,6 +138,77 @@
   .flashcards .widget-actions {
     justify-content: center;
   }
+  /* Top bar: position and counts, a progress bar, shuffle and start over. */
+  .flashcards-bar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.5rem 1rem;
+  }
+  .flashcards-bar .widget-progress {
+    grid-column: 1 / -1;
+  }
+  .flashcards-counts {
+    display: inline-flex;
+    gap: 0.9rem;
+  }
+  .count-known {
+    font-weight: 600;
+    color: var(--color-teal);
+  }
+  .flashcards-bar progress {
+    width: 100%;
+    height: 6px;
+    border: 0;
+    border-radius: 999px;
+    overflow: hidden;
+    appearance: none;
+    background: var(--color-border);
+  }
+  .flashcards-bar progress::-webkit-progress-bar {
+    background: var(--color-border);
+  }
+  .flashcards-bar progress::-webkit-progress-value {
+    border-radius: 999px;
+    background: var(--color-brand);
+  }
+  .flashcards-bar progress::-moz-progress-bar {
+    border-radius: 999px;
+    background: var(--color-brand);
+  }
+  .flashcards-tools {
+    display: flex;
+    gap: 0.4rem;
+  }
+  .btn-small {
+    min-height: 36px;
+    padding-inline: 0.8rem;
+    font-size: var(--text-sm);
+  }
+  .flashcards .widget-actions .btn {
+    min-width: 9rem;
+  }
+  /* Key hints: only where there is a keyboard to press. */
+  .flashcards-keys {
+    margin: -0.5rem 0 0;
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+  .flashcards-keys kbd {
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--color-border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: var(--text-xs);
+    color: var(--color-text);
+  }
+  @media (hover: none) {
+    .flashcards-keys {
+      display: none;
+    }
+  }
   /* Reduced motion: no turning, the faces simply swap. */
   @media (prefers-reduced-motion: reduce) {
     .flashcard-inner {

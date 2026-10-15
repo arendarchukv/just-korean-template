@@ -205,4 +205,13 @@ export const es: Dictionary = {
   'page.about.title': 'Sobre mí',
   'notFound.title': 'Página no encontrada',
   'notFound.body': 'La página que buscas no existe o se ha movido.',
+  'practice.searchDecks': 'Buscar mazos o palabras',
+  'practice.searchQuizzes': 'Buscar cuestionarios',
+  'practice.noMatch': 'Sin resultados.',
+  'deck.shuffle': 'Mezclar',
+  'deck.learningCount': '{k} por aprender',
+  'deck.keys': 'Teclas:',
+  'deck.keyFlip': 'girar',
+  'deck.keySpace': 'Espacio',
+  'practice.topics': 'Por tema',
 };

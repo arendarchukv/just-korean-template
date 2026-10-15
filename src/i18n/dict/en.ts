@@ -217,6 +217,15 @@ export const en = {
 
   'notFound.title': 'Page not found',
   'notFound.body': 'The page you are looking for does not exist or has moved.',
+  'practice.searchDecks': 'Search decks or words',
+  'practice.searchQuizzes': 'Search quizzes',
+  'practice.noMatch': 'Nothing found.',
+  'deck.shuffle': 'Shuffle',
+  'deck.learningCount': '{k} to learn',
+  'deck.keys': 'Keys:',
+  'deck.keyFlip': 'flip',
+  'deck.keySpace': 'Space',
+  'practice.topics': 'By topic',
 } as const;
 
 export type UIKey = keyof typeof en;

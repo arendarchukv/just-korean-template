@@ -3,7 +3,10 @@
  * Practice "studio": the list of every deck (or quiz) on the left, the open one on the right.
  * Choosing another is a plain link to its own page (each keeps its address, lesson links and
  * progress); view transitions keep the change smooth. On phones the list sits below the card.
- * Separate entries first, then those that come with a lesson.
+ *
+ * The list scales with the number of decks: it scrolls inside its column, a search finds a deck by
+ * its title or by a word inside, and a segment shows the separate entries or those from lessons
+ * (opening on the open one's). Without JS: the full list, both groups, no search.
  */
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
@@ -13,6 +16,8 @@ type Unit = {
   title: string;
   level: string;
   count: number;
+  /** Text the search looks in: title and the words or questions inside. */
+  search: string;
   lessonEntry?: { id: string; title: string };
 };
 interface Props {
@@ -23,44 +28,130 @@ interface Props {
 }
 const { kind, units, currentId, lang } = Astro.props;
 const t = useTranslations(lang);
+const ownTitle = t(kind === 'deck' ? 'practice.decks' : 'practice.quizzes');
 const groups = [
-  {
-    title: t(kind === 'deck' ? 'practice.decks' : 'practice.quizzes'),
-    items: units.filter((u) => !u.lessonEntry),
-  },
-  { title: t('practice.fromLessons'), items: units.filter((u) => u.lessonEntry) },
+  { id: 'own', title: t('practice.topics'), items: units.filter((u) => !u.lessonEntry) },
+  { id: 'lessons', title: t('practice.fromLessons'), items: units.filter((u) => u.lessonEntry) },
 ].filter((g) => g.items.length > 0);
+const currentGroup = units.find((u) => u.id === currentId)?.lessonEntry ? 'lessons' : 'own';
 const unitLabel = (n: number) => `${n} ${t(kind === 'deck' ? 'lesson.cards' : 'lesson.questions')}`;
+const searchLabel = t(kind === 'deck' ? 'practice.searchDecks' : 'practice.searchQuizzes');
 ---
 
 <div class="container-page studio">
   <nav
     class="studio-nav"
+    data-studio-nav
     aria-label={t(kind === 'deck' ? 'practice.chooseDeck' : 'practice.chooseQuiz')}
   >
-    {groups.map((g) => (
-      <div class="studio-group">
-        <p class="studio-group-title">{g.title}</p>
-        <ul>
-          {g.items.map((u) => (
-            <li>
-              <a
-                class="studio-item"
-                href={localizePath(lang, `practice/${kind}/${u.id}`)}
-                aria-current={u.id === currentId ? 'page' : undefined}
-              >
-                <span class="studio-item-title">{u.title}</span>
-                <span class="studio-item-meta">
-                  {t(`grammar.level.${u.level}` as UIKey)} · {unitLabel(u.count)}
-                </span>
-              </a>
-            </li>
+    <p class="studio-nav-title">
+      {ownTitle}
+      <span class="studio-count">{units.length}</span>
+    </p>
+    <div class="studio-tools" data-studio-tools hidden>
+      <label for="studio-q" class="sr-only">
+        {searchLabel}
+      </label>
+      <input
+        id="studio-q"
+        class="field"
+        type="search"
+        placeholder={searchLabel}
+        autocomplete="off"
+        data-studio-search
+      />
+      {groups.length > 1 && (
+        <div class="studio-segments" role="radiogroup" aria-label={ownTitle}>
+          {groups.map((g) => (
+            <label class="studio-segment">
+              <input
+                type="radio"
+                name="studio-segment"
+                value={g.id}
+                checked={g.id === currentGroup}
+                data-studio-segment
+              />
+              <span>
+                {g.title} <span class="studio-segment-count">{g.items.length}</span>
+              </span>
+            </label>
           ))}
-        </ul>
-      </div>
-    ))}
+        </div>
+      )}
+    </div>
+    <div class="studio-list">
+      {groups.map((g) => (
+        <div class="studio-group" data-studio-group={g.id}>
+          <p class="studio-group-title">{g.title}</p>
+          <ul>
+            {g.items.map((u) => (
+              <li data-search={u.search.toLowerCase()}>
+                <a
+                  class="studio-item"
+                  href={localizePath(lang, `practice/${kind}/${u.id}`)}
+                  aria-current={u.id === currentId ? 'page' : undefined}
+                >
+                  <span class="studio-item-title">{u.title}</span>
+                  <span class="studio-item-meta">
+                    <span>{t(`grammar.level.${u.level}` as UIKey)}</span>
+                    <span class="studio-badge">{unitLabel(u.count)}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      <p class="studio-none" role="status" data-studio-none data-text={t('practice.noMatch')}></p>
+    </div>
   </nav>
   <div class="studio-main">
     <slot />
   </div>
 </div>
+
+<script is:inline>
+  (() => {
+    const nav = document.querySelector('[data-studio-nav]');
+    if (!nav) return;
+    const tools = nav.querySelector('[data-studio-tools]');
+    const search = nav.querySelector('[data-studio-search]');
+    const segments = [...nav.querySelectorAll('[data-studio-segment]')];
+    const none = nav.querySelector('[data-studio-none]');
+    tools.hidden = false;
+    nav.classList.add('is-enhanced');
+    const update = () => {
+      const q = search.value.trim().toLowerCase();
+      const segment = segments.find((s) => s.checked)?.value;
+      let shown = 0;
+      for (const group of nav.querySelectorAll('[data-studio-group]')) {
+        // A search looks through every group; otherwise only the chosen segment shows.
+        const inSegment = q || !segment || group.dataset.studioGroup === segment;
+        let groupShown = 0;
+        for (const item of group.querySelectorAll('[data-search]')) {
+          const match = inSegment && (!q || item.dataset.search.includes(q));
+          item.hidden = !match;
+          if (match) groupShown += 1;
+        }
+        group.hidden = groupShown === 0;
+        shown += groupShown;
+      }
+      none.textContent = shown === 0 ? none.dataset.text : '';
+      // Group names repeat the segment; they help only while a search shows both groups.
+      nav.classList.toggle('is-searching', Boolean(q));
+    };
+    search.addEventListener('input', (event) => {
+      if (!event.isComposing) update();
+    });
+    search.addEventListener('compositionend', update);
+    for (const s of segments) s.addEventListener('change', update);
+    update();
+    // Keep the open deck in view inside the list (only the list scrolls, never the page).
+    const list = nav.querySelector('.studio-list');
+    const current = nav.querySelector('[aria-current="page"]');
+    if (list && current && list.scrollHeight > list.clientHeight) {
+      const top = current.offsetTop - list.offsetTop;
+      if (top + current.offsetHeight > list.clientHeight) list.scrollTop = top - 8;
+    }
+  })();
+</script>

@@ -19,8 +19,8 @@ Indonesian and Ukrainian now (machine-drafted, marked for review), next to Engli
   `translations.test.ts` requires every language item for item.
 - **Dates:** `dateFormat(lang, options)` in `src/i18n/utils.ts`, Intl tag from the list.
 - **Fonts by writing system:** Outfit (Latin, also Spanish and Indonesian), Pretendard (Hangul),
-  Manrope (Cyrillic; `@fontsource-variable/manrope`, after Outfit in the stack, so only Cyrillic
-  glyphs load it).
+  Manrope (Cyrillic; only its Cyrillic file from `@fontsource-variable/manrope`, declared inline
+  in `BaseLayout` with its unicode-range, after Outfit in the stack, so only Cyrillic glyphs load it).
 - **Pages CMS content stays single-language** (English with Korean examples).
 
 ## Adding a language later

@@ -22,11 +22,12 @@ const prefixOf = (page) => LOCALE_DIRS.find((d) => d.lang === langOf(page)).pref
 /** The same page in every language, e.g. inAll('about/index.html'). */
 const inAll = (path) => LOCALE_DIRS.map(({ dir }) => `${dir}${path}`);
 
-// --- Styleguide: English-only, unindexed, not in the sitemap ---
-{
-  const doc = read('styleguide/index.html');
-  if (/hreflang=/.test(doc)) problems.push('styleguide emits hreflang links');
-  if (!/name="robots" content="noindex"/.test(doc)) problems.push('styleguide missing noindex');
+// --- Styleguide and site guide: English-only, unindexed, not in the sitemap ---
+for (const page of ['styleguide', 'guide']) {
+  const doc = read(`${page}/index.html`);
+  if (/hreflang=/.test(doc)) problems.push(`${page} emits hreflang links`);
+  if (!/name="robots" content="noindex"/.test(doc)) problems.push(`${page} missing noindex`);
+  if (read('sitemap-0.xml').includes(`/${page}/`)) problems.push(`${page} listed in sitemap`);
 }
 
 // --- Design system samples: clean shapes, accessible samples ---
@@ -69,8 +70,6 @@ if (anchored.length === 0) problems.push('long-form headings have no anchor link
 for (const [, id, href] of anchored) {
   if (id !== href) problems.push(`heading #${id} anchors to #${href}`);
 }
-
-if (read('sitemap-0.xml').includes('/styleguide')) problems.push('styleguide listed in sitemap');
 
 // --- Interactive cards must be links (hover feedback promises a click) ---
 for (const page of [...inAll('index.html'), 'styleguide/index.html']) {

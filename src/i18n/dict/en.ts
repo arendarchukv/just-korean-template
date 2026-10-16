@@ -29,6 +29,7 @@ export const en = {
   'footer.instagram': 'Instagram',
   'footer.contact': 'Contact',
   'footer.kofi': 'Support on Ko-fi',
+  'footer.guide': 'Site guide',
   'footer.rights': 'All rights reserved.',
 
   'home.bookClass': 'Book a class',

@@ -42,6 +42,12 @@ const year = new Date().getFullYear();
             {t('footer.about')}
           </a>
         </li>
+        {/* DEMO ONLY: the site guide (English-only, not translated). */}
+        <li>
+          <a href="/guide/" class="nav-link text-sm">
+            {t('footer.guide')}
+          </a>
+        </li>
         {LINKS.filter(({ href }) => href).map(({ href, label }) => {
           const external = href.startsWith('http');
           return (

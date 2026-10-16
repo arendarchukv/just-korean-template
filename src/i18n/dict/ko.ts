@@ -32,6 +32,7 @@ export const ko: Dictionary = {
   'footer.instagram': '인스타그램',
   'footer.contact': '문의',
   'footer.kofi': 'Ko-fi로 후원하기',
+  'footer.guide': '사이트 안내',
   'footer.rights': '모든 권리 보유.', // TODO(ko-review)
 
   'home.bookClass': '수업 예약',

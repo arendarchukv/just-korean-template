@@ -26,6 +26,7 @@ export const id: Dictionary = {
   'footer.instagram': 'Instagram',
   'footer.contact': 'Kontak',
   'footer.kofi': 'Dukung di Ko-fi',
+  'footer.guide': 'Panduan situs',
   'footer.rights': 'Hak cipta dilindungi.',
   'home.bookClass': 'Pesan kelas',
   'home.watchLessons': 'Tonton pelajaran',

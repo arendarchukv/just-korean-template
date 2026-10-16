@@ -1,7 +1,8 @@
 ---
 /**
  * Developer styleguide for the "Paper & cut-outs" design system.
- * English-only sample copy: exempt from the i18n dictionary rule. Not linked, noindex, not in the sitemap.
+ * English-only sample copy: exempt from the i18n dictionary rule. Second tab of the site guide
+ * (linked from the footer), noindex, not in the sitemap.
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import ColorsSection from '@/components/styleguide/ColorsSection.astro';
@@ -10,6 +11,7 @@ import LongformSection from '@/components/styleguide/LongformSection.astro';
 import PatternsSection from '@/components/styleguide/PatternsSection.astro';
 import ShapesSection from '@/components/styleguide/ShapesSection.astro';
 import TypeSection from '@/components/styleguide/TypeSection.astro';
+import GuideTabs from '@/components/guide/GuideTabs.astro';
 
 const NAV = [
   ['colors', 'Color'],
@@ -28,7 +30,8 @@ const NAV = [
     <p class="mt-4 max-w-2xl text-lg text-muted">
       Calm academic precision with one hand-made layer from the channel intro.
     </p>
-    <nav aria-label="Styleguide sections" class="mt-8 flex flex-wrap gap-x-5 gap-y-2">
+    <GuideTabs current="design" />
+    <nav aria-label="Styleguide sections" class="mt-6 flex flex-wrap gap-x-5 gap-y-2">
       {NAV.map(([id, label]) => (
         <a href={`#${id}`} class="link">
           {label}

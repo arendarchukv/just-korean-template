@@ -1,0 +1,22 @@
+---
+/**
+ * DEMO ONLY — the two tabs of the site guide (what she can add · design system). Plain links, no
+ * JS. English-only, like the styleguide. Delete with src/pages/guide.astro and the footer link.
+ */
+interface Props {
+  current: 'content' | 'design';
+}
+const { current } = Astro.props;
+const TABS = [
+  { id: 'content', label: 'What you can add', href: '/guide/' },
+  { id: 'design', label: 'Design system', href: '/styleguide/' },
+] as const;
+---
+
+<nav aria-label="Site guide" class="mat-tabs guide-tabs">
+  {TABS.map((tab) => (
+    <a class="mat-tab" href={tab.href} aria-current={tab.id === current ? 'page' : undefined}>
+      {tab.label}
+    </a>
+  ))}
+</nav>

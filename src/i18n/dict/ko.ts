@@ -70,9 +70,7 @@ export const ko: Dictionary = {
   'lessons.filterPlaylist': '재생목록',
   'lessons.filterLevel': '수준',
   'lessons.search': '강의나 문법 검색',
-  'lessons.showing': '{total}개 중 {shown}개',
   'lessons.noResults': '맞는 강의가 없어요. 다른 수준이나 단어로 찾아보세요.',
-  'lessons.more': '더 보기',
   'lessons.number': '{n}강',
   'lessons.count': '강의 {total}개',
   'lessons.read': '읽기', // TODO(ko-review)
@@ -231,9 +229,9 @@ export const ko: Dictionary = {
   'deck.keySpace': 'Space', // TODO(ko-review)
   'practice.topics': '주제별', // TODO(ko-review)
   'deck.korean': '한국어', // TODO(ko-review)
-  'materials.pages': '페이지', // TODO(ko-review)
-  'materials.prev': '이전 페이지', // TODO(ko-review)
-  'materials.next': '다음 페이지', // TODO(ko-review)
-  'materials.page': '{n}페이지', // TODO(ko-review)
-  'materials.showing': '전체 {total}개 중 {from}–{to}', // TODO(ko-review)
+  'pager.pages': '페이지', // TODO(ko-review)
+  'pager.prev': '이전 페이지', // TODO(ko-review)
+  'pager.next': '다음 페이지', // TODO(ko-review)
+  'pager.page': '{n}페이지', // TODO(ko-review)
+  'pager.showing': '전체 {total}개 중 {from}–{to}', // TODO(ko-review)
 };

@@ -47,10 +47,9 @@
     max-width: 60ch;
     color: var(--color-muted);
   }
-  /* Lessons library: playlist chips, then level and search, one grid with "Show more". */
+  /* Lessons library: playlist chips, then level and search, one grid with the Materials pager. */
   .lessons-tools[hidden],
   .lessons-about[hidden],
-  .lessons-more[hidden],
   .lessons-grid li[hidden] {
     display: none;
   }
@@ -114,16 +113,14 @@
     margin: 0;
     color: var(--color-muted);
   }
+  .lessons .mat-pager {
+    margin-top: 2rem;
+  }
   .lessons-status {
     min-height: 1.25em;
     margin: 1.25rem 0 1rem;
     font-size: var(--text-sm);
     color: var(--color-muted);
-  }
-  .lessons-more {
-    display: flex;
-    justify-content: center;
-    margin-top: 2.5rem;
   }
 
   /* Site guide (demo): one ruled row per CMS form, name and pages on the left. */

@@ -46,21 +46,34 @@ test('a lesson links back to its playlist, opened on the Lessons page', async ({
   await expect(titles(page)).toHaveCount(3);
 });
 
-test('"Show more" adds the next cards and moves focus to the first new one', async ({ page }) => {
+test('the pager splits a long list, 24 a page, and restarts on page 1 after a filter', async ({
+  page,
+}) => {
   await page.route('**/lessons/', async (route) => {
     const response = await route.fetch();
     const body = (await response.text()).replace('data-page-size="24"', 'data-page-size="4"');
     await route.fulfill({ response, body });
   });
   await page.goto('/lessons/');
+  const pager = page.getByRole('navigation', { name: 'Pages' });
   await expect(titles(page)).toHaveCount(4);
-  await expect(page.getByRole('status')).toHaveText('4 of 6 lessons');
-  await page.getByRole('button', { name: 'Show more' }).click();
-  await expect(titles(page)).toHaveCount(6);
-  await expect(page.getByRole('button', { name: 'Show more' })).toBeHidden();
-  await expect(page.locator('[data-lessons-grid] li:visible a').nth(4)).toBeFocused();
-  // A new filter starts again from the first cards.
+  await expect(pager.getByText('Showing 1–4 of 6')).toBeVisible();
+  await pager.getByRole('button', { name: 'Page 2' }).click();
+  await expect(titles(page)).toHaveCount(2);
+  await expect(pager.getByText('Showing 5–6 of 6')).toBeVisible();
+  await expect(pager.getByRole('button', { name: 'Next page' })).toBeDisabled();
+  // A new filter starts again from page 1; the pager hides once everything fits.
   await page.getByRole('combobox', { name: 'Level' }).selectOption('beginner');
+  await expect(titles(page)).toHaveCount(3);
+  await expect(pager).toBeHidden();
   await page.getByRole('combobox', { name: 'Level' }).selectOption('');
-  await expect(titles(page)).toHaveCount(4);
+  await expect(pager.getByRole('button', { name: 'Page 1' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+});
+
+test('the pager is hidden while all lessons fit on one page', async ({ page }) => {
+  await page.goto('/lessons/');
+  await expect(page.getByRole('navigation', { name: 'Pages' })).toBeHidden();
 });

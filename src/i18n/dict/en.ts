@@ -70,9 +70,7 @@ export const en = {
   'lessons.filterPlaylist': 'Playlist',
   'lessons.filterLevel': 'Level',
   'lessons.search': 'Search lessons or patterns',
-  'lessons.showing': '{shown} of {total} lessons',
   'lessons.noResults': 'No lessons match. Try another level or word.',
-  'lessons.more': 'Show more',
   'lessons.number': 'Lesson {n}',
   'lessons.count': '{total} lessons',
   'lessons.read': 'Read',
@@ -233,11 +231,11 @@ export const en = {
   'deck.keySpace': 'Space',
   'practice.topics': 'By topic',
   'deck.korean': 'Korean',
-  'materials.pages': 'Pages',
-  'materials.prev': 'Previous page',
-  'materials.next': 'Next page',
-  'materials.page': 'Page {n}',
-  'materials.showing': 'Showing {from}–{to} of {total}',
+  'pager.pages': 'Pages',
+  'pager.prev': 'Previous page',
+  'pager.next': 'Next page',
+  'pager.page': 'Page {n}',
+  'pager.showing': 'Showing {from}–{to} of {total}',
 } as const;
 
 export type UIKey = keyof typeof en;

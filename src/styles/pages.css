@@ -366,6 +366,7 @@
     gap: 0.25rem 1.5rem;
     border-bottom: 1px solid var(--color-border);
   }
+  .mat-pager[hidden],
   .mat-tabs[hidden],
   .mat-tools[hidden],
   .mat-panel[hidden],
@@ -499,6 +500,54 @@
   }
   .mat-file .file-kind {
     min-width: 0;
+  }
+  /* Pager under the table: count on the left, page buttons on the right. */
+  .mat-pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    margin-top: 1rem;
+  }
+  .mat-pager-status {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted);
+  }
+  .mat-pager-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .mat-page {
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    padding-inline: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-control);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .mat-page:hover:not(:disabled):not([aria-current]) {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+  }
+  .mat-page[aria-current='page'] {
+    border-color: var(--color-brand-strong);
+    background: var(--color-brand-strong);
+    color: var(--color-on-brand);
+  }
+  .mat-page:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  .mat-gap {
+    padding-inline: 0.25rem;
+    color: var(--color-muted);
   }
   .mat-date {
     white-space: nowrap;

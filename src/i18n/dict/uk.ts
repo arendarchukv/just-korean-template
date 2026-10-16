@@ -208,4 +208,9 @@ export const uk: Dictionary = {
   'deck.keySpace': 'Пробіл',
   'practice.topics': 'Тематичні',
   'deck.korean': 'Корейською',
+  'materials.pages': 'Сторінки',
+  'materials.prev': 'Попередня сторінка',
+  'materials.next': 'Наступна сторінка',
+  'materials.page': 'Сторінка {n}',
+  'materials.showing': 'Показано {from}–{to} з {total}',
 };

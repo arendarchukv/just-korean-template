@@ -215,4 +215,9 @@ export const es: Dictionary = {
   'deck.keySpace': 'Espacio',
   'practice.topics': 'Por tema',
   'deck.korean': 'Coreano',
+  'materials.pages': 'Páginas',
+  'materials.prev': 'Página anterior',
+  'materials.next': 'Página siguiente',
+  'materials.page': 'Página {n}',
+  'materials.showing': 'Mostrando {from}–{to} de {total}',
 };

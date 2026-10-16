@@ -34,10 +34,10 @@ const dates = dateFormat(lang);
     class="container-page materials"
     data-materials
     data-page-size="20"
-    data-label-prev={t('materials.prev')}
-    data-label-next={t('materials.next')}
-    data-label-page={t('materials.page')}
-    data-label-showing={t('materials.showing')}
+    data-label-prev={t('pager.prev')}
+    data-label-next={t('pager.next')}
+    data-label-page={t('pager.page')}
+    data-label-showing={t('pager.showing')}
   >
     <div class="mat-tabs" role="tablist" aria-label={t('page.materials.title')} hidden>
       {tabs.map((tab, i) => (
@@ -138,7 +138,7 @@ const dates = dateFormat(lang);
             ))}
           </tbody>
         </table>
-        <nav class="mat-pager" data-mat-pager aria-label={t('materials.pages')} hidden>
+        <nav class="mat-pager" data-mat-pager aria-label={t('pager.pages')} hidden>
           <p class="mat-pager-status" data-mat-showing></p>
           <div class="mat-pager-buttons" data-mat-pages></div>
         </nav>

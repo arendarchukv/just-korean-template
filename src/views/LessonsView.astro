@@ -2,7 +2,7 @@
 /**
  * Lessons library: every lesson as the same card in one grid, newest first. Above it a playlist
  * choice (All · each playlist), a level filter and a search over titles, summaries and grammar
- * patterns; 24 cards show, then "Show more". A course, once chosen, reads oldest first; its cards
+ * patterns; 24 cards a page, with the Materials pager. A course, once chosen, reads oldest first; its cards
  * carry "Lesson 3" everywhere. `#<playlist>` in the address opens that playlist (the lesson page
  * links there). Without JS: the full grid, no controls.
  */
@@ -42,8 +42,11 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
     class="container-page lessons"
     data-lessons
     data-page-size="24"
-    data-label-showing={t('lessons.showing')}
     data-label-count={t('lessons.count')}
+    data-label-prev={t('pager.prev')}
+    data-label-next={t('pager.next')}
+    data-label-page={t('pager.page')}
+    data-label-showing={t('pager.showing')}
   >
     <div class="lessons-tools" data-lessons-tools hidden>
       <div class="lesson-chips" role="radiogroup" aria-label={t('lessons.filterPlaylist')}>
@@ -122,11 +125,11 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
       ))}
     </ul>
 
-    <div class="lessons-more" data-lessons-more hidden>
-      <button type="button" class="btn btn-ghost">
-        {t('lessons.more')}
-      </button>
-    </div>
+    {/* The same pager as Materials (its styles). */}
+    <nav class="mat-pager" data-lessons-pager aria-label={t('pager.pages')} hidden>
+      <p class="mat-pager-status" data-pager-showing></p>
+      <div class="mat-pager-buttons" data-pager-pages></div>
+    </nav>
   </div>
 
   <script is:inline>
@@ -139,13 +142,36 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
       const level = root.querySelector('[data-lessons-level]');
       const search = root.querySelector('[data-lessons-search]');
       const status = root.querySelector('[data-lessons-status]');
-      const more = root.querySelector('[data-lessons-more]');
+      const pager = root.querySelector('[data-lessons-pager]');
       const size = Number(root.dataset.pageSize) || 24;
-      let shown = size;
+      let page = 1;
       root.querySelector('[data-lessons-tools]').hidden = false;
+      const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, k) => String(values[k]));
+      const button = (label, onClick, { current, disabled, text } = {}) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'mat-page';
+        b.textContent = text ?? label;
+        b.setAttribute('aria-label', label);
+        if (current) b.setAttribute('aria-current', 'page');
+        b.disabled = Boolean(disabled);
+        b.addEventListener('click', onClick);
+        return b;
+      };
+      /** Page numbers to show: all when few, else first, last and the ones around the current. */
+      const pageList = (count) => {
+        if (count <= 7) return Array.from({ length: count }, (_, i) => i + 1);
+        const keep = new Set([1, count, page - 1, page, page + 1]);
+        const list = [];
+        for (let n = 1; n <= count; n++) {
+          if (keep.has(n)) list.push(n);
+          else if (list.at(-1) !== '…') list.push('…');
+        }
+        return list;
+      };
 
-      const update = (reset = true) => {
-        if (reset) shown = size;
+      const update = (keepPage = false) => {
+        if (!keepPage) page = 1;
         const chosen = radios.find((r) => r.checked);
         const playlist = chosen?.value ?? '';
         const lvl = level.value;
@@ -167,15 +193,44 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
             (!lvl || li.dataset.level === lvl) &&
             (!q || li.dataset.search.includes(q)),
         );
+        const pages = Math.max(1, Math.ceil(matches.length / size));
+        page = Math.min(page, pages);
+        const from = (page - 1) * size;
         for (const li of items) li.hidden = true;
-        matches.slice(0, shown).forEach((li) => (li.hidden = false));
-        more.hidden = matches.length <= shown;
+        matches.slice(from, from + size).forEach((li) => (li.hidden = false));
         status.textContent =
           matches.length === 0
             ? status.dataset.none
-            : (matches.length > shown ? root.dataset.labelShowing : root.dataset.labelCount)
-                .replace('{shown}', String(shown))
-                .replace('{total}', String(matches.length));
+            : fill(root.dataset.labelCount, { total: matches.length });
+
+        pager.hidden = pages <= 1;
+        if (pages <= 1) return;
+        pager.querySelector('[data-pager-showing]').textContent = fill(root.dataset.labelShowing, {
+          from: from + 1,
+          to: Math.min(from + size, matches.length),
+          total: matches.length,
+        });
+        const go = (n) => () => {
+          page = n;
+          update(true);
+          // Back to the top of the grid when it has scrolled away.
+          if (grid.getBoundingClientRect().top < 0) status.scrollIntoView({ block: 'start' });
+        };
+        pager.querySelector('[data-pager-pages]').replaceChildren(
+          button(root.dataset.labelPrev, go(page - 1), { disabled: page === 1, text: '‹' }),
+          ...pageList(pages).map((n) =>
+            n === '…'
+              ? Object.assign(document.createElement('span'), {
+                  className: 'mat-gap',
+                  textContent: '…',
+                })
+              : button(fill(root.dataset.labelPage, { n }), go(n), {
+                  current: n === page,
+                  text: String(n),
+                }),
+          ),
+          button(root.dataset.labelNext, go(page + 1), { disabled: page === pages, text: '›' }),
+        );
       };
 
       for (const r of radios) {
@@ -189,19 +244,11 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
         if (!event.isComposing) update();
       });
       search.addEventListener('compositionend', () => update());
-      more.querySelector('button').addEventListener('click', () => {
-        const visible = () => [...grid.children].filter((li) => !li.hidden);
-        const first = visible().length;
-        shown += size;
-        update(false);
-        // Move focus to the first new card so keyboard users continue from there.
-        visible()[first]?.querySelector('a')?.focus();
-      });
       // #crash-course opens that playlist, e.g. from a lesson page.
       const fromHash = radios.find((r) => r.value && `#${r.value}` === location.hash);
       if (fromHash) fromHash.checked = true;
       update();
-      window.addEventListener('pageshow', () => update(false));
+      window.addEventListener('pageshow', () => update(true));
     })();
   </script>
 </BaseLayout>

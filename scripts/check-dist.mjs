@@ -401,7 +401,7 @@ for (const path of ['lessons', 'grammar', 'practice']) {
   }
 }
 
-// --- Lessons library: every lesson linked, a course as a numbered list, in both languages ---
+// --- Lessons library: every lesson linked and a course to choose, in every language ---
 for (const [page, prefix] of LOCALE_DIRS.map(({ dir, prefix }) => [
   `${dir}lessons/index.html`,
   prefix,
@@ -412,9 +412,7 @@ for (const [page, prefix] of LOCALE_DIRS.map(({ dir, prefix }) => [
     if (!html.includes(`href="${prefix}/lessons/${id}/"`))
       problems.push(`${page}: no link to ${id}`);
   }
-  if (!/<ol[^>]*class="[^"]*course-list/.test(html)) {
-    problems.push(`${page}: course is not a numbered list`);
-  }
+  if (!/<input[^>]*data-course/.test(html)) problems.push(`${page}: no course to choose`);
 }
 
 /** Internal links inside <main> that do not lead to a built page. */

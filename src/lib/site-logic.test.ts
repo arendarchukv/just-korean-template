@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   grammarTags,
-  groupByPlaylist,
   krdictUrl,
   materialTabs,
   neighbours,
@@ -33,26 +32,6 @@ describe('sortInPlaylist', () => {
   it('orders a library newest first', () => {
     const list = [lesson('old', '2021-01-01'), lesson('new', '2026-01-01')];
     expect(sortInPlaylist(list, 'library').map((l) => l.id)).toEqual(['new', 'old']);
-  });
-});
-
-describe('groupByPlaylist', () => {
-  const playlists = [
-    { id: 'crash', title: 'Crash', kind: 'course' as const },
-    { id: 'grammar', title: 'Grammar', kind: 'library' as const },
-    { id: 'empty', title: 'Empty', kind: 'library' as const },
-  ];
-  it('keeps the playlist order, drops empty ones, puts lessons without a playlist last', () => {
-    const groups = groupByPlaylist(
-      [
-        lesson('g1', '2026-01-01', { playlist: 'grammar' }),
-        lesson('c1', '2022-01-01', { playlist: 'crash' }),
-        lesson('loose', '2026-02-01'),
-      ],
-      playlists,
-    );
-    expect(groups.map((g) => g.playlist?.id ?? 'other')).toEqual(['crash', 'grammar', 'other']);
-    expect(groups.at(-1)!.lessons.map((l) => l.id)).toEqual(['loose']);
   });
 });
 

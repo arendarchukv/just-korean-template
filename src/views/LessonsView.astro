@@ -1,22 +1,34 @@
 ---
-/** Lessons library: playlists in code order; a course as a numbered table of contents, others as a grid. */
+/**
+ * Lessons library: every lesson as the same card in one grid, newest first. Above it a playlist
+ * choice (All · each playlist), a level filter and a search over titles, summaries and grammar
+ * patterns; 24 cards show, then "Show more". A course, once chosen, reads oldest first; its cards
+ * carry "Lesson 3" everywhere. `#<playlist>` in the address opens that playlist (the lesson page
+ * links there). Without JS: the full grid, no controls.
+ */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import LessonCard from '@/components/LessonCard.astro';
 import PageHead from '@/components/PageHead.astro';
-import SectionHead from '@/components/SectionHead.astro';
 import { getLessons, getPlaylists } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { playlistText } from '@/data/playlists';
-import { localizePath, useTranslations } from '@/i18n/utils';
-import { groupByPlaylist } from '@/lib/site-logic';
+import { useTranslations } from '@/i18n/utils';
+import { sortInPlaylist } from '@/lib/site-logic';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const groups = groupByPlaylist(await getLessons(), getPlaylists());
-const href = (id: string) => localizePath(lang, `lessons/${id}`);
+const lessons = sortInPlaylist(await getLessons(), 'library');
+const playlists = getPlaylists()
+  .map((p) => ({
+    ...p,
+    ...playlistText(p, lang),
+    lessons: lessons.filter((l) => l.playlist === p.id),
+  }))
+  .filter((p) => p.lessons.length > 0);
+const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
 ---
 
 <BaseLayout title={t('page.lessons.title')}>
@@ -25,46 +37,171 @@ const href = (id: string) => localizePath(lang, `lessons/${id}`);
     title={t('page.lessons.title')}
     lead={t('lessons.lead')}
   />
-  {groups.map((g) => {
-    const id = `series-${g.playlist?.id ?? 'other'}`;
-    const text = g.playlist && playlistText(g.playlist, lang);
-    return (
-      <section class="container-page page-section" aria-labelledby={id}>
-        <SectionHead
-          id={id}
-          eyebrow={g.playlist ? t(`lessons.${g.playlist.kind}` as UIKey) : t('lessons.single')}
-          title={text?.title ?? t('lessons.other')}
-          lead={text?.description}
-          link={
-            g.playlist?.youtube
-              ? { href: g.playlist.youtube, label: t('lessons.playlist') }
-              : undefined
-          }
-        />
-        {g.playlist?.kind === 'course' ? (
-          <ol class="course-list">
-            {g.lessons.map((l, i) => (
-              <li>
-                <a href={href(l.id)} class="course-link">
-                  <span class="course-number" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span class="course-title">{l.title}</span>
-                  {l.summary && <span class="course-summary">{l.summary}</span>}
-                </a>
-              </li>
+
+  <div
+    class="container-page lessons"
+    data-lessons
+    data-page-size="24"
+    data-label-showing={t('lessons.showing')}
+    data-label-count={t('lessons.count')}
+  >
+    <div class="lessons-tools" data-lessons-tools hidden>
+      <div class="lesson-chips" role="radiogroup" aria-label={t('lessons.filterPlaylist')}>
+        <label class="lesson-chip">
+          <input type="radio" name="playlist" value="" checked data-lessons-playlist />
+          <span>
+            {t('lessons.all')} <span class="lesson-chip-count">{lessons.length}</span>
+          </span>
+        </label>
+        {playlists.map((p) => (
+          <label class="lesson-chip">
+            <input
+              type="radio"
+              name="playlist"
+              value={p.id}
+              data-course={p.kind === 'course' ? '' : undefined}
+              data-lessons-playlist
+            />
+            <span>
+              {p.title} <span class="lesson-chip-count">{p.lessons.length}</span>
+            </span>
+          </label>
+        ))}
+      </div>
+      <div class="mat-tools">
+        <label class="mat-tool">
+          <span class="sr-only">{t('lessons.filterLevel')}</span>
+          <select class="field" data-lessons-level>
+            <option value="">{t('lessons.allLevels')}</option>
+            {LEVELS.map((k) => (
+              <option value={k}>{t(`grammar.level.${k}` as UIKey)}</option>
             ))}
-          </ol>
-        ) : (
-          <ul class="lesson-row">
-            {g.lessons.map((l) => (
-              <li>
-                <LessonCard lesson={l} lang={lang} showPlaylist={false} />
-              </li>
-            ))}
-          </ul>
+          </select>
+        </label>
+        <label class="mat-tool mat-search">
+          <span class="sr-only">{t('lessons.search')}</span>
+          <input
+            type="search"
+            class="field"
+            placeholder={t('lessons.search')}
+            autocomplete="off"
+            data-lessons-search
+          />
+        </label>
+      </div>
+    </div>
+
+    {playlists.map((p) => (
+      <div class="lessons-about" data-lessons-about={p.id} hidden>
+        <p>{p.description}</p>
+        {p.youtube && (
+          <a class="link" href={p.youtube} target="_blank" rel="noopener noreferrer">
+            {t('lessons.playlist')}
+          </a>
         )}
-      </section>
-    );
-  })}
+      </div>
+    ))}
+
+    <p
+      class="lessons-status"
+      role="status"
+      data-lessons-status
+      data-none={t('lessons.noResults')}
+    ></p>
+
+    <ul class="lesson-row lessons-grid" data-lessons-grid>
+      {lessons.map((l) => (
+        <li
+          data-playlist={l.playlist ?? ''}
+          data-level={l.level}
+          data-date={l.date.toISOString()}
+          data-search={[l.title, l.summary ?? '', ...l.grammar].join(' ').toLowerCase()}
+        >
+          <LessonCard lesson={l} lang={lang} />
+        </li>
+      ))}
+    </ul>
+
+    <div class="lessons-more" data-lessons-more hidden>
+      <button type="button" class="btn btn-ghost">
+        {t('lessons.more')}
+      </button>
+    </div>
+  </div>
+
+  <script is:inline>
+    (() => {
+      const root = document.querySelector('[data-lessons]');
+      if (!root) return;
+      const grid = root.querySelector('[data-lessons-grid]');
+      const items = [...grid.children];
+      const radios = [...root.querySelectorAll('[data-lessons-playlist]')];
+      const level = root.querySelector('[data-lessons-level]');
+      const search = root.querySelector('[data-lessons-search]');
+      const status = root.querySelector('[data-lessons-status]');
+      const more = root.querySelector('[data-lessons-more]');
+      const size = Number(root.dataset.pageSize) || 24;
+      let shown = size;
+      root.querySelector('[data-lessons-tools]').hidden = false;
+
+      const update = (reset = true) => {
+        if (reset) shown = size;
+        const chosen = radios.find((r) => r.checked);
+        const playlist = chosen?.value ?? '';
+        const lvl = level.value;
+        const q = search.value.trim().toLowerCase();
+        for (const about of root.querySelectorAll('[data-lessons-about]')) {
+          about.hidden = about.dataset.lessonsAbout !== playlist;
+        }
+        // A course reads oldest first; everything else newest first.
+        const course = chosen?.hasAttribute('data-course');
+        const sorted = [...items].sort((a, b) =>
+          course
+            ? a.dataset.date.localeCompare(b.dataset.date)
+            : b.dataset.date.localeCompare(a.dataset.date),
+        );
+        grid.replaceChildren(...sorted);
+        const matches = sorted.filter(
+          (li) =>
+            (!playlist || li.dataset.playlist === playlist) &&
+            (!lvl || li.dataset.level === lvl) &&
+            (!q || li.dataset.search.includes(q)),
+        );
+        for (const li of items) li.hidden = true;
+        matches.slice(0, shown).forEach((li) => (li.hidden = false));
+        more.hidden = matches.length <= shown;
+        status.textContent =
+          matches.length === 0
+            ? status.dataset.none
+            : (matches.length > shown ? root.dataset.labelShowing : root.dataset.labelCount)
+                .replace('{shown}', String(shown))
+                .replace('{total}', String(matches.length));
+      };
+
+      for (const r of radios) {
+        r.addEventListener('change', () => {
+          history.replaceState(null, '', r.value ? `#${r.value}` : location.pathname);
+          update();
+        });
+      }
+      level.addEventListener('change', () => update());
+      search.addEventListener('input', (event) => {
+        if (!event.isComposing) update();
+      });
+      search.addEventListener('compositionend', () => update());
+      more.querySelector('button').addEventListener('click', () => {
+        const visible = () => [...grid.children].filter((li) => !li.hidden);
+        const first = visible().length;
+        shown += size;
+        update(false);
+        // Move focus to the first new card so keyboard users continue from there.
+        visible()[first]?.querySelector('a')?.focus();
+      });
+      // #crash-course opens that playlist, e.g. from a lesson page.
+      const fromHash = radios.find((r) => r.value && `#${r.value}` === location.hash);
+      if (fromHash) fromHash.checked = true;
+      update();
+      window.addEventListener('pageshow', () => update(false));
+    })();
+  </script>
 </BaseLayout>

@@ -37,7 +37,11 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
     <article class="lesson-main">
       {lesson.youtube && <VideoFacade id={lesson.youtube} title={lesson.title} lang={lang} />}
       <header class="lesson-head">
-        {playlist && <p class="section-eyebrow">{playlistTitle}</p>}
+        {playlist && (
+          <p class="section-eyebrow">
+            <a href={`${localizePath(lang, 'lessons')}#${playlist.id}`}>{playlistTitle}</a>
+          </p>
+        )}
         <h1 class="lesson-heading">{lesson.title}</h1>
         {lesson.summary && <p class="page-lead">{lesson.summary}</p>}
       </header>

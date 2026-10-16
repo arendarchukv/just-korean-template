@@ -47,6 +47,85 @@
     max-width: 60ch;
     color: var(--color-muted);
   }
+  /* Lessons library: playlist chips, then level and search, one grid with "Show more". */
+  .lessons-tools[hidden],
+  .lessons-about[hidden],
+  .lessons-more[hidden],
+  .lessons-grid li[hidden] {
+    display: none;
+  }
+  .lessons-tools .mat-tools {
+    margin-top: 1rem;
+  }
+  .lesson-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .lesson-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .lesson-chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .lesson-chip:hover {
+    border-color: var(--color-brand);
+  }
+  .lesson-chip:has(input:checked) {
+    border-color: var(--color-brand-strong);
+    background: var(--color-brand-strong);
+    color: var(--color-on-brand);
+  }
+  .lesson-chip:has(input:focus-visible) {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+  .lesson-chip-count {
+    margin-left: 0.15rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.75;
+  }
+  .lessons-about {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+    margin-top: 1.5rem;
+    padding: 0.9rem 1.1rem;
+    border-left: 3px solid var(--color-brand);
+    border-radius: 0 12px 12px 0;
+    background: var(--color-surface);
+  }
+  .lessons-about p {
+    flex: 1 1 24rem;
+    margin: 0;
+    color: var(--color-muted);
+  }
+  .lessons-status {
+    min-height: 1.25em;
+    margin: 1.25rem 0 1rem;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .lessons-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+
   /* Site guide (demo): one ruled row per CMS form, name and pages on the left. */
   .guide-tabs {
     margin-top: 2rem;
@@ -116,46 +195,8 @@
     color: var(--color-muted);
   }
 
-  .page-section-head + .lesson-row,
-  .page-section-head + .course-list {
+  .page-section-head + .lesson-row {
     margin-top: 1.5rem;
-  }
-
-  /* Course: a numbered table of contents, like the home 목차. */
-  .course-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-top: 2px solid var(--color-text);
-  }
-  .course-link {
-    display: grid;
-    grid-template-columns: 3rem 1fr;
-    column-gap: 0.75rem;
-    row-gap: 0.2rem;
-    align-items: baseline;
-    min-height: 44px;
-    padding-block: 1rem;
-    border-bottom: 1px solid var(--color-border);
-    color: inherit;
-    text-decoration: none;
-  }
-  .course-number {
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    color: var(--color-teal);
-  }
-  .course-title {
-    font-size: var(--text-lg);
-    line-height: var(--text-lg--line-height);
-    font-weight: 600;
-  }
-  .course-summary {
-    grid-column: 2;
-    color: var(--color-muted);
-  }
-  .course-link:hover .course-title {
-    color: var(--color-brand);
   }
   .lesson-thumb-empty {
     display: grid;

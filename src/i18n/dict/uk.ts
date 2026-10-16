@@ -26,6 +26,7 @@ export const uk: Dictionary = {
   'footer.instagram': 'Instagram',
   'footer.contact': 'Контакт',
   'footer.kofi': 'Підтримати на Ko-fi',
+  'footer.guide': 'Довідник сайту',
   'footer.rights': 'Усі права захищено.',
   'home.bookClass': 'Записатися на заняття',
   'home.watchLessons': 'Дивитися уроки',

@@ -59,7 +59,7 @@ export default defineConfig({
   integrations: [
     svelte(),
     sitemap({
-      filter: (page) => !new URL(page).pathname.startsWith('/styleguide'),
+      filter: (page) => !/^\/(styleguide|guide)\//.test(new URL(page).pathname),
       i18n: {
         defaultLocale: defaultLang,
         locales: Object.fromEntries(LANGS.map((l) => [l, l])),

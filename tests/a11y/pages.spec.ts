@@ -32,6 +32,7 @@ const PAGES = [
   '/ko/lessons/ge-vs-dorok/',
   '/lessons/korean-numbers/',
   '/styleguide/',
+  '/guide/',
   '/missing-page/',
   '/ko/missing-page/',
   // The other languages: their home, a content page, a studio and their 404.

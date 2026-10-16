@@ -16,26 +16,6 @@ export function sortInPlaylist<L extends Dated>(lessons: L[], kind: PlaylistKind
   );
 }
 
-/** Playlists in their code order with their lessons; lessons without a playlist form a last group. */
-export function groupByPlaylist<
-  L extends Dated & { id: string; playlist?: string },
-  P extends { id: string; kind: PlaylistKind },
->(lessons: L[], playlists: readonly P[]): { playlist?: P; lessons: L[] }[] {
-  const groups: { playlist?: P; lessons: L[] }[] = playlists
-    .map((p) => ({
-      playlist: p,
-      lessons: sortInPlaylist(
-        lessons.filter((l) => l.playlist === p.id),
-        p.kind,
-      ),
-    }))
-    .filter((g) => g.lessons.length > 0);
-  const known = new Set(playlists.map((p) => p.id));
-  const loose = lessons.filter((l) => !l.playlist || !known.has(l.playlist));
-  if (loose.length > 0) groups.push({ lessons: sortInPlaylist(loose, 'library') });
-  return groups;
-}
-
 export function neighbours<L extends { id: string }>(
   ordered: L[],
   id: string,

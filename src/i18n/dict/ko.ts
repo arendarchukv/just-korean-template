@@ -65,11 +65,20 @@ export const ko: Dictionary = {
   'home.newLessons.lead': '새 영상과 함께 사이트에서 노트와 연습 문제를 볼 수 있어요.', // TODO(ko-review)
   'home.newLessons.all': '모든 강의',
   'home.newLessons.watch': '보기', // TODO(ko-review)
+  'lessons.all': '전체',
+  'lessons.allLevels': '모든 수준',
+  'lessons.filterPlaylist': '재생목록',
+  'lessons.filterLevel': '수준',
+  'lessons.search': '강의나 문법 검색',
+  'lessons.showing': '{total}개 중 {shown}개',
+  'lessons.noResults': '맞는 강의가 없어요. 다른 수준이나 단어로 찾아보세요.',
+  'lessons.more': '더 보기',
+  'lessons.number': '{n}강',
+  'lessons.count': '강의 {total}개',
   'lessons.read': '읽기', // TODO(ko-review)
 
   'lessons.lead':
-    '강의는 유튜브 채널과 같은 방식으로 정리했어요. 코스는 순서대로 보는 걸 추천해요.',
-  'lessons.other': '기타 강의',
+    '채널의 모든 강의를 최신순으로 모았어요. 재생목록이나 수준을 고르거나 문법으로 검색해 보세요.',
   'lessons.playlist': '유튜브 재생목록',
   'lessons.noVideo': '영상 없는 강의',
 
@@ -204,10 +213,6 @@ export const ko: Dictionary = {
   'page.grammar.eyebrow': '강의에 나온 문법', // TODO(ko-review)
   'page.materials.eyebrow': '무료 자료', // TODO(ko-review)
   'page.practice.eyebrow': '무료 연습', // TODO(ko-review)
-  'lessons.course': '코스 · 순서대로 보기', // TODO(ko-review)
-  'lessons.library': '재생목록', // TODO(ko-review)
-  'lessons.podcast': '팟캐스트', // TODO(ko-review)
-  'lessons.single': '단독 강의', // TODO(ko-review)
   'page.practice.title': '연습',
   'page.materials.title': '자료',
   'page.classes.title': '수업',

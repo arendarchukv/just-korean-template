@@ -2,24 +2,31 @@
 import LevelBadge from '@/components/learn/LevelBadge.astro';
 /**
  * One lesson as a framed card: thumbnail (fetched and optimised at build; a paper placeholder for
- * a lesson without a video), playlist and date, title, then level and "Watch". Home and Lessons.
+ * a lesson without a video), playlist (with the place in a course) and date, title, then level and "Watch". Home and Lessons.
  */
 import { Image } from 'astro:assets';
-import type { Lesson } from '@/content/queries';
+import { getLessons, type Lesson } from '@/content/queries';
 import { playlistText } from '@/data/playlists';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { dateFormat, localizePath, useTranslations } from '@/i18n/utils';
+import { sortInPlaylist } from '@/lib/site-logic';
 import { youtubeThumbnail } from '@/lib/youtube';
 
 interface Props {
   lesson: Lesson;
   lang: Lang;
-  /** Show the playlist name (left out inside its own playlist section). */
-  showPlaylist?: boolean;
 }
-const { lesson: l, lang, showPlaylist = true } = Astro.props;
+const { lesson: l, lang } = Astro.props;
 const t = useTranslations(lang);
 const dates = dateFormat(lang);
+// A course lesson says its place ("Lesson 3") wherever the card is, so a course reads in order.
+const course = l.playlistEntry?.kind === 'course' ? l.playlistEntry.id : undefined;
+const position = course
+  ? sortInPlaylist(
+      (await getLessons()).filter((x) => x.playlist === course),
+      'course',
+    ).findIndex((x) => x.id === l.id) + 1
+  : 0;
 ---
 
 <a class="lesson-card" href={localizePath(lang, `lessons/${l.id}`)}>
@@ -37,7 +44,8 @@ const dates = dateFormat(lang);
   )}
   <span class="lesson-card-body">
     <span class="lesson-meta">
-      {showPlaylist && l.playlistEntry && `${playlistText(l.playlistEntry, lang).title} · `}
+      {l.playlistEntry && `${playlistText(l.playlistEntry, lang).title} · `}
+      {position && `${t('lessons.number').replace('{n}', String(position))} · `}
       <time datetime={l.date.toISOString().slice(0, 10)}>{dates.format(l.date)}</time>
     </span>
     <span class="lesson-title">{l.title}</span>

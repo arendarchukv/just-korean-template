@@ -225,4 +225,9 @@ export const ko: Dictionary = {
   'deck.keySpace': 'Space', // TODO(ko-review)
   'practice.topics': '주제별', // TODO(ko-review)
   'deck.korean': '한국어', // TODO(ko-review)
+  'materials.pages': '페이지', // TODO(ko-review)
+  'materials.prev': '이전 페이지', // TODO(ko-review)
+  'materials.next': '다음 페이지', // TODO(ko-review)
+  'materials.page': '{n}페이지', // TODO(ko-review)
+  'materials.showing': '전체 {total}개 중 {from}–{to}', // TODO(ko-review)
 };

@@ -60,3 +60,66 @@ test('without JavaScript every section shows one after another, no tabs', async 
   await expect(page.getByRole('heading', { name: /from lessons/i })).toBeVisible();
   await context.close();
 });
+
+test.describe('pager', () => {
+  /** Serve the page with one row per page, so the two demo rows of a tab make two pages. */
+  const onePerPage = async (page: Page) => {
+    await page.route('**/materials/', async (route) => {
+      const response = await route.fetch();
+      const body = (await response.text()).replace('data-page-size="20"', 'data-page-size="1"');
+      await route.fulfill({ response, body });
+    });
+  };
+
+  test('is hidden while a tab fits on one page', async ({ page }) => {
+    await page.goto('/materials/');
+    await expect(page.locator('#mat-class [data-mat-pager]')).toBeHidden();
+  });
+
+  test('splits a long tab into pages and moves between them', async ({ page }) => {
+    await onePerPage(page);
+    await page.goto('/materials/');
+    const rows = page.locator('#mat-class [data-mat-row]');
+    const pager = page.getByRole('navigation', { name: 'Pages' }).first();
+    await expect(pager).toBeVisible();
+    await expect(rows.filter({ visible: true })).toHaveCount(1);
+    await expect(page.getByText('Showing 1–1 of 2')).toBeVisible();
+    await pager.getByRole('button', { name: 'Page 2' }).click();
+    await expect(pager.getByRole('button', { name: 'Page 2' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    await expect(page.getByText('Showing 2–2 of 2')).toBeVisible();
+    await expect(pager.getByRole('button', { name: 'Next page' })).toBeDisabled();
+    await pager.getByRole('button', { name: 'Previous page' }).click();
+    await expect(page.getByText('Showing 1–1 of 2')).toBeVisible();
+  });
+
+  test('pages what the filter leaves, starting again from page 1', async ({ page }) => {
+    await onePerPage(page);
+    await page.goto('/materials/');
+    const pager = page.getByRole('navigation', { name: 'Pages' }).first();
+    await pager.getByRole('button', { name: 'Page 2' }).click();
+    await page.getByRole('combobox', { name: /type/i }).selectOption('writing');
+    await expect(page.locator('#mat-class [data-mat-row]').filter({ visible: true })).toHaveCount(
+      1,
+    );
+    await expect(pager).toBeHidden();
+  });
+});
+
+test('the current page number stays readable under the mouse', async ({ page }) => {
+  await page.route('**/materials/', async (route) => {
+    const response = await route.fetch();
+    const body = (await response.text()).replace('data-page-size="20"', 'data-page-size="1"');
+    await route.fulfill({ response, body });
+  });
+  await page.goto('/materials/');
+  const current = page.getByRole('button', { name: 'Page 1' }).first();
+  await current.hover();
+  const [color, background] = await current.evaluate((el) => {
+    const s = getComputedStyle(el);
+    return [s.color, s.backgroundColor];
+  });
+  expect(color).not.toBe(background);
+});

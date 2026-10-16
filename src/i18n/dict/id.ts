@@ -209,4 +209,9 @@ export const id: Dictionary = {
   'deck.keySpace': 'Spasi',
   'practice.topics': 'Per topik',
   'deck.korean': 'Bahasa Korea',
+  'materials.pages': 'Halaman',
+  'materials.prev': 'Halaman sebelumnya',
+  'materials.next': 'Halaman berikutnya',
+  'materials.page': 'Halaman {n}',
+  'materials.showing': 'Menampilkan {from}–{to} dari {total}',
 };

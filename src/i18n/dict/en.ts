@@ -227,6 +227,11 @@ export const en = {
   'deck.keySpace': 'Space',
   'practice.topics': 'By topic',
   'deck.korean': 'Korean',
+  'materials.pages': 'Pages',
+  'materials.prev': 'Previous page',
+  'materials.next': 'Next page',
+  'materials.page': 'Page {n}',
+  'materials.showing': 'Showing {from}–{to} of {total}',
 } as const;
 
 export type UIKey = keyof typeof en;

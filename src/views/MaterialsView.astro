@@ -2,7 +2,7 @@
 /**
  * Materials, after the logic of her old site: tabs (Class materials · Podcast · Self-study · From
  * lessons), each a dense ruled table, newest first: type · title · files · date, with a type filter
- * and a title search above. Without JS every tab shows one after another with its full table; the
+ * and a title search above, and a pager (20 rows a page) once a tab is longer than that. Without JS every tab shows one after another with its full table; the
  * inline script turns them into tabs and adds the filter.
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
@@ -30,7 +30,15 @@ const dates = dateFormat(lang);
     lead={t('materials.lead')}
   />
 
-  <div class="container-page materials" data-materials>
+  <div
+    class="container-page materials"
+    data-materials
+    data-page-size="20"
+    data-label-prev={t('materials.prev')}
+    data-label-next={t('materials.next')}
+    data-label-page={t('materials.page')}
+    data-label-showing={t('materials.showing')}
+  >
     <div class="mat-tabs" role="tablist" aria-label={t('page.materials.title')} hidden>
       {tabs.map((tab, i) => (
         <button
@@ -130,6 +138,10 @@ const dates = dateFormat(lang);
             ))}
           </tbody>
         </table>
+        <nav class="mat-pager" data-mat-pager aria-label={t('materials.pages')} hidden>
+          <p class="mat-pager-status" data-mat-showing></p>
+          <div class="mat-pager-buttons" data-mat-pages></div>
+        </nav>
       </section>
     ))}
   </div>
@@ -150,18 +162,78 @@ const dates = dateFormat(lang);
       tools.hidden = false;
 
       let current = tabs[0];
-      const filter = () => {
+      let page = 1;
+      const size = Number(root.dataset.pageSize) || 20;
+      const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, k) => String(values[k]));
+      const button = (label, onClick, { current: isCurrent, disabled, text } = {}) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'mat-page';
+        b.textContent = text ?? label;
+        b.setAttribute('aria-label', label);
+        if (isCurrent) b.setAttribute('aria-current', 'page');
+        b.disabled = Boolean(disabled);
+        b.addEventListener('click', onClick);
+        return b;
+      };
+      /** Page numbers to show: all when few, else first, last and the ones around the current. */
+      const pageList = (count) => {
+        if (count <= 7) return Array.from({ length: count }, (_, i) => i + 1);
+        const keep = new Set([1, count, page - 1, page, page + 1]);
+        const list = [];
+        for (let n = 1; n <= count; n++) {
+          if (keep.has(n)) list.push(n);
+          else if (list.at(-1) !== '…') list.push('…');
+        }
+        return list;
+      };
+      // Filter and search narrow the open tab; the pager then splits what is left.
+      const filter = (keepPage = false) => {
+        if (!keepPage) page = 1;
         const type = typeSelect.value;
         const q = search.value.trim().toLowerCase();
         const panel = document.getElementById(current.getAttribute('aria-controls'));
-        let shown = 0;
-        for (const row of panel.querySelectorAll('[data-mat-row]')) {
-          const match =
-            (!type || row.dataset.type === type) && (!q || row.dataset.search.includes(q));
-          row.hidden = !match;
-          if (match) shown += 1;
-        }
-        status.textContent = shown === 0 ? status.dataset.none : '';
+        const rows = [...panel.querySelectorAll('[data-mat-row]')];
+        const matches = rows.filter(
+          (row) => (!type || row.dataset.type === type) && (!q || row.dataset.search.includes(q)),
+        );
+        const pages = Math.max(1, Math.ceil(matches.length / size));
+        page = Math.min(page, pages);
+        const from = (page - 1) * size;
+        for (const row of rows) row.hidden = true;
+        matches.slice(from, from + size).forEach((row) => (row.hidden = false));
+        status.textContent = matches.length === 0 ? status.dataset.none : '';
+
+        const pager = panel.querySelector('[data-mat-pager]');
+        pager.hidden = pages <= 1;
+        if (pages <= 1) return;
+        pager.querySelector('[data-mat-showing]').textContent = fill(root.dataset.labelShowing, {
+          from: from + 1,
+          to: Math.min(from + size, matches.length),
+          total: matches.length,
+        });
+        const go = (n) => () => {
+          page = n;
+          filter(true);
+          // Back to the top of the table when it has scrolled away.
+          if (panel.getBoundingClientRect().top < 0) panel.scrollIntoView({ block: 'start' });
+        };
+        const box = pager.querySelector('[data-mat-pages]');
+        box.replaceChildren(
+          button(root.dataset.labelPrev, go(page - 1), { disabled: page === 1, text: '‹' }),
+          ...pageList(pages).map((n) =>
+            n === '…'
+              ? Object.assign(document.createElement('span'), {
+                  className: 'mat-gap',
+                  textContent: '…',
+                })
+              : button(fill(root.dataset.labelPage, { n }), go(n), {
+                  current: n === page,
+                  text: String(n),
+                }),
+          ),
+          button(root.dataset.labelNext, go(page + 1), { disabled: page === pages, text: '›' }),
+        );
       };
       const select = (tab, focus) => {
         current = tab;
@@ -188,11 +260,11 @@ const dates = dateFormat(lang);
           event.preventDefault();
         });
       });
-      typeSelect.addEventListener('change', filter);
+      typeSelect.addEventListener('change', () => filter());
       search.addEventListener('input', (event) => {
         if (!event.isComposing) filter();
       });
-      search.addEventListener('compositionend', filter);
+      search.addEventListener('compositionend', () => filter());
       // Open the tab named in the address (#mat-podcast), e.g. from a shared link.
       const fromHash = tabs.find((t) => `#${t.getAttribute('aria-controls')}` === location.hash);
       select(fromHash ?? tabs[0], false);
@@ -200,7 +272,7 @@ const dates = dateFormat(lang);
         p.setAttribute('role', 'tabpanel');
         p.setAttribute('aria-labelledby', `mat-tab-${p.id.replace(/^mat-/, '')}`);
       }
-      window.addEventListener('pageshow', filter);
+      window.addEventListener('pageshow', () => filter());
     })();
   </script>
 </BaseLayout>

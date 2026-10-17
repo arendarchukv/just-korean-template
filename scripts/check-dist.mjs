@@ -72,7 +72,11 @@ for (const [, id, href] of anchored) {
 }
 
 // --- Interactive cards must be links (hover feedback promises a click) ---
-for (const page of [...inAll('index.html'), 'styleguide/index.html']) {
+for (const page of [
+  ...inAll('index.html'),
+  ...inAll('practice/index.html'),
+  'styleguide/index.html',
+]) {
   for (const [, tag] of read(page).matchAll(/<(\w+)[^>]*class="[^"]*\bcard-interactive\b/g)) {
     if (tag !== 'a') problems.push(`${page}: card-interactive on <${tag}>, not a link`);
   }
@@ -284,7 +288,6 @@ for (const [page, prefix] of LOCALES) {
   const expected = [
     noticeCount > 0 && 'notices',
     'about',
-    'links',
     expectedNewLessons > 0 && 'new-lessons',
     'classes',
   ].filter(Boolean);
@@ -308,6 +311,12 @@ for (const [page, prefix] of LOCALES) {
     }
   }
 
+  // Credentials under the greeting: degree, certificate, channel (the countries line is About only).
+  const facts = /class="hero-facts"[\s\S]*?<\/ul>/.exec(homeBlock(page, 'about'))?.[0] ?? '';
+  const factCount = (facts.match(/<li/g) ?? []).length;
+  if (factCount !== 3)
+    problems.push(`${page}: ${factCount} credentials on the home page, expected 3`);
+
   // Classes: a short line per format from src/data/classes.ts, no table, booking via TidyCal.
   const classes = homeBlock(page, 'classes');
   if (/<table/.test(classes)) problems.push(`${page}: home classes block is still a table`);
@@ -318,26 +327,7 @@ for (const [page, prefix] of LOCALES) {
   if (!/data-book-class/.test(classes))
     problems.push(`${page}: classes block has no booking button`);
 
-  // Quick links: dictionary, pronunciation and Korean news, straight to those sites in a new tab.
-  const quick = [...homeBlock(page, 'links').matchAll(/<a[^>]*>/g)].map((m) => m[0]);
-  const hosts = quick.map((a) => /href="https:\/\/([^/"]+)/.exec(a)?.[1]);
-  if (hosts.join() !== 'krdict.korean.go.kr,nuri.iksi.or.kr,www.ohmynews.com') {
-    problems.push(`${page}: quick links lead to [${hosts}]`);
-  }
-  if (quick.some((a) => !/target="_blank"/.test(a) || !/rel="noopener noreferrer"/.test(a))) {
-    problems.push(`${page}: a quick link does not open safely in a new tab`);
-  }
   if (/data-home-block="contents"/.test(html)) problems.push(`${page}: still has "On this site"`);
-  // The dictionary card searches krdict right away (word field, new tab).
-  const tools = homeBlock(page, 'links');
-  if (
-    !/<form[^>]*action="https:\/\/krdict\.korean\.go\.kr\/eng\/dicMarinerSearch\/search"[^>]*target="_blank"/.test(
-      tools,
-    )
-  ) {
-    problems.push(`${page}: dictionary card has no krdict search`);
-  }
-  if (!/name="mainSearchWord"/.test(tools)) problems.push(`${page}: dictionary field name`);
 
   // New lessons: local optimised thumbnails, links to existing lesson pages, video lessons only.
   const block = homeBlock(page, 'new-lessons');
@@ -373,13 +363,9 @@ for (const [page, prefix] of LOCALES) {
   if (/<header[\s\S]*href="[^"]*\/grammar\/"[\s\S]*<\/header>/.test(html)) {
     problems.push(`${page}: grammar is still in the header menu`);
   }
-  // Every "Book a class" button, header included, opens TidyCal once its link is set.
-  if (site.tidycal) {
-    const header = /<header[\s\S]*?<\/header>/.exec(html)?.[0] ?? '';
-    const headerBook = [...header.matchAll(/<a[^>]*data-book-class[^>]*>/g)].map((m) => m[0]);
-    if (headerBook.length !== 2 || headerBook.some((a) => !a.includes(`href="${site.tidycal}"`))) {
-      problems.push(`${page}: header booking buttons do not open TidyCal`);
-    }
+  // Booking lives on the page (home, Classes), not in the header.
+  if (/data-book-class/.test(/<header[\s\S]*?<\/header>/.exec(html)?.[0] ?? '')) {
+    problems.push(`${page}: header still has a Book a class button`);
   }
   // Ko-fi: when its link is set, the header offers it (icon on desktop, link in the phone menu).
   if (site.social?.kofi) {
@@ -399,6 +385,33 @@ for (const path of ['lessons', 'grammar', 'practice']) {
     if (!exists(`${prefix}${path}/index.html`))
       problems.push(`missing ${prefix}${path}/index.html`);
   }
+}
+
+// --- Practice: the outside study tools come first, in every language ---
+for (const page of inAll('practice/index.html')) {
+  const html = read(page);
+  // Study tools: dictionary, pronunciation and Korean news, straight to those sites in a new tab.
+  const tools = /<ul[^>]*data-study-tools[\s\S]*?<\/ul>/.exec(html)?.[0] ?? '';
+  if (!(html.indexOf('data-study-tools') < html.indexOf('practice-entries'))) {
+    problems.push(`${page}: study tools do not come first`);
+  }
+  const quick = [...tools.matchAll(/<a[^>]*>/g)].map((m) => m[0]);
+  const hosts = quick.map((a) => /href="https:\/\/([^/"]+)/.exec(a)?.[1]);
+  if (hosts.join() !== 'krdict.korean.go.kr,nuri.iksi.or.kr,www.ohmynews.com') {
+    problems.push(`${page}: quick links lead to [${hosts}]`);
+  }
+  if (quick.some((a) => !/target="_blank"/.test(a) || !/rel="noopener noreferrer"/.test(a))) {
+    problems.push(`${page}: a quick link does not open safely in a new tab`);
+  }
+  // The dictionary card searches krdict right away (word field, new tab).
+  if (
+    !/<form[^>]*action="https:\/\/krdict\.korean\.go\.kr\/eng\/dicMarinerSearch\/search"[^>]*target="_blank"/.test(
+      tools,
+    )
+  ) {
+    problems.push(`${page}: dictionary card has no krdict search`);
+  }
+  if (!/name="mainSearchWord"/.test(tools)) problems.push(`${page}: dictionary field name`);
 }
 
 // --- Lessons library: every lesson linked and a course to choose, in every language ---
@@ -542,7 +555,6 @@ for (const page of inAll('practice/index.html')) {
     }
   }
   if (!/data-coming-soon/.test(html)) problems.push(`${page}: no "coming soon" TOPIK block`);
-  if (/dictionary-form|nuri\.iksi/.test(html)) problems.push(`${page}: still has the tool blocks`);
   for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
 }
 

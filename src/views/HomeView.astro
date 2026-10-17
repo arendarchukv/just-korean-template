@@ -5,7 +5,6 @@ import AboutHero from '@/components/home/AboutHero.astro';
 import ClassesTable from '@/components/home/ClassesTable.astro';
 import NewLessons from '@/components/home/NewLessons.astro';
 import NoticeStrip from '@/components/home/NoticeStrip.astro';
-import QuickLinks from '@/components/home/QuickLinks.astro';
 import { validateContent } from '@/content/queries';
 import type { Lang } from '@/i18n/ui';
 
@@ -21,7 +20,6 @@ await validateContent();
 <BaseLayout>
   <NoticeStrip lang={lang} slot="before-main" />
   <AboutHero lang={lang} />
-  <QuickLinks lang={lang} />
   <NewLessons lang={lang} />
   <ClassesTable lang={lang} />
 </BaseLayout>

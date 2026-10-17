@@ -1,7 +1,11 @@
 ---
-/** Practice: the Flashcards and Quizzes studios, and the TOPIK mock test announced as coming soon. */
+/**
+ * Practice: the outside study tools first (dictionary, pronunciation, news), then the Flashcards and
+ * Quizzes studios, and the TOPIK mock test announced as coming soon.
+ */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHead from '@/components/PageHead.astro';
+import StudyTools from '@/components/practice/StudyTools.astro';
 import Icon, { type IconName } from '@/components/Icon.astro';
 import Shape, { type ShapeName, type ShapeTone } from '@/components/shapes/Shape.astro';
 import { getDecks, getQuizzes } from '@/content/queries';
@@ -55,6 +59,8 @@ const ENTRIES = [
     title={t('page.practice.title')}
     lead={t('practice.lead')}
   />
+
+  <StudyTools lang={lang} />
 
   <div class="container-page practice-entries">
     {ENTRIES.filter((e) => e.count > 0).map((e) => (

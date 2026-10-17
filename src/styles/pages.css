@@ -760,6 +760,9 @@
     }
   }
   /* Practice: two ways in, as large cards. */
+  .practice-tools {
+    padding-top: 1.5rem;
+  }
   .practice-entries {
     display: grid;
     gap: 1.25rem;

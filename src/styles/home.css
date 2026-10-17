@@ -158,14 +158,65 @@
     display: grid;
     gap: 1.25rem;
   }
-  /* Photo cut out by an organic shape, not a rounded box. */
-  .about-photo {
+  /* Hero picture: grid paper, an arch, a teal dot and a wave around a soft disc; the cut-out photo
+     stands in the disc, which clips it at the bottom while the head rises above its edge. */
+  .hero-portrait {
+    position: relative;
+    container-type: inline-size;
     width: 100%;
+    max-width: 30rem;
+    margin-inline: auto;
+    aspect-ratio: 1;
+  }
+  .hero-portrait-grid {
+    position: absolute;
+    top: 2%;
+    left: 4%;
+    width: 50%;
+    rotate: -4deg;
+  }
+  .hero-portrait-wave {
+    position: absolute;
+    top: 6%;
+    right: 2%;
+    width: 22%;
+  }
+  .hero-portrait-arch {
+    position: absolute;
+    right: 0;
+    bottom: 4%;
+    width: 30%;
+  }
+  .hero-portrait-dot {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 18%;
+  }
+  .hero-portrait-disc {
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    width: 80%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--color-brand) 22%, var(--color-bg));
+  }
+  .hero-portrait-photo {
+    position: absolute;
+    bottom: 0;
+    left: -2%;
+    width: 104%;
+    max-width: none;
     height: auto;
-    aspect-ratio: 7 / 8;
-    object-fit: cover;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M9 13 C22 2 52 1 74 6 C93 11 99 30 97 55 C95 80 83 96 57 98 C31 100 8 92 3 66 C-1 42 0 21 9 13 Z'/%3E%3C/svg%3E")
-      center / 100% 100% no-repeat;
+    /* Above the disc's centre everything shows; below it, only what is inside the disc. */
+    mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - 40cqw) no-repeat,
+      radial-gradient(
+        circle 40cqw at 50% calc(100% - 40cqw),
+        #000 calc(100% - 1px),
+        transparent 100%
+      );
   }
 
   /* Section heading in three steps: a small label, the title, one line; a link on the right. */

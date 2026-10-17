@@ -8,7 +8,10 @@
  */
 import type { Localized } from '../i18n/localized';
 
-/** Her photo: upload to R2 and paste the https:// link (also add the domain to image.domains). */
+/**
+ * Her photo for the home hero: cut out (or on a plain background), upload to R2 and paste the
+ * https:// link (also add the domain to image.domains). Empty: a placeholder cut from her thumbnail.
+ */
 export const TEACHER_PHOTO = '';
 
 type TeacherText = {

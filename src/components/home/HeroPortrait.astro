@@ -1,0 +1,47 @@
+---
+/**
+ * Home hero picture: her photo, cut out, standing in a soft disc that clips it at the bottom, with
+ * the cut-paper shapes of the design system around it (grid paper, an arch, a teal dot, a wave).
+ * No handwritten notes, so it stays calm. The shapes are decorative; the photo has its alt text.
+ * Hidden in print (`collage`), where the text takes the full width.
+ */
+import { Image } from 'astro:assets';
+import Shape from '@/components/shapes/Shape.astro';
+import placeholder from '@/assets/teacher-placeholder.png';
+
+interface Props {
+  /** Her photo (an https:// link, cut out on a plain background) or, until then, the placeholder. */
+  photo?: string;
+  alt: string;
+}
+const { photo, alt } = Astro.props;
+---
+
+<div class="collage hero-portrait">
+  <Shape name="grid" tone="paper" texture="grid" class="hero-portrait-grid" />
+  <Shape name="wave" tone="brand" class="hero-portrait-wave" />
+  <Shape name="arch" tone="indigo" class="hero-portrait-arch" />
+  <Shape name="blob" tone="teal" class="hero-portrait-dot" />
+  <div class="hero-portrait-disc" aria-hidden="true"></div>
+  {photo ? (
+    <Image
+      src={photo}
+      alt={alt}
+      width={560}
+      height={560}
+      class="hero-portrait-photo"
+      loading="eager"
+      fetchpriority="high"
+    />
+  ) : (
+    // DEMO ONLY: cut out of her own YouTube thumbnail ("게 vs 도록") until she sends a photo.
+    <Image
+      src={placeholder}
+      alt={alt}
+      width={520}
+      class="hero-portrait-photo"
+      loading="eager"
+      fetchpriority="high"
+    />
+  )}
+</div>

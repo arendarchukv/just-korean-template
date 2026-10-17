@@ -7,6 +7,12 @@
 @import './widgets.css';
 @import './print.css';
 
+/* The full header menu, its labels on one line, fits from 72rem (1152px) in the longest language
+   (Ukrainian); below that the menu button holds the links (Header.astro, `nav:` variant). */
+@theme {
+  --breakpoint-nav: 72rem;
+}
+
 /* Dark mode follows the resolved theme on <html data-theme>, set by the inline head script. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 

@@ -1,16 +1,16 @@
 ---
 import Icon from '@/components/Icon.astro';
 import Shape from '@/components/shapes/Shape.astro';
-import SectionHead from '@/components/SectionHead.astro';
 import { QUICK_LINKS } from '@/data/links';
 import { KRDICT } from '@/lib/site-logic';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { useTranslations } from '@/i18n/utils';
 
 /**
- * Home block: the outside study tools she recommends as three cards. The dictionary card searches
- * krdict right away (a form, new tab) with a link to the site; pronunciation and news are one link
- * each, in a new tab: icon, name, what it is, a tag and the action.
+ * Practice, first row: the outside study tools she recommends as three cards. The dictionary card
+ * searches krdict right away (a form, new tab) with a link to the site; pronunciation and news are
+ * one link each, in a new tab: icon, name, what it is, a tag and the action. (Copy keys keep their
+ * `home.links.*` names from when this block was on the home page.)
  */
 interface Props {
   lang: Lang;
@@ -21,14 +21,8 @@ const t = useTranslations(lang);
 const k = (key: string, part = '') => `home.links.${key}${part}` as UIKey;
 ---
 
-<section class="container-page home-section" data-home-block="links" aria-labelledby="links-title">
-  <SectionHead
-    id="links-title"
-    eyebrow={t('home.links.eyebrow')}
-    title={t('home.links.title')}
-    lead={t('home.links.lead')}
-  />
-  <ul class="tool-cards">
+<div class="container-page practice-tools">
+  <ul class="tool-cards" data-study-tools>
     {QUICK_LINKS.map((link) =>
       link.key === 'dictionary' ? (
         <li>
@@ -101,4 +95,4 @@ const k = (key: string, part = '') => `home.links.${key}${part}` as UIKey;
       ),
     )}
   </ul>
-</section>
+</div>

@@ -60,10 +60,10 @@ test('page does not shift sideways when the scroll lock removes the scrollbar', 
   ).toBe('stable');
 });
 
-test('on a tablet the header fits its width in both languages, the menu holding the links', async ({
+test('the header fits its width in every language, below and at the full-menu width', async ({
   page,
 }) => {
-  for (const width of [768, 900, 1024]) {
+  for (const width of [768, 1024, 1151, 1152, 1280]) {
     await page.setViewportSize({ width, height: 800 });
     // Every language: Spanish and Indonesian labels are the longest.
     for (const path of ['/', '/ko/', '/es/', '/id/', '/uk/']) {
@@ -74,6 +74,13 @@ test('on a tablet the header fits its width in both languages, the menu holding 
         client: el.clientWidth,
       }));
       expect(scroll, `${path} at ${width}px`).toBeLessThanOrEqual(client);
+      // Labels never wrap: every header link and button stays one line high.
+      const tall = await page
+        .locator('header nav a:visible, header [data-kofi]:visible')
+        .evaluateAll((els) =>
+          els.filter((el) => el.getBoundingClientRect().height > 48).map((el) => el.textContent),
+        );
+      expect(tall, `${path} at ${width}px`).toEqual([]);
     }
   }
 });

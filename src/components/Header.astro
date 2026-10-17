@@ -28,13 +28,8 @@ const items = NAV.map((item) => ({
   active: current === item.path || current.startsWith(`${item.path}/`),
 }));
 const site = await getSite();
-// Booking opens TidyCal in a new tab; until its link is set, the Classes page.
-const tidycal = site.tidycal;
 // Ko-fi support link, shown only once it is set in Site settings.
 const kofi = site.social.kofi;
-const book = tidycal
-  ? { href: tidycal, target: '_blank', rel: 'noopener noreferrer' }
-  : { href: localizePath(lang, 'classes') };
 ---
 
 <header class="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur">
@@ -47,11 +42,15 @@ const book = tidycal
       <Logo wordmark />
     </a>
 
-    <nav aria-label={t('a11y.mainNav')} class="ml-6 hidden lg:block" data-print="hide">
+    <nav aria-label={t('a11y.mainNav')} class="ml-6 hidden nav:block" data-print="hide">
       <ul class="flex items-center gap-1">
         {items.map((item) => (
           <li>
-            <a href={item.href} aria-current={item.active ? 'page' : undefined} class="nav-link">
+            <a
+              href={item.href}
+              aria-current={item.active ? 'page' : undefined}
+              class="nav-link whitespace-nowrap"
+            >
               {item.label}
             </a>
           </li>
@@ -68,8 +67,7 @@ const book = tidycal
           target="_blank"
           rel="noopener noreferrer"
           data-kofi
-          class="nav-link hidden gap-1.5 lg:inline-flex"
-          title={t('footer.kofi')}
+          class="nav-link hidden gap-1.5 whitespace-nowrap nav:inline-flex"
         >
           <svg
             class="size-5"
@@ -89,13 +87,10 @@ const book = tidycal
           <span class="sr-only">(Ko-fi)</span>
         </a>
       )}
-      <a {...book} data-book-class class="btn btn-primary ml-2 hidden lg:inline-flex">
-        {t('nav.bookClass')}
-      </a>
 
       <!-- Mobile menu: a native disclosure, so it works without JS; the script below adds
            Escape / backdrop to close, scroll lock, and closing when the window widens. -->
-      <details class="group lg:hidden" data-mobile-menu>
+      <details class="group nav:hidden" data-mobile-menu>
         <summary class="icon-btn cursor-pointer list-none [&::-webkit-details-marker]:hidden">
           <span class="sr-only">{t('a11y.menu')}</span>
           <svg
@@ -147,15 +142,10 @@ const book = tidycal
                   data-kofi
                   class="nav-link text-lg text-text hover:bg-surface"
                 >
-                  {t('footer.kofi')}
+                  {t('nav.support')}
                 </a>
               </li>
             )}
-            <li class="pt-2">
-              <a {...book} data-book-class class="btn btn-primary w-full">
-                {t('nav.bookClass')}
-              </a>
-            </li>
           </ul>
         </nav>
       </details>
@@ -168,7 +158,7 @@ const book = tidycal
   if (menu) {
     const summary = menu.querySelector('summary')!;
     const root = document.documentElement;
-    const desktop = window.matchMedia('(min-width: 64rem)');
+    const desktop = window.matchMedia('(min-width: 72rem)');
     const close = () => {
       menu.open = false;
     };

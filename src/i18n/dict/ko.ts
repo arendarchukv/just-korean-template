@@ -14,12 +14,11 @@ export const ko: Dictionary = {
   'a11y.footerNav': '하단 메뉴',
   'a11y.menu': '메뉴',
 
-  'nav.lessons': '강의',
+  'nav.lessons': '무료 강의',
   'nav.practice': '연습',
   'nav.materials': '자료',
-  'nav.classes': '수업',
-  'nav.bookClass': '수업 예약',
-  'nav.support': '후원하기',
+  'nav.classes': '지은 선생님 수업',
+  'nav.support': 'Just Korean 후원하기',
 
   'lang.switchTo': '한국어로 보기',
   'lang.label': '언어', // TODO(ko-review)
@@ -31,12 +30,11 @@ export const ko: Dictionary = {
   'footer.youtube': '유튜브',
   'footer.instagram': '인스타그램',
   'footer.contact': '문의',
-  'footer.kofi': 'Ko-fi로 후원하기',
   'footer.guide': '사이트 안내',
   'footer.rights': '모든 권리 보유.', // TODO(ko-review)
 
   'home.bookClass': '수업 예약',
-  'home.watchLessons': '강의 보기',
+  'home.watchLessons': '무료 강의 보기',
   'home.credentials': '선생님 소개',
   'home.classes.eyebrow': '실시간 수업', // TODO(ko-review)
   'home.classes.title': '지은 선생님과 직접 공부해요', // TODO(ko-review)
@@ -44,9 +42,6 @@ export const ko: Dictionary = {
   'home.classes.ctaText': '수업료, 시간표, 자주 묻는 질문은 수업 페이지에서 볼 수 있어요.', // TODO(ko-review)
   'home.classes.forWhom': '대상',
   'home.classes.more': '수업 안내와 자주 묻는 질문',
-  'home.links.eyebrow': '무료 학습 도구', // TODO(ko-review)
-  'home.links.title': '추천 학습 도구', // TODO(ko-review)
-  'home.links.lead': '수업 사이에 학생들과 함께 쓰는 무료 사이트예요.', // TODO(ko-review)
   'home.links.dictionary': '사전', // TODO(ko-review)
   'home.links.dictionary.text': '국립국어원 한국어기초사전이에요. 영어 뜻과 예문을 볼 수 있어요.', // TODO(ko-review)
   'home.links.dictionary.tag': '어휘', // TODO(ko-review)

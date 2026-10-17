@@ -1,6 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import Collage from '@/components/shapes/Collage.astro';
+import HeroPortrait from '@/components/home/HeroPortrait.astro';
 import Icon, { type IconName } from '@/components/Icon.astro';
 import { SITE_NAME_KO } from '@/lib/display-text';
 import { getSite } from '@/content/queries';
@@ -63,17 +62,6 @@ const booking = tidycal || localizePath(lang, 'classes');
   </div>
 
   <div class="about-side">
-    {TEACHER_PHOTO ? (
-      <Image
-        src={TEACHER_PHOTO}
-        alt={home.photoAlt ?? ''}
-        width={560}
-        height={640}
-        class="about-photo"
-        loading="eager"
-      />
-    ) : (
-      <Collage variant="hero" />
-    )}
+    <HeroPortrait photo={TEACHER_PHOTO || undefined} alt={home.photoAlt} />
   </div>
 </section>

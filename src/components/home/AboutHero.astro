@@ -17,16 +17,8 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 const home = pick(TEACHER, lang);
-// Degree, certificate and channel, by their place in the credentials in teacher.ts; the line about
-// the countries she taught in stays on About only.
-const FACTS: [index: number, icon: IconName][] = [
-  [0, 'cap'],
-  [1, 'badge'],
-  [3, 'play'],
-];
-const facts = FACTS.flatMap(([i, icon]) =>
-  home.credentials[i] ? [{ text: home.credentials[i], icon }] : [],
-);
+// Degree, certificate, channel: in the order of the credentials in teacher.ts.
+const FACT_ICONS: IconName[] = ['cap', 'badge', 'play'];
 // Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
 const tidycal = (await getSite()).tidycal;
 const booking = tidycal || localizePath(lang, 'classes');
@@ -55,14 +47,14 @@ const booking = tidycal || localizePath(lang, 'classes');
         {t('home.watchLessons')}
       </a>
     </div>
-    {facts.length > 0 && (
+    {home.credentials.length > 0 && (
       <div class="hero-facts">
         <h2 class="sr-only">{t('home.credentials')}</h2>
         <ul>
-          {facts.map((f) => (
+          {home.credentials.map((c, i) => (
             <li>
-              <Icon name={f.icon} />
-              <span>{f.text}</span>
+              <Icon name={FACT_ICONS[i % FACT_ICONS.length]!} />
+              <span>{c}</span>
             </li>
           ))}
         </ul>

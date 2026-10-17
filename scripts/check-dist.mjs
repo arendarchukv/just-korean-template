@@ -4,7 +4,7 @@ import { parse } from 'yaml';
 // Classes data is hardcoded (not CMS); Node runs the TS module directly.
 import { CLASSES } from '../src/data/classes.ts';
 import { LANGS, defaultLang } from '../src/i18n/locales.ts';
-import { NEW_LESSONS_COUNT, TEACHER as TEACHER_TEXT } from '../src/data/teacher.ts';
+import { NEW_LESSONS_COUNT } from '../src/data/teacher.ts';
 
 const read = (path) => readFileSync(new URL(`../dist/${path}`, import.meta.url), 'utf8');
 const exists = (path) => existsSync(new URL(`../dist/${path}`, import.meta.url));
@@ -19,7 +19,7 @@ const LOCALE_DIRS = LANGS.map((lang) =>
 const langOf = (page) =>
   LANGS.find((l) => l !== defaultLang && page.startsWith(`${l}/`)) ?? defaultLang;
 const prefixOf = (page) => LOCALE_DIRS.find((d) => d.lang === langOf(page)).prefix;
-/** The same page in every language, e.g. inAll('about/index.html'). */
+/** The same page in every language, e.g. inAll('classes/index.html'). */
 const inAll = (path) => LOCALE_DIRS.map(({ dir }) => `${dir}${path}`);
 
 // --- Styleguide and site guide: English-only, unindexed, not in the sitemap ---
@@ -80,57 +80,6 @@ for (const page of [
   for (const [, tag] of read(page).matchAll(/<(\w+)[^>]*class="[^"]*\bcard-interactive\b/g)) {
     if (tag !== 'a') problems.push(`${page}: card-interactive on <${tag}>, not a link`);
   }
-}
-
-// --- About page exists in both languages, is in the sitemap and linked from the footer ---
-for (const [page, href] of LOCALE_DIRS.map(({ dir, prefix }) => [
-  `${dir}index.html`,
-  `${prefix}/about/`,
-])) {
-  const footer = /<footer[\s\S]*<\/footer>/.exec(read(page))?.[0] ?? '';
-  if (!footer.includes(`href="${href}"`)) problems.push(`${page}: footer does not link to ${href}`);
-}
-// About content comes from src/data/teacher.ts: story, principles, timeline, channel numbers.
-for (const page of inAll('about/index.html')) {
-  if (!exists(page)) {
-    problems.push(`missing ${page}`);
-    continue;
-  }
-  const html = read(page);
-  const TEACHER = TEACHER_TEXT[langOf(page)];
-  if (/placeholder\.comingSoon|Coming soon|준비 중/.test(html))
-    problems.push(`${page}: still a placeholder`);
-  if (!html.includes(TEACHER.greeting.replace("'", '&#39;')) && !html.includes(TEACHER.greeting)) {
-    problems.push(`${page}: no greeting`);
-  }
-  const timeline = /<ol[^>]*class="timeline"[\s\S]*?<\/ol>/.exec(html)?.[0] ?? '';
-  if ((timeline.match(/<li/g) ?? []).length !== TEACHER.timeline.length) {
-    problems.push(`${page}: timeline does not list ${TEACHER.timeline.length} places`);
-  }
-  const stats = /<dl[^>]*class="channel-stats"[\s\S]*?<\/dl>/.exec(html)?.[0] ?? '';
-  if ((stats.match(/<dd/g) ?? []).length !== TEACHER.channel.length) {
-    problems.push(`${page}: channel numbers missing`);
-  }
-  for (const p of TEACHER.principles) {
-    if (!html.includes(p.title)) problems.push(`${page}: principle "${p.title}" missing`);
-  }
-  // Illustrated portrait: a local optimised image with a description, not the paper collage.
-  const portrait = /<img[^>]*class="[^"]*about-portrait[^"]*"[^>]*>/.exec(html)?.[0] ?? '';
-  if (!portrait) problems.push(`${page}: no portrait`);
-  else {
-    if (!/src="\/_astro\/[^"]+\.webp"/.test(portrait))
-      problems.push(`${page}: portrait not optimised`);
-    if (!/alt="[^"]+"/.test(portrait)) problems.push(`${page}: portrait has no alt text`);
-    if (!/width="\d+"/.test(portrait) || !/height="\d+"/.test(portrait)) {
-      problems.push(`${page}: portrait without size`);
-    }
-  }
-  if (/class="collage/.test(/<section[^>]*about-page[\s\S]*?<\/section>/.exec(html)?.[0] ?? '')) {
-    problems.push(`${page}: collage still shown instead of the portrait`);
-  }
-}
-if (!/<loc>https:\/\/[^<]+\/about\/<\/loc>/.test(read('sitemap-0.xml'))) {
-  problems.push('about page is not in the sitemap');
 }
 
 // --- Theme toggle is a plain light/dark switch (no confusing "system" state) ---
@@ -311,7 +260,7 @@ for (const [page, prefix] of LOCALES) {
     }
   }
 
-  // Credentials under the greeting: degree, certificate, channel (the countries line is About only).
+  // Credentials under the greeting: degree, certificate, channel.
   const facts = /class="hero-facts"[\s\S]*?<\/ul>/.exec(homeBlock(page, 'about'))?.[0] ?? '';
   const factCount = (facts.match(/<li/g) ?? []).length;
   if (factCount !== 3)

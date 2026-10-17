@@ -26,8 +26,6 @@ const PAGES = [
   '/classes/',
   '/contact/',
   '/ko/contact/',
-  '/about/',
-  '/ko/about/',
   '/lessons/ge-vs-dorok/',
   '/ko/lessons/ge-vs-dorok/',
   '/lessons/korean-numbers/',
@@ -43,7 +41,6 @@ const PAGES = [
   '/id/materials/',
   '/id/lessons/ge-vs-dorok/',
   '/uk/',
-  '/uk/about/',
   '/uk/practice/quizzes/',
   '/uk/missing-page/',
 ];

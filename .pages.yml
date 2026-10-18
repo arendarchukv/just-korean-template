@@ -137,6 +137,14 @@ content:
           values:
             - { name: crash-course, label: Beginner Korean Crash Course }
             - { name: grammar, label: Grammar }
+            - { name: speaking, label: Speaking like a Korean }
+            - { name: vocabulary, label: Vocabulary }
+            - { name: pronunciation, label: Pronunciation }
+            - { name: shadowing, label: Shadowing }
+            - { name: podcast, label: Podcast & listening }
+            - { name: reading, label: Reading }
+            - { name: culture, label: Korean culture }
+            - { name: kpop, label: K-pop }
       - name: date
         type: date
         required: true

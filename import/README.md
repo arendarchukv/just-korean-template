@@ -1,8 +1,10 @@
 # Channel import (working folder)
 
 Data taken from the public YouTube channel @JustKorean on 2026-10-18 with yt-dlp
-(titles, dates, lengths, playlists). The channel counts 235 videos: 139 long ones (here) and 96
-Shorts (left out). Nothing here is on the site yet.
+(titles, dates, lengths, playlists). The 139 generated lesson files now live in
+`src/content/lessons/` (level, summary and grammar machine-drafted from the titles, for JiEun to
+check). The channel counts 235 videos: 139 long ones (here) and 96
+Shorts (left out).
 
 - `videos.md` — the 139 videos as a table, newest first, with a count per playlist.
 - `videos.json` — the same data for scripts: `id`, `title`, `date`, `duration`, `playlists`, `views`.

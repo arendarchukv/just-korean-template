@@ -1,8 +1,11 @@
 ---
-title: Korean numbers and how to use them
-date: 2026-06-10
+title: 'Beginner Korean Intensive Course! 8. Numbers'
+date: 2026-04-08
 level: beginner
-summary: Native Korean and Sino-Korean numbers, and which one to use with which counter.
+youtube: gjJsT1FBXpM
+playlist: crash-course
+summary: 'How to count and use Sino-Korean and native Korean numbers.'
+grammar: []
 files:
   - label: Worksheet
     kind: pdf

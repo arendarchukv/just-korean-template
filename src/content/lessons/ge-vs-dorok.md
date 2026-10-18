@@ -1,11 +1,11 @@
 ---
 title: 'Korean Grammar 한국어 문법 : 게 vs 도록'
+date: 2026-09-18
+level: intermediate
 youtube: R3Ny_hDzKpc
 playlist: grammar
-date: 2026-09-23
-level: intermediate
+summary: '-게 and -도록 both mean "so that": when to use each one.'
 grammar: ['-게', '-도록']
-summary: '-게 and -도록: "so that" in everyday speech and in formal Korean.'
 quiz:
   - type: choice
     prompt: '늦지 않___ 일찍 출발하세요.'

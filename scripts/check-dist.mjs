@@ -398,8 +398,10 @@ const deadLinks = (html) => {
   }
   if (!/class="prose"/.test(html)) problems.push('lesson body is not rendered in .prose');
   for (const href of deadLinks(html)) problems.push(`lesson page links to missing ${href}`);
-  if (/data-video-facade/.test(read('lessons/korean-numbers/index.html'))) {
-    problems.push('lesson without video shows a player');
+  for (const { id } of lessonEntries.filter(({ data }) => !data.youtube)) {
+    if (/data-video-facade/.test(read(`lessons/${id}/index.html`))) {
+      problems.push(`lesson without video (${id}) shows a player`);
+    }
   }
 }
 
@@ -597,8 +599,8 @@ for (const [dir, prefix] of LOCALE_DIRS.map(({ dir, prefix }) => [dir, prefix]))
   }
 }
 for (const [prefix, dir] of LOCALE_DIRS.map(({ dir, prefix }) => [prefix, dir])) {
-  const deckLesson = read(`${dir}lessons/negative-form/index.html`);
-  if (!deckLesson.includes(`href="${prefix}/practice/deck/negative-form/"`)) {
+  const deckLesson = read(`${dir}lessons/crash-course-04-negation/index.html`);
+  if (!deckLesson.includes(`href="${prefix}/practice/deck/crash-course-04-negation/"`)) {
     problems.push(`${dir}lesson page does not link its deck page`);
   }
   const quizLesson = read(`${dir}lessons/ge-vs-dorok/index.html`);

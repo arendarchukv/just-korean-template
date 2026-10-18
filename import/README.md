@@ -28,7 +28,9 @@ others get added there (with their titles in every language) once we know which 
 | korean culture, K-pop, Reading             |  1+1+1 | none (single lessons) | —                       |
 | no playlist                                |      8 | none                  | —                       |
 
-A video in two playlists: pick one for `playlist`.
+A video in two playlists: pick one for `playlist`. This is the case for 19 of the 20 Listening
+videos: they are the podcast episodes, also listed in Listening, so `listening` holds only one
+video of its own and may simply merge into `podcast`.
 
 ## Filling a lesson
 

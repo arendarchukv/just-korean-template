@@ -12,25 +12,24 @@ The YouTube descriptions and tags were left out: they are the same boilerplate o
 
 ## Playlists: YouTube → site id
 
-Only `crash-course` and `grammar` exist in the site code today (`src/data/playlists.ts`); the
-others get added there (with their titles in every language) once we know which are kept.
+Every playlist below exists in the site code (`src/data/playlists.ts`, titles in every language)
+and in the Pages CMS choice list. The site does not mirror the channel: Listening is folded into
+`podcast`, since 19 of its 20 videos are the podcast episodes. A playlist shows on the Lessons
+page once it has a lesson.
 
-| YouTube playlist                           | Videos | Site id (proposed)    | Kind                    |
-| ------------------------------------------ | -----: | --------------------- | ----------------------- |
-| Beginner Korean Crash Course               |     10 | `crash-course`        | course (watch in order) |
-| Grammer                                    |     52 | `grammar`             | library                 |
-| Vocabulary                                 |     22 | `vocabulary`          | library                 |
-| podcast                                    |     21 | `podcast`             | podcast                 |
-| Listening                                  |     20 | `listening`           | library                 |
-| pronunciation.                             |     10 | `pronunciation`       | course?                 |
-| 한국인처럼 말하기 (Speaking like a Korean) |      6 | `speaking`            | course?                 |
-| Shadowing                                  |      6 | `shadowing`           | library                 |
-| korean culture, K-pop, Reading             |  1+1+1 | none (single lessons) | —                       |
-| no playlist                                |      8 | none                  | —                       |
-
-A video in two playlists: pick one for `playlist`. This is the case for 19 of the 20 Listening
-videos: they are the podcast episodes, also listed in Listening, so `listening` holds only one
-video of its own and may simply merge into `podcast`.
+| YouTube playlist                           | Videos | Site id         | Kind                    |
+| ------------------------------------------ | -----: | --------------- | ----------------------- |
+| Beginner Korean Crash Course               |     10 | `crash-course`  | course (watch in order) |
+| Grammer                                    |     52 | `grammar`       | library                 |
+| 한국인처럼 말하기 (Speaking like a Korean) |      6 | `speaking`      | library                 |
+| Vocabulary                                 |     22 | `vocabulary`    | library                 |
+| pronunciation.                             |     10 | `pronunciation` | library                 |
+| Shadowing                                  |      6 | `shadowing`     | course (#1–#6 in order) |
+| podcast + Listening                        |     22 | `podcast`       | podcast                 |
+| Reading                                    |      1 | `reading`       | library                 |
+| korean culture                             |      1 | `culture`       | library                 |
+| K-pop                                      |      1 | `kpop`          | library                 |
+| no playlist                                |      8 | leave it out    | —                       |
 
 ## Filling a lesson
 

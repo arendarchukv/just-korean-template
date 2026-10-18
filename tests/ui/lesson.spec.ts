@@ -74,3 +74,21 @@ test('a lesson with its own words links to their flashcards page, named after th
     }),
   ).toHaveAttribute('href', '/lessons/crash-course-04-negation/');
 });
+
+test('a long playlist scrolls inside its box, with the open lesson in view', async ({ page }) => {
+  test.skip(
+    test.info().project.name !== 'desktop',
+    'the side list sits beside the lesson on desktop',
+  );
+  await page.goto('/lessons/geodeunyo-vs-janhayo/');
+  const result = await page.locator('.series-list').evaluate((list) => {
+    const current = list.querySelector('[aria-current="page"]')!.getBoundingClientRect();
+    const box = list.getBoundingClientRect();
+    return {
+      scrolls: list.scrollHeight > list.clientHeight,
+      inView: current.top >= box.top && current.bottom <= box.bottom,
+      page: window.scrollY,
+    };
+  });
+  expect(result).toEqual({ scrolls: true, inView: true, page: 0 });
+});

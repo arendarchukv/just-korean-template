@@ -381,6 +381,16 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    /* A long playlist scrolls inside the box; the current lesson is scrolled into view. */
+    max-height: 26rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  @media (min-width: 64rem) {
+    .series-list {
+      max-height: calc(100dvh - 12rem);
+    }
   }
   .series-list li:last-child a {
     border-bottom: 0;

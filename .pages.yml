@@ -143,8 +143,7 @@ content:
             - { name: shadowing, label: Shadowing }
             - { name: podcast, label: Podcast & listening }
             - { name: reading, label: Reading }
-            - { name: culture, label: Korean culture }
-            - { name: kpop, label: K-pop }
+            - { name: culture, label: Korean culture & K-pop }
       - name: date
         type: date
         required: true

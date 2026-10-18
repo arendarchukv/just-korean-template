@@ -251,51 +251,29 @@ export const PLAYLISTS = [
     youtube: 'https://www.youtube.com/playlist?list=PLciVMc5G4V70RIie3yuM27DIGMM8Mly6W',
     text: {
       en: {
-        title: 'Korean culture',
-        description: 'Everyday life and culture in Korea, often with a guest.',
+        title: 'Korean culture & K-pop',
+        description:
+          'Everyday life and culture in Korea, often with a guest, and Korean learned from K-pop songs.',
       },
       ko: {
-        title: '한국 문화',
-        description: '한국의 일상과 문화를 이야기해요. 게스트와 함께할 때도 많아요.',
+        title: '한국 문화와 케이팝',
+        description:
+          '한국의 일상과 문화를 이야기하고, 케이팝 노래로 한국어도 배워요. 게스트와 함께할 때도 많아요.',
       },
       es: {
-        title: 'Cultura coreana',
-        description: 'La vida diaria y la cultura en Corea, a menudo con un invitado.',
+        title: 'Cultura coreana y K-pop',
+        description:
+          'La vida diaria y la cultura en Corea, a menudo con un invitado, y coreano con canciones de K-pop.',
       },
       id: {
-        title: 'Budaya Korea',
-        description: 'Kehidupan sehari-hari dan budaya di Korea, sering bersama tamu.',
+        title: 'Budaya Korea & K-pop',
+        description:
+          'Kehidupan sehari-hari dan budaya di Korea, sering bersama tamu, dan belajar bahasa Korea dari lagu K-pop.',
       },
       uk: {
-        title: 'Корейська культура',
-        description: 'Повсякдення й культура Кореї, часто з гостем.',
-      },
-    },
-  },
-  {
-    id: 'kpop',
-    kind: 'library',
-    youtube: 'https://www.youtube.com/playlist?list=PLciVMc5G4V721U5jwNaQLPUKSnyMj7n4N',
-    text: {
-      en: {
-        title: 'K-pop',
-        description: 'Learn Korean from the lyrics of K-pop songs.',
-      },
-      ko: {
-        title: '케이팝',
-        description: '케이팝 노래 가사로 한국어를 배워요.',
-      },
-      es: {
-        title: 'K-pop',
-        description: 'Aprende coreano con las letras de canciones de K-pop.',
-      },
-      id: {
-        title: 'K-pop',
-        description: 'Belajar bahasa Korea dari lirik lagu K-pop.',
-      },
-      uk: {
-        title: 'K-pop',
-        description: 'Вчимо корейську за текстами пісень K-pop.',
+        title: 'Корейська культура і K-pop',
+        description:
+          'Повсякдення й культура Кореї, часто з гостем, а ще корейська за піснями K-pop.',
       },
     },
   },

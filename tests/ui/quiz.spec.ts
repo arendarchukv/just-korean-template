@@ -72,3 +72,29 @@ test('an empty answer is ignored, and a broken stored best score is not shown', 
   await page.getByRole('button', { name: 'Check' }).click();
   await expect(page.getByText(/^(Correct|Not quite)$/)).toHaveCount(0);
 });
+
+test('steps colour each answer, and the result shows the score, counts and a review', async ({
+  page,
+}) => {
+  await open(page);
+  await page.getByRole('button', { name: '려고' }).click();
+  await expect(page.locator('.quiz-steps li').first()).toHaveAttribute('data-state', 'wrong');
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.locator('.quiz-steps li').nth(1)).toHaveAttribute('data-state', 'current');
+  await page.getByRole('textbox', { name: /answer/i }).fill('게');
+  await page.getByRole('button', { name: 'Check' }).click();
+  await page.getByRole('button', { name: /see the result/i }).click();
+
+  await expect(page.locator('.quiz-score-num')).toHaveText('1/2');
+  await expect(page.getByText('Good start')).toBeVisible();
+  await expect(page.getByText('1 correct')).toBeVisible();
+  await expect(page.getByText('1 wrong')).toBeVisible();
+  const review = page.getByRole('region', { name: 'Your answers' });
+  await expect(review.getByRole('listitem')).toHaveCount(2);
+  const first = review.getByRole('listitem').first();
+  await expect(first).toHaveAttribute('data-correct', 'false');
+  await expect(first).toContainText('You answered: 려고');
+  await expect(first).toContainText('Answer: 도록');
+  await expect(first).toContainText('-도록 states the purpose');
+  await expect(review.getByRole('listitem').nth(1)).toHaveAttribute('data-correct', 'true');
+});

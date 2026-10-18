@@ -153,6 +153,16 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
             </li>
           ))}
         </ol>
+        <script is:inline>
+          // The list scrolls inside its box: bring the current lesson into view (never the page).
+          (() => {
+            const list = document.querySelector('.series-list');
+            const current = list?.querySelector('[aria-current="page"]');
+            if (!list || !current || list.scrollHeight <= list.clientHeight) return;
+            const top = current.offsetTop - list.offsetTop;
+            list.scrollTop = top - list.clientHeight / 2 + current.offsetHeight / 2;
+          })();
+        </script>
       </aside>
     )}
   </div>

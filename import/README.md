@@ -1,7 +1,8 @@
 # Channel import (working folder)
 
 Data taken from the public YouTube channel @JustKorean on 2026-10-18 with yt-dlp
-(titles, dates, lengths, playlists; Shorts left out). Nothing here is on the site yet.
+(titles, dates, lengths, playlists). The channel counts 235 videos: 139 long ones (here) and 96
+Shorts (left out). Nothing here is on the site yet.
 
 - `videos.md` — the 139 videos as a table, newest first, with a count per playlist.
 - `videos.json` — the same data for scripts: `id`, `title`, `date`, `duration`, `playlists`, `views`.
@@ -14,7 +15,7 @@ The YouTube descriptions and tags were left out: they are the same boilerplate o
 
 Every playlist below exists in the site code (`src/data/playlists.ts`, titles in every language)
 and in the Pages CMS choice list. The site does not mirror the channel: Listening is folded into
-`podcast`, since 19 of its 20 videos are the podcast episodes. A playlist shows on the Lessons
+`podcast`, since 19 of its 20 videos are the podcast episodes, and K-pop into `culture`. A playlist shows on the Lessons
 page once it has a lesson.
 
 | YouTube playlist                           | Videos | Site id         | Kind                    |
@@ -27,8 +28,7 @@ page once it has a lesson.
 | Shadowing                                  |      6 | `shadowing`     | course (#1–#6 in order) |
 | podcast + Listening                        |     22 | `podcast`       | podcast                 |
 | Reading                                    |      1 | `reading`       | library                 |
-| korean culture                             |      1 | `culture`       | library                 |
-| K-pop                                      |      1 | `kpop`          | library                 |
+| korean culture + K-pop                     |      2 | `culture`       | library                 |
 | no playlist                                |      8 | leave it out    | —                       |
 
 ## Filling a lesson

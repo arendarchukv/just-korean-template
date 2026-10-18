@@ -96,7 +96,7 @@ async function measure(page: import('@playwright/test').Page, path: string): Pro
   return { ...metrics, css, scripts, jsBrotli, fontBytes };
 }
 
-const WIDGET_PAGES = ['/practice/deck/negative-form/'];
+const WIDGET_PAGES = ['/practice/deck/crash-course-04-negation/'];
 
 // '/uk/' loads the Cyrillic font as well.
 for (const path of [

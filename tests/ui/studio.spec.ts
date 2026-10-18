@@ -36,7 +36,7 @@ test('decks that come with a lesson are listed apart', async ({ page }) => {
   await nav.locator('label', { hasText: 'From lessons' }).click();
   await expect(nav.getByRole('link', { name: /Negative Form/ })).toHaveAttribute(
     'href',
-    '/practice/deck/negative-form/',
+    '/practice/deck/crash-course-04-negation/',
   );
 });
 
@@ -93,7 +93,7 @@ test.describe('deck list scales: search and segments', () => {
     await expect(nav.getByRole('link', { name: /Negative Form/ })).toBeVisible();
     await expect(nav.getByRole('link', { name: /At a café/ })).toBeHidden();
     // A deck from a lesson opens with its own segment selected.
-    await page.goto('/practice/deck/negative-form/');
+    await page.goto('/practice/deck/crash-course-04-negation/');
     await expect(
       page
         .getByRole('navigation', { name: 'Choose a deck' })

@@ -4,7 +4,7 @@ test.beforeEach(({}, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop', 'widgets are checked on desktop');
 });
 
-const DECK = '/practice/deck/negative-form/';
+const DECK = '/practice/deck/crash-course-04-negation/';
 
 /** Open the deck and wait until the island has hydrated (client:visible), so clicks work. */
 async function open(page: Page) {
@@ -83,7 +83,10 @@ test('focus stays on the card after an answer, and the meaning is announced', as
 
 test('a deck already learned opens on its end screen', async ({ page }) => {
   await page.addInitScript(() =>
-    localStorage.setItem('jk:deck:negative-form', JSON.stringify(['안 가요', '가지 않아요'])),
+    localStorage.setItem(
+      'jk:deck:crash-course-04-negation',
+      JSON.stringify(['안 가요', '가지 않아요']),
+    ),
   );
   await open(page);
   await expect(page.getByRole('status')).toContainText('You know 2 of 2');
@@ -95,12 +98,15 @@ test('stale or broken stored progress does not break the deck', async ({ page })
   await page.addInitScript(() => {
     if (sessionStorage.getItem('seeded')) return;
     sessionStorage.setItem('seeded', '1');
-    localStorage.setItem('jk:deck:negative-form', '5');
+    localStorage.setItem('jk:deck:crash-course-04-negation', '5');
   });
   await open(page);
   await expect(page.getByRole('button', { name: /안 가요/ })).toBeVisible();
   await page.evaluate(() =>
-    localStorage.setItem('jk:deck:negative-form', JSON.stringify(['removed card', '안 가요'])),
+    localStorage.setItem(
+      'jk:deck:crash-course-04-negation',
+      JSON.stringify(['removed card', '안 가요']),
+    ),
   );
   await page.reload();
   await expect(page.locator('astro-island')).not.toHaveAttribute('ssr', /.*/);

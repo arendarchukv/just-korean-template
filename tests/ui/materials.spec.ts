@@ -35,8 +35,8 @@ test('files added to a lesson have their own tab and link to the lesson', async 
   const fromLessons = page.getByRole('tab', tab(/from lessons/i));
   await expect(fromLessons).toHaveAttribute('aria-selected', 'true');
   await expect(
-    page.getByRole('link', { name: 'Korean numbers and how to use them', exact: true }),
-  ).toHaveAttribute('href', '/lessons/korean-numbers/');
+    page.getByRole('link', { name: 'Beginner Korean Intensive Course! 8. Numbers', exact: true }),
+  ).toHaveAttribute('href', '/lessons/crash-course-08-numbers/');
 });
 
 test('the type filter and the title search narrow the open tab', async ({ page }) => {

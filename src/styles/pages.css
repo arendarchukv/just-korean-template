@@ -95,7 +95,10 @@
     margin-left: 0.15rem;
     font-weight: 500;
     font-variant-numeric: tabular-nums;
-    opacity: 0.75;
+    color: var(--color-muted);
+  }
+  .lesson-chip:has(input:checked) .lesson-chip-count {
+    color: inherit;
   }
   .lessons-about {
     display: flex;

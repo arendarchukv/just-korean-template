@@ -28,10 +28,10 @@ test('without JavaScript the play button is a link to YouTube', async ({ browser
 });
 
 test('a course lesson links to its neighbours', async ({ page }) => {
-  await page.goto('/lessons/negative-form/');
+  await page.goto('/lessons/crash-course-04-negation/');
   await expect(page.getByRole('link', { name: /next/i })).toHaveAttribute(
     'href',
-    '/lessons/location-particles/',
+    '/lessons/crash-course-05-tenses/',
   );
 });
 
@@ -63,14 +63,14 @@ test('Ctrl+click on play opens YouTube normally instead of the embedded player',
 test('a lesson with its own words links to their flashcards page, named after the lesson', async ({
   page,
 }) => {
-  await page.goto('/lessons/negative-form/');
+  await page.goto('/lessons/crash-course-04-negation/');
   await page.getByRole('link', { name: /flashcards/i }).click();
-  await expect(page).toHaveURL(/\/practice\/deck\/negative-form\/$/);
+  await expect(page).toHaveURL(/\/practice\/deck\/crash-course-04-negation\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Negative Form');
   await expect(
     page.getByRole('link', {
       name: 'Beginner Korean Intensive Course! 4. Negative Form',
       exact: true,
     }),
-  ).toHaveAttribute('href', '/lessons/negative-form/');
+  ).toHaveAttribute('href', '/lessons/crash-course-04-negation/');
 });

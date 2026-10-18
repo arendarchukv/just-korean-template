@@ -7,6 +7,7 @@ Shorts (left out). Nothing here is on the site yet.
 - `videos.md` — the 139 videos as a table, newest first, with a count per playlist.
 - `videos.json` — the same data for scripts: `id`, `title`, `date`, `duration`, `playlists`, `views`.
 - `lesson-template.md` — the shape of one lesson file (`src/content/lessons/<slug>.md`).
+- `generate-prompt.md` — a prompt that turns a batch of `videos.json` entries into lesson files.
 
 The YouTube descriptions and tags were left out: they are the same boilerplate on every video
 (subtitles note, website link), so `summary` and `grammar` have to be written or generated.

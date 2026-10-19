@@ -7,10 +7,10 @@
  */
 import { Image } from 'astro:assets';
 import Shape from '@/components/shapes/Shape.astro';
-import placeholder from '@/assets/teacher-placeholder.png';
+import teacherPhoto from '@/assets/teacher-photo.png';
 
 interface Props {
-  /** Her photo (an https:// link, cut out on a plain background) or, until then, the placeholder. */
+  /** A replacement photo as an https:// link (cut out); by default her profile photo in assets. */
   photo?: string;
   alt: string;
 }
@@ -34,11 +34,10 @@ const { photo, alt } = Astro.props;
       fetchpriority="high"
     />
   ) : (
-    // DEMO ONLY: cut out of her own YouTube thumbnail ("게 vs 도록") until she sends a photo.
     <Image
-      src={placeholder}
+      src={teacherPhoto}
       alt={alt}
-      width={520}
+      width={560}
       class="hero-portrait-photo"
       loading="eager"
       fetchpriority="high"

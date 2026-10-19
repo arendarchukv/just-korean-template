@@ -9,8 +9,9 @@
 import type { Localized } from '../i18n/localized';
 
 /**
- * Her photo for the home hero: cut out (or on a plain background), upload to R2 and paste the
- * https:// link (also add the domain to image.domains). Empty: a placeholder cut from her thumbnail.
+ * Her photo for the home hero lives in src/assets/teacher-photo.png (her profile photo, cut out).
+ * To use another one from R2 instead, paste its https:// link here (and add the domain to
+ * image.domains in astro.config.mjs).
  */
 export const TEACHER_PHOTO = '';
 

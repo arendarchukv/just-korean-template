@@ -50,9 +50,10 @@ export const uk: Dictionary = {
   'home.links.news.tag': 'Читання',
   'home.links.news.action': 'Читати новини',
   'home.links.newTab': 'відкривається в новій вкладці',
-  'home.newLessons.eyebrow': 'З каналу',
+  'home.newLessons.eyebrow': 'Відео й читання',
   'home.newLessons.title': 'Нові уроки',
-  'home.newLessons.lead': 'Найновіші відео разом із нотатками і практикою тут, на сайті.',
+  'home.newLessons.lead':
+    'Найновіші уроки: відео з каналу й тексти для читання, зі словами та практикою тут, на сайті.',
   'home.newLessons.all': 'Усі уроки',
   'home.newLessons.watch': 'Дивитися',
   'lessons.all': 'Усі',

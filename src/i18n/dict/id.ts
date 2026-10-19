@@ -50,9 +50,10 @@ export const id: Dictionary = {
   'home.links.news.tag': 'Membaca',
   'home.links.news.action': 'Baca berita',
   'home.links.newTab': 'terbuka di tab baru',
-  'home.newLessons.eyebrow': 'Dari kanal',
+  'home.newLessons.eyebrow': 'Video dan bacaan',
   'home.newLessons.title': 'Pelajaran baru',
-  'home.newLessons.lead': 'Video terbaru, lengkap dengan catatan dan latihan di situs ini.',
+  'home.newLessons.lead':
+    'Pelajaran terbaru: video dari kanal dan bacaan, lengkap dengan kosakata dan latihan di situs ini.',
   'home.newLessons.all': 'Semua pelajaran',
   'home.newLessons.watch': 'Tonton',
   'lessons.all': 'Semua',

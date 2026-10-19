@@ -56,9 +56,10 @@ export const en = {
   'home.links.news.tag': 'Reading',
   'home.links.news.action': 'Read the news',
   'home.links.newTab': 'opens in a new tab',
-  'home.newLessons.eyebrow': 'From the channel',
+  'home.newLessons.eyebrow': 'Videos and readings',
   'home.newLessons.title': 'New lessons',
-  'home.newLessons.lead': 'The newest videos, with notes and practice here on the site.',
+  'home.newLessons.lead':
+    'The newest lessons: videos from the channel and readings, with words and practice here on the site.',
   'home.newLessons.all': 'All lessons',
   'home.newLessons.watch': 'Watch',
   'lessons.all': 'All',

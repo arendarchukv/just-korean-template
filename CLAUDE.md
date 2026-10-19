@@ -266,6 +266,11 @@ Data decisions already made:
   `../../assets/lessons/<file>`), so the build checks and optimises them (`image()` in
   `content.config.ts` via `makeLessonSchema`). A lesson without a video opens with its cover, which
   is also its card thumbnail and share image.
+- Responsive images everywhere (`image.layout: 'constrained'` in `astro.config.mjs`, breakpoints
+  320–1920): every image, Markdown ones in lesson texts included, has a srcset and `sizes`, lazy
+  except the first picture of a page. Remote images (YouTube thumbnails, 480 px at the source) set
+  their own `widths`, since Astro cannot see their size; new `<Image>` uses should pass `sizes`
+  matching their layout.
 - Reading lessons: a lesson may carry `story`, a text in parts (Korean heading, Korean text,
   optional English translation folded under each part); the page then shows 읽기 (reading), 단어
   (the lesson's words as a list), the lesson text (e.g. 문법), 문형 (pattern tags), 연습. Block

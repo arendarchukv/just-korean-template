@@ -15,6 +15,8 @@ interface Props {
   alt: string;
 }
 const { photo, alt } = Astro.props;
+// The picture is at most 30rem wide (.hero-portrait) and the photo a little wider than it.
+const SIZES = '(min-width: 32rem) 32rem, 100vw';
 ---
 
 <div class="collage hero-portrait">
@@ -29,6 +31,8 @@ const { photo, alt } = Astro.props;
       alt={alt}
       width={560}
       height={560}
+      widths={[480, 640, 960]}
+      sizes={SIZES}
       class="hero-portrait-photo"
       loading="eager"
       fetchpriority="high"
@@ -38,6 +42,7 @@ const { photo, alt } = Astro.props;
       src={teacherPhoto}
       alt={alt}
       width={560}
+      sizes={SIZES}
       class="hero-portrait-photo"
       loading="eager"
       fetchpriority="high"

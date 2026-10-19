@@ -63,6 +63,10 @@ export const ko: Dictionary = {
   'home.newLessons.watch': '보기', // TODO(ko-review)
   'lessons.all': '전체',
   'lessons.allLevels': '모든 수준',
+  'lessons.filterFormat': '형식',
+  'lessons.allFormats': '모든 형식',
+  'lessons.format.video': '영상 있음',
+  'lessons.format.text': '영상 없음',
   'lessons.filterPlaylist': '재생목록',
   'lessons.filterLevel': '수준',
   'lessons.search': '강의나 문법 검색',

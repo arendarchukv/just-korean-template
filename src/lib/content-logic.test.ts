@@ -50,20 +50,26 @@ describe('notices', () => {
 });
 
 describe('selectNewLessons', () => {
-  const l = (title: string, date: string, youtube?: string) => ({ title, date: d(date), youtube });
+  const l = (title: string, date: string, youtube?: string, cover?: string) => ({
+    title,
+    date: d(date),
+    youtube,
+    cover,
+  });
 
-  it('takes only video lessons, newest first, limited', () => {
+  it('takes lessons with a picture (a video or a cover), newest first, limited', () => {
     const list = [
       l('A', '2026-09-01', 'aaaaaaaaaaa'),
-      l('No video', '2026-10-10'),
+      l('No picture', '2026-10-12'),
+      l('Cover', '2026-10-10', undefined, 'cover.jpg'),
       l('C', '2026-10-01', 'ccccccccccc'),
       l('B', '2026-10-01', 'bbbbbbbbbbb'),
     ];
-    expect(selectNewLessons(list, 2).map((x) => x.title)).toEqual(['B', 'C']);
+    expect(selectNewLessons(list, 3).map((x) => x.title)).toEqual(['Cover', 'B', 'C']);
   });
 
   it('returns fewer when there are not enough', () => {
-    expect(selectNewLessons([l('No video', '2026-10-10')], 3)).toEqual([]);
+    expect(selectNewLessons([l('No picture', '2026-10-10')], 3)).toEqual([]);
   });
 });
 

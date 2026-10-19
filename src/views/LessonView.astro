@@ -2,10 +2,12 @@
 /** Lesson page: player, text, grammar tags, its own files, words and quiz, playlist navigation. */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VideoFacade from '@/components/VideoFacade.astro';
+import Icon from '@/components/Icon.astro';
+import LevelBadge from '@/components/learn/LevelBadge.astro';
 import { getLessons, renderBody, type Lesson } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { playlistText } from '@/data/playlists';
-import { localizePath, useTranslations } from '@/i18n/utils';
+import { dateFormat, localizePath, useTranslations } from '@/i18n/utils';
 import { neighbours, sortInPlaylist, tagSlug } from '@/lib/site-logic';
 
 interface Props {
@@ -25,6 +27,9 @@ const seriesLessons = playlist
     )
   : [];
 const { prev, next } = neighbours(seriesLessons, lesson.id);
+const isCourse = playlist?.kind === 'course';
+const position = seriesLessons.findIndex((l) => l.id === lesson.id) + 1;
+const dates = dateFormat(lang);
 // The lesson's own words and quiz have their pages under its id (see getDecks / getQuizzes).
 const hasWords = lesson.words.length > 0;
 const hasQuiz = lesson.quiz.length > 0;
@@ -38,12 +43,37 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
       {lesson.youtube && <VideoFacade id={lesson.youtube} title={lesson.title} lang={lang} />}
       <header class="lesson-head">
         {playlist && (
-          <p class="section-eyebrow">
-            <a href={`${localizePath(lang, 'lessons')}#${playlist.id}`}>{playlistTitle}</a>
+          <p class="lesson-kicker">
+            <a class="section-eyebrow" href={`${localizePath(lang, 'lessons')}#${playlist.id}`}>
+              {playlistTitle}
+            </a>
+            {isCourse && (
+              <span class="lesson-position">
+                {t('lesson.position')
+                  .replace('{n}', String(position))
+                  .replace('{total}', String(seriesLessons.length))}
+              </span>
+            )}
           </p>
         )}
         <h1 class="lesson-heading">{lesson.title}</h1>
         {lesson.summary && <p class="page-lead">{lesson.summary}</p>}
+        <div class="lesson-meta-row" data-lesson-meta>
+          <LevelBadge level={lesson.level} label={t(`grammar.level.${lesson.level}` as UIKey)} />
+          <time datetime={lesson.date.toISOString().slice(0, 10)}>{dates.format(lesson.date)}</time>
+          {lesson.youtube && (
+            <a
+              class="lesson-youtube"
+              href={`https://www.youtube.com/watch?v=${lesson.youtube}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon name="youtube" />
+              {t('lesson.watchOnYouTube')}
+              <Icon name="arrow-up-right" class="lesson-youtube-out" />
+            </a>
+          )}
+        </div>
       </header>
       <div class="prose">
         <Body />
@@ -70,50 +100,61 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
         </section>
       )}
 
-      {lesson.files.length > 0 && (
-        <section class="lesson-block" aria-labelledby="lesson-files">
-          <h2 id="lesson-files" class="lesson-block-title">
-            {t('lesson.files')}
-          </h2>
-          <ul class="file-list">
-            {lesson.files.map((f) => (
-              <li>
-                <a class="file-link" href={f.url} target="_blank" rel="noopener noreferrer">
-                  <span class="file-kind">{kind(f.kind)}</span>
-                  <span>{f.label}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
       {(hasWords || hasQuiz) && (
         <section class="lesson-block" aria-labelledby="lesson-practice">
           <h2 id="lesson-practice" class="lesson-block-title">
             {t('lesson.practice')}
           </h2>
-          <ul class="file-list">
+          <ul class="lesson-tiles">
             {hasWords && (
               <li>
-                <a class="file-link" href={localizePath(lang, `practice/deck/${lesson.id}`)}>
-                  <span class="file-kind">{t('lesson.deck')}</span>
-                  <span>
-                    {lesson.words.length} {t('lesson.cards')}
+                <a class="lesson-tile" href={localizePath(lang, `practice/deck/${lesson.id}`)}>
+                  <Icon name="cards" class="lesson-tile-icon" />
+                  <span class="lesson-tile-text">
+                    <span class="lesson-tile-title">{t('lesson.deck')}</span>
+                    <span class="lesson-tile-sub">
+                      {lesson.words.length} {t('lesson.cards')}
+                    </span>
                   </span>
+                  <Icon name="arrow" class="lesson-tile-arrow" />
                 </a>
               </li>
             )}
             {hasQuiz && (
               <li>
-                <a class="file-link" href={localizePath(lang, `practice/quiz/${lesson.id}`)}>
-                  <span class="file-kind">{t('lesson.quiz')}</span>
-                  <span>
-                    {lesson.quiz.length} {t('lesson.questions')}
+                <a class="lesson-tile" href={localizePath(lang, `practice/quiz/${lesson.id}`)}>
+                  <Icon name="quiz" class="lesson-tile-icon" />
+                  <span class="lesson-tile-text">
+                    <span class="lesson-tile-title">{t('lesson.quiz')}</span>
+                    <span class="lesson-tile-sub">
+                      {lesson.quiz.length} {t('lesson.questions')}
+                    </span>
                   </span>
+                  <Icon name="arrow" class="lesson-tile-arrow" />
                 </a>
               </li>
             )}
+          </ul>
+        </section>
+      )}
+
+      {lesson.files.length > 0 && (
+        <section class="lesson-block" aria-labelledby="lesson-files">
+          <h2 id="lesson-files" class="lesson-block-title">
+            {t('lesson.files')}
+          </h2>
+          <ul class="lesson-tiles">
+            {lesson.files.map((f) => (
+              <li>
+                <a class="lesson-tile" href={f.url} target="_blank" rel="noopener noreferrer">
+                  <span class="file-kind">{kind(f.kind)}</span>
+                  <span class="lesson-tile-text">
+                    <span class="lesson-tile-title">{f.label}</span>
+                  </span>
+                  <Icon name="arrow-up-right" class="lesson-tile-arrow" />
+                </a>
+              </li>
+            ))}
           </ul>
         </section>
       )}
@@ -123,13 +164,13 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
           {prev && (
             <a class="pager-link" href={href(prev.id)} rel="prev">
               <span class="pager-label">{t('lesson.prev')}</span>
-              <span>{prev.title}</span>
+              <span class="pager-title">{prev.title}</span>
             </a>
           )}
           {next && (
             <a class="pager-link pager-next" href={href(next.id)} rel="next">
               <span class="pager-label">{t('lesson.next')}</span>
-              <span>{next.title}</span>
+              <span class="pager-title">{next.title}</span>
             </a>
           )}
         </nav>
@@ -138,16 +179,19 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
 
     {seriesLessons.length > 1 && (
       <aside class="lesson-aside" aria-labelledby="lesson-series-title">
-        <h2 id="lesson-series-title" class="lesson-block-title">
-          {playlistTitle}
-        </h2>
+        <div class="lesson-aside-head">
+          <h2 id="lesson-series-title" class="lesson-aside-title">
+            {playlistTitle}
+          </h2>
+          <p class="lesson-aside-count">
+            {t('lessons.count').replace('{total}', String(seriesLessons.length))}
+          </p>
+        </div>
         <ol class="series-list">
           {seriesLessons.map((l, i) => (
             <li>
               <a href={href(l.id)} aria-current={l.id === lesson.id ? 'page' : undefined}>
-                {playlist!.kind === 'course' && (
-                  <span class="series-number">{String(i + 1).padStart(2, '0')}</span>
-                )}
+                {isCourse && <span class="series-number">{String(i + 1).padStart(2, '0')}</span>}
                 <span>{l.title}</span>
               </a>
             </li>

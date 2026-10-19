@@ -14,18 +14,20 @@ interface Props {
 const { lang, showLanguageSwitch = true } = Astro.props;
 const t = useTranslations(lang);
 
-const NAV: { path: string; key: UIKey }[] = [
-  { path: 'lessons', key: 'nav.lessons' },
+// `sections`: the paths a menu item stands for. Grammar has no menu item of its own (the owner's
+// wish); its pages grow out of the lessons, so they belong to Free lessons.
+const NAV: { path: string; key: UIKey; sections?: string[] }[] = [
+  { path: 'lessons', key: 'nav.lessons', sections: ['lessons', 'grammar'] },
   { path: 'materials', key: 'nav.materials' },
   { path: 'practice', key: 'nav.practice' },
   { path: 'classes', key: 'nav.classes' },
 ];
 
 const current = stripLocale(Astro.url.pathname);
-const items = NAV.map((item) => ({
-  href: localizePath(lang, item.path),
-  label: t(item.key),
-  active: current === item.path || current.startsWith(`${item.path}/`),
+const items = NAV.map(({ path, key, sections = [path] }) => ({
+  href: localizePath(lang, path),
+  label: t(key),
+  active: sections.some((section) => current === section || current.startsWith(`${section}/`)),
 }));
 const site = await getSite();
 // Ko-fi support link, shown only once it is set in Site settings.

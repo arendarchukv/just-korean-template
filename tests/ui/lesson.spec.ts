@@ -92,3 +92,41 @@ test('a long playlist scrolls inside its box, with the open lesson in view', asy
   });
   expect(result).toEqual({ scrolls: true, inView: true, page: 0 });
 });
+
+test('the lesson head: title, level, date and a link to the video on YouTube', async ({ page }) => {
+  await page.goto('/lessons/ge-vs-dorok/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+    'Korean Grammar 한국어 문법 : 게 vs 도록',
+  );
+  const meta = page.locator('[data-lesson-meta]');
+  await expect(meta.locator('.badge-level')).toBeVisible();
+  await expect(meta.locator('time')).toHaveAttribute('datetime', /^\d{4}-\d{2}-\d{2}$/);
+  await expect(meta.getByRole('link', { name: /Watch on YouTube/ })).toHaveAttribute(
+    'href',
+    'https://www.youtube.com/watch?v=R3Ny_hDzKpc',
+  );
+});
+
+test('a course lesson says where it sits in the course', async ({ page }) => {
+  await page.goto('/lessons/crash-course-04-negation/');
+  await expect(page.locator('.lesson-head')).toContainText('Lesson 4 of 10');
+});
+
+test('the playlist panel marks the open lesson and says how many lessons it has', async ({
+  page,
+}) => {
+  await page.goto('/lessons/ge-vs-dorok/');
+  const aside = page.locator('.lesson-aside');
+  await expect(aside).toContainText('52 lessons');
+  await expect(aside.locator('[aria-current="page"]')).toHaveText(
+    'Korean Grammar 한국어 문법 : 게 vs 도록',
+  );
+});
+
+test('the Grammar page marks Free lessons as the current section', async ({ page }) => {
+  test.skip(test.info().project.name !== 'desktop', 'the full menu shows on desktop');
+  await page.goto('/grammar/');
+  await expect(
+    page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Free lessons' }),
+  ).toHaveAttribute('aria-current', 'page');
+});

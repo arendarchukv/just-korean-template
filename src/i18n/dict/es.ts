@@ -11,6 +11,8 @@ export const es: Dictionary = {
   'a11y.home': 'Just Korean, inicio',
   'a11y.mainNav': 'Principal',
   'a11y.footerNav': 'Pie de página',
+  'footer.learn': 'Aprende',
+  'footer.connect': 'Conecta',
   'a11y.menu': 'Menú',
   'nav.lessons': 'Lecciones gratis',
   'nav.practice': 'Práctica',
@@ -167,6 +169,7 @@ export const es: Dictionary = {
   'contact.demoSent':
     'Esto es una demostración: tu mensaje no se ha enviado. Aquí irá el formulario real (Tally).',
   'lesson.watchOnYouTube': 'Ver en YouTube',
+  'lesson.position': 'Lección {n} de {total}',
   'lesson.play': 'Reproducir vídeo',
   'lesson.grammar': 'Gramática de esta lección',
   'lesson.files': 'Archivos',

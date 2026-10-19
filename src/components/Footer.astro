@@ -1,4 +1,5 @@
 ---
+import Icon, { type IconName } from '@/components/Icon.astro';
 import Logo from '@/components/Logo.astro';
 import { SITE } from '@/config';
 import { getSite } from '@/content/queries';
@@ -13,75 +14,88 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const site = await getSite();
 
-// Links are edited in Pages CMS (Site settings); empty ones are left out, as the CMS hint says.
-const LINKS: { href: string; label: UIKey }[] = [
-  { href: site.social.youtube, label: 'footer.youtube' },
-  { href: site.social.instagram, label: 'footer.instagram' },
-  // Tally form when set; until then the demo contact page.
-  { href: site.contactForm || localizePath(lang, 'contact'), label: 'footer.contact' },
-  { href: site.social.kofi, label: 'nav.support' },
-];
-
 // The site's pages. Grammar is not in the header menu (the owner's wish), so it is reached here.
-const PAGES: { path: string; label: UIKey }[] = [
+const LEARN: { path: string; label: UIKey }[] = [
   { path: 'lessons', label: 'nav.lessons' },
   { path: 'grammar', label: 'page.grammar.title' },
   { path: 'materials', label: 'nav.materials' },
   { path: 'practice', label: 'nav.practice' },
-  { path: 'classes', label: 'nav.classes' },
 ];
 
+// Links are edited in Pages CMS (Site settings); empty ones are left out, as the CMS hint says.
+const CONNECT: { href: string; label: UIKey; icon: IconName }[] = [
+  { href: localizePath(lang, 'classes'), label: 'nav.classes', icon: 'cap' },
+  // Tally form when set; until then the demo contact page.
+  {
+    href: site.contactForm || localizePath(lang, 'contact'),
+    label: 'footer.contact',
+    icon: 'mail',
+  },
+  { href: site.social.kofi, label: 'nav.support', icon: 'cup' },
+];
+
+// Her channels as icon buttons under the logo, apart from the page links.
+const SOCIAL: { href: string; label: UIKey; icon: IconName }[] = [
+  { href: site.social.youtube, label: 'footer.youtube', icon: 'youtube' },
+  { href: site.social.instagram, label: 'footer.instagram', icon: 'instagram' },
+];
+
+const external = (href: string) =>
+  href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-24 border-t border-border bg-surface">
-  <div
-    class="container-page flex flex-col gap-8 py-10 md:flex-row md:items-start md:justify-between"
-    data-print="hide"
-  >
-    <div class="flex flex-col gap-3">
+<footer class="site-footer">
+  <div class="container-page footer-main" data-print="hide">
+    <div class="footer-brand">
       <Logo wordmark class="text-lg" />
-      <p class="max-w-xs text-sm text-muted">{t('site.tagline')}</p>
-    </div>
-
-    <nav aria-label={t('a11y.footerNav')} class="flex flex-col gap-3 md:items-end">
-      <ul class="flex flex-wrap gap-x-2 gap-y-1 md:justify-end" data-footer-pages>
-        {PAGES.map(({ path, label }) => (
+      <p class="footer-tagline">{t('site.tagline')}</p>
+      <ul class="footer-social">
+        {SOCIAL.filter(({ href }) => href).map(({ href, label, icon }) => (
           <li>
-            <a href={localizePath(lang, path)} class="nav-link text-sm font-semibold">
-              {t(label)}
+            <a href={href} {...external(href)} class="footer-social-link" aria-label={t(label)}>
+              <Icon name={icon} />
             </a>
           </li>
         ))}
       </ul>
-      <ul class="flex flex-wrap gap-x-2 gap-y-1 md:justify-end">
-        {/* DEMO ONLY: the site guide (English-only, not translated). */}
-        <li>
-          <a href="/guide/" class="nav-link text-sm">
-            {t('footer.guide')}
-          </a>
-        </li>
-        {LINKS.filter(({ href }) => href).map(({ href, label }) => {
-          const external = href.startsWith('http');
-          return (
+    </div>
+
+    <nav aria-label={t('a11y.footerNav')} class="footer-nav">
+      <div class="footer-group">
+        <h2 class="footer-heading">{t('footer.learn')}</h2>
+        <ul data-footer-pages>
+          {LEARN.map(({ path, label }) => (
             <li>
-              <a
-                href={href}
-                target={external ? '_blank' : undefined}
-                rel={external ? 'noopener noreferrer' : undefined}
-                class="nav-link text-sm"
-              >
+              <a href={localizePath(lang, path)} class="footer-link">
                 {t(label)}
               </a>
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      </div>
+      <div class="footer-group">
+        <h2 class="footer-heading">{t('footer.connect')}</h2>
+        <ul>
+          {CONNECT.filter(({ href }) => href).map(({ href, label, icon }) => (
+            <li>
+              <a href={href} {...external(href)} class="footer-link">
+                <Icon name={icon} />
+                {t(label)}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   </div>
-  <div class="container-page border-t border-border py-5 text-sm text-muted">
+  <div class="container-page footer-bottom">
     <p>
       &copy; {year} {SITE.name}. {t('footer.rights')}
     </p>
+    {/* DEMO ONLY: the site guide (English-only, not translated). */}
+    <a href="/guide/" class="footer-link" data-print="hide">
+      {t('footer.guide')}
+    </a>
   </div>
 </footer>

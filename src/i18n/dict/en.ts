@@ -9,6 +9,8 @@ export const en = {
   'a11y.home': 'Just Korean, home',
   'a11y.mainNav': 'Main',
   'a11y.footerNav': 'Footer',
+  'footer.learn': 'Learn',
+  'footer.connect': 'Connect',
   'a11y.menu': 'Menu',
 
   'nav.lessons': 'Free lessons',
@@ -176,6 +178,7 @@ export const en = {
     'This is a demo: your message was not sent. The real form (Tally) will go here.',
 
   'lesson.watchOnYouTube': 'Watch on YouTube',
+  'lesson.position': 'Lesson {n} of {total}',
   'lesson.play': 'Play video',
   'lesson.grammar': 'Grammar in this lesson',
   'lesson.files': 'Files',

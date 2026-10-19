@@ -12,6 +12,8 @@ export const ko: Dictionary = {
   'a11y.home': 'Just Korean 홈',
   'a11y.mainNav': '주 메뉴',
   'a11y.footerNav': '하단 메뉴',
+  'footer.learn': '배우기',
+  'footer.connect': '함께하기',
   'a11y.menu': '메뉴',
 
   'nav.lessons': '무료 강의',
@@ -174,6 +176,7 @@ export const ko: Dictionary = {
     '데모예요: 메시지가 보내지지 않았어요. 여기에 실제 양식(Tally)이 들어갈 거예요.',
 
   'lesson.watchOnYouTube': '유튜브에서 보기',
+  'lesson.position': '{total}강 중 {n}강',
   'lesson.play': '영상 재생',
   'lesson.grammar': '이 강의의 문법',
   'lesson.files': '자료',

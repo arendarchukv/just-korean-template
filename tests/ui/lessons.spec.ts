@@ -116,3 +116,27 @@ test('when nothing matches, one button clears every filter', async ({ page }) =>
   await expect(page.getByRole('searchbox', { name: 'Search lessons or patterns' })).toBeFocused();
   await expect(clear).toBeHidden();
 });
+
+test('a format filter separates lessons with a video from those without', async ({ page }) => {
+  await page.goto('/lessons/');
+  const format = page.getByRole('combobox', { name: 'Format' });
+  await format.selectOption('text');
+  await expect(page).toHaveURL(/\/lessons\/\?format=text$/);
+  await expect(titles(page)).toHaveText(['환향녀 이야기', '곰과 호랑이 이야기 (단군 신화)']);
+  await format.selectOption('video');
+  await expect(status(page)).toHaveText('139 lessons');
+  // Clear filters resets it too.
+  await page.getByRole('searchbox', { name: 'Search lessons or patterns' }).fill('zzz');
+  await page.getByRole('button', { name: 'Clear filters' }).click();
+  await expect(format).toHaveValue('');
+  await expect(status(page)).toHaveText('141 lessons');
+});
+
+test('the home page shows the three newest lessons, a lesson without video among them', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const cards = page.locator('[data-home-block="new-lessons"] .lesson-title');
+  await expect(cards).toHaveCount(3);
+  await expect(cards.first()).toHaveText('환향녀 이야기');
+});

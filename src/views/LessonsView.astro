@@ -1,7 +1,7 @@
 ---
 /**
  * Lessons library: every lesson as the same card in one grid, newest first. Above it a playlist
- * choice (All · each playlist), a level filter and a search over titles, summaries and grammar
+ * choice (All · each playlist), level and format (with or without a video) filters and a search over titles, summaries and grammar
  * patterns; 24 cards a page, with the Materials pager. A course, once chosen, reads oldest first; its cards
  * carry "Lesson 3" everywhere. The view lives in the address (`?playlist=grammar&level=…&q=…&page=2`),
  * so Back from a lesson returns to it and the lesson page can link to its playlist. When nothing
@@ -30,6 +30,7 @@ const playlists = getPlaylists()
   }))
   .filter((p) => p.lessons.length > 0);
 const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
+const FORMATS = ['video', 'text'] as const;
 ---
 
 <BaseLayout title={t('page.lessons.title')}>
@@ -82,6 +83,15 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
             ))}
           </select>
         </label>
+        <label class="mat-tool">
+          <span class="sr-only">{t('lessons.filterFormat')}</span>
+          <select class="field" data-lessons-format>
+            <option value="">{t('lessons.allFormats')}</option>
+            {FORMATS.map((k) => (
+              <option value={k}>{t(`lessons.format.${k}` as UIKey)}</option>
+            ))}
+          </select>
+        </label>
         <label class="mat-tool mat-search">
           <span class="sr-only">{t('lessons.search')}</span>
           <input
@@ -123,6 +133,7 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
         <li
           data-playlist={l.playlist ?? ''}
           data-level={l.level}
+          data-format={l.youtube ? 'video' : 'text'}
           data-date={l.date.toISOString()}
           data-search={[l.title, l.summary ?? '', ...l.grammar].join(' ').toLowerCase()}
         >
@@ -146,6 +157,7 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
       const items = [...grid.children];
       const radios = [...root.querySelectorAll('[data-lessons-playlist]')];
       const level = root.querySelector('[data-lessons-level]');
+      const format = root.querySelector('[data-lessons-format]');
       const search = root.querySelector('[data-lessons-search]');
       const status = root.querySelector('[data-lessons-status]');
       const pager = root.querySelector('[data-lessons-pager]');
@@ -178,10 +190,11 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
       };
 
       /** The view in the address: playlist, level, search and page (only what is set). */
-      const writeAddress = (playlist, lvl, q) => {
+      const writeAddress = (playlist, lvl, fmt, q) => {
         const params = new URLSearchParams();
         if (playlist) params.set('playlist', playlist);
         if (lvl) params.set('level', lvl);
+        if (fmt) params.set('format', fmt);
         if (q) params.set('q', q);
         if (page > 1) params.set('page', String(page));
         const query = params.toString();
@@ -193,6 +206,8 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
         (chosen ?? radios[0]).checked = true;
         const lvl = params.get('level') ?? '';
         level.value = [...level.options].some((o) => o.value === lvl) ? lvl : '';
+        const fmt = params.get('format') ?? '';
+        format.value = [...format.options].some((o) => o.value === fmt) ? fmt : '';
         search.value = params.get('q') ?? '';
         page = Math.max(1, Number.parseInt(params.get('page') ?? '1', 10) || 1);
       };
@@ -202,6 +217,7 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
         const chosen = radios.find((r) => r.checked);
         const playlist = chosen?.value ?? '';
         const lvl = level.value;
+        const fmt = format.value;
         const query = search.value.trim();
         const q = query.toLowerCase();
         for (const about of root.querySelectorAll('[data-lessons-about]')) {
@@ -219,6 +235,7 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
           (li) =>
             (!playlist || li.dataset.playlist === playlist) &&
             (!lvl || li.dataset.level === lvl) &&
+            (!fmt || li.dataset.format === fmt) &&
             (!q || li.dataset.search.includes(q)),
         );
         const pages = Math.max(1, Math.ceil(matches.length / size));
@@ -231,7 +248,7 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
             ? status.dataset.none
             : fill(root.dataset.labelCount, { total: matches.length });
         empty.hidden = matches.length > 0;
-        writeAddress(playlist, lvl, query);
+        writeAddress(playlist, lvl, fmt, query);
 
         pager.hidden = pages <= 1;
         if (pages <= 1) return;
@@ -265,6 +282,7 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
 
       for (const r of radios) r.addEventListener('change', () => update());
       level.addEventListener('change', () => update());
+      format.addEventListener('change', () => update());
       search.addEventListener('input', (event) => {
         if (!event.isComposing) update();
       });
@@ -272,6 +290,7 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
       root.querySelector('[data-lessons-clear]').addEventListener('click', () => {
         radios[0].checked = true;
         level.value = '';
+        format.value = '';
         search.value = '';
         update();
         search.focus();

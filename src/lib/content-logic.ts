@@ -31,13 +31,15 @@ export function sortNotices<T extends NoticeLike>(notices: T[]): T[] {
   );
 }
 
-/** Latest lessons that have a YouTube video, newest first. */
-export function selectNewLessons<T extends { youtube?: string; date: Date; title: string }>(
-  lessons: T[],
-  count: number,
-): T[] {
+/**
+ * Latest lessons that have a picture for their card (a YouTube video or a cover), newest first.
+ * A lesson with neither would show only the paper placeholder on the home page.
+ */
+export function selectNewLessons<
+  T extends { youtube?: string; cover?: unknown; date: Date; title: string },
+>(lessons: T[], count: number): T[] {
   return lessons
-    .filter((l) => l.youtube)
+    .filter((l) => l.youtube || l.cover)
     .sort((a, b) => b.date.getTime() - a.date.getTime() || a.title.localeCompare(b.title))
     .slice(0, count);
 }

@@ -47,6 +47,30 @@ describe('lessonSchema', () => {
     expect(quizSchema.shape.questions.parse(r.quiz)).toEqual(r.quiz);
   });
 
+  it('may carry a cover image and a reading text in parts, each with an optional translation', () => {
+    const r = lessonSchema.parse({
+      ...base,
+      cover: '../../assets/lessons/bear.png',
+      story: [
+        {
+          title: '사람이 되고 싶은 동물들',
+          text: '옛날에 곰이 살았어요.',
+          translation: 'Long ago…',
+        },
+        { title: '환웅의 시험', text: '환웅은 쑥과 마늘을 주었어요.' },
+      ],
+    });
+    expect(r.cover).toBe('../../assets/lessons/bear.png');
+    expect(r.story[1]!.translation).toBeUndefined();
+    expect(lessonSchema.parse(base).story).toEqual([]);
+  });
+
+  it('rejects a reading part without Korean text', () => {
+    expect(lessonSchema.safeParse({ ...base, story: [{ title: '1', text: '' }] }).success).toBe(
+      false,
+    );
+  });
+
   it('rejects a broken question inside a lesson, as in a separate quiz', () => {
     const r = lessonSchema.safeParse({
       ...base,

@@ -25,6 +25,8 @@ interface Props {
   noindex?: boolean;
   /** Page exists in one language only: no hreflang alternates, no language switch. */
   monolingual?: boolean;
+  /** Share image (1200×630) instead of the default one, e.g. a lesson cover. */
+  image?: { src: string; alt: string };
 }
 
 const lang: Lang = getLangFromUrl(Astro.url);
@@ -35,6 +37,7 @@ const {
   description = t('site.description'),
   noindex = false,
   monolingual = false,
+  image,
 } = Astro.props;
 const showAlternates = !noindex && !monolingual;
 const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${t('site.tagline')}`;
@@ -47,8 +50,9 @@ const alternates = (Object.keys(languages) as Lang[]).map((l) => ({
 }));
 const xDefault = alternates.find((a) => a.lang === defaultLang)!.href;
 const ogLocale = LOCALES[lang].og;
-// Default share image, rendered by `npm run icons`.
-const ogImage = new URL('/og-default.png', site).href;
+// Share image: the page's own, else the default one rendered by `npm run icons`.
+const ogImage = new URL(image?.src ?? '/og-default.png', site).href;
+const ogImageAlt = image?.alt ?? t('site.ogImageAlt');
 ---
 
 <!doctype html>
@@ -81,7 +85,7 @@ const ogImage = new URL('/og-default.png', site).href;
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={t('site.ogImageAlt')} />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

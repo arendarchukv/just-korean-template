@@ -1,5 +1,7 @@
 # Pages CMS forms. Keep in step with src/content/schemas.ts (checked by pages-config.test.ts).
-# Files (PDF, audio, photos) live in Cloudflare R2: upload there, paste the public link here.
+# Heavy files (PDF, audio) live in Cloudflare R2: upload there, paste the public link here.
+# Lesson images (cover, pictures in the text) are uploaded here and kept in the repository, where
+# the build optimises them.
 # Simple on purpose: no form points at another. A lesson carries its own words, quiz and files;
 # the same parts can also be added on their own (Words, Quizzes, Materials) with the same fields.
 
@@ -106,6 +108,16 @@ components:
             type: text
             description: Shown after answering (optional).
 
+# Lesson images. `output` is written into the lesson file: a path from src/content/lessons/ to the
+# image, which Astro resolves and optimises at build.
+media:
+  - name: lessons
+    label: Lesson images
+    input: src/assets/lessons
+    output: ../../assets/lessons
+    categories: [image]
+    rename: safe
+
 content:
   - name: lessons
     label: Lessons
@@ -130,6 +142,11 @@ content:
         description: Paste the YouTube link (or the 11-character video id). Leave empty for a lesson without a video.
         pattern:
           { regex: '(youtube\.com/|youtu\.be/|^[\w-]{11}$)', message: Paste a YouTube video link }
+      - name: cover
+        label: Cover image
+        type: image
+        description: A picture for the card and the top of the lesson (wide, 16:9 works best). A lesson with a video shows the video instead, and the picture only on its card when it has no video.
+        options: { media: lessons }
       - name: playlist
         type: select
         description: The playlist it belongs to (optional). A course is shown in date order.
@@ -155,6 +172,25 @@ content:
       - name: summary
         type: text
         description: One or two sentences for cards and search results.
+      - name: story
+        label: Reading text
+        description: A text to read, in parts (optional), e.g. a story. Korean only in the text; the translation stays folded until a student opens it.
+        list: { collapsible: { collapsed: true, summary: '{title}' } }
+        type: object
+        fields:
+          - name: title
+            label: Heading
+            type: string
+            description: A short Korean heading for this part (optional).
+          - name: text
+            label: Korean text
+            type: text
+            required: true
+            description: The Korean text of this part. A blank line starts a new paragraph.
+          - name: translation
+            label: Translation
+            type: text
+            description: English translation of this part (optional), shown on request.
       - name: grammar
         label: Grammar patterns
         type: string
@@ -178,7 +214,8 @@ content:
       - name: body
         type: rich-text
         label: Lesson text
-        description: Explanation or transcript shown on the lesson page.
+        description: Explanation or transcript shown on the lesson page. The image button adds a picture to the text.
+        options: { format: markdown, media: lessons }
 
   - name: decks
     label: Words

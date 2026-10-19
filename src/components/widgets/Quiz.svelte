@@ -156,6 +156,22 @@
     answers[i] ? (answers[i].correct ? 'correct' : 'wrong') : i === index ? 'current' : 'todo';
 </script>
 
+<!-- Right / wrong mark, the same drawing on the options and in the review. -->
+{#snippet mark(correct: boolean)}
+  <svg
+    viewBox="0 0 20 20"
+    width="20"
+    height="20"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    {#if correct}<path d="M4 10.5l4 4 8-9" />{:else}<path d="M5 5l10 10M15 5L5 15" />{/if}
+  </svg>
+{/snippet}
+
 <div class="widget quiz">
   {#if !finished && question}
     <div class="quiz-bar">
@@ -187,28 +203,7 @@
               <span class="quiz-letter" aria-hidden="true">{LETTERS[i]}</span>
               <span class="quiz-option-text" lang="ko">{option.text}</span>
               <span class="quiz-icon" aria-hidden="true">
-                {#if state === 'correct'}
-                  <svg
-                    viewBox="0 0 20 20"
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"><path d="M4 10.5l4 4 8-9" /></svg
-                  >
-                {:else if state === 'wrong'}
-                  <svg
-                    viewBox="0 0 20 20"
-                    width="20"
-                    height="20"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.2"
-                    stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15" /></svg
-                  >
-                {/if}
+                {#if state !== 'default'}{@render mark(state === 'correct')}{/if}
               </span>
               {#if state === 'correct'}<span class="sr-only">({labels.correct})</span>{/if}
               {#if state === 'wrong'}<span class="sr-only">({labels.wrong})</span>{/if}
@@ -301,7 +296,9 @@
         {#each questions as q, i (i)}
           {@const a = answers[i]}
           <li data-correct={a?.correct ?? false}>
-            <span class="quiz-review-mark" aria-hidden="true">{a?.correct ? '✓' : '✕'}</span>
+            <span class="quiz-review-mark" aria-hidden="true"
+              >{@render mark(a?.correct ?? false)}</span
+            >
             <div>
               <p class="quiz-review-prompt" lang="ko">
                 {q.type === 'choice' ? q.prompt : q.sentence}

@@ -67,6 +67,7 @@ export const ko: Dictionary = {
   'lessons.filterLevel': '수준',
   'lessons.search': '강의나 문법 검색',
   'lessons.noResults': '맞는 강의가 없어요. 다른 수준이나 단어로 찾아보세요.',
+  'lessons.clear': '필터 초기화',
   'lessons.number': '{n}강',
   'lessons.count': '강의 {total}개',
   'lessons.read': '읽기', // TODO(ko-review)
@@ -216,6 +217,7 @@ export const ko: Dictionary = {
 
   'notFound.title': '페이지를 찾을 수 없어요',
   'notFound.body': '찾으시는 페이지가 없거나 이동되었어요.',
+  'notFound.try': '다른 곳으로 가기',
   'practice.searchDecks': '카드 묶음이나 단어 검색', // TODO(ko-review)
   'practice.searchQuizzes': '퀴즈 검색', // TODO(ko-review)
   'practice.noMatch': '찾는 결과가 없어요.', // TODO(ko-review)

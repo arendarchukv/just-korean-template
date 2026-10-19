@@ -3,8 +3,9 @@
  * Lessons library: every lesson as the same card in one grid, newest first. Above it a playlist
  * choice (All · each playlist), a level filter and a search over titles, summaries and grammar
  * patterns; 24 cards a page, with the Materials pager. A course, once chosen, reads oldest first; its cards
- * carry "Lesson 3" everywhere. `#<playlist>` in the address opens that playlist (the lesson page
- * links there). Without JS: the full grid, no controls.
+ * carry "Lesson 3" everywhere. The view lives in the address (`?playlist=grammar&level=…&q=…&page=2`),
+ * so Back from a lesson returns to it and the lesson page can link to its playlist. When nothing
+ * matches, one button clears the filters. Without JS: the full grid, no controls.
  */
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import LessonCard from '@/components/LessonCard.astro';
@@ -111,6 +112,11 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
       data-lessons-status
       data-none={t('lessons.noResults')}
     ></p>
+    <div class="lessons-empty" data-lessons-empty hidden>
+      <button type="button" class="btn btn-ghost" data-lessons-clear>
+        {t('lessons.clear')}
+      </button>
+    </div>
 
     <ul class="lesson-row lessons-grid" data-lessons-grid>
       {lessons.map((l) => (
@@ -143,6 +149,7 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
       const search = root.querySelector('[data-lessons-search]');
       const status = root.querySelector('[data-lessons-status]');
       const pager = root.querySelector('[data-lessons-pager]');
+      const empty = root.querySelector('[data-lessons-empty]');
       const size = Number(root.dataset.pageSize) || 24;
       let page = 1;
       root.querySelector('[data-lessons-tools]').hidden = false;
@@ -170,12 +177,33 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
         return list;
       };
 
+      /** The view in the address: playlist, level, search and page (only what is set). */
+      const writeAddress = (playlist, lvl, q) => {
+        const params = new URLSearchParams();
+        if (playlist) params.set('playlist', playlist);
+        if (lvl) params.set('level', lvl);
+        if (q) params.set('q', q);
+        if (page > 1) params.set('page', String(page));
+        const query = params.toString();
+        history.replaceState(null, '', query ? `?${query}` : location.pathname);
+      };
+      const readAddress = () => {
+        const params = new URLSearchParams(location.search);
+        const chosen = radios.find((r) => r.value === (params.get('playlist') ?? ''));
+        (chosen ?? radios[0]).checked = true;
+        const lvl = params.get('level') ?? '';
+        level.value = [...level.options].some((o) => o.value === lvl) ? lvl : '';
+        search.value = params.get('q') ?? '';
+        page = Math.max(1, Number.parseInt(params.get('page') ?? '1', 10) || 1);
+      };
+
       const update = (keepPage = false) => {
         if (!keepPage) page = 1;
         const chosen = radios.find((r) => r.checked);
         const playlist = chosen?.value ?? '';
         const lvl = level.value;
-        const q = search.value.trim().toLowerCase();
+        const query = search.value.trim();
+        const q = query.toLowerCase();
         for (const about of root.querySelectorAll('[data-lessons-about]')) {
           about.hidden = about.dataset.lessonsAbout !== playlist;
         }
@@ -202,6 +230,8 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
           matches.length === 0
             ? status.dataset.none
             : fill(root.dataset.labelCount, { total: matches.length });
+        empty.hidden = matches.length > 0;
+        writeAddress(playlist, lvl, query);
 
         pager.hidden = pages <= 1;
         if (pages <= 1) return;
@@ -233,21 +263,21 @@ const LEVELS = ['beginner', 'intermediate', 'advanced'] as const;
         );
       };
 
-      for (const r of radios) {
-        r.addEventListener('change', () => {
-          history.replaceState(null, '', r.value ? `#${r.value}` : location.pathname);
-          update();
-        });
-      }
+      for (const r of radios) r.addEventListener('change', () => update());
       level.addEventListener('change', () => update());
       search.addEventListener('input', (event) => {
         if (!event.isComposing) update();
       });
       search.addEventListener('compositionend', () => update());
-      // #crash-course opens that playlist, e.g. from a lesson page.
-      const fromHash = radios.find((r) => r.value && `#${r.value}` === location.hash);
-      if (fromHash) fromHash.checked = true;
-      update();
+      root.querySelector('[data-lessons-clear]').addEventListener('click', () => {
+        radios[0].checked = true;
+        level.value = '';
+        search.value = '';
+        update();
+        search.focus();
+      });
+      readAddress();
+      update(true);
       window.addEventListener('pageshow', () => update(true));
     })();
   </script>

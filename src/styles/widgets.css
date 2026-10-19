@@ -492,9 +492,11 @@
     height: 1.6rem;
     border-radius: 50%;
     background: var(--color-danger-tint);
-    font-size: var(--text-sm);
-    font-weight: 700;
     color: var(--color-danger);
+  }
+  .quiz-review-mark svg {
+    width: 0.95rem;
+    height: 0.95rem;
   }
   .quiz-review li[data-correct='true'] .quiz-review-mark {
     background: var(--color-teal-tint);

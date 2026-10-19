@@ -13,7 +13,7 @@ test('every lesson is the same card in one grid, newest first, 24 a page', async
 });
 
 test('a course lesson says where it sits in the course', async ({ page }) => {
-  await page.goto('/lessons/#crash-course');
+  await page.goto('/lessons/?playlist=crash-course');
   await expect(
     page.locator('[data-lessons-grid] li:visible .lesson-meta', { hasText: 'Lesson 4' }),
   ).toContainText('Beginner Korean Crash Course');
@@ -22,7 +22,7 @@ test('a course lesson says where it sits in the course', async ({ page }) => {
 test('choosing a course shows its lessons in order with its description', async ({ page }) => {
   await page.goto('/lessons/');
   await page.locator('label', { hasText: 'Beginner Korean Crash Course' }).click();
-  await expect(page).toHaveURL(/#crash-course$/);
+  await expect(page).toHaveURL(/\/lessons\/\?playlist=crash-course$/);
   await expect(titles(page)).toHaveCount(10);
   await expect(titles(page).first()).toContainText('1.');
   await expect(titles(page).last()).toContainText('10.');
@@ -48,7 +48,7 @@ test('level and search narrow the grid; a pattern finds its lessons', async ({ p
 test('a lesson links back to its playlist, opened on the Lessons page', async ({ page }) => {
   await page.goto('/lessons/ge-vs-dorok/');
   await page.locator('.lesson-head').getByRole('link', { name: 'Grammar' }).click();
-  await expect(page).toHaveURL(/\/lessons\/#grammar$/);
+  await expect(page).toHaveURL(/\/lessons\/\?playlist=grammar$/);
   await expect(page.getByRole('radio', { name: /Grammar/ })).toBeChecked();
   await expect(status(page)).toHaveText('52 lessons');
 });
@@ -70,4 +70,49 @@ test('the pager pages through the list and restarts on page 1 after a filter', a
     'aria-current',
     'page',
   );
+});
+
+test('the filters live in the address, so Back from a lesson returns to the same view', async ({
+  page,
+}) => {
+  await page.goto('/lessons/');
+  await page.locator('label', { hasText: 'Grammar' }).first().click();
+  await page.getByRole('combobox', { name: 'Level' }).selectOption('intermediate');
+  await page.getByRole('searchbox', { name: 'Search lessons or patterns' }).fill('vs');
+  await expect(page).toHaveURL(/\?playlist=grammar&level=intermediate&q=vs$/);
+  const count = await status(page).textContent();
+  await titles(page).first().click();
+  await expect(page.locator('.lesson-head')).toBeVisible();
+  await page.goBack();
+  await expect(page.getByRole('radio', { name: /Grammar/ })).toBeChecked();
+  await expect(page.getByRole('combobox', { name: 'Level' })).toHaveValue('intermediate');
+  await expect(page.getByRole('searchbox', { name: 'Search lessons or patterns' })).toHaveValue(
+    'vs',
+  );
+  await expect(status(page)).toHaveText(count!);
+});
+
+test('the page number is kept in the address too', async ({ page }) => {
+  await page.goto('/lessons/?page=3');
+  const pager = page.getByRole('navigation', { name: 'Pages' });
+  await expect(pager.getByRole('button', { name: 'Page 3' })).toHaveAttribute(
+    'aria-current',
+    'page',
+  );
+  await pager.getByRole('button', { name: 'Page 4' }).click();
+  await expect(page).toHaveURL(/\/lessons\/\?page=4$/);
+  // A new filter starts again from page 1, which the address leaves out.
+  await page.locator('label', { hasText: 'Beginner Korean Crash Course' }).click();
+  await expect(page).toHaveURL(/\/lessons\/\?playlist=crash-course$/);
+});
+
+test('when nothing matches, one button clears every filter', async ({ page }) => {
+  await page.goto('/lessons/?playlist=podcast&level=advanced&q=zzz');
+  const clear = page.getByRole('button', { name: 'Clear filters' });
+  await expect(clear).toBeVisible();
+  await clear.click();
+  await expect(status(page)).toHaveText('139 lessons');
+  await expect(page).toHaveURL(/\/lessons\/$/);
+  await expect(page.getByRole('searchbox', { name: 'Search lessons or patterns' })).toBeFocused();
+  await expect(clear).toBeHidden();
 });

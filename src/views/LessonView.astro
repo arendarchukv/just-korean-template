@@ -44,7 +44,10 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
       <header class="lesson-head">
         {playlist && (
           <p class="lesson-kicker">
-            <a class="section-eyebrow" href={`${localizePath(lang, 'lessons')}#${playlist.id}`}>
+            <a
+              class="section-eyebrow"
+              href={`${localizePath(lang, 'lessons')}?playlist=${playlist.id}`}
+            >
               {playlistTitle}
             </a>
             {isCourse && (

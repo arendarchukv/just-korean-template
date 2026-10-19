@@ -67,6 +67,7 @@ export const en = {
   'lessons.filterLevel': 'Level',
   'lessons.search': 'Search lessons or patterns',
   'lessons.noResults': 'No lessons match. Try another level or word.',
+  'lessons.clear': 'Clear filters',
   'lessons.number': 'Lesson {n}',
   'lessons.count': '{total} lessons',
   'lessons.read': 'Read',
@@ -218,6 +219,7 @@ export const en = {
 
   'notFound.title': 'Page not found',
   'notFound.body': 'The page you are looking for does not exist or has moved.',
+  'notFound.try': 'Or go to',
   'practice.searchDecks': 'Search decks or words',
   'practice.searchQuizzes': 'Search quizzes',
   'practice.noMatch': 'Nothing found.',

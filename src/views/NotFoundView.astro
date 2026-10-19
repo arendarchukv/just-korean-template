@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Collage from '@/components/shapes/Collage.astro';
-import type { Lang } from '@/i18n/ui';
+import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
 interface Props {
@@ -10,6 +10,13 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
+// The main sections, so a broken link still leads somewhere useful.
+const SECTIONS: { path: string; label: UIKey }[] = [
+  { path: 'lessons', label: 'nav.lessons' },
+  { path: 'grammar', label: 'page.grammar.title' },
+  { path: 'practice', label: 'nav.practice' },
+  { path: 'materials', label: 'nav.materials' },
+];
 ---
 
 <BaseLayout title={t('notFound.title')} noindex>
@@ -21,6 +28,20 @@ const t = useTranslations(lang);
       <a href={localizePath(lang)} class="btn btn-primary mt-10">
         {t('placeholder.backHome')}
       </a>
+      <nav class="not-found-links" aria-labelledby="not-found-links">
+        <h2 id="not-found-links" class="not-found-links-title">
+          {t('notFound.try')}
+        </h2>
+        <ul data-not-found-links>
+          {SECTIONS.map(({ path, label }) => (
+            <li>
+              <a href={localizePath(lang, path)} class="link">
+                {t(label)}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
     <Collage variant="compact" class="mx-auto max-w-56 md:max-w-xs" />
   </section>

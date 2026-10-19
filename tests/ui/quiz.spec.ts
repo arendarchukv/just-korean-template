@@ -97,4 +97,7 @@ test('steps colour each answer, and the result shows the score, counts and a rev
   await expect(first).toContainText('Answer: 도록');
   await expect(first).toContainText('-도록 states the purpose');
   await expect(review.getByRole('listitem').nth(1)).toHaveAttribute('data-correct', 'true');
+  // The review marks are the same drawn icons as the options, not text glyphs.
+  await expect(review.locator('.quiz-review-mark svg')).toHaveCount(2);
+  await expect(review.locator('.quiz-review-mark')).toHaveText(['', '']);
 });

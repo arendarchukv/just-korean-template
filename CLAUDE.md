@@ -260,7 +260,18 @@ Data decisions already made:
 - `.pages.yml` mirrors the schemas; `src/content/pages-config.test.ts` fails when a form and its
   schema disagree (choices included, e.g. playlist ids), or a field has no hint. Change both
   together.
-- Files (PDF, audio, photo) live in Cloudflare R2; content stores `https://` links only.
+- Heavy files (PDF, audio, her photo override) live in Cloudflare R2; content stores `https://` links
+  for them. Lesson images (the `cover`, pictures in the lesson text) are uploaded in Pages CMS into
+  the repository (`src/assets/lessons/`, media `lessons` in `.pages.yml`, written into the lesson as
+  `../../assets/lessons/<file>`), so the build checks and optimises them (`image()` in
+  `content.config.ts` via `makeLessonSchema`). A lesson without a video opens with its cover, which
+  is also its card thumbnail and share image.
+- Reading lessons: a lesson may carry `story`, a text in parts (Korean heading, Korean text,
+  optional English translation folded under each part); the page then shows 읽기 (reading), 단어
+  (the lesson's words as a list), the lesson text (e.g. 문법), 문형 (pattern tags), 연습. Block
+  headings put the Korean term first, taken from the Korean dictionary for the same key
+  (`LessonBlockTitle.astro`). Examples: `dangun-bear-and-tiger` (beginner), `hwanhyangnyeo`
+  (intermediate); covers drawn with agy in the paper-cut style of the site.
   `npm run check:links` checks them (skips the `.example` placeholder domain); run before deploy.
 - Pages CMS content is single-language (English with Korean examples). Everything else is
   translated: the UI dictionaries (`src/i18n/dict/<lang>.ts`, complete: `dictionaries.test.ts`) and

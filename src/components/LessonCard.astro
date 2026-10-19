@@ -1,8 +1,8 @@
 ---
 import LevelBadge from '@/components/learn/LevelBadge.astro';
 /**
- * One lesson as a framed card: thumbnail (fetched and optimised at build; a paper placeholder for
- * a lesson without a video), playlist (with the place in a course) and date, title, then level and "Watch". Home and Lessons.
+ * One lesson as a framed card: thumbnail (the video's, fetched and optimised at build; else the
+ * lesson's cover; else a paper placeholder), playlist (with the place in a course) and date, title, then level and "Watch". Home and Lessons.
  */
 import { Image } from 'astro:assets';
 import { getLessons, type Lesson } from '@/content/queries';
@@ -39,6 +39,8 @@ const position = course
       fit="cover"
       class="lesson-thumb"
     />
+  ) : l.cover ? (
+    <Image src={l.cover} alt="" width={480} height={270} fit="cover" class="lesson-thumb" />
   ) : (
     <span class="lesson-thumb lesson-thumb-empty grid-paper">{t('lessons.noVideo')}</span>
   )}

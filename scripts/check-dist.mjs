@@ -396,7 +396,8 @@ const deadLinks = (html) => {
   if (!/href="\/grammar\/#g-[^"]+"/.test(html)) {
     problems.push('lesson page does not link its grammar tags');
   }
-  if (!/class="prose"/.test(html)) problems.push('lesson body is not rendered in .prose');
+  if (!/class="(?:[^"]* )?prose[ "]/.test(html))
+    problems.push('lesson body is not rendered in .prose');
   for (const href of deadLinks(html)) problems.push(`lesson page links to missing ${href}`);
   for (const { id } of lessonEntries.filter(({ data }) => !data.youtube)) {
     if (/data-video-facade/.test(read(`lessons/${id}/index.html`))) {

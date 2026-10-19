@@ -370,11 +370,151 @@
   .lesson-block {
     margin-top: 2.5rem;
   }
+  /* Block heading: the Korean term, then the page language's name for it, smaller and muted. */
   .lesson-block-title {
-    margin: 0 0 0.75rem;
-    font-size: var(--text-lg);
-    line-height: var(--text-lg--line-height);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.6rem;
+    margin: 0 0 1rem;
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
     font-weight: 700;
+  }
+  .lesson-block-title::before {
+    align-self: center;
+    flex: none;
+    margin-right: -0.15rem;
+  }
+  .lesson-block-ko {
+    font-family: var(--font-korean);
+  }
+  .lesson-block-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .lesson-text:not(:empty) {
+    margin-top: 2.5rem;
+  }
+
+  /* Cover picture in place of the player, same frame. */
+  .lesson-cover {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: var(--color-surface);
+  }
+  .lesson-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Reading text: numbered parts, the Korean large and airy, the translation folded below. */
+  .story-parts {
+    display: grid;
+    gap: 2.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .story-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin: 0 0 0.75rem;
+    font-family: var(--font-korean);
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+  .story-number {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-teal);
+  }
+  .story-text {
+    font-family: var(--font-korean);
+    font-size: var(--text-xl);
+    line-height: 1.9;
+    word-break: keep-all;
+  }
+  .story-text p,
+  .story-translation-text p {
+    margin: 0;
+    white-space: pre-line;
+  }
+  .story-text p + p,
+  .story-translation-text p + p {
+    margin-top: 1em;
+  }
+  .story-translation {
+    margin-top: 0.75rem;
+  }
+  .story-translation summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-brand);
+    cursor: pointer;
+    list-style: none;
+  }
+  .story-translation summary::-webkit-details-marker {
+    display: none;
+  }
+  .story-translation summary::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    rotate: -45deg;
+    transition: rotate 0.15s ease;
+  }
+  .story-translation[open] summary::before {
+    rotate: 45deg;
+  }
+  .story-translation-text {
+    padding: 0.25rem 0 0 1rem;
+    border-left: 2px solid var(--color-border);
+    line-height: 1.7;
+    color: var(--color-muted);
+  }
+
+  /* Words: Korean on the left, meaning and an example on the right, ruled rows. */
+  .word-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    column-gap: 2rem;
+    margin: 0;
+  }
+  .word-row {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: 0.25rem 1rem;
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .word-row dt {
+    font-family: var(--font-korean);
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+  .word-row dd {
+    display: grid;
+    gap: 0.15rem;
+    margin: 0;
+  }
+  .word-example {
+    font-family: var(--font-korean);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
   }
   .chip-list {
     display: flex;
@@ -586,6 +726,9 @@
     color: inherit;
   }
   @media (prefers-reduced-motion: reduce) {
+    .story-translation summary::before {
+      transition: none;
+    }
     .video-play:hover .video-play-icon {
       transform: translate(-50%, -50%);
     }

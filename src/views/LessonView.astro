@@ -1,8 +1,14 @@
 ---
-/** Lesson page: player, text, grammar tags, its own files, words and quiz, playlist navigation. */
+/**
+ * Lesson page: the video (or, without one, the cover picture), the head, the reading text in parts
+ * with folded translations, the words, the lesson text, grammar patterns, practice and files, and
+ * the playlist beside it. Block headings put the Korean term first.
+ */
+import { getImage, Image } from 'astro:assets';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import VideoFacade from '@/components/VideoFacade.astro';
 import Icon from '@/components/Icon.astro';
+import LessonBlockTitle from '@/components/learn/LessonBlockTitle.astro';
 import LevelBadge from '@/components/learn/LevelBadge.astro';
 import { getLessons, renderBody, type Lesson } from '@/content/queries';
 import type { Lang, UIKey } from '@/i18n/ui';
@@ -35,12 +41,41 @@ const hasWords = lesson.words.length > 0;
 const hasQuiz = lesson.quiz.length > 0;
 const href = (id: string) => localizePath(lang, `lessons/${id}`);
 const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
+// The cover is also the share image (1200×630, cropped to fit).
+const shareImage =
+  lesson.cover &&
+  (await getImage({ src: lesson.cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' }));
+/** A part's paragraphs: a blank line starts a new one; single line breaks are kept by CSS. */
+const paragraphs = (text: string) =>
+  text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean);
 ---
 
-<BaseLayout title={lesson.title} description={lesson.summary}>
+<BaseLayout
+  title={lesson.title}
+  description={lesson.summary}
+  image={shareImage ? { src: shareImage.src, alt: lesson.title } : undefined}
+>
   <div class="container-page lesson-layout">
     <article class="lesson-main">
-      {lesson.youtube && <VideoFacade id={lesson.youtube} title={lesson.title} lang={lang} />}
+      {lesson.youtube ? (
+        <VideoFacade id={lesson.youtube} title={lesson.title} lang={lang} />
+      ) : (
+        lesson.cover && (
+          <div class="lesson-cover">
+            <Image
+              src={lesson.cover}
+              alt=""
+              widths={[640, 960, 1280]}
+              sizes="(min-width: 64rem) 46rem, 100vw"
+              loading="eager"
+              fetchpriority="high"
+            />
+          </div>
+        )
+      )}
       <header class="lesson-head">
         {playlist && (
           <p class="lesson-kicker">
@@ -78,15 +113,70 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
           )}
         </div>
       </header>
-      <div class="prose">
+
+      {lesson.story.length > 0 && (
+        <section class="lesson-block story" aria-labelledby="lesson-reading">
+          <LessonBlockTitle id="lesson-reading" lang={lang} label="lesson.reading" />
+          <ol class="story-parts">
+            {lesson.story.map((part, i) => (
+              <li class="story-part">
+                {part.title && (
+                  <h3 class="story-title" lang="ko">
+                    <span class="story-number" aria-hidden="true">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    {part.title}
+                  </h3>
+                )}
+                <div class="story-text" lang="ko">
+                  {paragraphs(part.text).map((p) => (
+                    <p>{p}</p>
+                  ))}
+                </div>
+                {part.translation && (
+                  <details class="story-translation">
+                    <summary>{t('lesson.translation')}</summary>
+                    <div class="story-translation-text">
+                      {paragraphs(part.translation).map((p) => (
+                        <p>{p}</p>
+                      ))}
+                    </div>
+                  </details>
+                )}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {hasWords && (
+        <section class="lesson-block" aria-labelledby="lesson-words">
+          <LessonBlockTitle id="lesson-words" lang={lang} label="lesson.words" />
+          <dl class="word-list">
+            {lesson.words.map((w) => (
+              <div class="word-row">
+                <dt lang="ko">{w.front}</dt>
+                <dd>
+                  {w.back}
+                  {w.example && (
+                    <span class="word-example" lang="ko">
+                      {w.example}
+                    </span>
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
+      <div class="prose lesson-text">
         <Body />
       </div>
 
       {lesson.grammar.length > 0 && (
         <section class="lesson-block" aria-labelledby="lesson-grammar">
-          <h2 id="lesson-grammar" class="lesson-block-title">
-            {t('lesson.grammar')}
-          </h2>
+          <LessonBlockTitle id="lesson-grammar" lang={lang} label="lesson.grammar" />
           <ul class="chip-list">
             {lesson.grammar.map((tag) => (
               <li>
@@ -105,9 +195,7 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
 
       {(hasWords || hasQuiz) && (
         <section class="lesson-block" aria-labelledby="lesson-practice">
-          <h2 id="lesson-practice" class="lesson-block-title">
-            {t('lesson.practice')}
-          </h2>
+          <LessonBlockTitle id="lesson-practice" lang={lang} label="lesson.practice" />
           <ul class="lesson-tiles">
             {hasWords && (
               <li>
@@ -143,9 +231,7 @@ const kind = (k: string) => t(`lesson.kind.${k}` as UIKey);
 
       {lesson.files.length > 0 && (
         <section class="lesson-block" aria-labelledby="lesson-files">
-          <h2 id="lesson-files" class="lesson-block-title">
-            {t('lesson.files')}
-          </h2>
+          <LessonBlockTitle id="lesson-files" lang={lang} label="lesson.files" />
           <ul class="lesson-tiles">
             {lesson.files.map((f) => (
               <li>

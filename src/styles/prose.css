@@ -27,7 +27,9 @@
     line-height: var(--text-2xl--line-height);
     font-weight: 700;
   }
-  .prose h2::before {
+  /* The pebble before h2, shared with the lesson page's block headings so they read as one set. */
+  .prose h2::before,
+  .lesson-block-title::before {
     content: '';
     display: inline-block;
     width: 0.55em;

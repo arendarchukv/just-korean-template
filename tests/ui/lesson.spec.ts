@@ -130,3 +130,47 @@ test('the Grammar page marks Free lessons as the current section', async ({ page
     page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Free lessons' }),
   ).toHaveAttribute('aria-current', 'page');
 });
+
+test.describe('a reading lesson without a video', () => {
+  const url = '/lessons/dangun-bear-and-tiger/';
+
+  test('opens with its cover picture instead of a player', async ({ page }) => {
+    await page.goto(url);
+    await expect(page.locator('[data-video-facade]')).toHaveCount(0);
+    const cover = page.locator('.lesson-cover img');
+    await expect(cover).toBeVisible();
+    await expect(cover).toHaveAttribute('src', /\.webp$/);
+    // The share image is the cover too.
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      'content',
+      /\/_astro\/.+\.jpg$/,
+    );
+  });
+
+  test('reads in Korean, part by part, with the translation folded away', async ({ page }) => {
+    await page.goto(url);
+    const reading = page.getByRole('region', { name: /읽기/ });
+    await expect(reading.getByRole('heading', { level: 2 })).toHaveText('읽기 Reading');
+    await expect(reading.locator('.story-part')).toHaveCount(4);
+    const first = reading.locator('.story-part').first();
+    await expect(first.locator('.story-text')).toHaveAttribute('lang', 'ko');
+    const translation = first.locator('.story-translation-text');
+    await expect(translation).toBeHidden();
+    await first.getByText('Translation').click();
+    await expect(translation).toBeVisible();
+  });
+
+  test('lists its words on the page', async ({ page }) => {
+    await page.goto(url);
+    const words = page.getByRole('region', { name: /단어/ });
+    await expect(words.locator('dt', { hasText: '곰' })).toBeVisible();
+    await expect(words.locator('dd').first()).not.toBeEmpty();
+  });
+
+  test('shows its cover on its card in the library', async ({ page }) => {
+    await page.goto('/lessons/?q=단군');
+    const card = page.locator('[data-lessons-grid] li:visible').first();
+    await expect(card.locator('img.lesson-thumb')).toBeVisible();
+    await expect(card.locator('.lesson-thumb-empty')).toHaveCount(0);
+  });
+});

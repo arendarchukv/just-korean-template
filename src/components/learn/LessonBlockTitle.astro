@@ -1,0 +1,29 @@
+---
+/**
+ * A lesson block heading: the Korean term first (from the Korean dictionary, same key), then the
+ * page language's name for it, e.g. "단어 Words". On Korean pages only the Korean term.
+ */
+import type { Lang, UIKey } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/utils';
+
+interface Props {
+  id: string;
+  lang: Lang;
+  label: UIKey;
+}
+const { id, lang, label } = Astro.props;
+const korean = useTranslations('ko')(label);
+---
+
+<h2 id={id} class="lesson-block-title">
+  <span lang="ko" class="lesson-block-ko">
+    {korean}
+  </span>
+  {/* A real space between the two, so they are read as two words. */}
+  {lang !== 'ko' && (
+    <>
+      {' '}
+      <span class="lesson-block-label">{useTranslations(lang)(label)}</span>
+    </>
+  )}
+</h2>

@@ -16,4 +16,5 @@ Update this table at the end of every cycle.
 | 9   | Korean news reading              | Home "Study tools" card → ohmynews.com (direct link, no scripts)                                                                                                                                                   | Built: link only; the news page was removed after review                                                                                    | `/`                                                              |
 
 Also built beyond her list: notices strip (important / news / info, pinned), grammar page built from tags on lessons (reached from lessons, not in the menu), lessons library
-by playlist, six simple Pages CMS forms (a lesson carries its own words, quiz and files).
+by playlist, six simple Pages CMS forms (a lesson carries its own words, quiz and files), reading lessons without a video
+(cover picture uploaded in Pages CMS, Korean text in parts with folded translations, word list): `/lessons/dangun-bear-and-tiger/`.

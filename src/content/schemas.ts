@@ -54,23 +54,38 @@ export const question = z.discriminatedUnion('type', [
   }),
 ]);
 
-/**
- * A lesson is a container: besides the video and text it may carry its own words, quiz and files.
- * Nothing points to another form; the playlist comes from a fixed list in code.
- */
-export const lessonSchema = z.object({
-  title: z.string().min(1),
-  youtube: youtube.optional(),
-  playlist: z.enum(PLAYLIST_IDS).optional(),
-  date: day,
-  level,
-  summary: z.string().optional(),
-  /** Grammar patterns as typed, e.g. "-게"; the grammar page is built from them. */
-  grammar: z.array(z.string().trim().min(1)).default([]),
-  words: z.array(word).default([]),
-  quiz: z.array(question).default([]),
-  files: z.array(download).default([]),
+/** One part of a lesson's reading text: Korean, with an optional English translation. */
+export const storyPart = z.object({
+  title: z.string().optional(),
+  text: z.string().trim().min(1, { message: 'Write the Korean text of this part' }),
+  translation: z.string().optional(),
 });
+
+/**
+ * A lesson is a container: besides the video and text it may carry a cover image, a reading text,
+ * its own words, quiz and files. Nothing points to another form; the playlist comes from a fixed
+ * list in code. The cover is an image in the repository (`src/assets/lessons/`, uploaded in Pages
+ * CMS), so content.config.ts passes Astro's `image()`, which checks and optimises it; elsewhere
+ * (tests, the .pages.yml check) it is the path as written.
+ */
+export function makeLessonSchema<Cover extends z.ZodType>(cover: Cover) {
+  return z.object({
+    title: z.string().min(1),
+    youtube: youtube.optional(),
+    cover: cover.optional(),
+    playlist: z.enum(PLAYLIST_IDS).optional(),
+    date: day,
+    level,
+    summary: z.string().optional(),
+    story: z.array(storyPart).default([]),
+    /** Grammar patterns as typed, e.g. "-게"; the grammar page is built from them. */
+    grammar: z.array(z.string().trim().min(1)).default([]),
+    words: z.array(word).default([]),
+    quiz: z.array(question).default([]),
+    files: z.array(download).default([]),
+  });
+}
+export const lessonSchema = makeLessonSchema(z.string());
 
 export const materialSchema = z.object({
   title: z.string().min(1),

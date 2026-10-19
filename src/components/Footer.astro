@@ -22,6 +22,15 @@ const LINKS: { href: string; label: UIKey }[] = [
   { href: site.social.kofi, label: 'nav.support' },
 ];
 
+// The site's pages. Grammar is not in the header menu (the owner's wish), so it is reached here.
+const PAGES: { path: string; label: UIKey }[] = [
+  { path: 'lessons', label: 'nav.lessons' },
+  { path: 'grammar', label: 'page.grammar.title' },
+  { path: 'materials', label: 'nav.materials' },
+  { path: 'practice', label: 'nav.practice' },
+  { path: 'classes', label: 'nav.classes' },
+];
+
 const year = new Date().getFullYear();
 ---
 
@@ -35,8 +44,17 @@ const year = new Date().getFullYear();
       <p class="max-w-xs text-sm text-muted">{t('site.tagline')}</p>
     </div>
 
-    <nav aria-label={t('a11y.footerNav')}>
-      <ul class="flex flex-wrap gap-x-2 gap-y-1">
+    <nav aria-label={t('a11y.footerNav')} class="flex flex-col gap-3 md:items-end">
+      <ul class="flex flex-wrap gap-x-2 gap-y-1 md:justify-end" data-footer-pages>
+        {PAGES.map(({ path, label }) => (
+          <li>
+            <a href={localizePath(lang, path)} class="nav-link text-sm font-semibold">
+              {t(label)}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <ul class="flex flex-wrap gap-x-2 gap-y-1 md:justify-end">
         {/* DEMO ONLY: the site guide (English-only, not translated). */}
         <li>
           <a href="/guide/" class="nav-link text-sm">

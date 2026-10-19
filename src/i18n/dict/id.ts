@@ -70,7 +70,7 @@ export const id: Dictionary = {
   'lessons.count': '{total} pelajaran',
   'lessons.read': 'Baca',
   'lessons.lead':
-    'Semua pelajaran dari kanal, yang terbaru dulu. Pilih daftar putar atau tingkat, atau cari sebuah pola.',
+    'Semua pelajaran, yang terbaru dulu. Pilih daftar putar, tingkat, atau format, atau cari sebuah pola.',
   'lessons.playlist': 'Daftar putar di YouTube',
   'lessons.noVideo': 'Pelajaran tanpa video',
   'grammar.lead':
@@ -196,9 +196,9 @@ export const id: Dictionary = {
   'placeholder.comingSoon': 'Segera hadir',
   'placeholder.body': 'Bagian ini sedang dibuat. Sementara itu, pelajarannya ada di YouTube.',
   'placeholder.backHome': 'Kembali ke beranda',
-  'page.lessons.title': 'Pelajaran',
+  'page.lessons.title': 'Pelajaran gratis',
   'page.grammar.title': 'Tata bahasa',
-  'page.lessons.eyebrow': 'Dari kanal',
+  'page.lessons.eyebrow': 'Video dan bacaan',
   'page.grammar.eyebrow': 'Pola dari pelajaran',
   'page.materials.eyebrow': 'Unduhan gratis',
   'page.practice.eyebrow': 'Latihan gratis',

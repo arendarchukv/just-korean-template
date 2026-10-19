@@ -77,7 +77,7 @@ export const en = {
   'lessons.read': 'Read',
 
   'lessons.lead':
-    'Every lesson from the channel, newest first. Pick a playlist or a level, or search for a pattern.',
+    'Every lesson, newest first. Pick a playlist, a level or a format, or search for a pattern.',
   'lessons.playlist': 'Playlist on YouTube',
   'lessons.noVideo': 'Lesson without video',
 
@@ -213,9 +213,9 @@ export const en = {
   'placeholder.body': 'This section is being built. Meanwhile, the lessons are on YouTube.',
   'placeholder.backHome': 'Back to home',
 
-  'page.lessons.title': 'Lessons',
+  'page.lessons.title': 'Free lessons',
   'page.grammar.title': 'Grammar',
-  'page.lessons.eyebrow': 'From the channel',
+  'page.lessons.eyebrow': 'Videos and readings',
   'page.grammar.eyebrow': 'Patterns from the lessons',
   'page.materials.eyebrow': 'Free downloads',
   'page.practice.eyebrow': 'Free practice',

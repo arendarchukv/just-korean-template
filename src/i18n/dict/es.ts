@@ -53,9 +53,10 @@ export const es: Dictionary = {
   'home.links.news.tag': 'Lectura',
   'home.links.news.action': 'Leer noticias',
   'home.links.newTab': 'se abre en una pestaña nueva',
-  'home.newLessons.eyebrow': 'Del canal',
+  'home.newLessons.eyebrow': 'Vídeos y lecturas',
   'home.newLessons.title': 'Lecciones nuevas',
-  'home.newLessons.lead': 'Los vídeos más recientes, con notas y práctica aquí en la web.',
+  'home.newLessons.lead':
+    'Las lecciones más recientes: vídeos del canal y lecturas, con vocabulario y práctica aquí en la web.',
   'home.newLessons.all': 'Todas las lecciones',
   'home.newLessons.watch': 'Ver',
   'lessons.all': 'Todas',

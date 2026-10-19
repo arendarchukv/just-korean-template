@@ -56,9 +56,10 @@ export const ko: Dictionary = {
   'home.links.news.tag': '읽기', // TODO(ko-review)
   'home.links.news.action': '뉴스 읽기', // TODO(ko-review)
   'home.links.newTab': '새 탭에서 열림', // TODO(ko-review)
-  'home.newLessons.eyebrow': '채널에서', // TODO(ko-review)
+  'home.newLessons.eyebrow': '영상과 읽기', // TODO(ko-review)
   'home.newLessons.title': '새 강의',
-  'home.newLessons.lead': '새 영상과 함께 사이트에서 노트와 연습 문제를 볼 수 있어요.', // TODO(ko-review)
+  'home.newLessons.lead':
+    '채널 영상과 읽기 자료로 만든 새 강의예요. 단어와 연습 문제도 사이트에서 볼 수 있어요.', // TODO(ko-review)
   'home.newLessons.all': '모든 강의',
   'home.newLessons.watch': '보기', // TODO(ko-review)
   'lessons.all': '전체',

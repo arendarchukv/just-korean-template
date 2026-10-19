@@ -27,20 +27,34 @@ const position = course
       'course',
     ).findIndex((x) => x.id === l.id) + 1
   : 0;
+// Cards fill the width on phones and a third of it from 40rem (.lesson-row).
+const SIZES = '(min-width: 40rem) 33vw, 100vw';
 ---
 
 <a class="lesson-card" href={localizePath(lang, `lessons/${l.id}`)}>
   {l.youtube ? (
+    // The YouTube thumbnail is 480 px wide at the source: no larger copies.
     <Image
       src={youtubeThumbnail(l.youtube)}
       alt=""
       width={480}
       height={270}
+      widths={[320, 480]}
+      sizes={SIZES}
       fit="cover"
       class="lesson-thumb"
     />
   ) : l.cover ? (
-    <Image src={l.cover} alt="" width={480} height={270} fit="cover" class="lesson-thumb" />
+    <Image
+      src={l.cover}
+      alt=""
+      width={480}
+      height={270}
+      widths={[320, 480, 640, 960]}
+      sizes={SIZES}
+      fit="cover"
+      class="lesson-thumb"
+    />
   ) : (
     <span class="lesson-thumb lesson-thumb-empty grid-paper">{t('lessons.noVideo')}</span>
   )}

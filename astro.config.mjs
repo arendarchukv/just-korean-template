@@ -50,6 +50,14 @@ export default defineConfig({
     // YouTube thumbnails are fetched at build and served as local WebP. Add the R2 domain here
     // once it is known, so her photo is optimised the same way.
     domains: ['i.ytimg.com'],
+    // Every image gets a srcset (widths up to twice its displayed size), Markdown images in lesson
+    // texts included, so a phone downloads a small file. The components style their images
+    // themselves, so Astro's global responsive styles stay off.
+    layout: 'constrained',
+    responsiveStyles: false,
+    // Fewer steps than Astro's default list, each about 1.5× the one before. Remote images (YouTube
+    // thumbnails) set their own widths, since Astro cannot see how large they are.
+    breakpoints: [320, 480, 640, 960, 1280, 1920],
   },
   markdown: {
     // Code is styled by .prose with semantic tokens; Shiki would inject its own colours.

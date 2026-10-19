@@ -73,7 +73,7 @@ export const es: Dictionary = {
   'lessons.count': '{total} lecciones',
   'lessons.read': 'Leer',
   'lessons.lead':
-    'Todas las lecciones del canal, de la más nueva a la más antigua. Elige una lista o un nivel, o busca una estructura.',
+    'Todas las lecciones, de la más nueva a la más antigua. Elige una lista, un nivel o un formato, o busca una estructura.',
   'lessons.playlist': 'Lista en YouTube',
   'lessons.noVideo': 'Lección sin vídeo',
   'grammar.lead':
@@ -202,9 +202,9 @@ export const es: Dictionary = {
   'placeholder.body':
     'Esta sección está en construcción. Mientras tanto, las lecciones están en YouTube.',
   'placeholder.backHome': 'Volver al inicio',
-  'page.lessons.title': 'Lecciones',
+  'page.lessons.title': 'Lecciones gratis',
   'page.grammar.title': 'Gramática',
-  'page.lessons.eyebrow': 'Del canal',
+  'page.lessons.eyebrow': 'Vídeos y lecturas',
   'page.grammar.eyebrow': 'Estructuras de las lecciones',
   'page.materials.eyebrow': 'Descargas gratuitas',
   'page.practice.eyebrow': 'Práctica gratuita',

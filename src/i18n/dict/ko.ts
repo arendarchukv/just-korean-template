@@ -77,7 +77,7 @@ export const ko: Dictionary = {
   'lessons.read': '읽기', // TODO(ko-review)
 
   'lessons.lead':
-    '채널의 모든 강의를 최신순으로 모았어요. 재생목록이나 수준을 고르거나 문법으로 검색해 보세요.',
+    '모든 강의를 최신순으로 모았어요. 재생목록, 수준, 형식을 고르거나 문법으로 검색해 보세요.',
   'lessons.playlist': '유튜브 재생목록',
   'lessons.noVideo': '영상 없는 강의',
 
@@ -211,9 +211,9 @@ export const ko: Dictionary = {
   'placeholder.body': '이 페이지는 준비 중이에요. 그동안 유튜브에서 강의를 볼 수 있어요.',
   'placeholder.backHome': '홈으로',
 
-  'page.lessons.title': '강의',
+  'page.lessons.title': '무료 강의',
   'page.grammar.title': '문법',
-  'page.lessons.eyebrow': '채널에서', // TODO(ko-review)
+  'page.lessons.eyebrow': '영상과 읽기', // TODO(ko-review)
   'page.grammar.eyebrow': '강의에 나온 문법', // TODO(ko-review)
   'page.materials.eyebrow': '무료 자료', // TODO(ko-review)
   'page.practice.eyebrow': '무료 연습', // TODO(ko-review)

@@ -6,6 +6,8 @@ const status = (page: Page) => page.locator('[data-lessons-status]');
 
 test('every lesson is the same card in one grid, newest first, 24 a page', async ({ page }) => {
   await page.goto('/lessons/');
+  // Named like the menu item that leads here.
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Free lessons');
   await expect(page.locator('.course-list')).toHaveCount(0);
   await expect(titles(page)).toHaveCount(24);
   await expect(titles(page).first()).toContainText('환향녀 이야기');

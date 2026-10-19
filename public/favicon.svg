@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 120 120">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-19 -10 120 120">
   <style>path{fill:#5c7ebe}@media (prefers-color-scheme:dark){path{fill:#9db0d6}}</style>
-  <path d="M0 0H100V66H80V20H0Z"/>
-  <path d="M0 34H20V80H100V100H0Z"/>
+  <path d="M0 0H82V66H60V20H0Z"/>
+  <path d="M0 34H22V80H82V100H0Z"/>
 </svg>

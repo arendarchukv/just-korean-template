@@ -1,14 +1,18 @@
 /**
- * Shared SVG geometry (100×100 grid) for the logo mark and the cut-paper shapes.
+ * Shared SVG geometry for the logo mark (82×100) and the cut-paper shapes (100×100 grid).
  * Used by Logo.astro and Shape.astro, and by scripts/generate-icons.ts to render PNG assets,
  * so icons and share images always match the site.
  */
 
-/** Logo mark, variant A: ㄱ + ㄴ rotated against each other, interlocking into a square. */
-export const LOGO_MARK_PATHS = ['M0 0H100V66H80V20H0Z', 'M0 34H20V80H100V100H0Z'] as const;
+/**
+ * Logo mark, variant A: ㄱ + ㄴ rotated against each other, interlocking into an upright block, in
+ * the proportions of her channel logo (82 wide × 100 tall; bars 20, uprights 22, equal gaps).
+ */
+export const LOGO_MARK_WIDTH = 82;
+export const LOGO_MARK_PATHS = ['M0 0H82V66H60V20H0Z', 'M0 34H22V80H82V100H0Z'] as const;
 
 /** Logo mark, variant B (rounded): polylines drawn with a 20-unit round stroke. */
-export const LOGO_MARK_ROUNDED_POLYLINES = ['10,10 90,10 90,58', '10,42 10,90 90,90'] as const;
+export const LOGO_MARK_ROUNDED_POLYLINES = ['11,10 71,10 71,58', '11,42 11,90 71,90'] as const;
 
 export const SHAPE_PATHS = {
   arch: 'M14 96 L16 44 C17 18 35 5 52 6 C70 7 86 21 86 45 L88 95 L66 96 L65 47 C65 35 59 28 51 28 C42 29 36 36 36 48 L35 95 Z',

@@ -14,7 +14,7 @@ Materials page of `2026-10-14-demo-pages-design.md`). Older specs:
 the end of every cycle.
 
 Built: content collections + `.pages.yml` (Lessons with their own words / quiz / files, Words,
-Quizzes, Materials, Notices, Site settings), the 139 real lessons of the channel (no Shorts; imported 2026-10-18 with yt-dlp into `import/`, then generated from `import/generate-prompt.md`: level, summary and grammar are machine drafts to check; 9 playlists in `src/data/playlists.ts`, Listening folded into podcast and K-pop into culture), demo decks / quizzes / materials / notices, home page (notice strip with tinted type pills, hero with credentials row (degree, certificate, channel) and `HeroPortrait.astro` (her cut-out photo standing in a soft disc that clips it at the bottom, head above its edge, among cut-paper shapes: grid paper, wave, arch, teal dot; no handwritten notes; DEMO placeholder `src/assets/teacher-placeholder.png` cut from her "게 vs 도록" thumbnail until `TEACHER_PHOTO` is set), new-lesson cards, class cards + bar to Classes; sections open with `SectionHead`: eyebrow, title, lead; line icons in `Icon.astro`; class cards are `FormatCard.astro`, shared with Classes (hover: the tape strip draws out, the only movement; the people dots take a soft halo); levels always shown with the design-system `LevelBadge` (bars); lesson cards `LessonCard.astro`, shared with Lessons). Content pages open with `PageHead` (eyebrow, h1, lead): Lessons (one grid of the same lesson card, newest first; playlist chips (All · each playlist, `#<playlist>` opens one; the lesson page's playlist eyebrow links there), level filter, search over title, summary and grammar; 24 cards a page with the same numbered pager as Materials (labels `pager.*`); a chosen course reads oldest first; a course lesson's card says "Lesson 3" everywhere), Practice (entry cards), Grammar, Materials, Classes; the lesson page shows its playlist as an eyebrow beside a framed playlist panel (the list scrolls inside its box, the open lesson scrolled into view), Lessons library, Lesson page (click-to-load player), Grammar (tags typed on lessons, each with its lessons; search), Materials (tabs over dense
+Quizzes, Materials, Notices, Site settings), the 139 real lessons of the channel (no Shorts; imported 2026-10-18 with yt-dlp into `import/`, then generated from `import/generate-prompt.md`: level, summary and grammar are machine drafts to check; 9 playlists in `src/data/playlists.ts`, Listening folded into podcast and K-pop into culture), demo decks / quizzes / materials / notices, home page (notice strip with tinted type pills, hero with credentials row (degree, certificate, channel) and `HeroPortrait.astro` (her cut-out photo standing in a soft disc that clips it at the bottom, head above its edge, among cut-paper shapes: grid paper, wave, arch, teal dot; no handwritten notes; her profile photo `src/assets/teacher-photo.png`, sent 2026-10-19, already cut out; `TEACHER_PHOTO` can point to another one on R2), new-lesson cards, class cards + bar to Classes; sections open with `SectionHead`: eyebrow, title, lead; line icons in `Icon.astro`; class cards are `FormatCard.astro`, shared with Classes (hover: the tape strip draws out, the only movement; the people dots take a soft halo); levels always shown with the design-system `LevelBadge` (bars); lesson cards `LessonCard.astro`, shared with Lessons). Content pages open with `PageHead` (eyebrow, h1, lead): Lessons (one grid of the same lesson card, newest first; playlist chips (All · each playlist, `#<playlist>` opens one; the lesson page's playlist eyebrow links there), level filter, search over title, summary and grammar; 24 cards a page with the same numbered pager as Materials (labels `pager.*`); a chosen course reads oldest first; a course lesson's card says "Lesson 3" everywhere), Practice (entry cards), Grammar, Materials, Classes; the lesson page shows its playlist as an eyebrow beside a framed playlist panel (the list scrolls inside its box, the open lesson scrolled into view), Lessons library, Lesson page (click-to-load player), Grammar (tags typed on lessons, each with its lessons; search), Materials (tabs over dense
 tables, type filter, title search, a pager of 20 rows once a tab is longer), Classes (formats with facts, how to start, FAQ), Practice (first the three study-tool cards moved from home, `StudyTools.astro` (design-system `card-interactive` with a corner shape that nudges on hover; the dictionary card searches krdict right away and keeps a still shape; copy keys still `home.links.*`), then two entry cards to the Flashcards and Quizzes studios, plus a muted "TOPIK mock test · Coming soon" block: the list of every deck/quiz on the left, the open one on the right (on phones the list sits below the card), `PracticeStudio.astro`: the list scrolls inside its column, with a search by title or word and a By topic / From lessons segment; each deck/quiz keeps its own page; 3D flip card (both faces: label on top, main text centred, line below, so nothing jumps) with a progress bar, counts, Shuffle / Start over and keys Space · 1 · 2); the quiz is a paper card with a row of steps (each answered question teal or red), lettered options and tinted feedback, and a result screen: score ring, a word on how it went (four bands), counts, best score ("New best"), and a review of every answer with the right answer and explanation, demo Contact form (validates, sends nothing; Tally link replaces it). DEMO ONLY site guide `/guide/` (footer link "Site guide"; English, noindex): the six CMS forms in plain words, with the styleguide as its second tab (`GuideTabs.astro`). Navigation: Free lessons · Materials · Practice · Classes with JiEun; grammar pages are reached from lessons; full menu from 1152px (`nav:` breakpoint in `global.css`; header labels never wrap, sized for the longest language, Ukrainian), the menu button below. Header right: language, theme, "Support Just Korean" (Ko-fi, from Site settings; Instagram and Ko-fi links taken from her old site); no booking button in the header (booking is on home and Classes). **Languages: English, 한국어, Español, Bahasa Indonesia, Українська** (spec `docs/superpowers/specs/2026-10-16-multilingual-design.md`): one list in `src/i18n/locales.ts` drives routes (`src/pages/[lang]/`), menu, hreflang, sitemap, 404s, dates and checks; dictionaries per language in `src/i18n/dict/` (es, id, uk machine-drafted, `TODO(<lang>-review)`); Manrope covers Cyrillic (only its Cyrillic file, declared inline in `BaseLayout`, so the shared CSS stays under budget). Language menu: a `<details>` list of every locale in its own name.
 
 Next cycles, each with its own spec: 1. polish from reviews + visual pass, 2. quiz results via Tally (needs her form), 3. site search (Pagefind).
@@ -39,7 +39,7 @@ Done earlier (content-independent):
 
 Waiting on the owner (do not guess these):
 
-- Her photo (waist-up, plain background, good light; replaces the thumbnail cut-out) and bio wording (`src/data/teacher.ts`, drafted; photo link + R2 domain in `image.domains`), TidyCal and Tally URLs,
+- Her bio wording (`src/data/teacher.ts`, drafted; photo link + R2 domain in `image.domains`), TidyCal and Tally URLs,
   the R2 public domain (`site.yml`; add it to `image.domains` in `astro.config.mjs` for the photo).
 - Domain (placeholder `https://just-korean.example` in `astro.config.mjs`) and hosting/deploy
   (Cloudflare Workers is planned; no deploy until asked).
@@ -155,20 +155,24 @@ Rules:
 
 ## Logo
 
-The mark is ㄱ + ㄴ rotated 180° against each other, interlocking into a square.
-The wordmark is "Just / Korean", two lines, bold rounded geometric sans.
+The mark is ㄱ + ㄴ rotated 180° against each other, interlocking into an upright block: the
+proportions of her channel logo (sent 2026-10-19): **82 wide × 100 tall**, bars 20, uprights 22,
+equal gaps, colour #5C7EBE (her logo's drop shadow is left out). Geometry in
+`src/components/shapes/paths.ts` (`LOGO_MARK_PATHS`, `LOGO_MARK_WIDTH`); `public/favicon.svg` and
+`npm run icons` use it. The wordmark is "Just / Korean", two lines, bold rounded geometric sans,
+in the brand colour (`text-brand`: #5C7EBE itself is below AA for small text on paper).
 
-Refined vector (variant A, 100×100 grid, stroke weight 20, equal gaps):
+Vector (variant A):
 
 ```svg
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-  <path d="M0 0H100V66H80V20H0Z" fill="currentColor"/>
-  <path d="M0 34H20V80H100V100H0Z" fill="currentColor"/>
+<svg viewBox="0 0 82 100" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0 0H82V66H60V20H0Z" fill="currentColor"/>
+  <path d="M0 34H22V80H82V100H0Z" fill="currentColor"/>
 </svg>
 ```
 
-Variant B (rounded) for avatars: two polylines `10,10 90,10 90,58` and
-`10,42 10,90 90,90`, `stroke-width:20`, round caps and joins.
+Variant B (rounded) for avatars: two polylines `11,10 71,10 71,58` and
+`11,42 11,90 71,90`, `stroke-width:20`, round caps and joins.
 Variant C (two-tone): second path in brand-700.
 The final variant is TBD. Make the component accept a `variant` prop.
 The wordmark font is unknown: use Outfit 700 for now.

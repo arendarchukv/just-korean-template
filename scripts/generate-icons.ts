@@ -5,7 +5,12 @@
 import { mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
-import { LOGO_MARK_PATHS, SHAPE_PATHS, WAVE_PATH } from '../src/components/shapes/paths.ts';
+import {
+  LOGO_MARK_PATHS,
+  LOGO_MARK_WIDTH,
+  SHAPE_PATHS,
+  WAVE_PATH,
+} from '../src/components/shapes/paths.ts';
 
 const OUT = new URL('../public/', import.meta.url);
 mkdirSync(OUT, { recursive: true });
@@ -22,10 +27,11 @@ const COLOR = {
   white: '#ffffff',
 };
 
-/** The logo mark at `size`, top-left at (x, y). */
+/** The logo mark `size` px tall, centred in a `size` square whose top-left is (x, y). */
 function mark(x: number, y: number, size: number, fill: string): string {
   const s = size / 100;
-  return `<g transform="translate(${x} ${y}) scale(${s})">${LOGO_MARK_PATHS.map(
+  const dx = (size - LOGO_MARK_WIDTH * s) / 2;
+  return `<g transform="translate(${x + dx} ${y}) scale(${s})">${LOGO_MARK_PATHS.map(
     (d) => `<path d="${d}" fill="${fill}"/>`,
   ).join('')}</g>`;
 }

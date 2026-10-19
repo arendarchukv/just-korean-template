@@ -1,8 +1,13 @@
 ---
-import { LOGO_MARK_PATHS, LOGO_MARK_ROUNDED_POLYLINES } from '@/components/shapes/paths';
+import {
+  LOGO_MARK_PATHS,
+  LOGO_MARK_ROUNDED_POLYLINES,
+  LOGO_MARK_WIDTH,
+} from '@/components/shapes/paths';
 
 /**
- * Just Korean mark: ㄱ + ㄴ rotated 180° against each other, interlocking into a square.
+ * Just Korean mark: ㄱ + ㄴ rotated 180° against each other, interlocking into an upright block
+ * (the proportions of her channel logo).
  * Final variant is TBD:
  *   a — sharp (default), b — rounded (avatars), c — two-tone.
  * Wordmark font is unknown; Outfit 700 for now.
@@ -22,7 +27,11 @@ const a11y = title
 ---
 
 <span class:list={['inline-flex items-center gap-2.5 text-logo', className]} {...a11y}>
-  <svg viewBox="0 0 100 100" class="size-[1.75em] shrink-0" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    viewBox={`0 0 ${LOGO_MARK_WIDTH} 100`}
+    class="h-[1.75em] w-auto shrink-0"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     {variant === 'b' ? (
       <g
         fill="none"
@@ -46,7 +55,7 @@ const a11y = title
     )}
   </svg>
   {wordmark && (
-    <span class="flex flex-col font-['Outfit_Variable',sans-serif] text-[0.8em] leading-[0.95] font-bold tracking-tight text-text">
+    <span class="flex flex-col font-['Outfit_Variable',sans-serif] text-[0.8em] leading-[0.95] font-bold tracking-tight text-brand">
       <span>Just</span>
       <span>Korean</span>
     </span>

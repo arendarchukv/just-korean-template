@@ -26,7 +26,6 @@ export const es: Dictionary = {
   'footer.youtube': 'YouTube',
   'footer.instagram': 'Instagram',
   'footer.contact': 'Contacto',
-  'footer.guide': 'Guía del sitio',
   'footer.rights': 'Todos los derechos reservados.',
   'home.bookClass': 'Reservar una clase',
   'home.watchLessons': 'Ver lecciones gratis',

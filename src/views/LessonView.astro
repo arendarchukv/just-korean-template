@@ -11,7 +11,7 @@ import Icon from '@/components/Icon.astro';
 import LessonBlockTitle from '@/components/learn/LessonBlockTitle.astro';
 import LevelBadge from '@/components/learn/LevelBadge.astro';
 import { getLessons, renderBody, type Lesson } from '@/content/queries';
-import type { Lang, UIKey } from '@/i18n/ui';
+import { defaultLang, type Lang, type UIKey } from '@/i18n/ui';
 import { playlistText } from '@/data/playlists';
 import { dateFormat, localizePath, useTranslations } from '@/i18n/utils';
 import { neighbours, sortInPlaylist, tagSlug } from '@/lib/site-logic';
@@ -56,6 +56,7 @@ const paragraphs = (text: string) =>
 <BaseLayout
   title={lesson.title}
   description={lesson.summary}
+  canonicalPath={localizePath(defaultLang, `lessons/${lesson.id}`)}
   image={shareImage ? { src: shareImage.src, alt: lesson.title } : undefined}
 >
   <div class="container-page lesson-layout">

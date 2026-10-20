@@ -28,7 +28,6 @@ export const en = {
   'footer.youtube': 'YouTube',
   'footer.instagram': 'Instagram',
   'footer.contact': 'Contact',
-  'footer.guide': 'Site guide',
   'footer.rights': 'All rights reserved.',
 
   'home.bookClass': 'Book a class',

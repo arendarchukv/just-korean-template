@@ -5,7 +5,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Flashcards from '@/components/widgets/Flashcards.svelte';
 import { getDecks } from '@/content/queries';
 import PracticeStudio from '@/components/PracticeStudio.astro';
-import type { Lang, UIKey } from '@/i18n/ui';
+import { defaultLang, type Lang, type UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
 type Deck = Awaited<ReturnType<typeof getDecks>>[number];
@@ -36,7 +36,11 @@ const labels = {
 };
 ---
 
-<BaseLayout title={deck.title} description={deck.description}>
+<BaseLayout
+  title={`${t('lesson.deck')} · ${deck.title}`}
+  description={deck.description}
+  canonicalPath={localizePath(defaultLang, `practice/deck/${deck.id}`)}
+>
   <PracticeStudio
     kind="deck"
     units={decks.map((d) => ({

@@ -17,20 +17,21 @@ deployed to Cloudflare Workers static assets.
 
 ## Commands
 
-| Command                | What it does                                         |
-| ---------------------- | ---------------------------------------------------- |
-| `npm install`          | Install dependencies                                 |
-| `npm run dev`          | Dev server at `http://localhost:4321`                |
-| `npm run build`        | Build the static site into `dist/`                   |
-| `npm run preview`      | Serve the built site locally                         |
-| `npm run check`        | Type-check `.astro`, `.ts` and `.svelte` files       |
-| `npm run format`       | Format all files with Prettier                       |
-| `npm test`             | Unit tests (Vitest): contrast, tokens, CSS rules     |
-| `npm run test:browser` | Accessibility (axe) and print checks in Chrome       |
-| `npm run check:dist`   | Checks the built HTML in `dist/` (after build)       |
-| `npm run icons`        | Render PNG icons and share image into `public/`      |
-| `npm run cf:preview`   | Build and serve via Wrangler, as on Cloudflare       |
-| `npm run deploy`       | Build and deploy to Cloudflare Workers (needs login) |
+| Command                | What it does                                          |
+| ---------------------- | ----------------------------------------------------- |
+| `npm install`          | Install dependencies                                  |
+| `npm run dev`          | Dev server at `http://localhost:4321`                 |
+| `npm run build`        | Build the static site into `dist/`                    |
+| `npm run preview`      | Serve the built site locally                          |
+| `npm run check`        | Type-check `.astro`, `.ts` and `.svelte` files        |
+| `npm run format`       | Format all files with Prettier                        |
+| `npm test`             | Unit tests (Vitest): contrast, tokens, CSS rules      |
+| `npm run test:browser` | Accessibility (axe) and print checks in Chrome        |
+| `npm run build:test`   | Production build plus the dev styleguide (for checks) |
+| `npm run check:dist`   | Checks the built HTML in `dist/` (after build)        |
+| `npm run icons`        | Render PNG icons and share image into `public/`       |
+| `npm run cf:preview`   | Build and serve via Wrangler, as on Cloudflare        |
+| `npm run deploy`       | Build and deploy to Cloudflare Workers (needs login)  |
 
 ## Project structure
 

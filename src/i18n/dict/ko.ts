@@ -31,7 +31,6 @@ export const ko: Dictionary = {
   'footer.youtube': '유튜브',
   'footer.instagram': '인스타그램',
   'footer.contact': '문의',
-  'footer.guide': '사이트 안내',
   'footer.rights': '모든 권리 보유.', // TODO(ko-review)
 
   'home.bookClass': '수업 예약',

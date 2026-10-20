@@ -1,4 +1,5 @@
-@import 'tailwindcss';
+/* Classes are read from src/ only: scratch files elsewhere in the repo must not grow the CSS. */
+@import 'tailwindcss' source('..');
 @import './theme.css';
 @import './signature.css';
 @import './prose.css';

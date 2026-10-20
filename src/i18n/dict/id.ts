@@ -25,7 +25,6 @@ export const id: Dictionary = {
   'footer.youtube': 'YouTube',
   'footer.instagram': 'Instagram',
   'footer.contact': 'Kontak',
-  'footer.guide': 'Panduan situs',
   'footer.rights': 'Hak cipta dilindungi.',
   'home.bookClass': 'Pesan kelas',
   'home.watchLessons': 'Tonton pelajaran gratis',

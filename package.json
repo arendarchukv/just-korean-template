@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:test": "node scripts/build-test.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "format": "prettier --write .",
@@ -18,7 +19,7 @@
     "test": "vitest run",
     "check:dist": "node scripts/check-dist.mjs",
     "icons": "node scripts/generate-icons.ts",
-    "test:browser": "npm run build && playwright test --grep-invert @perf && playwright test --grep @perf --workers=1",
+    "test:browser": "npm run build:test && playwright test --grep-invert @perf && playwright test --grep @perf --workers=1",
     "fonts": "node scripts/generate-display-font.ts",
     "check:links": "node scripts/check-links.mjs"
   },

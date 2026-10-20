@@ -25,7 +25,6 @@ export const uk: Dictionary = {
   'footer.youtube': 'YouTube',
   'footer.instagram': 'Instagram',
   'footer.contact': 'Контакт',
-  'footer.guide': 'Довідник сайту',
   'footer.rights': 'Усі права захищено.',
   'home.bookClass': 'Записатися на заняття',
   'home.watchLessons': 'Дивитися безкоштовні уроки',

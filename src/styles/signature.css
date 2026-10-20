@@ -205,9 +205,6 @@
   .footer-bottom p {
     margin: 0;
   }
-  .footer-bottom .footer-link {
-    color: var(--muted);
-  }
   /* Language menu: a small disclosure; the list hangs from the right edge of its button. */
   .lang-menu {
     position: relative;

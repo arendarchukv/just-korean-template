@@ -1,4 +1,5 @@
-// Checks the built site in dist/ (run after `npm run build`).
+// Checks the built site in dist/ (run after `npm run build:test`, or `npm run build`, which leaves
+// out the styleguide and its checks).
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 // Classes data is hardcoded (not CMS); Node runs the TS module directly.
@@ -22,60 +23,60 @@ const prefixOf = (page) => LOCALE_DIRS.find((d) => d.lang === langOf(page)).pref
 /** The same page in every language, e.g. inAll('classes/index.html'). */
 const inAll = (path) => LOCALE_DIRS.map(({ dir }) => `${dir}${path}`);
 
-// --- Styleguide and site guide: English-only, unindexed, not in the sitemap ---
-for (const page of ['styleguide', 'guide']) {
-  const doc = read(`${page}/index.html`);
-  if (/hreflang=/.test(doc)) problems.push(`${page} emits hreflang links`);
-  if (!/name="robots" content="noindex"/.test(doc)) problems.push(`${page} missing noindex`);
-  if (read('sitemap-0.xml').includes(`/${page}/`)) problems.push(`${page} listed in sitemap`);
-}
+if (exists('styleguide/index.html')) {
+  // --- Styleguide (only in the test build, `npm run build:test`): English-only, unindexed, not in
+  // the sitemap; its design-system samples: clean shapes, accessible samples ---
+  const html = read('styleguide/index.html');
+  if (/hreflang=/.test(html)) problems.push('styleguide emits hreflang links');
+  if (!/name="robots" content="noindex"/.test(html)) problems.push('styleguide missing noindex');
+  if (read('sitemap-0.xml').includes('/styleguide/')) problems.push('styleguide listed in sitemap');
 
-// --- Design system samples: clean shapes, accessible samples ---
-const html = read('styleguide/index.html');
+  const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+  const dupes = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
+  if (dupes.length) problems.push(`duplicate ids: ${dupes.join(', ')}`);
 
-const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
-const dupes = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
-if (dupes.length) problems.push(`duplicate ids: ${dupes.join(', ')}`);
+  // Shapes have clean edges: no pixel-displacement filters (they made contours and textures ragged).
+  if (/<feDisplacementMap|<feTurbulence/.test(html))
+    problems.push('shapes use a displacement filter');
 
-// Shapes have clean edges: no pixel-displacement filters (they made contours and textures ragged).
-if (/<feDisplacementMap|<feTurbulence/.test(html))
-  problems.push('shapes use a displacement filter');
-
-// Quiz options: only a selected option is "pressed"; revealed results need screen-reader text.
-for (const [button] of html.matchAll(/<button[^>]*class="quiz-option"[\s\S]*?<\/button>/g)) {
-  const state = /data-state="(\w+)"/.exec(button)?.[1];
-  if (/aria-pressed="true"/.test(button) && state !== 'selected') {
-    problems.push(`quiz option "${state}" is announced as pressed`);
+  // Quiz options: only a selected option is "pressed"; revealed results need screen-reader text.
+  for (const [button] of html.matchAll(/<button[^>]*class="quiz-option"[\s\S]*?<\/button>/g)) {
+    const state = /data-state="(\w+)"/.exec(button)?.[1];
+    if (/aria-pressed="true"/.test(button) && state !== 'selected') {
+      problems.push(`quiz option "${state}" is announced as pressed`);
+    }
+    if ((state === 'correct' || state === 'wrong') && !/class="sr-only"/.test(button)) {
+      problems.push(`quiz option "${state}" has no screen-reader label`);
+    }
   }
-  if ((state === 'correct' || state === 'wrong') && !/class="sr-only"/.test(button)) {
-    problems.push(`quiz option "${state}" has no screen-reader label`);
+
+  if (!/class="btn btn-link"/.test(html)) problems.push('styleguide does not show the link button');
+
+  // Long-form sample: Markdown renders inside .prose, and tables get the scroll wrapper.
+  if (!/class="prose"/.test(html)) problems.push('styleguide has no .prose long-form sample');
+  if (!/<div class="table-scroll" tabindex="0"><table>/.test(html)) {
+    problems.push('Markdown tables are not wrapped in a focusable .table-scroll');
   }
-}
 
-if (!/class="btn btn-link"/.test(html)) problems.push('styleguide does not show the link button');
-
-// Long-form sample: Markdown renders inside .prose, and tables get the scroll wrapper.
-if (!/class="prose"/.test(html)) problems.push('styleguide has no .prose long-form sample');
-if (!/<div class="table-scroll" tabindex="0"><table>/.test(html)) {
-  problems.push('Markdown tables are not wrapped in a focusable .table-scroll');
-}
-
-// Long-form headings carry an anchor to their own id.
-const anchored = [
-  ...html.matchAll(
-    /<h[23] id="([^"]+)"[^>]*>(?:(?!<\/h[23]>)[\s\S])*?<a class="heading-anchor" href="#([^"]+)"/g,
-  ),
-];
-if (anchored.length === 0) problems.push('long-form headings have no anchor links');
-for (const [, id, href] of anchored) {
-  if (id !== href) problems.push(`heading #${id} anchors to #${href}`);
+  // Long-form headings carry an anchor to their own id.
+  const anchored = [
+    ...html.matchAll(
+      /<h[23] id="([^"]+)"[^>]*>(?:(?!<\/h[23]>)[\s\S])*?<a class="heading-anchor" href="#([^"]+)"/g,
+    ),
+  ];
+  if (anchored.length === 0) problems.push('long-form headings have no anchor links');
+  for (const [, id, href] of anchored) {
+    if (id !== href) problems.push(`heading #${id} anchors to #${href}`);
+  }
+} else {
+  console.log('check:dist: no styleguide in this build (production); its checks skipped.');
 }
 
 // --- Interactive cards must be links (hover feedback promises a click) ---
 for (const page of [
   ...inAll('index.html'),
   ...inAll('practice/index.html'),
-  'styleguide/index.html',
+  ...(exists('styleguide/index.html') ? ['styleguide/index.html'] : []),
 ]) {
   for (const [, tag] of read(page).matchAll(/<(\w+)[^>]*class="[^"]*\bcard-interactive\b/g)) {
     if (tag !== 'a') problems.push(`${page}: card-interactive on <${tag}>, not a link`);
@@ -648,6 +649,29 @@ for (const page of htmlPages()) {
   const width = Number(/width="(\d+)"/.exec(img ?? '')?.[1] ?? 0);
   if (width < 640) problems.push(`lesson player thumbnail is ${width}px wide`);
   if (!/sddefault/.test(img ?? '')) problems.push('lesson player does not use the 640px thumbnail');
+}
+
+// --- SEO: the sitemap lists only pages that are their own canonical and indexable; a lesson in
+// another language points to the English one; a 404's language menu leads to existing pages ---
+{
+  const sitemap = read('sitemap-0.xml');
+  for (const [, loc] of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
+    const path = new URL(loc).pathname;
+    const doc = read(`${path.slice(1)}index.html`);
+    const canonical = /<link rel="canonical" href="([^"]+)"/.exec(doc)?.[1];
+    if (canonical !== loc) problems.push(`sitemap lists ${path}, whose canonical is ${canonical}`);
+    if (/name="robots" content="noindex"/.test(doc)) problems.push(`sitemap lists noindex ${path}`);
+  }
+  const copy = read('ko/lessons/ge-vs-dorok/index.html');
+  if (
+    !/<link rel="canonical" href="[^"]+\/lessons\/ge-vs-dorok\/"/.test(copy) ||
+    /hreflang=/.test(/<head>[\s\S]*<\/head>/.exec(copy)?.[0] ?? '')
+  ) {
+    problems.push('a lesson in another language is not canonical to the English one');
+  }
+  if (/href="\/([a-z]{2}\/)?404\//.test(read('404.html'))) {
+    problems.push('the 404 language menu links to a missing /404/ page');
+  }
 }
 
 if (problems.length) {

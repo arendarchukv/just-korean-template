@@ -15,7 +15,7 @@ the end of every cycle.
 
 Built: content collections + `.pages.yml` (Lessons with their own words / quiz / files, Words,
 Quizzes, Materials, Notices, Site settings), the 139 real lessons of the channel (no Shorts; imported 2026-10-18 with yt-dlp into `import/`, then generated from `import/generate-prompt.md`: level, summary and grammar are machine drafts to check; 9 playlists in `src/data/playlists.ts`, Listening folded into podcast and K-pop into culture), demo decks / quizzes / materials / notices, home page (notice strip with tinted type pills, hero with credentials row (degree, certificate, channel) and `HeroPortrait.astro` (her cut-out photo standing in a soft disc that clips it at the bottom, head above its edge, among cut-paper shapes: grid paper, wave, arch, teal dot; no handwritten notes; her profile photo `src/assets/teacher-photo.png`, sent 2026-10-19, already cut out; `TEACHER_PHOTO` can point to another one on R2), new-lesson cards (the three newest lessons with a picture: a video or a cover), class cards + bar to Classes; sections open with `SectionHead`: eyebrow, title, lead; line icons in `Icon.astro`; class cards are `FormatCard.astro`, shared with Classes (hover: the tape strip draws out, the only movement; the people dots take a soft halo); levels always shown with the design-system `LevelBadge` (bars); lesson cards `LessonCard.astro`, shared with Lessons). Content pages open with `PageHead` (eyebrow, h1, lead): Lessons (one grid of the same lesson card, newest first; playlist chips (All · each playlist), level and format (with / without video) filters and search kept in the address (`?playlist=grammar&level=…&format=text&q=…&page=2`, so Back from a lesson returns to the same view; the lesson page's playlist pill links to `?playlist=<id>`); when nothing matches, a "Clear filters" button, level filter, search over title, summary and grammar; 24 cards a page with the same numbered pager as Materials (labels `pager.*`); a chosen course reads oldest first; a course lesson's card says "Lesson 3" everywhere), Practice (entry cards), Grammar, Materials, Classes; the lesson page opens with its playlist pill ("Lesson 4 of 10" in a course), title, summary and a ruled meta row (level badge, date, "Watch on YouTube"); practice and files are framed tiles; beside it a framed playlist panel with the lesson count (the list scrolls inside its box, the open lesson tinted and scrolled into view), Lessons library, Lesson page (click-to-load player), Grammar (tags typed on lessons, each with its lessons; search), Materials (tabs over dense
-tables, type filter, title search, a pager of 20 rows once a tab is longer), Classes (formats with facts, how to start, FAQ), Practice (first the three study-tool cards moved from home, `StudyTools.astro` (design-system `card-interactive` with a corner shape that nudges on hover; the dictionary card searches krdict right away and keeps a still shape; copy keys still `home.links.*`), then two entry cards to the Flashcards and Quizzes studios, plus a muted "TOPIK mock test · Coming soon" block: the list of every deck/quiz on the left, the open one on the right (on phones the list sits below the card), `PracticeStudio.astro`: the list scrolls inside its column, with a search by title or word and a By topic / From lessons segment; each deck/quiz keeps its own page; 3D flip card (both faces: label on top, main text centred, line below, so nothing jumps) with a progress bar, counts, Shuffle / Start over and keys Space · 1 · 2); the quiz is a paper card with a row of steps (each answered question teal or red), lettered options and tinted feedback, and a result screen: score ring, a word on how it went (four bands), counts, best score ("New best"), and a review of every answer with the right answer and explanation, 404 pages link the main sections (lessons, grammar, practice, materials); demo Contact form (validates, sends nothing; Tally link replaces it). DEMO ONLY site guide `/guide/` (footer link "Site guide"; English, noindex): the six CMS forms in plain words, with the styleguide as its second tab (`GuideTabs.astro`). Navigation: Free lessons · Materials · Practice · Classes with JiEun; grammar pages are reached from lessons and the footer, and mark Free lessons as the current section (`sections` on the menu item); footer: logo, tagline and her channels as icon buttons, then two titled groups (Learn: lessons, Grammar, materials, practice; Connect: classes, contact, Ko-fi), and a bottom bar (copyright, site guide); full menu from 1152px (`nav:` breakpoint in `global.css`; header labels never wrap, sized for the longest language, Ukrainian), the menu button below. Header right: language, theme, "Support Just Korean" (Ko-fi, from Site settings; Instagram and Ko-fi links taken from her old site); no booking button in the header (booking is on home and Classes). **Languages: English, 한국어, Español, Bahasa Indonesia, Українська** (spec `docs/superpowers/specs/2026-10-16-multilingual-design.md`): one list in `src/i18n/locales.ts` drives routes (`src/pages/[lang]/`), menu, hreflang, sitemap, 404s, dates and checks; dictionaries per language in `src/i18n/dict/` (es, id, uk machine-drafted, `TODO(<lang>-review)`); Manrope covers Cyrillic (only its Cyrillic file, declared inline in `BaseLayout`, so the shared CSS stays under budget). Language menu: a `<details>` list of every locale in its own name.
+tables, type filter, title search, a pager of 20 rows once a tab is longer), Classes (formats with facts, how to start, FAQ), Practice (first the three study-tool cards moved from home, `StudyTools.astro` (design-system `card-interactive` with a corner shape that nudges on hover; the dictionary card searches krdict right away and keeps a still shape; copy keys still `home.links.*`), then two entry cards to the Flashcards and Quizzes studios, plus a muted "TOPIK mock test · Coming soon" block: the list of every deck/quiz on the left, the open one on the right (on phones the list sits below the card), `PracticeStudio.astro`: the list scrolls inside its column, with a search by title or word and a By topic / From lessons segment; each deck/quiz keeps its own page; 3D flip card (both faces: label on top, main text centred, line below, so nothing jumps) with a progress bar, counts, Shuffle / Start over and keys Space · 1 · 2); the quiz is a paper card with a row of steps (each answered question teal or red), lettered options and tinted feedback, and a result screen: score ring, a word on how it went (four bands), counts, best score ("New best"), and a review of every answer with the right answer and explanation, 404 pages link the main sections (lessons, grammar, practice, materials); demo Contact form (validates, sends nothing; Tally link replaces it). Navigation: Free lessons · Materials · Practice · Classes with JiEun; grammar pages are reached from lessons and the footer, and mark Free lessons as the current section (`sections` on the menu item); footer: logo, tagline and her channels as icon buttons, then two titled groups (Learn: lessons, Grammar, materials, practice; Connect: classes, contact, Ko-fi), and a bottom bar (copyright); full menu from 1152px (`nav:` breakpoint in `global.css`; header labels never wrap, sized for the longest language, Ukrainian), the menu button below. Header right: language, theme, "Support Just Korean" (Ko-fi, from Site settings; Instagram and Ko-fi links taken from her old site); no booking button in the header (booking is on home and Classes). **Languages: English, 한국어, Español, Bahasa Indonesia, Українська** (spec `docs/superpowers/specs/2026-10-16-multilingual-design.md`): one list in `src/i18n/locales.ts` drives routes (`src/pages/[lang]/`), menu, hreflang, sitemap, 404s, dates and checks; dictionaries per language in `src/i18n/dict/` (es, id, uk machine-drafted, `TODO(<lang>-review)`); Manrope covers Cyrillic (only its Cyrillic file, declared inline in `BaseLayout`, so the shared CSS stays under budget). Language menu: a `<details>` list of every locale in its own name.
 
 Next cycles, each with its own spec: 1. polish from reviews + visual pass, 2. quiz results via Tally (needs her form), 3. site search (Pagefind).
 Also later: an R2 upload page, content translations.
@@ -29,11 +29,12 @@ Done earlier (content-independent):
 - Foundation: Astro 7 static, Tailwind v4, strict TS, i18n (EN at `/`, other languages prefixed), sitemap,
   theme toggle (light/dark), header/footer, 404s. (The About page was removed on 2026-10-17 at the owner's request; the home about block is the only teacher text.)
 - Design system "Paper & cut-outs" (spec `docs/superpowers/specs/2026-10-11-design-system-design.md`),
-  shown on `/styleguide` (dev page, noindex).
+  shown on `/styleguide`: a developer page in `src/dev/`, added only in `astro dev` and the test
+  build (`npm run build:test`), never in the production build.
 - Long-form typography (`.prose`), print styles, app icons + share image (`npm run icons`),
   `robots.txt`, web manifest.
 - Polish: mobile menu behaviour, heading anchors, page transitions, finishing details.
-- Quality gates: `npm test` (unit), `npm run check`, `npm run build` + `npm run check:dist`,
+- Quality gates: `npm test` (unit), `npm run check`, `npm run build:test` + `npm run check:dist`,
   `npm run test:browser` (axe a11y, print, UI, then the `@perf` budget tests on their own with one
   worker so parallel tests do not skew the throttled timings; local Chrome).
 
@@ -133,7 +134,7 @@ Rules:
   intro) is the second color, used for learning moments (key-expression marks, "correct",
   progress, focus ring). Muted red only for errors / "wrong". White text never on teal-400/500.
 - Design system "Paper & cut-outs": see `docs/superpowers/specs/2026-10-11-design-system-design.md`
-  and `/styleguide` (dev reference page, noindex). Signature details: hatch link underline,
+  and `/styleguide` (dev reference page, `astro dev` only). Signature details: hatch link underline,
   key-expression hatch mark, 원고지 grid paper for examples, cut-paper shapes (collage only in
   hero / 404 / empty states). Tokens: `src/styles/theme.css`; classes: `src/styles/signature.css`.
 - `npm test` checks every semantic text/background pair for WCAG AA in both themes.
@@ -228,13 +229,13 @@ Data decisions already made:
   `src/components/shapes/paths.ts` (re-run after logo/colour changes; commit the PNGs).
 - Print: `src/styles/print.css` prints content only, dark ink on white, in any theme. Mark UI
   that should not print with `data-print="hide"`; buttons, shapes and collages are hidden already.
-- Browser checks: `npm run test:browser` builds, then runs `tests/` with Playwright in the locally
+- Browser checks: `npm run test:browser` builds (`build:test`: the production build plus the styleguide), then runs `tests/` with Playwright in the locally
   installed Chrome: axe (WCAG 2.1 A/AA) on every page in both themes, desktop and mobile; a
   keyboard skip-link test; print rendering (`tests/print`); mobile menu and page transitions (`tests/ui`); a performance budget on a
   throttled phone (`tests/perf`: LCP < 2 s, CLS < 0.1, one render-blocking CSS < 25 KB brotli, no
   external JS, fonts ≤ 300 KB on the English home). Recheck real numbers with PageSpeed Insights after hosting. Add new page templates to
   `tests/a11y/pages.spec.ts`.
-- Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build`) checks the built HTML: styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
+- Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build:test`; after `npm run build` it skips the styleguide checks) checks the built HTML: the sitemap lists only indexable pages that are their own canonical, styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
 - Links (TidyCal, Tally forms, social, R2 base URL) live in `src/content/settings/site.yml`,
@@ -315,6 +316,25 @@ Data decisions already made:
   so Cloudflare serves it for missing `/<lang>/...` URLs.
 - Wrangler (Cloudflare CLI) is a devDependency: `npm run deploy` builds and uploads `dist/`.
 - Git commits: no co-author trailer. No remote yet.
+
+## Launch preparation (2026-10-21)
+
+- Demo content stays for now (decks, quizzes, materials, notices, the two reading lessons): JiEun
+  edits or replaces it in Pages CMS. The site guide was removed; her CMS instructions will be a
+  separate page outside the site (English). The demo Contact form stays until her Tally link is set.
+- SEO: lessons, decks and quizzes are English in every language, so their `/ko/`, `/es/`, ... copies
+  set `canonicalPath` (BaseLayout) to the English page, without hreflang, and the sitemap leaves
+  them out (`ENGLISH_CONTENT` in `astro.config.mjs`); so do `/practice/flashcards/` and
+  `/practice/quizzes/` (canonical to their first deck/quiz). Revisit once content is translated.
+  Deck and quiz pages are titled "Flashcards · …" / "Quiz · …"; a 404's language menu leads home.
+- Tailwind reads classes from `src/` only (`source('..')` in `global.css`): scratch files elsewhere
+  (e.g. `temp_files/`) once pushed the CSS over its budget.
+- **When the domain is bought:** set `SITE_URL` in `astro.config.mjs`; set `filesBaseUrl` in
+  `src/content/settings/site.yml` to the R2 custom domain and add that domain to `image.domains`;
+  rebuild, then `npm run check:links` and `npm run check:dist`.
+- Deploy (recommended, not yet confirmed by the owner): Cloudflare Workers Builds from the GitHub
+  repo (build `npm run build`, deploy `npx wrangler deploy`), so each Pages CMS save (a commit to
+  `main`) triggers one build. Still no scheduled builds: anything date-dependent runs in the browser.
 
 ## Astro tooling
 

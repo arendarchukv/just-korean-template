@@ -27,6 +27,12 @@ interface Props {
   monolingual?: boolean;
   /** Share image (1200×630) instead of the default one, e.g. a lesson cover. */
   image?: { src: string; alt: string };
+  /**
+   * The page repeats another one: a lesson, deck or quiz (its content is English in every
+   * language), or a studio opened on its first deck. Its canonical points there, with no hreflang
+   * alternates; the sitemap leaves such pages out (astro.config.mjs).
+   */
+  canonicalPath?: string;
 }
 
 const lang: Lang = getLangFromUrl(Astro.url);
@@ -38,12 +44,13 @@ const {
   noindex = false,
   monolingual = false,
   image,
+  canonicalPath,
 } = Astro.props;
-const showAlternates = !noindex && !monolingual;
+const showAlternates = !noindex && !monolingual && !canonicalPath;
 const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${t('site.tagline')}`;
 
 const site = Astro.site ?? Astro.url;
-const canonical = new URL(Astro.url.pathname, site).href;
+const canonical = new URL(canonicalPath ?? Astro.url.pathname, site).href;
 const alternates = (Object.keys(languages) as Lang[]).map((l) => ({
   lang: l,
   href: new URL(switchLocalePath(Astro.url, l), site).href,

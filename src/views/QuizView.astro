@@ -5,7 +5,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Quiz from '@/components/widgets/Quiz.svelte';
 import { getQuizzes } from '@/content/queries';
 import PracticeStudio from '@/components/PracticeStudio.astro';
-import type { Lang, UIKey } from '@/i18n/ui';
+import { defaultLang, type Lang, type UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
 type QuizEntry = Awaited<ReturnType<typeof getQuizzes>>[number];
@@ -43,7 +43,10 @@ const labels = {
 };
 ---
 
-<BaseLayout title={quiz.title}>
+<BaseLayout
+  title={`${t('lesson.quiz')} · ${quiz.title}`}
+  canonicalPath={localizePath(defaultLang, `practice/quiz/${quiz.id}`)}
+>
   <PracticeStudio
     kind="quiz"
     units={quizzes.map((q) => ({

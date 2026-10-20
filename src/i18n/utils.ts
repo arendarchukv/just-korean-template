@@ -32,9 +32,10 @@ export function localizePath(lang: Lang, path = ''): string {
   return getRelativeLocaleUrl(lang, path);
 }
 
-/** The current page in another locale. */
+/** The current page in another locale. A 404 page has no address of its own: its home. */
 export function switchLocalePath(url: URL, target: Lang): string {
-  return localizePath(target, stripLocale(url.pathname));
+  const path = stripLocale(url.pathname);
+  return localizePath(target, /^404(\.html)?$/.test(path) ? '' : path);
 }
 
 /** Dates in the page language (format from locales.ts). Content dates are UTC days. */

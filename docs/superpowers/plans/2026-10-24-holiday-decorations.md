@@ -3,7 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** On five Korean holidays the site shows a pill, a greeting and cut-paper motifs, chosen
-by the visitor's date in the browser, switchable off in Site settings, with a DEMO ONLY header
+by the visitor's date in the browser, set in Site settings (none, automatic by date, or one holiday by hand), with a DEMO ONLY header
 switch to preview any holiday.
 
 **Architecture:** Holiday data and date windows live in `src/data/holidays.ts` (pure logic in
@@ -32,7 +32,9 @@ Vitest, Playwright, Pages CMS (`.pages.yml`).
   emoji, no textures, no displacement filters, no layout shift.
 - UI text in all five languages; ko/es/id/uk machine-drafted with `TODO(<lang>-review)`.
 - Test switch: DEMO ONLY comment in every file it touches; English-only; listed in CLAUDE.md.
-- Site setting `holidays` (boolean, default true): off means no holiday markup or script at all.
+- Site setting `holiday`: `none` (default) | `auto` | a holiday id. `none`: no holiday markup or
+  script. Holiday id: `data-holiday` written at build (the script then only serves the DEMO ONLY preview).
+  `auto`: the date script. The demo `site.yml` uses `auto` while the preview switch exists.
 
 ## Review Focus
 
@@ -41,7 +43,9 @@ Vitest, Playwright, Pages CMS (`.pages.yml`).
 - A year past 2035 → nothing shows, no error (Task 1 test).
 - Test switch set to a holiday, then the page reloaded or another page opened → the same holiday
   stays for the session; "none" clears it (Task 5 browser test).
-- Holidays off in Site settings → no pill, no motif, no script in the HTML (Task 2 check:dist).
+- Site setting `none` → no pill, no motif, no script in the HTML; a holiday id → `data-holiday`
+  in the HTML, shown with JS off too (Task 2 unit test on the render rule + check:dist). While the
+  DEMO ONLY preview exists, the demo `site.yml` is set to `auto` so every holiday's markup is there.
 - Dark theme with a holiday on → motifs and pill readable, axe passes (Task 6 browser test).
 
 ---
@@ -82,10 +86,11 @@ Vitest, Playwright, Pages CMS (`.pages.yml`).
 
 **Files:**
 
-- Modify: `src/content/schemas.ts` (`siteSchema.holidays: z.boolean().default(true)`),
-  `src/content/settings/site.yml` (`holidays: true`), `.pages.yml` (boolean field, label
-  "Holiday decorations", description "Show small decorations and a greeting on Korean holidays
-  (Seollal, Chuseok, Christmas, Hangul Day, Liberation Day)."), `src/layouts/BaseLayout.astro`,
+- Modify: `src/content/schemas.ts` (`siteSchema.holiday: z.enum(['none','auto', ...HolidayId]).default('none')`),
+  `src/content/settings/site.yml` (`holiday: none`), `.pages.yml` (select, label "Holiday
+  decorations", options None / Automatic by date / Seollal / Chuseok / Christmas / Hangul Day /
+  Liberation Day, description "Small decorations and a greeting for a Korean holiday. Automatic
+  shows each holiday on its dates; a holiday chosen here shows until you change it."), `src/layouts/BaseLayout.astro`,
   `scripts/check-dist.mjs`
 - Create: `src/components/holidays/HolidayScript.astro`
 

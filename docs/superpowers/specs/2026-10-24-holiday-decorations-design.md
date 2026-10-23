@@ -17,8 +17,9 @@ Its cream background and painted illustrations are **not** taken over.
 
 - Five holidays: 추석 Chuseok, 설날 Seollal, Christmas, 한글날 Hangul Day (9 October), 광복절
   Liberation Day (15 August).
-- Turns itself on and off by date, with no build (builds are rare and manual).
-- One switch in Site settings (Pages CMS) to turn the whole feature off.
+- In Automatic mode it turns itself on and off by date, with no build (builds are rare and manual).
+- One select in Site settings (Pages CMS), "Holiday decorations": **None** (default), **Automatic
+  by date**, or one holiday chosen by hand (shown until changed). Decided by the owner 2026-10-24.
 - A test switch in the header (DEMO ONLY) that shows any holiday at once, for review.
 - Each holiday's motifs and assets in its own folder.
 
@@ -80,8 +81,9 @@ If two windows overlap (they do not with these dates), the first in the list win
   strip's) sets `data-holiday="<id>"` on `<html>` when today falls in a window, and CSS shows that
   holiday's pieces. Without JS nothing shows. No JS file is added, so `check:dist`'s rule holds.
   The inline SVG must stay small: the CSS budget (25 KB brotli) and the HTML size are checked.
-- Site settings: a boolean `holidays` ("Holiday decorations", default on) in `site.yml`,
-  `.pages.yml` and `siteSchema`. Off: the markup is not rendered at all.
+- Site settings: a select `holiday` in `site.yml`, `.pages.yml` and `siteSchema`: `none` (default),
+  `auto`, or a holiday id. `none`: no holiday markup or script at all. A holiday id: the build writes
+  `data-holiday="<id>"` on `<html>`, no script. `auto`: the date script below.
 - **Test switch (DEMO ONLY):** a small select in the header, "Holiday: none / 추석 / 설날 /
   Christmas / 한글날 / 광복절", that sets `data-holiday` at once, overriding the date (kept for the
   session in `sessionStorage`). Marked DEMO ONLY in code, listed in CLAUDE.md for removal before

@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 const ENGLISH_CONTENT = '(lessons|practice/deck|practice/quiz)/[^/]+/';
 
 // Placeholder until the domain is chosen (TBD). Pages read it as Astro.site.
-const SITE_URL = 'https://just-korean.example';
+const SITE_URL = 'https://just-korean.arendarchukv.workers.dev';
 
 /**
  * Astro only emits the root 404 as `404.html`; other locales get `<lang>/404/index.html`.

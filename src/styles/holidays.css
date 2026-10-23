@@ -31,4 +31,45 @@
     font-weight: 700;
     white-space: nowrap;
   }
+
+  /* Motifs: the main one stands in the hero collage where the wave is (the wave steps aside). */
+  .holiday-motif .shape {
+    width: 100%;
+    height: auto;
+  }
+  .hero-portrait-holiday {
+    position: absolute;
+    top: -4%;
+    right: -6%;
+    width: 40%;
+  }
+  :root[data-holiday] .hero-portrait-wave {
+    display: none;
+  }
+  /* Echo beside a section's eyebrow, the size of a capital letter. */
+  .holiday-echo {
+    width: 1.1em;
+    margin-right: 0.45em;
+    vertical-align: -0.2em;
+  }
+  :root[data-holiday] .holiday-echo[data-holiday-piece] {
+    display: none;
+  }
+  :root[data-holiday='seollal'] .holiday-echo[data-holiday-piece='seollal'],
+  :root[data-holiday='chuseok'] .holiday-echo[data-holiday-piece='chuseok'],
+  :root[data-holiday='christmas'] .holiday-echo[data-holiday-piece='christmas'],
+  :root[data-holiday='hangeulnal'] .holiday-echo[data-holiday-piece='hangeulnal'],
+  :root[data-holiday='gwangbokjeol'] .holiday-echo[data-holiday-piece='gwangbokjeol'] {
+    display: inline-block;
+  }
+  /* Footer echo: in the top right corner, above the footer's rule. */
+  .site-footer {
+    position: relative;
+  }
+  .holiday-footer-echo {
+    position: absolute;
+    top: -1.4rem;
+    right: max(1rem, calc((100% - 72rem) / 2));
+    width: 2.75rem;
+  }
 }

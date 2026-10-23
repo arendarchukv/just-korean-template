@@ -8,13 +8,16 @@
 import { Image } from 'astro:assets';
 import Shape from '@/components/shapes/Shape.astro';
 import teacherPhoto from '@/assets/teacher-photo.png';
+import HolidayMotifs from '@/components/holidays/HolidayMotifs.astro';
 
 interface Props {
   /** A replacement photo as an https:// link (cut out); by default her profile photo in assets. */
   photo?: string;
   alt: string;
+  /** Holiday motifs join the collage (Site settings allow holidays); one shows at a time. */
+  holidays?: boolean;
 }
-const { photo, alt } = Astro.props;
+const { photo, alt, holidays = false } = Astro.props;
 // The picture is at most 30rem wide (.hero-portrait) and the photo a little wider than it.
 const SIZES = '(min-width: 32rem) 32rem, 100vw';
 ---
@@ -24,6 +27,7 @@ const SIZES = '(min-width: 32rem) 32rem, 100vw';
   <Shape name="wave" tone="brand" class="hero-portrait-wave" />
   <Shape name="arch" tone="indigo" class="hero-portrait-arch" />
   <Shape name="blob" tone="teal" class="hero-portrait-dot" />
+  {holidays && <HolidayMotifs kind="main" class="hero-portrait-holiday" />}
   <div class="hero-portrait-disc" aria-hidden="true"></div>
   {photo ? (
     <Image

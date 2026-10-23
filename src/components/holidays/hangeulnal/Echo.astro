@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<!-- 한글날 echo: one grid-paper tile with ㄱ. -->
+<svg viewBox="0 0 40 40" class:list={['shape', className]} aria-hidden="true" focusable="false">
+  <rect
+    x="5"
+    y="5"
+    width="30"
+    height="30"
+    rx="2"
+    style="fill: var(--shape-paper); stroke: var(--shape-brand)"
+    stroke-width="1.5"
+  />
+  <path
+    d="M12 13 H28 V28"
+    fill="none"
+    style="stroke: var(--shape-indigo)"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

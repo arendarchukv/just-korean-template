@@ -103,6 +103,8 @@
   --shape-indigo: #2b3a7a;
   --shape-paper: #e3e7f4;
   --shape-ink: #1f2a5c;
+  /* Holiday motifs only (persimmons, berries, knot cord): a muted red, never for text. */
+  --shape-red: #c4544e;
 }
 
 /* Dark: deep indigo from the channel intro. */
@@ -141,6 +143,7 @@
   --shape-indigo: #3a4a8c;
   --shape-paper: #222b55;
   --shape-ink: #0b1029;
+  --shape-red: #a8484a;
 }
 
 /* Semantic tokens as Tailwind colors: bg-surface, text-muted, border-border, ... */

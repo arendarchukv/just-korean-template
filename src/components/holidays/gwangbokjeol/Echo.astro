@@ -1,0 +1,18 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<!-- 광복절 echo: a small 무궁화. -->
+<svg viewBox="0 0 40 40" class:list={['shape', className]} aria-hidden="true" focusable="false">
+  <g style="fill: var(--shape-paper); stroke: var(--shape-brand)" stroke-width="1.2">
+    <ellipse cx="20" cy="11" rx="6" ry="8" />
+    <ellipse cx="20" cy="11" rx="6" ry="8" transform="rotate(72 20 20)" />
+    <ellipse cx="20" cy="11" rx="6" ry="8" transform="rotate(144 20 20)" />
+    <ellipse cx="20" cy="11" rx="6" ry="8" transform="rotate(216 20 20)" />
+    <ellipse cx="20" cy="11" rx="6" ry="8" transform="rotate(288 20 20)" />
+  </g>
+  <circle cx="20" cy="20" r="4.5" style="fill: var(--shape-red)" />
+</svg>

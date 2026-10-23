@@ -1,0 +1,41 @@
+---
+/**
+ * Every holiday's motif of one kind, each in its own `data-holiday-piece` wrapper (hidden unless
+ * <html data-holiday> names it; holidays.css). `main` goes into the home hero collage, `echo` is a
+ * small motif for section heads and the footer. Decorative only (aria-hidden SVG).
+ */
+import ChristmasEcho from './christmas/Echo.astro';
+import ChristmasMain from './christmas/Main.astro';
+import ChuseokEcho from './chuseok/Echo.astro';
+import ChuseokMain from './chuseok/Main.astro';
+import GwangbokjeolEcho from './gwangbokjeol/Echo.astro';
+import GwangbokjeolMain from './gwangbokjeol/Main.astro';
+import HangeulnalEcho from './hangeulnal/Echo.astro';
+import HangeulnalMain from './hangeulnal/Main.astro';
+import SeollalEcho from './seollal/Echo.astro';
+import SeollalMain from './seollal/Main.astro';
+import type { HolidayId } from '@/data/holidays';
+
+interface Props {
+  kind: 'main' | 'echo';
+  class?: string;
+}
+const { kind, class: className } = Astro.props;
+
+const MOTIFS = {
+  seollal: { main: SeollalMain, echo: SeollalEcho },
+  chuseok: { main: ChuseokMain, echo: ChuseokEcho },
+  christmas: { main: ChristmasMain, echo: ChristmasEcho },
+  hangeulnal: { main: HangeulnalMain, echo: HangeulnalEcho },
+  gwangbokjeol: { main: GwangbokjeolMain, echo: GwangbokjeolEcho },
+} satisfies Record<HolidayId, Record<'main' | 'echo', unknown>>;
+---
+
+{Object.entries(MOTIFS).map(([id, motif]) => {
+  const Motif = motif[kind];
+  return (
+    <span data-holiday-piece={id} class:list={['holiday-motif', className]}>
+      <Motif />
+    </span>
+  );
+})}

@@ -1,0 +1,24 @@
+---
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<!-- Chuseok: a full moon and a persimmon branch, cut paper. -->
+<svg viewBox="0 0 100 100" class:list={['shape', className]} aria-hidden="true" focusable="false">
+  <circle cx="60" cy="38" r="30" style="fill: var(--shape-paper)" />
+  <path
+    d="M6 92 C26 80 42 72 64 70 C74 69 84 66 92 58"
+    fill="none"
+    style="stroke: var(--shape-indigo)"
+    stroke-width="3.5"
+    stroke-linecap="round"
+  />
+  <path d="M40 74 C38 64 44 58 52 58 C52 66 47 72 40 74 Z" style="fill: var(--shape-teal)" />
+  <path d="M70 68 C74 60 82 58 88 61 C84 68 77 70 70 68 Z" style="fill: var(--shape-teal)" />
+  <path d="M22 84 C18 76 22 70 30 69 C31 76 28 82 22 84 Z" style="fill: var(--shape-teal)" />
+  <circle cx="34" cy="86" r="6.5" style="fill: var(--shape-red)" />
+  <circle cx="58" cy="80" r="7.5" style="fill: var(--shape-red)" />
+  <circle cx="80" cy="73" r="6" style="fill: var(--shape-red)" />
+</svg>

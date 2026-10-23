@@ -3,6 +3,8 @@ import Icon, { type IconName } from '@/components/Icon.astro';
 import Logo from '@/components/Logo.astro';
 import { SITE } from '@/config';
 import { getSite } from '@/content/queries';
+import HolidayMotifs from '@/components/holidays/HolidayMotifs.astro';
+import { holidayRender } from '@/lib/holiday-logic';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { localizePath, useTranslations } from '@/i18n/utils';
 
@@ -46,6 +48,9 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
+  {holidayRender(site.holiday).pieces && (
+    <HolidayMotifs kind="echo" class="holiday-footer-echo collage" />
+  )}
   <div class="container-page footer-main" data-print="hide">
     <div class="footer-brand">
       <Logo wordmark class="text-lg" />

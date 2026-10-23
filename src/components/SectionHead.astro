@@ -18,7 +18,10 @@ const external = link?.href.startsWith('http')
 
 <div class="section-head">
   <div>
-    <p class="section-eyebrow">{eyebrow}</p>
+    <p class="section-eyebrow">
+      <slot name="mark" />
+      {eyebrow}
+    </p>
     <h2 id={id} class="section-title">
       {title}
     </h2>

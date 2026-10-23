@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { sameShape } from '../i18n/localized';
 import { languages } from '../i18n/ui';
 import { CLASSES } from './classes';
+import { HOLIDAYS } from './holidays';
 import { PLAYLISTS } from './playlists';
 import { TEACHER } from './teacher';
 
@@ -17,6 +18,13 @@ describe('hardcoded content is translated', () => {
     it(`classes in ${lang}`, () => {
       expect(CLASSES[lang], 'missing').toBeDefined();
       expect(sameShape(CLASSES.en, CLASSES[lang])).toEqual([]);
+    });
+    it(`holidays in ${lang}`, () => {
+      for (const h of HOLIDAYS) {
+        const text = h.text as Record<string, unknown>;
+        expect(text[lang], h.id).toBeDefined();
+        expect(sameShape(text.en, text[lang]), h.id).toEqual([]);
+      }
     });
     it(`playlists in ${lang}`, () => {
       for (const p of PLAYLISTS) {

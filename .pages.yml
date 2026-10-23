@@ -377,16 +377,6 @@ content:
         type: string
         description: Tally contact form link.
         pattern: { regex: '^https://', message: The link must start with https:// }
-      - name: quizResultsForm
-        label: Quiz results form (Tally)
-        type: string
-        description: Tally form that receives quiz results.
-        pattern: { regex: '^https://', message: The link must start with https:// }
-      - name: filesBaseUrl
-        label: R2 files address
-        type: string
-        description: Public address of the R2 bucket, e.g. https://files.example.com.
-        pattern: { regex: '^https://', message: The link must start with https:// }
       - name: social
         type: object
         description: Links in the footer. Leave empty to hide.

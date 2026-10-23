@@ -128,8 +128,6 @@ const optionalUrl = z.union([httpsUrl, z.literal('')]).default('');
 export const siteSchema = z.object({
   tidycal: optionalUrl,
   contactForm: optionalUrl,
-  quizResultsForm: optionalUrl,
-  filesBaseUrl: optionalUrl,
   // Pages CMS drops an object whose fields are all empty, so the key may be missing entirely.
   social: z
     .object({ youtube: optionalUrl, instagram: optionalUrl, kofi: optionalUrl })

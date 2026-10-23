@@ -238,7 +238,7 @@ Data decisions already made:
 - Tests: Vitest (`npm test`). `npm run check:dist` (after `npm run build:test`; after `npm run build` it skips the styleguide checks) checks the built HTML: the sitemap lists only indexable pages that are their own canonical, styleguide is English-only and unindexed, no duplicate SVG ids, no ragged-edge filters, quiz ARIA, interactive cards are links, mobile current page is marked.
 - **Domain: TBD.** Will likely be bought via Cloudflare. Until then `SITE_URL` in
   `astro.config.mjs` is a placeholder; pages read it as `Astro.site`.
-- Links (TidyCal, Tally forms, social, R2 base URL) live in `src/content/settings/site.yml`,
+- Links (TidyCal, the Tally contact form, social) live in `src/content/settings/site.yml`,
   editable in Pages CMS. Empty footer links are left out; "Book a class" falls back to the Classes
   page until the TidyCal link is set. Form fields carry the same limits as the schemas (tested).
 
@@ -329,9 +329,10 @@ Data decisions already made:
   Deck and quiz pages are titled "Flashcards · …" / "Quiz · …"; a 404's language menu leads home.
 - Tailwind reads classes from `src/` only (`source('..')` in `global.css`): scratch files elsewhere
   (e.g. `temp_files/`) once pushed the CSS over its budget.
-- **When the domain is bought:** set `SITE_URL` in `astro.config.mjs`; set `filesBaseUrl` in
-  `src/content/settings/site.yml` to the R2 custom domain and add that domain to `image.domains`;
-  rebuild, then `npm run check:links` and `npm run check:dist`.
+- **When the domain is bought:** set `SITE_URL` in `astro.config.mjs` (a commit; JiEun can edit it on
+  GitHub); if R2 gets a custom domain, add it to `image.domains`; then `npm run check:links`.
+- Site settings hold only links the site uses: the unused `filesBaseUrl` (R2) and `quizResultsForm`
+  fields were removed on 2026-10-24; add a field back with the feature that reads it.
 - Deploy (recommended, not yet confirmed by the owner): Cloudflare Workers Builds from the GitHub
   repo (build `npm run build`, deploy `npx wrangler deploy`), so each Pages CMS save (a commit to
   `main`) triggers one build. Still no scheduled builds: anything date-dependent runs in the browser.

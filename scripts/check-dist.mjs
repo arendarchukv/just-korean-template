@@ -665,6 +665,20 @@ for (const page of htmlPages()) {
     if (!['none', 'auto'].includes(choice) && attr !== choice) {
       problems.push(`${page}: <html> lacks data-holiday="${choice}"`);
     }
+    // Every holiday's greeting is in the home page unless the setting is none.
+    const greetings = [...doc.matchAll(/data-holiday-piece="([a-z]+)"[^>]*data-holiday-greeting/g)];
+    const want = choice === 'none' ? 0 : 5;
+    if (greetings.length !== want) {
+      problems.push(`${page}: ${greetings.length} holiday greetings, expected ${want}`);
+    }
+  }
+  // Pieces are hidden unless <html> names their holiday.
+  const css = readdirSync(new URL('../dist/_astro/', import.meta.url))
+    .filter((f) => f.endsWith('.css'))
+    .map((f) => read(`_astro/${f}`))
+    .join('');
+  if (!/\[data-holiday-piece\]\{display:none\}/.test(css)) {
+    problems.push('holiday pieces are not hidden by default');
   }
 }
 

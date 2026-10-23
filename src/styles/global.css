@@ -6,6 +6,7 @@
 @import './home.css';
 @import './pages.css';
 @import './widgets.css';
+@import './holidays.css';
 @import './print.css';
 
 /* The full header menu, its labels on one line, fits from 72rem (1152px) in the longest language

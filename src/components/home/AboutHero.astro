@@ -1,5 +1,7 @@
 ---
 import HeroPortrait from '@/components/home/HeroPortrait.astro';
+import HolidayGreeting from '@/components/holidays/HolidayGreeting.astro';
+import { holidayRender } from '@/lib/holiday-logic';
 import Icon, { type IconName } from '@/components/Icon.astro';
 import { SITE_NAME_KO } from '@/lib/display-text';
 import { getSite } from '@/content/queries';
@@ -19,12 +21,15 @@ const home = pick(TEACHER, lang);
 // Degree, certificate, channel: in the order of the credentials in teacher.ts.
 const FACT_ICONS: IconName[] = ['cap', 'badge', 'play'];
 // Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
-const tidycal = (await getSite()).tidycal;
+const site = await getSite();
+const tidycal = site.tidycal;
+const holidays = holidayRender(site.holiday).pieces;
 const booking = tidycal || localizePath(lang, 'classes');
 ---
 
 <section class="container-page about-hero" data-home-block="about" aria-labelledby="about-title">
   <div>
+    {holidays && <HolidayGreeting lang={lang} />}
     <h1 id="about-title">
       <span lang="ko" class="font-display about-title-ko">
         {SITE_NAME_KO}

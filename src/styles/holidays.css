@@ -1,0 +1,34 @@
+/*
+ * Holiday decorations (spec docs/superpowers/specs/2026-10-24-holiday-decorations-design.md).
+ * Every holiday's pieces are in the page and hidden; <html data-holiday="<id>"> shows that
+ * holiday's. Not the `hidden` attribute: Tailwind's preflight makes it !important.
+ */
+@layer components {
+  [data-holiday-piece] {
+    display: none;
+  }
+  :root[data-holiday='seollal'] [data-holiday-piece='seollal'],
+  :root[data-holiday='chuseok'] [data-holiday-piece='chuseok'],
+  :root[data-holiday='christmas'] [data-holiday-piece='christmas'],
+  :root[data-holiday='hangeulnal'] [data-holiday-piece='hangeulnal'],
+  :root[data-holiday='gwangbokjeol'] [data-holiday-piece='gwangbokjeol'] {
+    display: revert;
+  }
+
+  /* Greeting above the home title: a tinted pill like the notice types, then one line. */
+  .holiday-greeting {
+    margin: 0 0 1.25rem;
+    font-size: var(--text-sm);
+    line-height: 2;
+    font-weight: 600;
+    color: var(--color-teal);
+  }
+  .holiday-pill {
+    margin-right: 0.6rem;
+    padding: 0.15rem 0.65rem;
+    border-radius: 999px;
+    background: var(--color-teal-tint);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+}

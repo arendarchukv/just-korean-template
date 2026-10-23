@@ -1,0 +1,28 @@
+---
+/**
+ * Above the home title: a pill with the holiday's name (Korean, then the page language) and one
+ * line of greeting, for each holiday; CSS shows the one <html data-holiday> names (holidays.css).
+ * Real text, not decoration. Rendered only when Site settings allow holidays.
+ */
+import { HOLIDAYS } from '@/data/holidays';
+import { pick } from '@/i18n/localized';
+import type { Lang } from '@/i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+{HOLIDAYS.map((h) => {
+  const text = pick(h.text, lang);
+  return (
+    <p class="holiday-greeting" data-holiday-piece={h.id} data-holiday-greeting>
+      <span class="holiday-pill">
+        <span lang="ko">{h.korean}</span>
+        {lang !== 'ko' && <span> · {text.name}</span>}
+      </span>
+      <span>{text.greeting}</span>
+    </p>
+  );
+})}

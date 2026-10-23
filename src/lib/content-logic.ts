@@ -12,12 +12,13 @@ export function contentDay(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-export function isNoticeActive(n: { from: Date; to: Date }, today: string): boolean {
-  return contentDay(n.from) <= today && today <= contentDay(n.to);
+/** Active from its first day to its last; a notice without an end stays until it is deleted. */
+export function isNoticeActive(n: { from: Date; to?: Date }, today: string): boolean {
+  return contentDay(n.from) <= today && (!n.to || today <= contentDay(n.to));
 }
 
 export type NoticeTone = 'important' | 'news' | 'info';
-export type NoticeLike = { id: string; from: Date; to: Date; tone: NoticeTone };
+export type NoticeLike = { id: string; from: Date; to?: Date; tone: NoticeTone };
 
 const TONE_ORDER: Record<NoticeTone, number> = { important: 0, news: 1, info: 2 };
 

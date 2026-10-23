@@ -123,6 +123,13 @@ describe('noticeSchema', () => {
     expect(noticeSchema.parse({ ...notice, tone: 'info', pinned: true }).pinned).toBe(true);
   });
 
+  it('needs no end date: missing, empty or null all mean "until deleted"', () => {
+    for (const to of [undefined, '', null]) {
+      const r = noticeSchema.parse({ ...notice, to, tone: 'info' });
+      expect(r.to).toBeUndefined();
+    }
+  });
+
   it('rejects an end date before the start', () => {
     const r = noticeSchema.safeParse({
       title: 'Break',

@@ -22,6 +22,13 @@ describe('notices', () => {
     expect(toDay(d('2026-10-14'))).toBe('2026-10-14');
   });
 
+  it('stays active without an end date', () => {
+    const open = { from: yamlDate('2026-10-12') };
+    expect(isNoticeActive(open, '2026-10-11')).toBe(false);
+    expect(isNoticeActive(open, '2026-10-12')).toBe(true);
+    expect(isNoticeActive(open, '2030-01-01')).toBe(true);
+  });
+
   it('is active on both boundary days', () => {
     expect(isNoticeActive(n('a', '2026-10-12', '2026-12-18'), '2026-10-12')).toBe(true);
     expect(isNoticeActive(n('a', '2026-10-12', '2026-12-18'), '2026-12-18')).toBe(true);

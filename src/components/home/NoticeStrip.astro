@@ -46,7 +46,7 @@ const anyActiveAtBuild = notices.some((n) => isNoticeActive(n, buildDay));
           <li
             data-notice={n.id}
             data-from={contentDay(n.from)}
-            data-to={contentDay(n.to)}
+            data-to={n.to && contentDay(n.to)}
             data-tone={n.tone}
             data-pinned={n.pinned ? '' : undefined}
             hidden={!visible}
@@ -54,9 +54,12 @@ const anyActiveAtBuild = notices.some((n) => isNoticeActive(n, buildDay));
             <div class="container-page notice-row">
               <span class="notice-meta">
                 <span class="notice-tone">{t(`notice.tone.${n.tone}`)}</span>
-                <span class="notice-dates">
-                  {formatter.format(n.from)} – {formatter.format(n.to)}
-                </span>
+                {/* A notice without an end (e.g. a greeting) shows no dates. */}
+                {n.to && (
+                  <span class="notice-dates">
+                    {formatter.format(n.from)} – {formatter.format(n.to)}
+                  </span>
+                )}
               </span>
               <p>
                 <strong>{n.title}.</strong> {n.text}
@@ -109,7 +112,7 @@ const anyActiveAtBuild = notices.some((n) => isNoticeActive(n, buildDay));
     const update = () => {
       let shown = 0;
       for (const li of list.querySelectorAll('[data-notice]')) {
-        const active = li.dataset.from <= today && today <= li.dataset.to;
+        const active = li.dataset.from <= today && (!li.dataset.to || today <= li.dataset.to);
         // A pinned notice ignores an old dismissal (it may have been unpinned before).
         const closed =
           !('pinned' in li.dataset) &&

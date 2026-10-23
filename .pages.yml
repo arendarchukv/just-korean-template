@@ -361,8 +361,7 @@ content:
       - name: to
         label: Show until
         type: date
-        required: true
-        description: Last day the notice is shown; it disappears automatically after this day.
+        description: Last day the notice is shown; it disappears after this day. Leave empty to keep it until you delete it (e.g. a greeting).
         options: { format: yyyy-MM-dd }
       - name: tone
         label: Colour

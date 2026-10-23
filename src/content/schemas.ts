@@ -113,7 +113,9 @@ export const noticeSchema = z
     title: z.string().min(1),
     text: z.string().min(1),
     from: day,
-    to: day,
+    // No end date: shown until she deletes the notice (e.g. a greeting).
+    // Pages CMS may write an emptied date as '' or null: both mean no end date.
+    to: z.preprocess((v) => (v === '' || v === null ? undefined : v), day.optional()),
     tone: z.enum(['important', 'news', 'info']),
     pinned: z.boolean().default(false),
     link: z
@@ -121,7 +123,10 @@ export const noticeSchema = z
       .regex(/^(https:\/\/|\/)/, 'Use a site path like /classes/ or a full https:// link')
       .optional(),
   })
-  .refine((n) => n.to >= n.from, { message: 'End date is before the start date', path: ['to'] });
+  .refine((n) => !n.to || n.to >= n.from, {
+    message: 'End date is before the start date',
+    path: ['to'],
+  });
 
 const optionalUrl = z.union([httpsUrl, z.literal('')]).default('');
 

@@ -1,5 +1,6 @@
 # Pages CMS forms. Keep in step with src/content/schemas.ts (checked by pages-config.test.ts).
-# Heavy files (PDF, audio) live in Cloudflare R2: upload there, paste the public link here.
+# Files to download (PDF, audio) are linked by their full https:// address; where they are stored
+# (Cloudflare R2, Google Drive, ...) is not decided yet.
 # Lesson images (cover, pictures in the text) are uploaded here and kept in the repository, where
 # the build optimises them.
 # Simple on purpose: no form points at another. A lesson carries its own words, quiz and files;
@@ -18,13 +19,15 @@ components:
   file:
     type: object
     label: File
-    description: Upload the file to R2 in the Cloudflare dashboard, then paste its public link.
+    description: A file students can download.
     fields:
       - name: label
+        label: Label
         type: string
         required: true
         description: What students see, e.g. "Worksheet" or "Transcript".
       - name: kind
+        label: Type
         type: select
         required: true
         description: Shown as a small label on the download button.
@@ -37,7 +40,7 @@ components:
         label: Link to the file
         type: string
         required: true
-        description: Full https:// link to the file in R2.
+        description: The full link to the file, starting with https://
         pattern:
           regex: '^https://'
           message: The link must start with https://
@@ -70,41 +73,50 @@ components:
         label: Multiple choice
         fields:
           - name: prompt
+            label: Question
             type: string
             required: true
             description: The question or sentence.
           - name: options
+            label: Options
             type: object
-            description: Answer options; tick the correct one.
+            description: Tick the correct one.
             list: { min: 2 }
             fields:
               - name: text
+                label: Option
                 type: string
                 required: true
                 description: Option text.
               - name: correct
+                label: Correct
                 type: boolean
                 description: Tick if this option is correct.
           - name: explanation
+            label: Explanation
             type: text
             description: Shown after answering (optional).
       - name: fill
         label: Fill in the gap
         fields:
           - name: sentence
+            label: Sentence
             type: string
             required: true
             description: Sentence with the gap written as ___ (three underscores).
             pattern: { regex: '___', message: Mark the gap with ___ (three underscores) }
           - name: answer
+            label: Answer
             type: string
             required: true
             description: The correct answer.
           - name: alternatives
+            label: Other accepted answers
             type: string
             list: true
-            description: Other accepted answers (optional).
+            description: Another accepted answer (optional).
           - name: explanation
+            label: Explanation
             type: text
             description: Shown after answering (optional).
 
@@ -133,6 +145,7 @@ content:
       default: { sort: date, order: desc }
     fields:
       - name: title
+        label: Title
         type: string
         required: true
         description: The lesson title, as on YouTube.
@@ -148,6 +161,7 @@ content:
         description: A picture for the card and the top of the lesson (wide, 16:9 works best). A lesson with a video shows the video instead, and the picture only on its card when it has no video.
         options: { media: lessons }
       - name: playlist
+        label: Playlist
         type: select
         description: The playlist it belongs to (optional). A course is shown in date order.
         options:
@@ -162,6 +176,7 @@ content:
             - { name: reading, label: Reading }
             - { name: culture, label: Korean culture & K-pop }
       - name: date
+        label: Date
         type: date
         required: true
         description: Publication date; the home page shows the newest lessons first.
@@ -170,11 +185,12 @@ content:
         component: level
         required: true
       - name: summary
+        label: Summary
         type: text
         description: One or two sentences for cards and search results.
       - name: story
         label: Reading text
-        description: A text to read, in parts (optional), e.g. a story. Korean only in the text; the translation stays folded until a student opens it.
+        description: One part of a text to read, e.g. a story (optional).
         list: { collapsible: { collapsed: true, summary: '{title}' } }
         type: object
         fields:
@@ -195,21 +211,21 @@ content:
         label: Grammar patterns
         type: string
         list: true
-        description: Patterns this lesson explains, as students search for them, e.g. "-게". The Grammar page lists them.
+        description: A pattern this lesson explains, as students search for it, e.g. -게.
       - name: words
         component: word
         label: Words
-        description: Flashcards for this lesson (optional). They also appear on the Practice page.
+        description: A flashcard for this lesson (also on Practice).
         list: { collapsible: { collapsed: true, summary: '{front}' } }
       - name: quiz
         component: question
         label: Quiz
-        description: Questions for this lesson (optional). They also appear on the Practice page.
+        description: A question for this lesson (also on Practice).
         list: true
       - name: files
         component: file
         label: Files
-        description: Notes, transcript or audio for this lesson (optional). They also appear on the Materials page.
+        description: A file for this lesson (also on Materials).
         list: { collapsible: { collapsed: true, summary: '{label}' } }
       - name: body
         type: rich-text
@@ -226,6 +242,7 @@ content:
     view: { fields: [title, level], primary: title, search: [title] }
     fields:
       - name: title
+        label: Title
         type: string
         required: true
         description: Deck name, e.g. "Winter snacks".
@@ -233,12 +250,13 @@ content:
         component: level
         required: true
       - name: description
+        label: Description
         type: text
         description: One sentence about the deck (optional).
       - name: cards
         component: word
         label: Words
-        description: The flashcards. Korean on the front, meaning on the back.
+        description: A flashcard, Korean on the front and meaning on the back.
         list: { min: 1, collapsible: { collapsed: true, summary: '{front}' } }
 
   - name: quizzes
@@ -250,6 +268,7 @@ content:
     view: { fields: [title, level], primary: title, search: [title] }
     fields:
       - name: title
+        label: Title
         type: string
         required: true
         description: Quiz title.
@@ -259,7 +278,7 @@ content:
       - name: questions
         component: question
         label: Questions
-        description: Add questions; each can be multiple choice or fill in the gap.
+        description: Multiple choice or fill in the gap.
         list: { min: 1 }
 
   - name: materials
@@ -277,10 +296,12 @@ content:
       }
     fields:
       - name: title
+        label: Title
         type: string
         required: true
         description: Title students see in the materials table.
       - name: section
+        label: Tab
         type: select
         required: true
         description: The tab on the Materials page.
@@ -290,6 +311,7 @@ content:
             - { name: podcast, label: Podcast (팟캐스트 자료) }
             - { name: self-study, label: Self-study (공부 자료) }
       - name: type
+        label: Type
         type: select
         required: true
         description: What kind of material it is; students can filter by it.
@@ -301,6 +323,7 @@ content:
             - { name: vocabulary, label: Vocabulary (단어) }
             - { name: video, label: Video (영상) }
       - name: date
+        label: Date
         type: date
         required: true
         description: Date the material was added; newest first.
@@ -308,7 +331,7 @@ content:
       - name: files
         component: file
         label: Files
-        description: One or more files. Upload to R2 first, then paste the links.
+        description: A file to download.
         list: { min: 1, collapsible: { collapsed: true, summary: '{label}' } }
 
   - name: notices
@@ -320,10 +343,12 @@ content:
     view: { fields: [title, from, to, tone], primary: title, default: { sort: from, order: desc } }
     fields:
       - name: title
+        label: Title
         type: string
         required: true
         description: Short headline, e.g. "Winter break".
       - name: text
+        label: Text
         type: text
         required: true
         description: One line shown in the strip at the top of the site.
@@ -340,6 +365,7 @@ content:
         description: Last day the notice is shown; it disappears automatically after this day.
         options: { format: yyyy-MM-dd }
       - name: tone
+        label: Colour
         type: select
         required: true
         description: 'Colour and order in the strip: Important (red) first, then News (green), then Info (blue).'
@@ -349,6 +375,7 @@ content:
             - { name: news, label: 'News (green), e.g. a new site or a new group' }
             - { name: info, label: 'Info (blue), e.g. a timetable change' }
       - name: pinned
+        label: Pinned
         type: boolean
         description: Always show it during its dates; students cannot close it. Leave off for notices they may dismiss.
       - name: link

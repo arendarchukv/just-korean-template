@@ -12,6 +12,9 @@ import '@/styles/global.css';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import ThemeScript from '@/components/ThemeScript.astro';
+import HolidayScript from '@/components/holidays/HolidayScript.astro';
+import { getSite } from '@/content/queries';
+import { holidayRender } from '@/lib/holiday-logic';
 import { SITE } from '@/config';
 import { LOCALES } from '@/i18n/locales';
 import { defaultLang, languages, type Lang } from '@/i18n/ui';
@@ -47,6 +50,7 @@ const {
   canonicalPath,
 } = Astro.props;
 const showAlternates = !noindex && !monolingual && !canonicalPath;
+const holiday = holidayRender((await getSite()).holiday);
 const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${t('site.tagline')}`;
 
 const site = Astro.site ?? Astro.url;
@@ -63,11 +67,12 @@ const ogImageAlt = image?.alt ?? t('site.ogImageAlt');
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} data-holiday={holiday.fixed}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ThemeScript />
+    {holiday.script && <HolidayScript fixed={holiday.fixed} />}
     <!-- Preload the Latin UI font so text does not render in a fallback and then shift. -->
     <link rel="preload" href={outfitLatinUrl} as="font" type="font/woff2" crossorigin />
     <style

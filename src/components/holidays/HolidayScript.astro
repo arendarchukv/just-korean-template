@@ -1,0 +1,51 @@
+---
+/**
+ * Inline, render-blocking like ThemeScript: sets `data-holiday` on <html> before first paint, so
+ * holiday pieces never appear late (no layout shift). With Site settings on `auto` the visitor's
+ * own day picks the holiday (builds are rare: the date is never decided at build). A holiday chosen
+ * by hand is already written on <html> at build; the script then only serves the DEMO ONLY
+ * preview, whose choice (`holiday-preview` in sessionStorage: none, auto or an id) wins.
+ */
+import { HOLIDAY_IDS, type HolidayId } from '@/data/holidays';
+import { holidayWindows } from '@/lib/holiday-logic';
+
+interface Props {
+  fixed?: HolidayId;
+}
+const { fixed } = Astro.props;
+// Compact for the page: [id, from, to] per window.
+const windows = holidayWindows().map((w) => [w.id, w.from, w.to]);
+const ids = [...HOLIDAY_IDS];
+---
+
+<script is:inline define:vars={{ windows, ids, fixed: fixed ?? null }}>
+  (function () {
+    var root = document.documentElement;
+    function apply() {
+      var choice = fixed || 'auto';
+      try {
+        var preview = sessionStorage.getItem('holiday-preview');
+        if (preview === 'none' || preview === 'auto' || ids.indexOf(preview) >= 0) choice = preview;
+      } catch (e) {}
+      var id = null;
+      if (choice === 'auto') {
+        var d = new Date();
+        var pad = function (n) {
+          return String(n).padStart(2, '0');
+        };
+        var today = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+        for (var i = 0; i < windows.length; i++) {
+          if (windows[i][1] <= today && today <= windows[i][2]) {
+            id = windows[i][0];
+            break;
+          }
+        }
+      } else if (choice !== 'none') id = choice;
+      if (id) root.dataset.holiday = id;
+      else delete root.dataset.holiday;
+    }
+    apply();
+    // DEMO ONLY: the header preview switch re-applies after changing its choice.
+    window.jkApplyHoliday = apply;
+  })();
+</script>

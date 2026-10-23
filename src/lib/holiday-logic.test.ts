@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LUNAR_DAYS } from '../data/holidays';
-import { holidayOn } from './holiday-logic';
+import { holidayOn, holidayRender } from './holiday-logic';
 
 describe('holidayOn', () => {
   it('shows Chuseok from 3 days before to the day after', () => {
@@ -52,5 +52,17 @@ describe('lunar table', () => {
   it('runs at least two years ahead (extend it from the official Korean calendar)', () => {
     const last = Math.max(...Object.keys(LUNAR_DAYS.seollal).map(Number));
     expect(last).toBeGreaterThanOrEqual(new Date().getFullYear() + 2);
+  });
+});
+
+describe('holidayRender', () => {
+  it('renders nothing for none', () => {
+    expect(holidayRender('none')).toEqual({ pieces: false, script: false });
+  });
+  it('leaves the choice to the script for auto', () => {
+    expect(holidayRender('auto')).toEqual({ pieces: true, script: true });
+  });
+  it('writes a chosen holiday into the page, with the script only for the preview', () => {
+    expect(holidayRender('chuseok')).toEqual({ pieces: true, script: true, fixed: 'chuseok' });
   });
 });

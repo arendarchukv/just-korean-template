@@ -403,6 +403,19 @@ content:
         type: string
         description: Tally contact form link.
         pattern: { regex: '^https://', message: The link must start with https:// }
+      - name: holiday
+        label: Holiday decorations
+        type: select
+        description: Small decorations and a greeting for a Korean holiday. Automatic shows each holiday on its dates; a holiday chosen here shows until you change it.
+        options:
+          values:
+            - { name: none, label: None }
+            - { name: auto, label: Automatic by date }
+            - { name: seollal, label: Seollal (설날) }
+            - { name: chuseok, label: Chuseok (추석) }
+            - { name: christmas, label: Christmas }
+            - { name: hangeulnal, label: Hangul Day (한글날) }
+            - { name: gwangbokjeol, label: Liberation Day (광복절) }
       - name: social
         label: Footer links
         type: object

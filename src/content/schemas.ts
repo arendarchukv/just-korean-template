@@ -1,6 +1,7 @@
 import { z } from 'astro/zod';
 import { PLAYLIST_IDS } from '../data/playlists';
 import { parseYouTubeId } from '../lib/youtube';
+import { HOLIDAY_IDS } from '../data/holidays';
 
 /**
  * Content schemas: the single source of truth for what an entry may contain.
@@ -133,6 +134,8 @@ const optionalUrl = z.union([httpsUrl, z.literal('')]).default('');
 export const siteSchema = z.object({
   tidycal: optionalUrl,
   contactForm: optionalUrl,
+  // Holiday decorations: none, automatic by date, or one holiday chosen by hand.
+  holiday: z.enum(['none', 'auto', ...HOLIDAY_IDS]).default('none'),
   // Pages CMS drops an object whose fields are all empty, so the key may be missing entirely.
   social: z
     .object({ youtube: optionalUrl, instagram: optionalUrl, kofi: optionalUrl })

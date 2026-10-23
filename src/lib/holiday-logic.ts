@@ -41,3 +41,20 @@ export function holidayOn(
 ): HolidayId | undefined {
   return windows.find((w) => w.from <= today && today <= w.to)?.id;
 }
+
+export type HolidaySetting = 'none' | 'auto' | HolidayId;
+
+/**
+ * What a page carries for the Site settings choice: `none`, no holiday markup or script at all;
+ * `auto`, every holiday's markup and the date script; a holiday id, that holiday written into the
+ * page at build (`fixed`), shown without JS too. The script also serves the DEMO ONLY preview.
+ */
+export function holidayRender(setting: HolidaySetting): {
+  pieces: boolean;
+  script: boolean;
+  fixed?: HolidayId;
+} {
+  if (setting === 'none') return { pieces: false, script: false };
+  if (setting === 'auto') return { pieces: true, script: true };
+  return { pieces: true, script: true, fixed: setting };
+}

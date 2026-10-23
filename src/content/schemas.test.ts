@@ -107,6 +107,13 @@ describe('download', () => {
 });
 
 describe('siteSchema', () => {
+  it('shows no holiday unless one is chosen', () => {
+    expect(siteSchema.parse({}).holiday).toBe('none');
+    expect(siteSchema.parse({ holiday: 'auto' }).holiday).toBe('auto');
+    expect(siteSchema.parse({ holiday: 'chuseok' }).holiday).toBe('chuseok');
+    expect(siteSchema.safeParse({ holiday: 'halloween' }).success).toBe(false);
+  });
+
   it('accepts a file without social links (Pages CMS drops an all-empty object)', () => {
     const r = siteSchema.parse({ tidycal: '' });
     expect(r.social).toEqual({ youtube: '', instagram: '', kofi: '' });

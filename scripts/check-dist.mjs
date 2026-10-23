@@ -651,6 +651,23 @@ for (const page of htmlPages()) {
   if (!/sddefault/.test(img ?? '')) problems.push('lesson player does not use the 640px thumbnail');
 }
 
+// --- Holidays: Site settings none → nothing; auto → the date script, no holiday at build;
+// a holiday chosen by hand → written on <html> at build ---
+{
+  const choice = site.holiday ?? 'none';
+  for (const page of inAll('index.html')) {
+    const doc = read(page);
+    const attr = /<html[^>]*\sdata-holiday="([^"]+)"/.exec(doc)?.[1];
+    const script = doc.includes('holiday-preview');
+    if (choice === 'none' && (attr || script)) problems.push(`${page}: holiday markup with none`);
+    if (choice === 'auto' && (attr || !script))
+      problems.push(`${page}: auto needs the script only`);
+    if (!['none', 'auto'].includes(choice) && attr !== choice) {
+      problems.push(`${page}: <html> lacks data-holiday="${choice}"`);
+    }
+  }
+}
+
 // --- SEO: the sitemap lists only pages that are their own canonical and indexable; a lesson in
 // another language points to the English one; a 404's language menu leads to existing pages ---
 {

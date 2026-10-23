@@ -2,6 +2,9 @@
 import Logo from '@/components/Logo.astro';
 import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
 import ThemeToggle from '@/components/ThemeToggle.astro';
+// DEMO ONLY: holiday preview switch (remove before launch).
+import HolidayPreview from '@/components/holidays/HolidayPreview.astro';
+import { holidayRender } from '@/lib/holiday-logic';
 import type { Lang, UIKey } from '@/i18n/ui';
 import { getSite } from '@/content/queries';
 import { localizePath, stripLocale, useTranslations } from '@/i18n/utils';
@@ -61,6 +64,8 @@ const kofi = site.social.kofi;
     </nav>
 
     <div class="ml-auto flex items-center gap-1" data-print="hide">
+      {/* DEMO ONLY: holiday preview switch. */}
+      {holidayRender(site.holiday).script && <HolidayPreview />}
       {showLanguageSwitch && <LanguageSwitcher lang={lang} />}
       <ThemeToggle lang={lang} />
       {kofi && (

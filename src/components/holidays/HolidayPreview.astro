@@ -1,0 +1,50 @@
+---
+/**
+ * DEMO ONLY — remove before launch (with its use in Header.astro and tests/ui/holidays.spec.ts):
+ * a select to preview any holiday decoration at once, for review. English-only, exempt from the
+ * i18n dictionary rule. The choice lives in sessionStorage (`holiday-preview`) for the visit and
+ * is applied by HolidayScript.
+ */
+import { HOLIDAYS } from '@/data/holidays';
+---
+
+<label class="holiday-preview hidden nav:block">
+  <span class="sr-only">Holiday preview</span>
+  <select data-holiday-preview title="Holiday preview (demo only)">
+    <option value="auto">Holiday: by date</option>
+    <option value="none">Holiday: none</option>
+    {HOLIDAYS.map((h) => (
+      <option value={h.id}>
+        {h.korean} {h.text.en.name}
+      </option>
+    ))}
+  </select>
+</label>
+
+<script is:inline>
+  (function () {
+    var select = document.querySelector('[data-holiday-preview]');
+    if (!select) return;
+    try {
+      select.value = sessionStorage.getItem('holiday-preview') || 'auto';
+    } catch (e) {}
+    select.addEventListener('change', function () {
+      try {
+        sessionStorage.setItem('holiday-preview', select.value);
+      } catch (e) {}
+      if (window.jkApplyHoliday) window.jkApplyHoliday();
+    });
+  })();
+</script>
+
+<style>
+  select {
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-control);
+    background: var(--color-bg);
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+  }
+</style>

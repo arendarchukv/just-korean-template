@@ -378,6 +378,7 @@ content:
         description: Tally contact form link.
         pattern: { regex: '^https://', message: The link must start with https:// }
       - name: social
+        label: Footer links
         type: object
         description: Links in the footer. Leave empty to hide.
         fields:
@@ -387,6 +388,7 @@ content:
             description: YouTube channel link.
             pattern: { regex: '^https://', message: The link must start with https:// }
           - name: instagram
+            label: Instagram
             type: string
             description: Instagram profile link.
             pattern: { regex: '^https://', message: The link must start with https:// }

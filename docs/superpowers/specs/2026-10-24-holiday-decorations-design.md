@@ -54,7 +54,7 @@ Motifs (one main + one small echo each, cut-paper style):
 | 설날 Seollal | 매듭 knot charm (norigae)                                                           | Small knot      |
 | Christmas    | Pine sprig with red berries                                                         | Small star      |
 | 한글날       | Paper tiles with ㄱ ㅏ ㄴ (Hangul jamo), in the site's grid-paper (원고지) language | One jamo tile   |
-| 광복절       | 태극 disc with a 무궁화 (rose of Sharon)                                            | Small 무궁화    |
+| 광복절       | The 태극기 (official geometry) as a small paper flag; never a flower with rays      | The 태극        |
 
 ## Dates and when each shows
 

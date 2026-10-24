@@ -330,7 +330,9 @@ attribute: preflight makes it !important). Pill and greeting above the home titl
 (`HolidayGreeting`); motifs per holiday in `src/components/holidays/<id>/` (Main in the hero
 collage in the wave's corner, Echo beside the New lessons eyebrow and on the footer rule;
 `HolidayMotifs` renders all of one kind). Motif colours: shape tokens plus `--shape-red` (motifs
-only). Hidden in print. **DEMO ONLY:** `HolidayPreview.astro`, a floating select (bottom left)
+only); the 광복절 motif is the 태극기 from the official geometry (public-domain Wikimedia SVG) with
+`--shape-flag-*` tokens. Never a round flower with rays there: it reads as the Japanese imperial
+chrysanthemum / rising sun (owner, 2026-10-24). Hidden in print. **DEMO ONLY:** `HolidayPreview.astro`, a floating select (bottom left)
 that previews any holiday for the visit (`holiday-preview` in sessionStorage); remove it, its use
 in `BaseLayout.astro`, its test in `tests/ui/holidays.spec.ts` and the `holiday-preview` read in
 `HolidayScript.astro` (then a holiday chosen by hand needs no script: `holidayRender`) before launch. The demo

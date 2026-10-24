@@ -658,12 +658,12 @@ for (const page of htmlPages()) {
   for (const page of inAll('index.html')) {
     const doc = read(page);
     const attr = /<html[^>]*\sdata-holiday="([^"]+)"/.exec(doc)?.[1];
-    const script = doc.includes('holiday-preview');
+    const script = /const windows = \[\["seollal"/.test(doc);
     if (choice === 'none' && (attr || script)) problems.push(`${page}: holiday markup with none`);
     if (choice === 'auto' && (attr || !script))
       problems.push(`${page}: auto needs the script only`);
-    if (!['none', 'auto'].includes(choice) && attr !== choice) {
-      problems.push(`${page}: <html> lacks data-holiday="${choice}"`);
+    if (!['none', 'auto'].includes(choice) && (attr !== choice || script)) {
+      problems.push(`${page}: a chosen holiday needs data-holiday="${choice}" and no script`);
     }
     // Every holiday's greeting is in the home page unless the setting is none.
     const greetings = [...doc.matchAll(/data-holiday-piece="([a-z]+)"[^>]*data-holiday-greeting/g)];

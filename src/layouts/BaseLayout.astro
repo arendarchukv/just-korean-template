@@ -13,8 +13,6 @@ import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import ThemeScript from '@/components/ThemeScript.astro';
 import HolidayScript from '@/components/holidays/HolidayScript.astro';
-// DEMO ONLY: holiday preview switch (remove before launch).
-import HolidayPreview from '@/components/holidays/HolidayPreview.astro';
 import { getSite } from '@/content/queries';
 import { holidayRender } from '@/lib/holiday-logic';
 import { SITE } from '@/config';
@@ -74,7 +72,7 @@ const ogImageAlt = image?.alt ?? t('site.ogImageAlt');
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <ThemeScript />
-    {holiday.script && <HolidayScript fixed={holiday.fixed} />}
+    {holiday.script && <HolidayScript />}
     <!-- Preload the Latin UI font so text does not render in a fallback and then shift. -->
     <link rel="preload" href={outfitLatinUrl} as="font" type="font/woff2" crossorigin />
     <style
@@ -124,7 +122,5 @@ const ogImageAlt = image?.alt ?? t('site.ogImageAlt');
       <slot />
     </main>
     <Footer lang={lang} />
-    {/* DEMO ONLY: holiday preview switch. */}
-    {holiday.script && <HolidayPreview />}
   </body>
 </html>

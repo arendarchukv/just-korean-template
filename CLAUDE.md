@@ -324,7 +324,7 @@ Spec `docs/superpowers/specs/2026-10-24-holiday-decorations-design.md`. Five hol
 Seollal and Chuseok days per year to 2035, a unit test fails two years before the table ends);
 date logic `src/lib/holiday-logic.ts`. Site settings `holiday`: `none` (default) | `auto` (the
 visitor's date decides, inline `HolidayScript` in `<head>` sets `<html data-holiday>` before
-paint) | a holiday id (written on `<html>` at build). Pieces carry `data-holiday-piece="<id>"` and
+paint) | a holiday id (written on `<html>` at build, no script). Pieces carry `data-holiday-piece="<id>"` and
 are hidden by `src/styles/holidays.css` unless `<html>` names their holiday (not the `hidden`
 attribute: preflight makes it !important). Pill and greeting above the home title
 (`HolidayGreeting`); motifs per holiday in `src/components/holidays/<id>/` (Main in the hero
@@ -332,11 +332,8 @@ collage in the wave's corner, Echo beside the New lessons eyebrow and on the foo
 `HolidayMotifs` renders all of one kind). Motif colours: shape tokens plus `--shape-red` (motifs
 only); the 광복절 motif is the 태극기 from the official geometry (public-domain Wikimedia SVG) with
 `--shape-flag-*` tokens. Never a round flower with rays there: it reads as the Japanese imperial
-chrysanthemum / rising sun (owner, 2026-10-24). Hidden in print. **DEMO ONLY:** `HolidayPreview.astro`, a floating select (bottom left)
-that previews any holiday for the visit (`holiday-preview` in sessionStorage); remove it, its use
-in `BaseLayout.astro`, its test in `tests/ui/holidays.spec.ts` and the `holiday-preview` read in
-`HolidayScript.astro` (then a holiday chosen by hand needs no script: `holidayRender`) before launch. The demo
-`site.yml` uses `holiday: auto` while the preview exists.
+chrysanthemum / rising sun (owner, 2026-10-24). Hidden in print. Chosen only in Site settings (the DEMO ONLY preview switch was removed on 2026-10-24); the demo
+`site.yml` uses `holiday: auto`.
 
 ## Launch preparation (2026-10-21)
 

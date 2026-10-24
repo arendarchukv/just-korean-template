@@ -53,10 +53,17 @@ for (const theme of THEMES) {
       await page.addInitScript((t) => localStorage.setItem('theme', t), theme);
     });
 
-    // The home page with each holiday shown (needs `holiday` other than none in site.yml).
-    for (const holiday of ['seollal', 'chuseok', 'christmas', 'hangeulnal', 'gwangbokjeol']) {
+    // The home page on a day of each holiday (needs `holiday: auto` in site.yml).
+    const HOLIDAY_DAYS = {
+      seollal: '2027-02-07',
+      chuseok: '2026-09-25',
+      christmas: '2026-12-24',
+      hangeulnal: '2026-10-09',
+      gwangbokjeol: '2026-08-15',
+    };
+    for (const [holiday, day] of Object.entries(HOLIDAY_DAYS)) {
       test(`/ with ${holiday} has no WCAG 2.1 A/AA violations`, async ({ page }) => {
-        await page.addInitScript((h) => sessionStorage.setItem('holiday-preview', h), holiday);
+        await page.clock.setFixedTime(new Date(`${day}T10:00:00`));
         await page.goto('/');
         await expect(page.locator('html')).toHaveAttribute('data-holiday', holiday);
         const { violations } = await new AxeBuilder({ page })

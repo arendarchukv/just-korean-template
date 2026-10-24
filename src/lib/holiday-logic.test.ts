@@ -62,7 +62,7 @@ describe('holidayRender', () => {
   it('leaves the choice to the script for auto', () => {
     expect(holidayRender('auto')).toEqual({ pieces: true, script: true });
   });
-  it('writes a chosen holiday into the page, with the script only for the preview', () => {
-    expect(holidayRender('chuseok')).toEqual({ pieces: true, script: true, fixed: 'chuseok' });
+  it('writes a chosen holiday into the page, with no script', () => {
+    expect(holidayRender('chuseok')).toEqual({ pieces: true, script: false, fixed: 'chuseok' });
   });
 });

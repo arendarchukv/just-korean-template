@@ -21,4 +21,4 @@ by playlist, six simple Pages CMS forms (a lesson carries its own words, quiz an
 
 Holiday decorations (2026-10-24, the owner's idea): a pill, a greeting and cut-paper motifs on
 설날, 추석, Christmas, 한글날 and 광복절; Pages CMS → Site settings → Holiday decorations (None,
-Automatic by date, or one holiday). Check: `/` with the DEMO ONLY preview switch (bottom left).
+Automatic by date, or one holiday). Check: `/` on a holiday date, or pick a holiday in Site settings.

@@ -48,9 +48,7 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  {holidayRender(site.holiday).pieces && (
-    <HolidayMotifs kind="echo" class="holiday-footer-echo collage" />
-  )}
+  {holidayRender(site.holiday).pieces && <HolidayMotifs kind="echo" class="holiday-footer-echo" />}
   <div class="container-page footer-main" data-print="hide">
     <div class="footer-brand">
       <Logo wordmark class="text-lg" />

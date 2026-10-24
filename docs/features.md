@@ -18,3 +18,7 @@ Update this table at the end of every cycle.
 Also built beyond her list: notices strip (important / news / info, pinned), grammar page built from tags on lessons (reached from lessons, not in the menu), lessons library
 by playlist, six simple Pages CMS forms (a lesson carries its own words, quiz and files), reading lessons without a video
 (cover picture uploaded in Pages CMS, Korean text in parts with folded translations, word list): `/lessons/dangun-bear-and-tiger/`.
+
+Holiday decorations (2026-10-24, the owner's idea): a pill, a greeting and cut-paper motifs on
+설날, 추석, Christmas, 한글날 and 광복절; Pages CMS → Site settings → Holiday decorations (None,
+Automatic by date, or one holiday). Check: `/` with the DEMO ONLY preview switch (bottom left).

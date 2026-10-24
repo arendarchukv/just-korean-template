@@ -72,4 +72,14 @@
     right: max(1rem, calc((100% - 72rem) / 2));
     width: 2.75rem;
   }
+  .holiday-motif {
+    pointer-events: none;
+    user-select: none;
+  }
+  /* Paper copies stay plain: no holiday decoration or greeting in print. */
+  @media print {
+    :root[data-holiday] [data-holiday-piece] {
+      display: none !important;
+    }
+  }
 }

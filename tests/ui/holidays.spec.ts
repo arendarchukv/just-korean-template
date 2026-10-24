@@ -13,9 +13,8 @@ test('Automatic shows a holiday on its dates only', async ({ page }) => {
   await expect(page.locator('[data-holiday-greeting]:visible')).toHaveCount(0);
 });
 
-// DEMO ONLY: the header preview switch.
-test('the preview switch shows a holiday for the whole visit', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop', 'the switch sits in the desktop header');
+// DEMO ONLY: the floating preview switch.
+test('the preview switch shows a holiday for the whole visit', async ({ page }) => {
   await page.clock.setFixedTime(new Date('2026-06-01T10:00:00'));
   await page.goto('/');
   const select = page.getByRole('combobox', { name: 'Holiday preview' });

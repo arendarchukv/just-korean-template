@@ -317,6 +317,24 @@ Data decisions already made:
 - Wrangler (Cloudflare CLI) is a devDependency: `npm run deploy` builds and uploads `dist/`.
 - Git commits: no co-author trailer. No remote yet.
 
+## Holiday decorations (2026-10-24)
+
+Spec `docs/superpowers/specs/2026-10-24-holiday-decorations-design.md`. Five holidays (설날,
+추석, Christmas, 한글날, 광복절) in `src/data/holidays.ts` (names and greetings in five languages;
+Seollal and Chuseok days per year to 2035, a unit test fails two years before the table ends);
+date logic `src/lib/holiday-logic.ts`. Site settings `holiday`: `none` (default) | `auto` (the
+visitor's date decides, inline `HolidayScript` in `<head>` sets `<html data-holiday>` before
+paint) | a holiday id (written on `<html>` at build). Pieces carry `data-holiday-piece="<id>"` and
+are hidden by `src/styles/holidays.css` unless `<html>` names their holiday (not the `hidden`
+attribute: preflight makes it !important). Pill and greeting above the home title
+(`HolidayGreeting`); motifs per holiday in `src/components/holidays/<id>/` (Main in the hero
+collage in the wave's corner, Echo beside the New lessons eyebrow and on the footer rule;
+`HolidayMotifs` renders all of one kind). Motif colours: shape tokens plus `--shape-red` (motifs
+only). Hidden in print. **DEMO ONLY:** `HolidayPreview.astro`, a floating select (bottom left)
+that previews any holiday for the visit (`holiday-preview` in sessionStorage); remove it, its use
+in `BaseLayout.astro` and its test in `tests/ui/holidays.spec.ts` before launch. The demo
+`site.yml` uses `holiday: auto` while the preview exists.
+
 ## Launch preparation (2026-10-21)
 
 - Demo content stays for now (decks, quizzes, materials, notices, the two reading lessons): JiEun

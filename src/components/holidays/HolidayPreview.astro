@@ -1,6 +1,6 @@
 ---
 /**
- * DEMO ONLY — remove before launch (with its use in Header.astro and tests/ui/holidays.spec.ts):
+ * DEMO ONLY — remove before launch (with its use in BaseLayout.astro and tests/ui/holidays.spec.ts):
  * a select to preview any holiday decoration at once, for review. English-only, exempt from the
  * i18n dictionary rule. The choice lives in sessionStorage (`holiday-preview`) for the visit and
  * is applied by HolidayScript.
@@ -8,7 +8,7 @@
 import { HOLIDAYS } from '@/data/holidays';
 ---
 
-<label class="holiday-preview hidden nav:block">
+<label class="holiday-preview" data-print="hide">
   <span class="sr-only">Holiday preview</span>
   <select data-holiday-preview title="Holiday preview (demo only)">
     <option value="auto">Holiday: by date</option>
@@ -38,12 +38,19 @@ import { HOLIDAYS } from '@/data/holidays';
 </script>
 
 <style>
+  /* A small floating panel in the bottom left corner, apart from the header layout. */
+  .holiday-preview {
+    position: fixed;
+    left: calc(0.75rem + env(safe-area-inset-left, 0px));
+    bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    z-index: 40;
+  }
   select {
     min-height: 2.75rem;
     padding: 0 0.5rem;
     border: 1px dashed var(--color-border);
     border-radius: var(--radius-control);
-    background: var(--color-bg);
+    background: var(--color-surface);
     color: var(--color-muted);
     font-size: var(--text-xs);
   }

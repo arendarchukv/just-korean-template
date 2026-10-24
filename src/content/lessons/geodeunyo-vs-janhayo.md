@@ -1,4 +1,5 @@
 ---
+address: geodeunyo-vs-janhayo
 title: 'Korean Grammar Comparison.: 거든요vs잖아요'
 date: 2022-01-20
 level: intermediate

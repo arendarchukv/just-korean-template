@@ -1,4 +1,5 @@
 ---
+address: crash-course-09-can-and-want
 title: 'Beginner Korean Intensive Course! 9. can & want'
 date: 2026-05-23
 level: beginner

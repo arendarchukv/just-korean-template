@@ -1,4 +1,5 @@
 ---
+address: speaking-experience-bwatseoyo-jeogi-isseoyo
 title: '한국인처럼 말하기 : 경험 말하기 Experience 아/어 봤어요 & 은/ㄴ 적이 있어요'
 date: 2026-04-11
 level: intermediate

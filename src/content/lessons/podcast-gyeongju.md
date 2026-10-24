@@ -1,4 +1,5 @@
 ---
+address: podcast-gyeongju
 title: 'Korean Travel Podcast : 경주 (Kyongju)'
 date: 2022-04-03
 level: intermediate

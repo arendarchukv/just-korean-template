@@ -1,4 +1,5 @@
 ---
+address: indirect-speech-rago-dago-nyago-jago
 title: '간접 화법 : 라고 하다, 다고 하다, 냐고 하다, 자고 하다'
 date: 2022-06-04
 level: intermediate

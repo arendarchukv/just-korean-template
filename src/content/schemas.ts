@@ -69,8 +69,17 @@ export const storyPart = z.object({
  * CMS), so content.config.ts passes Astro's `image()`, which checks and optimises it; elsewhere
  * (tests, the .pages.yml check) it is the path as written.
  */
+/**
+ * The page address of a lesson, deck or quiz, typed in Pages CMS; the file is named after it
+ * (`.pages.yml` filename `{fields.address}`). Small Latin letters, digits, single dashes: Pages CMS
+ * drops Korean letters from file names, so a title cannot be used. Optional here because the site
+ * uses the file name; the CMS form requires it.
+ */
+export const pageAddress = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+
 export function makeLessonSchema<Cover extends z.ZodType>(cover: Cover) {
   return z.object({
+    address: pageAddress.optional(),
     title: z.string().min(1),
     youtube: youtube.optional(),
     cover: cover.optional(),
@@ -97,6 +106,7 @@ export const materialSchema = z.object({
 });
 
 export const deckSchema = z.object({
+  address: pageAddress.optional(),
   title: z.string().min(1),
   level,
   description: z.string().optional(),
@@ -104,6 +114,7 @@ export const deckSchema = z.object({
 });
 
 export const quizSchema = z.object({
+  address: pageAddress.optional(),
   title: z.string().min(1),
   level,
   questions: z.array(question).min(1),

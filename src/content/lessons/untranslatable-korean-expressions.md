@@ -1,4 +1,5 @@
 ---
+address: untranslatable-korean-expressions
 title: '영어로 표현하기 힘든 한국어 표현들'
 date: 2025-07-02
 level: advanced

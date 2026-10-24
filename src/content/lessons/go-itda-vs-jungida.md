@@ -1,4 +1,5 @@
 ---
+address: go-itda-vs-jungida
 title: 'Korean grammar 한국어 문법 : 고 있다 vs 중이다'
 date: 2022-04-25
 level: intermediate

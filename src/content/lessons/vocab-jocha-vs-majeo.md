@@ -1,4 +1,5 @@
 ---
+address: vocab-jocha-vs-majeo
 title: '한국어 어휘 "Even" : 조차 VS 마저'
 date: 2022-05-27
 level: intermediate

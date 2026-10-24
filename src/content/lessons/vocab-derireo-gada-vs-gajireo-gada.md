@@ -1,4 +1,5 @@
 ---
+address: vocab-derireo-gada-vs-gajireo-gada
 title: 'Korean vocabulary : 데리러 가다, 가지러 가다 pick up , Bring'
 date: 2022-02-13
 level: intermediate

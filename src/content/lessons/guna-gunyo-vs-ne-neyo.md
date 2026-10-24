@@ -1,4 +1,5 @@
 ---
+address: guna-gunyo-vs-ne-neyo
 title: 'Korean grammar 한국어 문법 : 구나/군요, 네/네요'
 date: 2023-03-12
 level: intermediate

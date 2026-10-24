@@ -1,4 +1,5 @@
 ---
+address: podcast-twenty-five-twenty-one-imf
 title: '한국어 듣기 연습 팟캐스트 Korean podcast : 25,21 스물다섯, 스물하나 와 IMF'
 date: 2022-03-25
 level: intermediate

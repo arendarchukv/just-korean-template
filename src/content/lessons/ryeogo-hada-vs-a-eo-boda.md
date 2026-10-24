@@ -1,4 +1,5 @@
 ---
+address: ryeogo-hada-vs-a-eo-boda
 title: 'Korean Grammar 한국어 문법 : 려고 하다 vs 아/어 보다 Try to!!'
 date: 2025-08-13
 level: intermediate

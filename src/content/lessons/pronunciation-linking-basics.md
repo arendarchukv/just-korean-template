@@ -1,4 +1,5 @@
 ---
+address: pronunciation-linking-basics
 title: '가장 기본적인 한국어 발음 : 연음 (Linking)'
 date: 2022-04-12
 level: beginner

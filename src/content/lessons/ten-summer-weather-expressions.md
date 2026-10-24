@@ -1,4 +1,5 @@
 ---
+address: ten-summer-weather-expressions
 title: '여름 날씨 한국어 표현 10'
 date: 2022-07-23
 level: intermediate

@@ -1,4 +1,5 @@
 ---
+address: daga-bonikka-vs-daga-bomyeon
 title: 'Korean Grammar 한국어 문법 : 다가 보니까, 다가 보면'
 date: 2023-05-27
 level: intermediate

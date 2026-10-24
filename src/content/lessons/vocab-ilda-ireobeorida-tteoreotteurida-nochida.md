@@ -1,4 +1,5 @@
 ---
+address: vocab-ilda-ireobeorida-tteoreotteurida-nochida
 title: 'Korean vocabulary 한국어 어휘, 단어 : 잃다, 잃어버리다, 떨어뜨리다, 놓치다'
 date: 2023-02-23
 level: intermediate

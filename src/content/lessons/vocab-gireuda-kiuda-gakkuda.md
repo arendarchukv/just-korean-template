@@ -1,4 +1,5 @@
 ---
+address: vocab-gireuda-kiuda-gakkuda
 title: 'Korean vocabulary 기르다, 키우다, 가꾸다 Raise!'
 date: 2023-08-17
 level: intermediate

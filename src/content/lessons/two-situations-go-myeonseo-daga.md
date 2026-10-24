@@ -1,4 +1,5 @@
 ---
+address: two-situations-go-myeonseo-daga
 title: 'Korean grammar for two situations : 두 가지 일! 고, 면서, 다가'
 date: 2022-03-17
 level: intermediate

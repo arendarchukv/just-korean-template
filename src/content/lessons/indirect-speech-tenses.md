@@ -1,4 +1,5 @@
 ---
+address: indirect-speech-tenses
 title: '한국어 간접 화법 시제 indirect speech'
 date: 2022-06-08
 level: intermediate

@@ -1,4 +1,5 @@
 ---
+address: crash-course-05-tenses
 title: 'Beginner Korean Intensive Course! 5. the tenses'
 date: 2026-04-05
 level: beginner

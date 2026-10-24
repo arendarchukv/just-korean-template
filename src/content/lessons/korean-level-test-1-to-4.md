@@ -1,4 +1,5 @@
 ---
+address: korean-level-test-1-to-4
 title: 'Korean Level Test - Elementry to Upper-Intermediate / 1급~4급'
 date: 2022-10-30
 level: intermediate

@@ -1,4 +1,5 @@
 ---
+address: crash-course-08-numbers
 title: 'Beginner Korean Intensive Course! 8. Numbers'
 date: 2026-04-08
 level: beginner

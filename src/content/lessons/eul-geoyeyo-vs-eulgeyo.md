@@ -1,4 +1,5 @@
 ---
+address: eul-geoyeyo-vs-eulgeyo
 title: 'Korean Future Grammar. : 을 거예요 vs 을 게요'
 date: 2022-03-11
 level: beginner

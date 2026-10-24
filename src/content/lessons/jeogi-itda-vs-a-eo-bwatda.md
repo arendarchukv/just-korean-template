@@ -1,4 +1,5 @@
 ---
+address: jeogi-itda-vs-a-eo-bwatda
 title: 'Korean Grammar 한국어 문법 : #경험 은/ㄴ 적이 있다 VS 아/어 봤다'
 date: 2023-01-19
 level: intermediate

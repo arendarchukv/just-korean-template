@@ -1,4 +1,5 @@
 ---
+address: crash-course-03-particles
 title: 'Beginner Korean Intensive Course! 3. Particles'
 date: 2026-04-03
 level: beginner

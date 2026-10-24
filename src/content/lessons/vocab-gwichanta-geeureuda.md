@@ -1,4 +1,5 @@
 ---
+address: vocab-gwichanta-geeureuda
 title: '4 Korean expressions of "Lazy" 귀찮다, 게으르다 그리고?'
 date: 2022-05-03
 level: intermediate

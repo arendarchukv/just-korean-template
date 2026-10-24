@@ -1,4 +1,5 @@
 ---
+address: purpose-reo-ryeogo-gi-wihaeseo
 title: 'Korean grammar about purpose : (으)러, (으)려고, 기 위해서'
 date: 2022-03-23
 level: intermediate

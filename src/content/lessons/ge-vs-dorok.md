@@ -1,4 +1,5 @@
 ---
+address: ge-vs-dorok
 title: 'Korean Grammar 한국어 문법 : 게 vs 도록'
 date: 2026-09-18
 level: intermediate

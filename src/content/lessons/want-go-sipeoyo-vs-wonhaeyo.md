@@ -1,4 +1,5 @@
 ---
+address: want-go-sipeoyo-vs-wonhaeyo
 title: 'Express "I want" in Korean? 고 싶어요 O 원해요 X'
 date: 2022-02-22
 level: beginner

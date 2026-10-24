@@ -1,4 +1,5 @@
 ---
+address: asseoya-haetda-vs-eulgeol-geuraetda
 title: 'Korean Grammar 한국어 문법 : 았/었어야 했다 vs 을/ㄹ걸 그랬다 Regret!!'
 date: 2025-07-09
 level: intermediate

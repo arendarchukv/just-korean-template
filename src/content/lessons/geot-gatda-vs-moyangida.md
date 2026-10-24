@@ -1,4 +1,5 @@
 ---
+address: geot-gatda-vs-moyangida
 title: 'Korean Grammar 한국어 문법 : 것 같다 vs 모양이다'
 date: 2025-01-14
 level: intermediate

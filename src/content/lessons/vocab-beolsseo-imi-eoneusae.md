@@ -1,4 +1,5 @@
 ---
+address: vocab-beolsseo-imi-eoneusae
 title: 'Korean vocabulary : 벌써, 이미, 어느새 Already? early?'
 date: 2022-02-01
 level: intermediate

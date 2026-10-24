@@ -1,4 +1,5 @@
 ---
+address: crash-course-06-location-particles
 title: 'Beginner Korean Intensive Course! 6. Location particles'
 date: 2026-04-06
 level: beginner

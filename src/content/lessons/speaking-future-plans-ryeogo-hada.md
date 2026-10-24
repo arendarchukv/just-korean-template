@@ -1,4 +1,5 @@
 ---
+address: speaking-future-plans-ryeogo-hada
 title: '한국인처럼 말하기 : 미래, 계획, 의도 (려고 하다)'
 date: 2025-08-06
 level: intermediate

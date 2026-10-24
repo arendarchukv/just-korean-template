@@ -5,9 +5,28 @@ import {
   lessonSchema,
   materialSchema,
   noticeSchema,
+  pageAddress,
   quizSchema,
   siteSchema,
 } from './schemas';
+
+describe('pageAddress (the file name, so the page address, of a lesson, deck or quiz)', () => {
+  it('takes small Latin letters, digits and single dashes', () => {
+    for (const ok of ['winter-snacks', 'ge-vs-dorok', 'crash-course-08-numbers']) {
+      expect(pageAddress.safeParse(ok).success, ok).toBe(true);
+    }
+  });
+  it('refuses what would break the file name or the address', () => {
+    for (const bad of ['', 'Winter snacks', '곰과-호랑이', 'test.md', '-a', 'a--b', 'a-']) {
+      expect(pageAddress.safeParse(bad).success, bad).toBe(false);
+    }
+  });
+  it('is part of lessons, decks and quizzes', () => {
+    expect(lessonSchema.shape.address).toBeDefined();
+    expect(deckSchema.shape.address).toBeDefined();
+    expect(quizSchema.shape.address).toBeDefined();
+  });
+});
 
 describe('lessonSchema', () => {
   const base = { title: 'Korean Grammar : 게 vs 도록', date: '2026-09-23', level: 'intermediate' };

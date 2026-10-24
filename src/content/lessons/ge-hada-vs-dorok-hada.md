@@ -1,4 +1,5 @@
 ---
+address: ge-hada-vs-dorok-hada
 title: '한국어 문법 : 게 하다 / 도록 하다'
 date: 2022-08-18
 level: intermediate

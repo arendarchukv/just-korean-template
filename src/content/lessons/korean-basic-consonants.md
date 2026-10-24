@@ -1,4 +1,5 @@
 ---
+address: korean-basic-consonants
 title: '한국어 기본자음 Korean alphabet Basic consonants'
 date: 2020-09-08
 level: beginner

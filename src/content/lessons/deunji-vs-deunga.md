@@ -1,4 +1,5 @@
 ---
+address: deunji-vs-deunga
 title: 'Korean Grammar 한국어 문법 : 든지, 든가'
 date: 2024-01-02
 level: intermediate

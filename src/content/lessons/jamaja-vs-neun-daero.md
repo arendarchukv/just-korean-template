@@ -1,4 +1,5 @@
 ---
+address: jamaja-vs-neun-daero
 title: 'Korean grammar 한국어 문법 : 자마자, 는 대로'
 date: 2022-04-08
 level: intermediate

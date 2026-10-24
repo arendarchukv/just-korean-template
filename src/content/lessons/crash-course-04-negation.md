@@ -1,4 +1,5 @@
 ---
+address: crash-course-04-negation
 title: 'Beginner Korean Intensive Course! 4. Negative Form'
 date: 2026-04-04
 level: beginner

@@ -1,4 +1,5 @@
 ---
+address: euna-mana-vs-a-eo-bwatja
 title: 'Korean Grammar 한국어 문법 : (으)나 마나 vs 아/어 봤자'
 date: 2026-10-03
 level: advanced

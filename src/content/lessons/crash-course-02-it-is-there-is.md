@@ -1,4 +1,5 @@
 ---
+address: crash-course-02-it-is-there-is
 title: 'Beginner Korean Intensive Course! 2. It is / There is'
 date: 2026-04-02
 level: beginner

@@ -1,4 +1,5 @@
 ---
+address: vocab-kkeunnada-machida-geumanduda
 title: 'Korean vocabulary : 끝나다? 마치다? 그만두다? 5 finish expressions'
 date: 2022-02-08
 level: intermediate

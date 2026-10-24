@@ -317,6 +317,16 @@ Data decisions already made:
 - Wrangler (Cloudflare CLI) is a devDependency: `npm run deploy` builds and uploads `dist/`.
 - Git commits: no co-author trailer. No remote yet.
 
+## File names in Pages CMS (2026-10-24)
+
+Pages CMS drops Korean letters when it builds a file name from a title, and its free Filename field
+takes a name without `.md`: both gave `Invalid extension ""` when the owner added a lesson. So
+lessons, decks and quizzes have a required **Page address** field (`address`, small Latin
+letters/digits/dashes, `pageAddress` in `schemas.ts`) and are named `{fields.address}.md|yml` with
+the Filename field hidden; materials and notices are named by their creation time. The site still
+uses the file name; `src/content/addresses.test.ts` checks every entry's address matches it (the
+existing 149 were filled in from their file names).
+
 ## Holiday decorations (2026-10-24)
 
 Spec `docs/superpowers/specs/2026-10-24-holiday-decorations-design.md`. Five holidays (설날,

@@ -1,4 +1,5 @@
 ---
+address: korean-double-consonants
 title: '쌍자음 Korean alphabet double consonants'
 date: 2020-09-16
 level: beginner

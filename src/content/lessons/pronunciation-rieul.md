@@ -1,4 +1,5 @@
 ---
+address: pronunciation-rieul
 title: '한국어 ㄹ 발음 Korean pronunciation'
 date: 2024-01-27
 level: beginner

@@ -1,4 +1,5 @@
 ---
+address: podcast-gangneung
 title: 'Korean Travel Podcast : 강릉 (Gangneung)'
 date: 2022-08-08
 level: intermediate

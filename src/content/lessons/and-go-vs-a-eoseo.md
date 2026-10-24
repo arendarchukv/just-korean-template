@@ -1,4 +1,5 @@
 ---
+address: and-go-vs-a-eoseo
 title: 'Korean Grammar : And 고 VS 아/어서'
 date: 2022-03-06
 level: beginner

@@ -1,4 +1,5 @@
 ---
+address: ji-anta-vs-ji-malda
 title: 'Korean Grammar 한국어 문법 : 지 않다 VS 지 말다 #부정문'
 date: 2023-01-16
 level: beginner

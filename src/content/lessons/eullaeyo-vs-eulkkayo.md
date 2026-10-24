@@ -1,4 +1,5 @@
 ---
+address: eullaeyo-vs-eulkkayo
 title: '한국어 문법 : 가장 쉽게 구분하기! ㄹ/을래요 VS ㄹ/을까요?'
 date: 2022-05-24
 level: beginner

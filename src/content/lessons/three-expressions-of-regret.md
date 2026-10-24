@@ -1,4 +1,5 @@
 ---
+address: three-expressions-of-regret
 title: "한국어 '후회' 표현 3 Expressions of Regret in korean"
 date: 2023-10-10
 level: intermediate

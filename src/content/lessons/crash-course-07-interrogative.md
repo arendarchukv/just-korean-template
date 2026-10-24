@@ -1,4 +1,5 @@
 ---
+address: crash-course-07-interrogative
 title: 'Beginner Korean Intensive Course! 7. Interrogative'
 date: 2026-04-07
 level: beginner

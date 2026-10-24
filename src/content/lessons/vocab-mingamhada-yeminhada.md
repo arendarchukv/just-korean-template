@@ -1,4 +1,5 @@
 ---
+address: vocab-mingamhada-yeminhada
 title: 'Korean vocabulary 한국어 Sensitive? 민감하다, 예민하다'
 date: 2023-05-09
 level: intermediate

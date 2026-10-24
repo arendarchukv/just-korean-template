@@ -1,4 +1,5 @@
 ---
+address: a-eo-boida-vs-moyangida
 title: 'Korean Grammar 한국어 문법 : 이/어 보이다, 는/은/ㄴ 모양이다'
 date: 2024-06-26
 level: intermediate

@@ -1,4 +1,5 @@
 ---
+address: vocab-nada-vs-deulda
 title: 'difference in nuance of Korean words : 나다, 들다'
 date: 2022-03-26
 level: intermediate

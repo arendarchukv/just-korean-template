@@ -1,4 +1,5 @@
 ---
+address: vocab-ssotda
 title: 'Korean vocabulary : 쏟다'
 date: 2022-08-01
 level: intermediate

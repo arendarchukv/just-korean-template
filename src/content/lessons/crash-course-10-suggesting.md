@@ -1,4 +1,5 @@
 ---
+address: crash-course-10-suggesting
 title: 'Beginner Korean Intensive Course! 10. Suggesting'
 date: 2026-05-28
 level: beginner

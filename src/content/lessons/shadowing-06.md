@@ -1,4 +1,5 @@
 ---
+address: shadowing-06
 title: 'Korean Listening&Speaking practice (한국어 듣기, 말하기 연습) : Shadowing #6'
 date: 2024-02-04
 level: intermediate

@@ -1,4 +1,5 @@
 ---
+address: culture-balance-game
 title: 'Billy 쌤과 해보는 문화 밸런스 게임!'
 date: 2026-07-24
 level: intermediate

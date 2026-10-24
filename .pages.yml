@@ -136,7 +136,8 @@ content:
     type: collection
     path: src/content/lessons
     format: yaml-frontmatter
-    filename: { template: '{primary}.md', field: create }
+    # The file is named after the Page address field (Korean titles cannot name files).
+    filename: { template: '{fields.address}.md', field: false }
     view:
       fields: [title, date, playlist]
       primary: title
@@ -144,6 +145,14 @@ content:
       sort: [date, title]
       default: { sort: date, order: desc }
     fields:
+      - name: address
+        label: Page address
+        type: string
+        required: true
+        description: The end of the page's web address, e.g. ge-vs-dorok gives /lessons/ge-vs-dorok/. Small Latin letters, digits and dashes. Set it when creating; changing it later does not move the page.
+        pattern:
+          regex: '^[a-z0-9]+(-[a-z0-9]+)*$'
+          message: Use small Latin letters, digits and single dashes, e.g. winter-snacks
       - name: title
         label: Title
         type: string
@@ -238,9 +247,17 @@ content:
     type: collection
     path: src/content/decks
     format: yaml
-    filename: { template: '{primary}.yml', field: create }
+    filename: { template: '{fields.address}.yml', field: false }
     view: { fields: [title, level], primary: title, search: [title] }
     fields:
+      - name: address
+        label: Page address
+        type: string
+        required: true
+        description: The end of the page's web address, e.g. winter-snacks gives /practice/deck/winter-snacks/. Small Latin letters, digits and dashes. Set it when creating; changing it later does not move the page.
+        pattern:
+          regex: '^[a-z0-9]+(-[a-z0-9]+)*$'
+          message: Use small Latin letters, digits and single dashes, e.g. winter-snacks
       - name: title
         label: Title
         type: string
@@ -264,9 +281,17 @@ content:
     type: collection
     path: src/content/quizzes
     format: yaml
-    filename: { template: '{primary}.yml', field: create }
+    filename: { template: '{fields.address}.yml', field: false }
     view: { fields: [title, level], primary: title, search: [title] }
     fields:
+      - name: address
+        label: Page address
+        type: string
+        required: true
+        description: The end of the page's web address, e.g. particles-check gives /practice/quiz/particles-check/. Small Latin letters, digits and dashes. Set it when creating; changing it later does not move the page.
+        pattern:
+          regex: '^[a-z0-9]+(-[a-z0-9]+)*$'
+          message: Use small Latin letters, digits and single dashes, e.g. winter-snacks
       - name: title
         label: Title
         type: string
@@ -286,7 +311,8 @@ content:
     type: collection
     path: src/content/materials
     format: yaml
-    filename: { template: '{primary}.yml', field: create }
+    # Named by the moment it is created: no page of its own, so no address to choose.
+    filename: { template: '{year}-{month}-{day}-{hour}{minute}{second}.yml', field: false }
     view:
       {
         fields: [title, section, date],
@@ -339,7 +365,8 @@ content:
     type: collection
     path: src/content/notices
     format: yaml
-    filename: { template: '{primary}.yml', field: create }
+    # Named by the moment it is created: no page of its own, so no address to choose.
+    filename: { template: '{year}-{month}-{day}-{hour}{minute}{second}.yml', field: false }
     view: { fields: [title, from, to, tone], primary: title, default: { sort: from, order: desc } }
     fields:
       - name: title

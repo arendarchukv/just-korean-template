@@ -1,4 +1,5 @@
 ---
+address: nominalizers-gi-geot-eum
 title: 'Korean grammar 한국어 문법 : 동사, 형용사를 명사로! 기, 것, 음'
 date: 2022-04-19
 level: intermediate

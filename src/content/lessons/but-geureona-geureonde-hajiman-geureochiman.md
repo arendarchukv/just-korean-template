@@ -1,4 +1,5 @@
 ---
+address: but-geureona-geureonde-hajiman-geureochiman
 title: 'BUT ? 그러나 그런데 하지만 그렇지만'
 date: 2022-07-10
 level: beginner

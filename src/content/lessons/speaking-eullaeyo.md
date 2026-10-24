@@ -1,4 +1,5 @@
 ---
+address: speaking-eullaeyo
 title: '한국인처럼 말하기 : 하고 싶어요 + 할 거예요! (을/ㄹ 래요)'
 date: 2025-09-15
 level: intermediate

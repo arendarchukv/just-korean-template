@@ -1,4 +1,5 @@
 ---
+address: giro-hada-vs-ryeogo-hada
 title: 'Korean Grammar 한국어 문법 : 기로 하다 vs 려고 하다'
 date: 2023-07-05
 level: intermediate

@@ -1,4 +1,5 @@
 ---
+address: vocab-hankkeot-silkeot-maeumkkeot
 title: 'Korean vocabulary 한국어 어휘, 단어 : 한껏, 실컷, 마음껏'
 date: 2023-03-28
 level: intermediate

@@ -1,4 +1,5 @@
 ---
+address: vocab-nunchi
 title: 'Difficult Korean vocabulary 눈치? sense?'
 date: 2022-01-26
 level: intermediate

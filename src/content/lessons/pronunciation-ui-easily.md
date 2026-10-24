@@ -1,4 +1,5 @@
 ---
+address: pronunciation-ui-easily
 title: "How can you pronounce '의' more easily?"
 date: 2022-04-01
 level: beginner

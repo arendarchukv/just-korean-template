@@ -1,4 +1,5 @@
 ---
+address: vocab-chamyeo-chamga-chamseok
 title: 'Korean vocabulary 한국어 어휘, 단어 : 참여, 참가, 참석 Attend ?'
 date: 2024-07-21
 level: intermediate

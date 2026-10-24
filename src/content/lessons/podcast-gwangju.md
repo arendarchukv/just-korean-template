@@ -1,4 +1,5 @@
 ---
+address: podcast-gwangju
 title: 'Korean Travel Podcast : 광주 (GwangJu)'
 date: 2022-06-11
 level: intermediate

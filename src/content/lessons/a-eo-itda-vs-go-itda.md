@@ -1,4 +1,5 @@
 ---
+address: a-eo-itda-vs-go-itda
 title: 'Korean Grammar 한국어 문법 : 아/어 있다 vs 고 있다'
 date: 2025-01-22
 level: intermediate

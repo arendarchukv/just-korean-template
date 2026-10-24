@@ -1,4 +1,5 @@
 ---
+address: speaking-eulgeyo
 title: '한국인처럼 말하기 : 도와 줄게요! (ㄹ/을게요)'
 date: 2025-09-21
 level: intermediate

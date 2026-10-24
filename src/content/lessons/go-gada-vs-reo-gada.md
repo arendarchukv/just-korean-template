@@ -1,4 +1,5 @@
 ---
+address: go-gada-vs-reo-gada
 title: 'Korean grammar 한국어 문법 : 고 가다, 오다 VS 러 가다, 오다'
 date: 2022-05-06
 level: intermediate

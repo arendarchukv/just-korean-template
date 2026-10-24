@@ -1,4 +1,5 @@
 ---
+address: place-particle-e-vs-eseo
 title: 'Korean Grammar : place particle 장소 + 에 vs 에서'
 date: 2022-02-26
 level: beginner

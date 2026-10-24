@@ -1,4 +1,5 @@
 ---
+address: dangun-bear-and-tiger
 title: '곰과 호랑이 이야기 (단군 신화)'
 date: 2026-10-19
 level: beginner

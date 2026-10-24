@@ -1,4 +1,5 @@
 ---
+address: vocab-gwanggo-vs-hongbo
 title: 'Korean vocabulary 한국어 어휘, 단어 비교 : 광고 vs 홍보'
 date: 2023-05-31
 level: intermediate

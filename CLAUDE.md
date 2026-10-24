@@ -327,6 +327,11 @@ the Filename field hidden; materials and notices are named by their creation tim
 uses the file name; `src/content/addresses.test.ts` checks every entry's address matches it (the
 existing 149 were filled in from their file names).
 
+Pages CMS's rich-text editor rewrites the whole lesson file on any save and drops raw HTML such as
+`<span lang="ko">` (tested 2026-10-24). Accepted by the owner: Korean inside English lesson text
+goes unmarked (Pretendard still renders it); no automatic marking. Front matter is reformatted too
+(quotes, lists, key order, `correct: false`), which the site reads the same.
+
 ## Holiday decorations (2026-10-24)
 
 Spec `docs/superpowers/specs/2026-10-24-holiday-decorations-design.md`. Five holidays (설날,

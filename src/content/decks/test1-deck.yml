@@ -1,0 +1,11 @@
+address: test1-deck
+title: Test Deck
+level: advanced
+description: WordsWordsWords
+cards:
+  - front: 수
+    back: su
+    example: sususu
+  - front: 심
+    back: sim
+    example: simsimsim

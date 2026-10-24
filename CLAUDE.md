@@ -332,7 +332,8 @@ collage in the wave's corner, Echo beside the New lessons eyebrow and on the foo
 `HolidayMotifs` renders all of one kind). Motif colours: shape tokens plus `--shape-red` (motifs
 only). Hidden in print. **DEMO ONLY:** `HolidayPreview.astro`, a floating select (bottom left)
 that previews any holiday for the visit (`holiday-preview` in sessionStorage); remove it, its use
-in `BaseLayout.astro` and its test in `tests/ui/holidays.spec.ts` before launch. The demo
+in `BaseLayout.astro`, its test in `tests/ui/holidays.spec.ts` and the `holiday-preview` read in
+`HolidayScript.astro` (then a holiday chosen by hand needs no script: `holidayRender`) before launch. The demo
 `site.yml` uses `holiday: auto` while the preview exists.
 
 ## Launch preparation (2026-10-21)

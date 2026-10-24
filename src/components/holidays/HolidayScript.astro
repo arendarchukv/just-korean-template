@@ -23,6 +23,7 @@ const ids = [...HOLIDAY_IDS];
     var root = document.documentElement;
     function apply() {
       var choice = fixed || 'auto';
+      // DEMO ONLY: the preview switch's choice (remove with HolidayPreview before launch).
       try {
         var preview = sessionStorage.getItem('holiday-preview');
         if (preview === 'none' || preview === 'auto' || ids.indexOf(preview) >= 0) choice = preview;

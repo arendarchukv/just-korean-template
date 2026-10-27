@@ -2,7 +2,9 @@
 /**
  * Light / dark switch. The initial theme is applied by ThemeScript in <head> (saved choice,
  * else the OS preference), so there is no flash; this button flips it and saves the choice.
- * Until the visitor clicks, the site keeps following OS changes.
+ * Until the visitor clicks, the site keeps following OS changes. The new theme spreads from the
+ * click like ink soaking into paper (a view transition; `[data-ink]` in signature.css); without
+ * support, or under reduced motion, it switches at once.
  */
 import type { Lang } from '@/i18n/ui';
 import { useTranslations } from '@/i18n/utils';
@@ -85,15 +87,31 @@ const t = useTranslations(Astro.props.lang);
     }
   }
 
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // The ink starts where the click was; from the keyboard, at the button's centre.
+  function spread(event: MouseEvent, btn: HTMLElement, change: () => void) {
+    if (!document.startViewTransition || still.matches) return change();
+    const box = btn.getBoundingClientRect();
+    const x = event.detail ? event.clientX : box.left + box.width / 2;
+    const y = event.detail ? event.clientY : box.top + box.height / 2;
+    const reach = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    root.style.setProperty('--ink-x', `${x}px`);
+    root.style.setProperty('--ink-y', `${y}px`);
+    root.style.setProperty('--ink-reach', `${Math.ceil(reach)}px`);
+    root.dataset.ink = '';
+    document.startViewTransition(change).finished.finally(() => delete root.dataset.ink);
+  }
+
   for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (event) => {
       const next: Theme = current() === 'dark' ? 'light' : 'dark';
       try {
         localStorage.setItem('theme', next);
       } catch {
         // Storage unavailable (private mode): the theme still applies for this page view.
       }
-      apply(next);
+      spread(event, btn, () => apply(next));
     });
   }
 

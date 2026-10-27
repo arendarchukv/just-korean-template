@@ -339,8 +339,12 @@ under reduced motion, decorative (`aria-hidden`), no outside files. First: the h
 가야금 strings (`HeroStrings.astro`) with 안족 bridges set aslant; a pointer crossing a string
 plucks it there (decaying harmonics, a teal tint fading back), and after a tap on the strings each
 sounds a 평조 note (Karplus-Strong synthesis in the browser, light 농현 vibrato). The script is
-inlined by Astro (small), only on the home page. Later on the same branch: ink-spread theme switch,
-the 도장 stamp on quiz results, new shapes behind the portrait.
+inlined by Astro (small), only on the home page. Second: the theme switch spreads the new theme
+from the click like ink soaking into paper (`ThemeToggle.astro` starts a same-document view
+transition; `[data-ink]` in `signature.css` masks the new snapshot with a soft-edged circle grown by
+`@property --ink-size`; the header joins the page snapshot meanwhile). From the keyboard it starts at
+the button; no support or reduced motion: instant. Later on the same branch: the 도장 stamp on quiz
+results, new shapes behind the portrait.
 
 ## Contact form embedded (2026-10-28)
 

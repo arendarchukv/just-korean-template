@@ -181,6 +181,7 @@ export const en = {
   'contact.send': 'Send',
   'contact.demoSent':
     'This is a demo: your message was not sent. The real form (Tally) will go here.',
+  'contact.openForm': 'Form not showing? Open it in a new tab',
 
   'lesson.watchOnYouTube': 'Watch on YouTube',
   'lesson.position': 'Lesson {n} of {total}',

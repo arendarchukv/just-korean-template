@@ -7,6 +7,7 @@ import {
   practiceUnits,
   sortInPlaylist,
   tagSlug,
+  tallyEmbedUrl,
   youtubeEmbedUrl,
 } from './site-logic';
 
@@ -159,5 +160,12 @@ describe('urls', () => {
     expect(youtubeEmbedUrl('R3Ny_hDzKpc')).toBe(
       'https://www.youtube-nocookie.com/embed/R3Ny_hDzKpc?autoplay=1&rel=0',
     );
+  });
+  it('turns a Tally form link into its embed link', () => {
+    const embed =
+      'https://tally.so/embed/Yj57M6?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1';
+    expect(tallyEmbedUrl('https://tally.so/r/Yj57M6')).toBe(embed);
+    expect(tallyEmbedUrl('https://tally.so/embed/Yj57M6?alignLeft=1')).toBe(embed);
+    expect(() => tallyEmbedUrl('https://forms.gle/abc')).toThrow();
   });
 });

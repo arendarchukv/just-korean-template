@@ -1,6 +1,7 @@
 import { z } from 'astro/zod';
 import { PLAYLIST_IDS } from '../data/playlists';
 import { parseYouTubeId } from '../lib/youtube';
+import { TALLY_FORM } from '../lib/site-logic';
 import { HOLIDAY_IDS } from '../data/holidays';
 
 /**
@@ -144,7 +145,16 @@ const optionalUrl = z.union([httpsUrl, z.literal('')]).default('');
 
 export const siteSchema = z.object({
   tidycal: optionalUrl,
-  contactForm: optionalUrl,
+  // Shown inside the Contact page, so it must be a Tally form.
+  contactForm: z
+    .union([
+      httpsUrl.refine(
+        (v) => TALLY_FORM.test(v),
+        'Use the Tally form link, like https://tally.so/r/abc123',
+      ),
+      z.literal(''),
+    ])
+    .default(''),
   // Holiday decorations: none, automatic by date, or one holiday chosen by hand.
   holiday: z.enum(['none', 'auto', ...HOLIDAY_IDS]).default('none'),
   // Pages CMS drops an object whose fields are all empty, so the key may be missing entirely.

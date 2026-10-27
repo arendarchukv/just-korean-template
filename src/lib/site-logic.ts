@@ -152,3 +152,13 @@ export function krdictUrl(word: string): string {
 export function youtubeEmbedUrl(id: string): string {
   return `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
 }
+
+/** A Tally form link (tally.so/r/<id>, or an embed link) and its form id. */
+export const TALLY_FORM = /^https:\/\/tally\.so\/(?:r|embed)\/([A-Za-z0-9]+)/;
+
+/** The embed address of a Tally form link: no title (the page has one), transparent, left-aligned. */
+export function tallyEmbedUrl(link: string): string {
+  const id = TALLY_FORM.exec(link)?.[1];
+  if (!id) throw new Error(`Not a Tally form link: ${link}`);
+  return `https://tally.so/embed/${id}?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1`;
+}

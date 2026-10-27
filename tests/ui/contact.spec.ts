@@ -1,27 +1,24 @@
 import { expect, test } from '@playwright/test';
 
 test.beforeEach(({}, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop', 'the demo form is checked on desktop');
+  test.skip(testInfo.project.name !== 'desktop', 'the contact page is checked on desktop');
 });
 
-test('the demo form checks the fields and says it sent nothing', async ({ page }) => {
+// Site settings hold her Tally link, so the page shows that form inside it, not the demo form.
+test('the contact page shows the Tally form inside the page', async ({ page }) => {
   await page.goto('/contact/');
-  const send = page.getByRole('button', { name: /send/i });
-  await send.click();
-  // Browser validation stops an empty form: the demo note is not shown yet.
-  await expect(page.getByRole('status')).toHaveText('');
-
-  await page.getByLabel(/name/i).fill('Mina');
-  await page.getByLabel(/email/i).fill('mina@example.com');
-  await page.getByLabel(/topic/i).selectOption({ index: 1 });
-  await page.getByLabel(/message/i).fill('Hello! Do you have evening classes?');
-  await send.click();
-
-  await expect(page).toHaveURL(/\/contact\/$/);
-  await expect(page.getByRole('status')).toContainText(/demo/i);
+  // Tally's script gives the frame its address (from data-tally-src) once it is in view.
+  const frame = page.locator('iframe[data-tally-src]');
+  await expect(frame).toHaveAttribute('src', /^https:\/\/tally\.so\/embed\/\w+\?/);
+  await expect(frame).toHaveAttribute('title', 'Contact');
+  await expect(page.getByRole('link', { name: /open it in a new tab/i })).toHaveAttribute(
+    'href',
+    /^https:\/\/tally\.so\/r\//,
+  );
+  await expect(page.locator('[data-demo-form]')).toHaveCount(0);
 });
 
-test('the footer Contact link opens the demo page', async ({ page }) => {
+test('the footer Contact link opens the contact page', async ({ page }) => {
   await page.goto('/');
   await page.locator('footer').getByRole('link', { name: 'Contact' }).click();
   await expect(page).toHaveURL(/\/contact\/$/);

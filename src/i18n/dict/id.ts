@@ -168,6 +168,7 @@ export const id: Dictionary = {
   'contact.message': 'Pesan',
   'contact.send': 'Kirim',
   'contact.demoSent': 'Ini demo: pesanmu tidak terkirim. Formulir asli (Tally) akan ada di sini.',
+  'contact.openForm': 'Formulir tidak muncul? Buka di tab baru',
   'lesson.watchOnYouTube': 'Tonton di YouTube',
   'lesson.position': 'Pelajaran {n} dari {total}',
   'lesson.play': 'Putar video',

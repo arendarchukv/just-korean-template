@@ -16,7 +16,7 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const site = await getSite();
 // Booking opens TidyCal; until its link is set, the Classes page (never a dead button).
-const contact = site.contactForm || localizePath(lang, 'contact');
+const contact = localizePath(lang, 'contact');
 const classesPage = localizePath(lang, 'classes');
 ---
 

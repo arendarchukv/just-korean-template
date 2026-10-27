@@ -88,6 +88,8 @@
   --teal-strong-hover: var(--color-teal-800);
   --teal-tint: var(--color-teal-50);
   --on-teal: #ffffff;
+  /* The Tally form's own white page (its theme ignores ours), so its card is white in both. */
+  --form-sheet: #ffffff;
 
   --danger: #b03a3a;
   --danger-tint: #fbeded;
@@ -133,6 +135,8 @@
   --teal-strong-hover: var(--color-teal-600);
   --teal-tint: #173a44;
   --on-teal: #ffffff;
+  /* The Tally form's own white page (its theme ignores ours), so its card is white in both. */
+  --form-sheet: #ffffff;
 
   --danger: #e58a8a;
   --danger-tint: #3a1f2a;
@@ -167,6 +171,7 @@
   --color-brand-strong-hover: var(--brand-strong-hover);
   --color-brand-tint: var(--brand-tint);
   --color-on-brand: var(--on-brand);
+  --color-form-sheet: var(--form-sheet);
   --color-teal: var(--teal);
   --color-teal-strong: var(--teal-strong);
   --color-teal-strong-hover: var(--teal-strong-hover);

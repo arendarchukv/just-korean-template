@@ -27,12 +27,8 @@ const LEARN: { path: string; label: UIKey }[] = [
 // Links are edited in Pages CMS (Site settings); empty ones are left out, as the CMS hint says.
 const CONNECT: { href: string; label: UIKey; icon: IconName }[] = [
   { href: localizePath(lang, 'classes'), label: 'nav.classes', icon: 'cap' },
-  // Tally form when set; until then the demo contact page.
-  {
-    href: site.contactForm || localizePath(lang, 'contact'),
-    label: 'footer.contact',
-    icon: 'mail',
-  },
+  // The Contact page shows her Tally form (or the demo form until it is set).
+  { href: localizePath(lang, 'contact'), label: 'footer.contact', icon: 'mail' },
   { href: site.social.kofi, label: 'nav.support', icon: 'cup' },
 ];
 

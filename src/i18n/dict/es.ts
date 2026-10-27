@@ -173,6 +173,7 @@ export const es: Dictionary = {
   'contact.send': 'Enviar',
   'contact.demoSent':
     'Esto es una demostración: tu mensaje no se ha enviado. Aquí irá el formulario real (Tally).',
+  'contact.openForm': '¿No ves el formulario? Ábrelo en una pestaña nueva',
   'lesson.watchOnYouTube': 'Ver en YouTube',
   'lesson.position': 'Lección {n} de {total}',
   'lesson.play': 'Reproducir vídeo',

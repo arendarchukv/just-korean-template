@@ -167,6 +167,7 @@ export const uk: Dictionary = {
   'contact.message': 'Повідомлення',
   'contact.send': 'Надіслати',
   'contact.demoSent': 'Це демо: ваше повідомлення не надіслано. Тут буде справжня форма (Tally).',
+  'contact.openForm': 'Форма не з’являється? Відкрийте її в новій вкладці',
   'lesson.watchOnYouTube': 'Дивитися на YouTube',
   'lesson.position': 'Урок {n} з {total}',
   'lesson.play': 'Відтворити відео',

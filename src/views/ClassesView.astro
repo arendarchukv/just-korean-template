@@ -19,8 +19,8 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const site = await getSite();
 const { formats: FORMATS, steps: STEPS, faq: FAQ } = pick(CLASSES, lang);
-// Tally form when set; until then the demo contact page.
-const contact = site.contactForm || localizePath(lang, 'contact');
+// The Contact page shows her Tally form (or the demo form until it is set).
+const contact = localizePath(lang, 'contact');
 const external = (href: string) =>
   href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 ---

@@ -1321,7 +1321,23 @@
     flex: 1 1 12rem;
   }
 
-  /* Contact (demo form). */
+  /* Contact: her Tally form (Tally's embed code; its script sets the frame's height). */
+  .contact-embed {
+    max-width: 46rem;
+  }
+  .contact-sheet {
+    padding: clamp(0.75rem, 3vw, 1.75rem);
+    border: 1px solid var(--color-border);
+    border-radius: 1.25rem;
+    background: var(--color-form-sheet);
+  }
+  .contact-alt {
+    margin: 1rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+  }
+
+  /* Contact (demo form, until the Tally link is set). */
   .contact-form {
     display: grid;
     gap: 1.25rem;

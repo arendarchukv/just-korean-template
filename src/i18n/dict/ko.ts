@@ -179,6 +179,7 @@ export const ko: Dictionary = {
   'contact.send': '보내기',
   'contact.demoSent':
     '데모예요: 메시지가 보내지지 않았어요. 여기에 실제 양식(Tally)이 들어갈 거예요.',
+  'contact.openForm': '양식이 보이지 않나요? 새 탭에서 열기',
 
   'lesson.watchOnYouTube': '유튜브에서 보기',
   'lesson.position': '{total}강 중 {n}강',

@@ -216,8 +216,8 @@ for (const [page, prefix] of LOCALES) {
     problems.push(`${page}: footer YouTube link does not come from site settings`);
   }
   if (/href="#"/.test(footer)) problems.push(`${page}: footer has an empty "#" link`);
-  // Contact: the Tally form when set, otherwise the demo contact page.
-  const contactHref = site.contactForm || `${prefix}/contact/`;
+  // Contact: the contact page, which shows the Tally form (or the demo form until it is set).
+  const contactHref = `${prefix}/contact/`;
   if (!footer.includes(`href="${contactHref}"`)) {
     problems.push(`${page}: footer Contact does not lead to ${contactHref}`);
   }
@@ -479,7 +479,7 @@ for (const page of inAll('classes/index.html')) {
       problems.push(`${page}: ${format.name} facts are not a definition list`);
     }
     // Each card has its own way on: book a private class (TidyCal), ask about a group (contact).
-    const contact = site.contactForm || `${prefixOf(page)}/contact/`;
+    const contact = `${prefixOf(page)}/contact/`;
     const target = format.action === 'book' ? site.tidycal || contact : contact;
     if (!block.includes(`href="${target}"`)) {
       problems.push(`${page}: ${format.name} has no button to ${target}`);
@@ -511,10 +511,21 @@ for (const page of inAll('practice/index.html')) {
   for (const href of deadLinks(html)) problems.push(`${page} links to missing ${href}`);
 }
 
-// --- Contact (demo): labelled fields, nothing is sent anywhere ---
+// --- Contact: her Tally form inside the page; until it is set, a demo that sends nothing ---
+const tallyId = /^https:\/\/tally\.so\/(?:r|embed)\/(\w+)/.exec(site.contactForm ?? '')?.[1];
 for (const page of inAll('contact/index.html')) {
   if (!exists(page)) {
     problems.push(`missing ${page}`);
+    continue;
+  }
+  if (tallyId) {
+    const frame = /<iframe[^>]*data-tally-src[^>]*>/.exec(read(page))?.[0] ?? '';
+    if (!frame.includes(`data-tally-src="https://tally.so/embed/${tallyId}?`))
+      problems.push(`${page}: no frame with the Tally form ${tallyId}`);
+    if (!/title="[^"]+"/.test(frame)) problems.push(`${page}: the Tally frame has no title`);
+    if (!read(page).includes('tally.so/widgets/embed.js'))
+      problems.push(`${page}: no Tally embed script to fit the frame`);
+    if (/<form/.test(read(page))) problems.push(`${page}: demo form shown beside the Tally form`);
     continue;
   }
   const form = /<form[\s\S]*?<\/form>/.exec(read(page))?.[0] ?? '';
@@ -611,11 +622,16 @@ for (const [prefix, dir] of LOCALE_DIRS.map(({ dir, prefix }) => [prefix, dir]))
   }
 }
 
-// --- JavaScript files load only where a widget lives ---
+// --- JavaScript files load only where a widget lives, and Tally's script only on Contact ---
 {
   const widgetPage = (p) => /(^|\/)practice\/(deck|quiz|flashcards|quizzes)\//.test(p);
+  const contactPage = (p) => /(^|\/)contact\/index\.html$/.test(p);
   for (const page of htmlPages()) {
     const html = read(page);
+    // Tally's embed code adds its script from an inline loader, not a <script src>.
+    if (html.includes('tally.so/widgets/embed.js') && !contactPage(page)) {
+      problems.push(`${page}: loads Tally's script outside Contact`);
+    }
     const hasJsFile = /<astro-island|<script[^>]*\ssrc=/.test(html);
     if (hasJsFile && !widgetPage(page)) problems.push(`${page}: loads a JS file but has no widget`);
   }

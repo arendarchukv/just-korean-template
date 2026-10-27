@@ -428,7 +428,7 @@ content:
       - name: contactForm
         label: Contact form (Tally)
         type: string
-        description: Tally contact form link.
+        description: Your Tally form link (https://tally.so/r/...). The Contact page shows the form; leave empty for the demo form.
         pattern: { regex: '^https://', message: The link must start with https:// }
       - name: holiday
         label: Holiday decorations

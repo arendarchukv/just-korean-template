@@ -369,6 +369,55 @@
     align-items: center;
     gap: 1.25rem 2rem;
   }
+  /* 칭찬 도장: the round praise stamp, set aslant in the card's corner, pressed onto the paper. */
+  .quiz-result[data-stamped] {
+    position: relative;
+    padding-right: 7.5rem;
+  }
+  .quiz-stamp {
+    position: absolute;
+    top: -0.75rem;
+    right: 0;
+    width: 6.75rem;
+    height: auto;
+    color: var(--color-stamp);
+    rotate: -9deg;
+    overflow: visible;
+  }
+  .quiz-stamp-ring,
+  .quiz-stamp-inner {
+    fill: none;
+    stroke: currentColor;
+  }
+  .quiz-stamp-ring {
+    stroke-width: 3.2;
+  }
+  .quiz-stamp-inner {
+    stroke-width: 1.4;
+  }
+  .quiz-stamp text {
+    fill: currentColor;
+    font-size: 14.5px;
+    font-weight: 800;
+    text-anchor: middle;
+  }
+  .quiz-stamp .quiz-stamp-cham {
+    font-size: 18px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .quiz-stamp {
+      animation: stamp-press 340ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+    }
+  }
+  @keyframes stamp-press {
+    from {
+      scale: 1.45;
+      opacity: 0;
+    }
+    55% {
+      opacity: 1;
+    }
+  }
   .quiz-score {
     position: relative;
     flex: none;

@@ -101,3 +101,25 @@ test('steps colour each answer, and the result shows the score, counts and a rev
   await expect(review.locator('.quiz-review-mark svg')).toHaveCount(2);
   await expect(review.locator('.quiz-review-mark')).toHaveText(['', '']);
 });
+
+test('a perfect result gets the round 칭찬 도장 참 잘했어요; a low one gets none', async ({ page }) => {
+  await open(page);
+  await page.getByRole('button', { name: '도록' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByRole('textbox', { name: /answer/i }).fill('도록');
+  await page.getByRole('button', { name: 'Check' }).click();
+  await page.getByRole('button', { name: /see the result/i }).click();
+  const seal = page.locator('.quiz-stamp');
+  await expect(seal).toHaveAttribute('data-stamp', 'perfect');
+  await expect(seal).toHaveAttribute('aria-hidden', 'true');
+  await expect(seal).toContainText('참잘했어요');
+
+  await page.getByRole('button', { name: 'Try again' }).click();
+  await page.getByRole('button', { name: '려고' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await page.getByRole('textbox', { name: /answer/i }).fill('x');
+  await page.getByRole('button', { name: 'Check' }).click();
+  await page.getByRole('button', { name: /see the result/i }).click();
+  await expect(page.getByRole('status')).toContainText('0 of 2 correct');
+  await expect(seal).toHaveCount(0);
+});

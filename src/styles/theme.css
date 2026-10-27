@@ -93,6 +93,8 @@
 
   --danger: #b03a3a;
   --danger-tint: #fbeded;
+  /* 인주, the red seal ink of the 도장 stamp on a good quiz result (not for errors). */
+  --stamp: #b4433a;
 
   --focus: var(--color-teal-500);
   --selection: var(--color-teal-100);
@@ -140,6 +142,7 @@
 
   --danger: #e58a8a;
   --danger-tint: #3a1f2a;
+  --stamp: #e8877c;
 
   --focus: var(--color-teal-300);
   --selection: var(--color-teal-800);
@@ -171,6 +174,7 @@
   --color-brand-strong-hover: var(--brand-strong-hover);
   --color-brand-tint: var(--brand-tint);
   --color-on-brand: var(--on-brand);
+  --color-stamp: var(--stamp);
   --color-form-sheet: var(--form-sheet);
   --color-teal: var(--teal);
   --color-teal-strong: var(--teal-strong);

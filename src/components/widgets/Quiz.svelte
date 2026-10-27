@@ -81,6 +81,10 @@
           ? labels.bands.good
           : labels.bands.low,
   );
+  // 칭찬 도장: the round praise stamp of Korean schools, 참 잘했어요 for a perfect result,
+  // 잘했어요 from 70%. Korean in every language, as in a Korean notebook; decorative (the band
+  // says it).
+  const stamp = $derived(percent === 100 ? 'perfect' : percent >= 70 ? 'great' : null);
   // Score ring: a circle of radius 42, drawn as the share answered right.
   const RING = 2 * Math.PI * 42;
 
@@ -255,7 +259,19 @@
     {#if finished}{fill(labels.result, { k: score, n: questions.length })}{/if}
   </p>
   {#if finished}
-    <div class="quiz-result">
+    <div class="quiz-result" data-stamped={stamp ? '' : undefined}>
+      {#if stamp}
+        <svg class="quiz-stamp" data-stamp={stamp} viewBox="0 0 96 96" aria-hidden="true" lang="ko">
+          <circle class="quiz-stamp-ring" cx="48" cy="48" r="44" />
+          <circle class="quiz-stamp-inner" cx="48" cy="48" r="38" />
+          {#if stamp === 'perfect'}
+            <text class="quiz-stamp-cham" x="48" y="44">참</text>
+            <text x="48" y="65">잘했어요</text>
+          {:else}
+            <text x="48" y="54">잘했어요</text>
+          {/if}
+        </svg>
+      {/if}
       <div
         class="quiz-score"
         data-band={percent === 100 ? 'perfect' : percent >= 40 ? 'ok' : 'low'}

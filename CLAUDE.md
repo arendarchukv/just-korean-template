@@ -343,8 +343,10 @@ inlined by Astro (small), only on the home page. Second: the theme switch spread
 from the click like ink soaking into paper (`ThemeToggle.astro` starts a same-document view
 transition; `[data-ink]` in `signature.css` masks the new snapshot with a soft-edged circle grown by
 `@property --ink-size`; the header joins the page snapshot meanwhile). From the keyboard it starts at
-the button; no support or reduced motion: instant. Later on the same branch: the 도장 stamp on quiz
-results, new shapes behind the portrait.
+the button; no support or reduced motion: instant. Third: a good quiz result gets the round
+칭찬 도장 of Korean schools (`Quiz.svelte`): 참 잘했어요 at 100%, 잘했어요 from 70%, none below;
+Korean in every language, `aria-hidden`, pressed on with a short scale-in (none under reduced
+motion), colour `--stamp` (인주, AA-tested, not for errors). Later: new shapes behind the portrait.
 
 ## Contact form embedded (2026-10-28)
 

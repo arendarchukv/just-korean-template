@@ -1,5 +1,6 @@
 ---
 import HeroPortrait from '@/components/home/HeroPortrait.astro';
+import HeroStrings from '@/components/home/HeroStrings.astro';
 import HolidayGreeting from '@/components/holidays/HolidayGreeting.astro';
 import { holidayRender } from '@/lib/holiday-logic';
 import Icon, { type IconName } from '@/components/Icon.astro';
@@ -54,6 +55,7 @@ const booking = tidycal || localizePath(lang, 'classes');
     {home.credentials.length > 0 && (
       <div class="hero-facts">
         <h2 class="sr-only">{t('home.credentials')}</h2>
+        <HeroStrings />
         <ul>
           {home.credentials.map((c, i) => (
             <li>

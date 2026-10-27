@@ -263,7 +263,7 @@ for (const [page, prefix] of LOCALES) {
 
   // Credentials under the greeting: degree, certificate, channel.
   const facts = /class="hero-facts"[\s\S]*?<\/ul>/.exec(homeBlock(page, 'about'))?.[0] ?? '';
-  const factCount = (facts.match(/<li/g) ?? []).length;
+  const factCount = (facts.match(/<li[\s>]/g) ?? []).length;
   if (factCount !== 3)
     problems.push(`${page}: ${factCount} credentials on the home page, expected 3`);
 

@@ -332,6 +332,16 @@ Pages CMS's rich-text editor rewrites the whole lesson file on any save and drop
 goes unmarked (Pretendard still renders it); no automatic marking. Front matter is reformatted too
 (quotes, lists, key order, `correct: false`), which the site reads the same.
 
+## Small delights (branch `feature/delights`, from 2026-10-28)
+
+Touches that show care without hurting the calm, professional look; each one quiet at rest, off
+under reduced motion, decorative (`aria-hidden`), no outside files. First: the hero rule is three
+가야금 strings (`HeroStrings.astro`) with 안족 bridges set aslant; a pointer crossing a string
+plucks it there (decaying harmonics, a teal tint fading back), and after a tap on the strings each
+sounds a 평조 note (Karplus-Strong synthesis in the browser, light 농현 vibrato). The script is
+inlined by Astro (small), only on the home page. Later on the same branch: ink-spread theme switch,
+the 도장 stamp on quiz results, new shapes behind the portrait.
+
 ## Contact form embedded (2026-10-28)
 
 The Contact page shows her Tally form with Tally's own embed code, as Share → Embed gives it

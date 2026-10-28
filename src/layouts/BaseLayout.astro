@@ -13,8 +13,6 @@ import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import ThemeScript from '@/components/ThemeScript.astro';
 import HolidayScript from '@/components/holidays/HolidayScript.astro';
-// DEMO ONLY: temporary holiday preview switch; remove before launch.
-import HolidayPreview from '@/components/holidays/HolidayPreview.astro';
 import { getSite } from '@/content/queries';
 import { holidayRender } from '@/lib/holiday-logic';
 import { SITE } from '@/config';
@@ -124,7 +122,5 @@ const ogImageAlt = image?.alt ?? t('site.ogImageAlt');
       <slot />
     </main>
     <Footer lang={lang} />
-    {/* DEMO ONLY: temporary holiday preview switch; remove before launch. */}
-    {holiday.pieces && <HolidayPreview />}
   </body>
 </html>

@@ -381,7 +381,7 @@ only); the 광복절 motif is the 태극기 from the official geometry (public-d
 a sun with rays; never a white kite with a red circle) sways over the mountains; on 추석 the full moon rises behind the mountains with a persimmon branch
 above; on 한글날 한 글 날 lie on paper tiles in the grid paper; at Christmas snow falls behind her (still
 under reduced motion); on 설날, 한글날 and at Christmas the usual sky stays. Never a round flower with rays there: it reads as the Japanese imperial
-chrysanthemum / rising sun (owner, 2026-10-24). Hidden in print. Chosen in Site settings; a temporary DEMO ONLY preview switch (`HolidayPreview.astro`, bottom left of every page, added again on 2026-10-28) overrides it per tab and must go before launch; the demo
+chrysanthemum / rising sun (owner, 2026-10-24). Hidden in print. Chosen only in Site settings (a DEMO ONLY preview switch was added for a review and removed again on 2026-10-28); the demo
 `site.yml` uses `holiday: auto`.
 
 ## Launch preparation (2026-10-21)

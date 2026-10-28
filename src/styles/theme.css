@@ -109,10 +109,13 @@
   --shape-ink: #1f2a5c;
   /* Hero landscape (HeroPortrait): cut-paper mountain and hills, far to near, each on a paper
      shadow; the sun and a cloud by day. */
-  --scene-far: var(--color-brand-200);
+  --scene-far: var(--color-brand-100);
+  --scene-far-shade: var(--color-brand-200);
   --scene-mountain: var(--color-brand-300);
+  --scene-mountain-shade: var(--color-brand-400);
   --scene-hill: var(--color-teal-300);
-  --scene-hill-near: var(--color-teal-500);
+  --scene-hill-shade: var(--color-teal-500);
+  --scene-snow: #ffffff;
   --scene-pine: var(--color-teal-700);
   --scene-shadow: #c3cbe0;
   --scene-cloud: #ffffff;
@@ -167,10 +170,13 @@
   --shape-paper: #222b55;
   --shape-ink: #0b1029;
   /* Night: the same landscape in indigo and deep teal, the moon and stars in paper white. */
-  --scene-far: #26326a;
-  --scene-mountain: #2f3d7e;
+  --scene-far: #222c5e;
+  --scene-far-shade: #1c2550;
+  --scene-mountain: #34438a;
+  --scene-mountain-shade: #283572;
   --scene-hill: #2a6663;
-  --scene-hill-near: #1f5552;
+  --scene-hill-shade: #1f5552;
+  --scene-snow: #a9b6dd;
   --scene-pine: #174744;
   --scene-shadow: #0b1029;
   --scene-cloud: #222b55;

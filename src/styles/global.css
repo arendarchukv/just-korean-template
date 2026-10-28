@@ -37,6 +37,9 @@
   body {
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
+    /* Collage pieces (the hero mountains, holiday motifs) may reach past the page's edge; they
+       never make it scroll sideways. `clip`, unlike `hidden`, keeps the sticky header working. */
+    overflow-x: clip;
   }
 
   /* Korean pages: Pretendard for everything, so Latin and Hangul share metrics. */

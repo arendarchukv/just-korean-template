@@ -197,8 +197,20 @@
   .scene-hill {
     fill: var(--scene-hill);
   }
-  .scene-hill-near {
-    fill: var(--scene-hill-near);
+  .scene-far-shade {
+    fill: var(--scene-far-shade);
+  }
+  .scene-mountain-shade {
+    fill: var(--scene-mountain-shade);
+  }
+  .scene-hill-shade {
+    fill: var(--scene-hill-shade);
+  }
+  .scene-snow {
+    fill: var(--scene-snow);
+  }
+  .scene-mist {
+    fill: var(--scene-cloud);
   }
   .scene-shadow {
     fill: var(--scene-shadow);

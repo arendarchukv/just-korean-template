@@ -130,7 +130,8 @@ Rules:
 - Neutrals (paper and ink). Light: bg #FBFBFD, paper #EEF0F8, border #DEE2EF,
   ink #1D2340, muted #4A5170. Dark (indigo): bg #111733, surface #1A2246,
   border #2C3763, text #E8EDFB, muted #A3ADCF.
-- No warm accent: the system is fully cool. **Teal** (scale from #56A8A3, from the channel
+- No warm accent: the system is fully cool (one exception, the owner's call on 2026-10-28: the pale
+  yellow ring of light around the hero sun under the pointer, `--scene-glow`). **Teal** (scale from #56A8A3, from the channel
   intro) is the second color, used for learning moments (key-expression marks, "correct",
   progress, focus ring). Muted red only for errors / "wrong". White text never on teal-400/500.
 - Design system "Paper & cut-outs": see `docs/superpowers/specs/2026-10-11-design-system-design.md`

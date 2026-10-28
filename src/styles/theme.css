@@ -124,6 +124,7 @@
   --scene-glow: #f8e9b4;
   --scene-letter: #1f2a5c;
   --scene-moon-full: #e3e7f4;
+  --scene-flake: var(--color-brand-300);
   --scene-line: var(--color-brand-200);
   /* Holiday motifs only (persimmons, berries, knot cord): a muted red, never for text. */
   --shape-red: #c4544e;
@@ -188,6 +189,7 @@
   --scene-glow: #3a4a8c;
   --scene-letter: #c5d1e8;
   --scene-moon-full: #e8edfb;
+  --scene-flake: #e8edfb;
   --scene-line: #2c3763;
   --shape-red: #a8484a;
   --shape-flag-red: #cd2e3a;

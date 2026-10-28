@@ -34,6 +34,25 @@ const GRID_CELLS = Array.from({ length: 81 }, (_, i) => ({
   letter: GANADA[i % GANADA.length],
 }));
 
+// Christmas snow: [x, radius, seconds to fall, how far into the fall it starts].
+const SNOW = [
+  [4, 0.7, 13, 2],
+  [12, 0.5, 11, 7],
+  [20, 0.9, 15, 11],
+  [27, 0.6, 12, 4],
+  [35, 0.8, 14, 9],
+  [43, 0.5, 10, 1],
+  [51, 0.7, 13, 6],
+  [58, 0.9, 16, 12],
+  [66, 0.6, 11, 3],
+  [73, 0.8, 14, 8],
+  [80, 0.5, 12, 10],
+  [87, 0.9, 15, 5],
+  [94, 0.6, 13, 0],
+  [101, 0.8, 11, 6],
+  [108, 0.5, 14, 9],
+] as const;
+
 // 한글날: 한 글 날 on paper tiles in three squares of the second row, clear of the photo.
 const HANGEUL_DAY = [...'한글날'].map((letter, i) => ({ x: 9 + i * 9, y: 18, letter }));
 
@@ -106,6 +125,19 @@ const RANGES = [
         <circle class="scene-halo" cx="84" cy="28" r="9.6" />
         <path class="scene-moon" d="M86 20A8 8 0 1 0 86 36A10 10 0 0 1 86 20Z" />
       </g>
+      {holidays && (
+        <g
+          data-holiday-piece="christmas"
+          transform="translate(83.4 21.6) rotate(-20) scale(0.42) translate(-98 -49.2)"
+        >
+          <path
+            class="scene-hat-cone"
+            d="M94 49.6C94.4 45 95 41 96.6 38.4C98.4 35.6 101.6 35.4 103.8 37.6C104.6 38.4 105 39.4 105.2 40.4C103.6 39.2 101.8 39 100.6 40.4C100 43 100.8 45.6 101.8 47.8Z"
+          />
+          <path class="scene-hat-trim" d="M93.6 50.2L102.4 48.3" />
+          <circle class="scene-hat-pompom" cx="105.2" cy="41" r="1.7" />
+        </g>
+      )}
       <circle cx="66" cy="14" r="0.55" />
       <circle cx="80" cy="12" r="0.45" />
       <circle cx="97" cy="44" r="0.45" />
@@ -152,17 +184,26 @@ const RANGES = [
       class="scene-mist"
       d="M48 100C54 97 60 96.5 66 97.5C72 98.7 78 96 84 96.4C92 96.8 98 98.6 104 97.2C110 96 116 96.6 128 97V100Z"
     />
-    {holidays && (
-      <g data-holiday-piece="christmas" class="scene-hat">
-        <path
-          class="scene-hat-cone"
-          d="M94 49.6C94.4 45 95 41 96.6 38.4C98.4 35.6 101.6 35.4 103.8 37.6C104.6 38.4 105 39.4 105.2 40.4C103.6 39.2 101.8 39 100.6 40.4C100 43 100.8 45.6 101.8 47.8Z"
-        />
-        <path class="scene-hat-trim" d="M93.6 50.2L102.4 48.3" />
-        <circle class="scene-hat-pompom" cx="105.2" cy="41" r="1.7" />
-      </g>
-    )}
   </svg>
+  {holidays && (
+    <svg
+      class="hero-scene scene-snowfall"
+      data-holiday-piece="christmas"
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {SNOW.map(([x, r, d, delay]) => (
+        <circle
+          class="scene-flake"
+          cx={x}
+          cy="-6"
+          r={r}
+          style={`--fall: ${d}s; --delay: -${delay}s; --rest: ${Math.round((delay / d) * 112)}px`}
+        />
+      ))}
+    </svg>
+  )}
   {photo ? (
     <Image
       src={photo}
@@ -194,7 +235,7 @@ const RANGES = [
   @layer components {
     /* Holidays that live in the landscape instead of a motif in the corner: on 추석 the full moon
        rises behind the mountains; on 한글날 한 글 날 lie on tiles in the grid paper; at Christmas
-       the high peak wears a hat; on both the sky is back. */
+       snow falls behind her and the moon wears a hat; on both the sky is back. */
     :root[data-holiday='chuseok'] .hero-portrait-holiday,
     :root[data-holiday='hangeulnal'] .hero-portrait-holiday,
     :root[data-holiday='christmas'] .hero-portrait-holiday {
@@ -204,7 +245,29 @@ const RANGES = [
     :root[data-holiday='christmas'] .hero-scene-sky {
       display: block;
     }
-    /* Christmas: a red hat on the high peak, its tip falling to the right. */
+    /* Christmas: snow falling behind her, and a small red hat on the moon at night. */
+    .scene-flake {
+      fill: var(--scene-flake);
+      animation: snow-fall var(--fall) linear var(--delay) infinite;
+    }
+    @keyframes snow-fall {
+      0% {
+        translate: 0 0;
+      }
+      50% {
+        translate: 2px 56px;
+      }
+      100% {
+        translate: -1px 112px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .scene-flake {
+        animation: none;
+        /* Still, each flake where it would be in its fall. */
+        translate: 0 var(--rest);
+      }
+    }
     .scene-hat-cone {
       fill: var(--shape-red);
     }

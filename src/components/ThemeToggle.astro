@@ -89,18 +89,38 @@ const t = useTranslations(Astro.props.lang);
 
   const still = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  // The ink starts where the click was; from the keyboard, at the button's centre.
+  // The ink starts where the click was; from the keyboard, at the button's centre. The new page
+  // shows through a soft-edged round mask that grows over it: Web Animations on the mask's size and
+  // position (no custom properties: Firefox does not animate those on view-transition pieces).
   function spread(event: MouseEvent, btn: HTMLElement, change: () => void) {
     if (!document.startViewTransition || still.matches) return change();
     const box = btn.getBoundingClientRect();
     const x = event.detail ? event.clientX : box.left + box.width / 2;
     const y = event.detail ? event.clientY : box.top + box.height / 2;
-    const reach = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    root.style.setProperty('--ink-x', `${x}px`);
-    root.style.setProperty('--ink-y', `${y}px`);
-    root.style.setProperty('--ink-reach', `${Math.ceil(reach)}px`);
+    // Wide enough to cover the far corner with its soft edge (the last fifth of the radius).
+    const size = 2.5 * Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
     root.dataset.ink = '';
-    document.startViewTransition(change).finished.finally(() => delete root.dataset.ink);
+    const transition = document.startViewTransition(change);
+    transition.ready
+      .then(() => {
+        const mask = 'radial-gradient(closest-side, #000 80%, transparent)';
+        root.animate(
+          {
+            maskImage: [mask, mask],
+            maskRepeat: ['no-repeat', 'no-repeat'],
+            maskSize: ['0px 0px', `${size}px ${size}px`],
+            maskPosition: [`${x}px ${y}px`, `${x - size / 2}px ${y - size / 2}px`],
+          },
+          {
+            duration: 650,
+            easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)',
+            fill: 'both',
+            pseudoElement: '::view-transition-new(root)',
+          },
+        );
+      })
+      .catch(() => {});
+    transition.finished.finally(() => delete root.dataset.ink);
   }
 
   for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {

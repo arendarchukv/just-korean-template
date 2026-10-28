@@ -644,32 +644,13 @@ header {
 }
 
 /* Theme switch (ThemeToggle): the new theme spreads from the click like ink soaking into paper,
-   a soft edge and no ragged one. The header joins the page so the ink covers it too. */
-@property --ink-size {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 0px;
-}
+   a soft edge and no ragged one; the script animates the new page's round mask. The header joins
+   the page so the ink covers it too. */
 [data-ink] header {
   view-transition-name: none;
 }
-[data-ink]::view-transition-old(root) {
-  animation: none;
-}
+[data-ink]::view-transition-old(root),
 [data-ink]::view-transition-new(root) {
+  animation: none;
   mix-blend-mode: normal;
-  mask-image: radial-gradient(
-    circle at var(--ink-x) var(--ink-y),
-    #000 calc(var(--ink-size) - 4rem),
-    transparent var(--ink-size)
-  );
-  animation: ink-spread 650ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
-}
-@keyframes ink-spread {
-  from {
-    --ink-size: 0px;
-  }
-  to {
-    --ink-size: calc(var(--ink-reach) + 4rem);
-  }
 }

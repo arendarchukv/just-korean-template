@@ -18,11 +18,19 @@ test('the new theme spreads from the click like ink, then the page is plain agai
   await toggle(page).click();
   await expect(html).toHaveAttribute('data-ink', '');
   await expect(html).toHaveAttribute('data-theme', 'dark');
-  // The ink starts at the click, inside the button.
-  const box = (await toggle(page).boundingBox())!;
-  const x = parseFloat(await html.evaluate((el) => el.style.getPropertyValue('--ink-x')));
-  expect(x).toBeGreaterThanOrEqual(box.x);
-  expect(x).toBeLessThanOrEqual(box.x + box.width);
+  // The new page grows through a round mask: an animation on the view transition's new image.
+  await expect
+    .poll(() =>
+      page.evaluate(() =>
+        document
+          .getAnimations()
+          .some(
+            (a) =>
+              (a.effect as KeyframeEffect | null)?.pseudoElement === '::view-transition-new(root)',
+          ),
+      ),
+    )
+    .toBe(true);
   await expect(html).not.toHaveAttribute('data-ink');
 });
 

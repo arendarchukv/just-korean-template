@@ -125,6 +125,9 @@
   --scene-letter: #1f2a5c;
   --scene-moon-full: #e3e7f4;
   --scene-flake: var(--color-brand-300);
+  --scene-kite: #ffffff;
+  --scene-kite-skirt: var(--color-brand-500);
+  --scene-kite-stick: var(--color-brand-300);
   --scene-line: var(--color-brand-200);
   /* Holiday motifs only (persimmons, berries, knot cord): a muted red, never for text. */
   --shape-red: #c4544e;
@@ -190,6 +193,9 @@
   --scene-letter: #c5d1e8;
   --scene-moon-full: #e8edfb;
   --scene-flake: #e8edfb;
+  --scene-kite: #c5d1e8;
+  --scene-kite-skirt: #4a68a6;
+  --scene-kite-stick: #7d8cc4;
   --scene-line: #2c3763;
   --shape-red: #a8484a;
   --shape-flag-red: #cd2e3a;

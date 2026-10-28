@@ -34,6 +34,9 @@ const GRID_CELLS = Array.from({ length: 81 }, (_, i) => ({
   letter: GANADA[i % GANADA.length],
 }));
 
+// 설날 kite: the paper, 10 wide and 14 high, with the round 방구멍 cut in its middle.
+const KITE_PAPER = 'M0 0H10V14H0ZM5 5.1A1.9 1.9 0 1 0 5 8.9A1.9 1.9 0 1 0 5 5.1Z';
+
 // Christmas snow: [x, radius, seconds to fall, how far into the fall it starts].
 const SNOW = [
   [4, 0.7, 13, 2],
@@ -131,6 +134,30 @@ const RANGES = [
       <circle cx="62" cy="26" r="0.4" />
       <circle cx="74" cy="4" r="0.4" />
     </g>
+    {holidays && (
+      <g data-holiday-piece="seollal">
+        <!-- 설날: a 방패연 (shield kite) of the 청치마연 kind, white with the round 방구멍 in the
+               middle and a blue lower part; only its top stick (머릿살) is drawn, never lines meeting at
+               the hole (they would read as a sun with rays); no tail, as on a real 방패연.
+               Its string runs down behind the mountain. -->
+        <path class="scene-kite-string" d="M98.2 19.9C100 34 105 50 112 70" />
+        <g class="scene-kite">
+          <g transform="translate(92 6) rotate(-10 5 7)">
+            <defs>
+              <clipPath id="seollal-kite-paper">
+                <path d={KITE_PAPER} clip-rule="evenodd" />
+              </clipPath>
+            </defs>
+            <path class="scene-kite-paper" d={KITE_PAPER} fill-rule="evenodd" />
+            <g clip-path="url(#seollal-kite-paper)">
+              <rect class="scene-kite-skirt" x="0" y="9.4" width="10" height="4.6" />
+              <path class="scene-kite-sticks" d="M0 0.8H10" />
+            </g>
+            <path class="scene-kite-edge" d={KITE_PAPER} fill-rule="evenodd" />
+          </g>
+        </g>
+      </g>
+    )}
   </svg>
   {holidays && <HolidayMotifs kind="main" class="hero-portrait-holiday" />}
   {holidays && (
@@ -220,17 +247,59 @@ const RANGES = [
      not in the shared stylesheet. -->
 <style is:global>
   @layer components {
-    /* Holidays that live in the landscape instead of a motif in the corner: on 추석 the full moon
+    /* Holidays that live in the landscape instead of a motif in the corner: on 설날 a kite flies;
+       on 추석 the full moon
        rises behind the mountains; on 한글날 한 글 날 lie on tiles in the grid paper; at Christmas
        snow falls behind her; on both the sky is back. */
+    :root[data-holiday='seollal'] .hero-portrait-holiday,
     :root[data-holiday='chuseok'] .hero-portrait-holiday,
     :root[data-holiday='hangeulnal'] .hero-portrait-holiday,
     :root[data-holiday='christmas'] .hero-portrait-holiday {
       display: none;
     }
+    :root[data-holiday='seollal'] .hero-scene-sky,
     :root[data-holiday='hangeulnal'] .hero-scene-sky,
     :root[data-holiday='christmas'] .hero-scene-sky {
       display: block;
+    }
+    /* 설날: the kite sways a little on its string. */
+    .scene-kite-paper {
+      fill: var(--scene-kite);
+    }
+    .scene-kite-skirt {
+      fill: var(--scene-kite-skirt);
+    }
+    .scene-kite-sticks {
+      fill: none;
+      stroke: var(--scene-kite-stick);
+      stroke-width: 0.35;
+    }
+    .scene-kite-edge {
+      fill: none;
+      stroke: var(--scene-kite-stick);
+      stroke-width: 0.4;
+    }
+    .scene-kite-string {
+      fill: none;
+      stroke: var(--scene-kite-stick);
+      stroke-width: 0.3;
+    }
+    .scene-kite {
+      transform-box: view-box;
+      transform-origin: 98.2px 19.9px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .scene-kite {
+        animation: kite-sway 5s ease-in-out infinite alternate;
+      }
+    }
+    @keyframes kite-sway {
+      from {
+        rotate: -3deg;
+      }
+      to {
+        rotate: 3deg;
+      }
     }
     /* Christmas: snow falling behind her. */
     .scene-flake {

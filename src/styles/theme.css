@@ -123,6 +123,7 @@
   /* The one warm touch on the site, the sun's ring of light under the pointer (owner, 2026-10-28). */
   --scene-glow: #f8e9b4;
   --scene-letter: #1f2a5c;
+  --scene-moon-full: #e3e7f4;
   --scene-line: var(--color-brand-200);
   /* Holiday motifs only (persimmons, berries, knot cord): a muted red, never for text. */
   --shape-red: #c4544e;
@@ -186,6 +187,7 @@
   --scene-sun: #e8edfb;
   --scene-glow: #3a4a8c;
   --scene-letter: #c5d1e8;
+  --scene-moon-full: #e8edfb;
   --scene-line: #2c3763;
   --shape-red: #a8484a;
   --shape-flag-red: #cd2e3a;

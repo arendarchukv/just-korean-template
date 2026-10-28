@@ -34,6 +34,9 @@ const GRID_CELLS = Array.from({ length: 81 }, (_, i) => ({
   letter: GANADA[i % GANADA.length],
 }));
 
+// 한글날: 한 글 날 on paper tiles in three squares of the second row, clear of the photo.
+const HANGEUL_DAY = [...'한글날'].map((letter, i) => ({ x: 9 + i * 9, y: 18, letter }));
+
 const RANGES = [
   {
     tone: 'far',
@@ -72,6 +75,18 @@ const RANGES = [
         </text>
       </g>
     ))}
+    {holidays && (
+      <g data-holiday-piece="hangeulnal" class="grid-hangeul">
+        {HANGEUL_DAY.map(({ x, y, letter }) => (
+          <>
+            <rect x={x} y={y} width="9" height="9" rx="0.6" />
+            <text x={x + 4.5} y={y + 6.6} lang="ko">
+              {letter}
+            </text>
+          </>
+        ))}
+      </g>
+    )}
   </svg>
   <svg class="hero-scene hero-scene-sky" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
     <g class="scene-day">
@@ -99,6 +114,27 @@ const RANGES = [
     </g>
   </svg>
   {holidays && <HolidayMotifs kind="main" class="hero-portrait-holiday" />}
+  {holidays && (
+    <svg
+      class="hero-scene"
+      data-holiday-piece="chuseok"
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g class="scene-glow">
+        <circle class="scene-halo" cx="84" cy="24" r="16" />
+        <circle class="scene-halo" cx="84" cy="24" r="13.4" />
+        <circle class="scene-full-moon" cx="84" cy="24" r="11" />
+      </g>
+      <path class="scene-branch" d="M66 4C74 6 82 9 90 8C95 7.5 99 6 103 4" />
+      <path class="scene-leaf" d="M74 6.8C73 3 75.5 0.5 79 0.6C79 3.8 77 6.2 74 6.8Z" />
+      <path class="scene-leaf" d="M92 7.8C94 4.6 97.5 3.8 100 5C98.4 7.8 95.4 8.8 92 7.8Z" />
+      <circle class="scene-persimmon" cx="78" cy="10.2" r="2.6" />
+      <circle class="scene-persimmon" cx="89" cy="11.4" r="2.9" />
+      <circle class="scene-persimmon" cx="98" cy="9" r="2.3" />
+    </svg>
+  )}
   <div class="hero-portrait-disc" aria-hidden="true"></div>
   <!-- Three ranges on the right, the snow-capped peak to the right, and a strip of mist; in front of
        the disc, behind the photo. Each range lies on its own paper shadow. -->
@@ -146,6 +182,45 @@ const RANGES = [
      not in the shared stylesheet. -->
 <style is:global>
   @layer components {
+    /* Holidays that live in the landscape instead of a motif in the corner: on 추석 the full moon
+       rises behind the mountains; on 한글날 한 글 날 lie on tiles in the grid paper and the sky is
+       back. */
+    :root[data-holiday='chuseok'] .hero-portrait-holiday,
+    :root[data-holiday='hangeulnal'] .hero-portrait-holiday {
+      display: none;
+    }
+    :root[data-holiday='hangeulnal'] .hero-scene-sky {
+      display: block;
+    }
+    .scene-full-moon {
+      fill: var(--scene-moon-full);
+      stroke: var(--scene-line);
+      stroke-width: 0.7;
+    }
+    .scene-branch {
+      fill: none;
+      stroke: var(--shape-indigo);
+      stroke-width: 1.1;
+      stroke-linecap: round;
+    }
+    .scene-leaf {
+      fill: var(--shape-teal);
+    }
+    .scene-persimmon {
+      fill: var(--shape-red);
+    }
+    .grid-hangeul rect {
+      fill: var(--scene-cloud);
+      stroke: var(--shape-brand);
+      stroke-width: 0.5;
+    }
+    .hero-grid-letters .grid-hangeul text {
+      fill: var(--scene-letter);
+      font-size: 5.6px;
+      font-weight: 700;
+      text-anchor: middle;
+      opacity: 1;
+    }
     .hero-scene {
       position: absolute;
       inset: 0;

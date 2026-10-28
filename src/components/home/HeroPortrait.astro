@@ -152,6 +152,16 @@ const RANGES = [
       class="scene-mist"
       d="M48 100C54 97 60 96.5 66 97.5C72 98.7 78 96 84 96.4C92 96.8 98 98.6 104 97.2C110 96 116 96.6 128 97V100Z"
     />
+    {holidays && (
+      <g data-holiday-piece="christmas" class="scene-hat">
+        <path
+          class="scene-hat-cone"
+          d="M94 49.6C94.4 45 95 41 96.6 38.4C98.4 35.6 101.6 35.4 103.8 37.6C104.6 38.4 105 39.4 105.2 40.4C103.6 39.2 101.8 39 100.6 40.4C100 43 100.8 45.6 101.8 47.8Z"
+        />
+        <path class="scene-hat-trim" d="M93.6 50.2L102.4 48.3" />
+        <circle class="scene-hat-pompom" cx="105.2" cy="41" r="1.7" />
+      </g>
+    )}
   </svg>
   {photo ? (
     <Image
@@ -183,14 +193,29 @@ const RANGES = [
 <style is:global>
   @layer components {
     /* Holidays that live in the landscape instead of a motif in the corner: on 추석 the full moon
-       rises behind the mountains; on 한글날 한 글 날 lie on tiles in the grid paper and the sky is
-       back. */
+       rises behind the mountains; on 한글날 한 글 날 lie on tiles in the grid paper; at Christmas
+       the high peak wears a hat; on both the sky is back. */
     :root[data-holiday='chuseok'] .hero-portrait-holiday,
-    :root[data-holiday='hangeulnal'] .hero-portrait-holiday {
+    :root[data-holiday='hangeulnal'] .hero-portrait-holiday,
+    :root[data-holiday='christmas'] .hero-portrait-holiday {
       display: none;
     }
-    :root[data-holiday='hangeulnal'] .hero-scene-sky {
+    :root[data-holiday='hangeulnal'] .hero-scene-sky,
+    :root[data-holiday='christmas'] .hero-scene-sky {
       display: block;
+    }
+    /* Christmas: a red hat on the high peak, its tip falling to the right. */
+    .scene-hat-cone {
+      fill: var(--shape-red);
+    }
+    .scene-hat-trim {
+      fill: none;
+      stroke: var(--scene-snow);
+      stroke-width: 2.6;
+      stroke-linecap: round;
+    }
+    .scene-hat-pompom {
+      fill: var(--scene-snow);
     }
     .scene-full-moon {
       fill: var(--scene-moon-full);

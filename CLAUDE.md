@@ -377,8 +377,8 @@ collage in the wave's corner, Echo beside the New lessons eyebrow and on the foo
 only); the 광복절 motif is the 태극기 from the official geometry (public-domain Wikimedia SVG) with
 `--shape-flag-*` tokens. Two holidays live in the hero landscape instead of a motif in the corner (2026-10-28,
 `HeroPortrait.astro`): on 추석 the full moon rises behind the mountains with a persimmon branch
-above; on 한글날 한 글 날 lie on paper tiles in the grid paper and the usual sky stays. Christmas is
-to be reworked the same way later (an idea: a hat on the peak). Never a round flower with rays there: it reads as the Japanese imperial
+above; on 한글날 한 글 날 lie on paper tiles in the grid paper; at Christmas the high peak wears a
+red hat with a white trim and pompom; on both the usual sky stays. Never a round flower with rays there: it reads as the Japanese imperial
 chrysanthemum / rising sun (owner, 2026-10-24). Hidden in print. Chosen only in Site settings (the DEMO ONLY preview switch was removed on 2026-10-24); the demo
 `site.yml` uses `holiday: auto`.
 

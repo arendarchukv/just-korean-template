@@ -25,6 +25,15 @@ const SIZES = '(min-width: 32rem) 32rem, 100vw';
 // Mountain ranges, far to near, cut from paper: each a silhouette with a ridge of shoulders and
 // saddles (`lit`), the shaded faces on the right of its peaks (`shade`), and on the high peak
 // snow on both faces. Broad, never thin spikes; the bases go under a strip of mist.
+// The grid paper's squares (9 units, from 9 to 90 each way) with 가나다 … 하 in reading order, round
+// and round.
+const GANADA = '가나다라마바사아자차카타파하';
+const GRID_CELLS = Array.from({ length: 81 }, (_, i) => ({
+  x: 9 + (i % 9) * 9,
+  y: 9 + Math.floor(i / 9) * 9,
+  letter: GANADA[i % GANADA.length],
+}));
+
 const RANGES = [
   {
     tone: 'far',
@@ -52,16 +61,36 @@ const RANGES = [
 
 <div class="collage hero-portrait">
   <Shape name="grid" tone="paper" texture="grid" class="hero-portrait-grid" />
+  <!-- Over the grid paper, cell for cell (its 9-unit squares): a 가나다 letter in each, shown faintly
+       under the pointer and fading slowly after it, like a light passing over the sheet. -->
+  <svg class="hero-portrait-grid hero-grid-letters" viewBox="0 0 100 100" aria-hidden="true">
+    {GRID_CELLS.map(({ x, y, letter }) => (
+      <g class="grid-cell">
+        <rect x={x} y={y} width="9" height="9" />
+        <text x={x + 4.5} y={y + 6.6} lang="ko">
+          {letter}
+        </text>
+      </g>
+    ))}
+  </svg>
   <svg class="hero-scene hero-scene-sky" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
     <g class="scene-day">
-      <circle class="scene-sun" cx="84" cy="27" r="6.5" />
+      <g class="scene-glow">
+        <circle class="scene-halo" cx="84" cy="27" r="11" />
+        <circle class="scene-halo" cx="84" cy="27" r="8.6" />
+        <circle class="scene-sun" cx="84" cy="27" r="6.5" />
+      </g>
       <path
         class="scene-cloud"
         d="M75 32.5C75 30 77.5 29 79.5 30C80 27 84.5 26 86.5 28.5C88 27 91 27.5 91 30.5C93 30.5 94 32.5 92.5 33.8H76.5C75.5 33.8 75 33.3 75 32.5Z"
       />
     </g>
     <g class="scene-night">
-      <path class="scene-moon" d="M86 20A8 8 0 1 0 86 36A10 10 0 0 1 86 20Z" />
+      <g class="scene-glow">
+        <circle class="scene-halo" cx="84" cy="28" r="12" />
+        <circle class="scene-halo" cx="84" cy="28" r="9.6" />
+        <path class="scene-moon" d="M86 20A8 8 0 1 0 86 36A10 10 0 0 1 86 20Z" />
+      </g>
       <circle cx="66" cy="14" r="0.55" />
       <circle cx="80" cy="12" r="0.45" />
       <circle cx="97" cy="44" r="0.45" />
@@ -112,3 +141,116 @@ const RANGES = [
     />
   )}
 </div>
+
+<!-- Global (the theme is on <html>), but loaded with this component, so only on the home page and
+     not in the shared stylesheet. -->
+<style is:global>
+  @layer components {
+    .hero-scene {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      /* The collage takes no pointer; only the grid letters and the sun or moon answer it, through
+       the scene and the photo. */
+      pointer-events: none;
+    }
+    /* Grid paper letters: faint under the pointer, fading slowly after it. */
+    .hero-grid-letters {
+      pointer-events: auto;
+    }
+    .hero-grid-letters rect {
+      fill: transparent;
+    }
+    .hero-grid-letters text {
+      fill: var(--shape-ink);
+      font-size: 5.4px;
+      font-weight: 600;
+      text-anchor: middle;
+      opacity: 0;
+      transition: opacity 1.5s ease-out;
+    }
+    .grid-cell:hover text {
+      opacity: 0.45;
+      transition-duration: 0.15s;
+    }
+    /* Sun and moon: a soft ring of light grows under the pointer. */
+    .scene-glow {
+      pointer-events: auto;
+    }
+    .scene-halo {
+      fill: var(--scene-glow);
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      scale: 0.8;
+      transition:
+        opacity 0.4s ease-out,
+        scale 0.4s ease-out;
+    }
+    .scene-glow:hover .scene-halo {
+      opacity: 0.5;
+      scale: 1;
+    }
+    .scene-glow:hover .scene-halo + .scene-halo {
+      opacity: 0.8;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-grid-letters text,
+      .scene-halo {
+        transition: none;
+      }
+    }
+    .scene-far {
+      fill: var(--scene-far);
+    }
+    .scene-mountain {
+      fill: var(--scene-mountain);
+    }
+    .scene-hill {
+      fill: var(--scene-hill);
+    }
+    .scene-far-shade {
+      fill: var(--scene-far-shade);
+    }
+    .scene-mountain-shade {
+      fill: var(--scene-mountain-shade);
+    }
+    .scene-hill-shade {
+      fill: var(--scene-hill-shade);
+    }
+    .scene-snow {
+      fill: var(--scene-snow);
+    }
+    .scene-snow-shade {
+      fill: var(--scene-snow-shade);
+    }
+    .scene-mist {
+      fill: var(--scene-cloud);
+    }
+    .scene-shadow {
+      fill: var(--scene-shadow);
+    }
+    .scene-cloud {
+      fill: var(--scene-cloud);
+      stroke: var(--scene-line);
+      stroke-width: 0.5;
+    }
+    .scene-sun {
+      fill: var(--scene-sun);
+      stroke: var(--scene-line);
+      stroke-width: 0.7;
+    }
+    .scene-night {
+      display: none;
+      fill: var(--scene-sun);
+    }
+    :root[data-theme='dark'] .scene-day {
+      display: none;
+    }
+    :root[data-theme='dark'] .scene-night {
+      display: inline;
+    }
+  }
+</style>

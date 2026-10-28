@@ -120,6 +120,7 @@
   --scene-shadow: #c3cbe0;
   --scene-cloud: #ffffff;
   --scene-sun: #ffffff;
+  --scene-glow: var(--color-brand-100);
   --scene-line: var(--color-brand-200);
   /* Holiday motifs only (persimmons, berries, knot cord): a muted red, never for text. */
   --shape-red: #c4544e;
@@ -181,6 +182,7 @@
   --scene-shadow: #0b1029;
   --scene-cloud: #222b55;
   --scene-sun: #e8edfb;
+  --scene-glow: #3a4a8c;
   --scene-line: #2c3763;
   --shape-red: #a8484a;
   --shape-flag-red: #cd2e3a;

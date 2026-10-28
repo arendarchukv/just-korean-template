@@ -1,9 +1,11 @@
 ---
 /**
  * Home hero picture: her photo, cut out, standing in a soft disc that clips it at the bottom, with
- * the cut-paper shapes of the design system around it (grid paper, an arch, a teal dot, a wave).
- * No handwritten notes, so it stays calm. The shapes are decorative; the photo has its alt text.
- * Hidden in print (`collage`), where the text takes the full width.
+ * grid paper and a wave, and a cut-paper landscape on the right: one broad mountain peaking to the
+ * right with low hills and a pine in front of the disc, the sun and a cloud by day or the moon and
+ * stars by night (the theme decides, so the ink of the theme switch pours the night over the hills). No handwritten notes, so it stays calm. The
+ * landscape is decorative; the photo has its alt text. Hidden in print (`collage`), where the text
+ * takes the full width.
  */
 import { Image } from 'astro:assets';
 import Shape from '@/components/shapes/Shape.astro';
@@ -20,15 +22,66 @@ interface Props {
 const { photo, alt, holidays = false } = Astro.props;
 // The picture is at most 30rem wide (.hero-portrait) and the photo a little wider than it.
 const SIZES = '(min-width: 32rem) 32rem, 100vw';
+// Far to near. Broad shapes, never thin spikes: the mountain is about as high as half its base,
+// with a long gentle slope on the left and a steeper one on the right.
+const MOUNTAINS = [
+  {
+    tone: 'far',
+    d: 'M44 100C50 92 56 84 62 78.5C65 75.5 68 75.5 71 78C75 81.5 78 86 80 90V100Z',
+  },
+  {
+    tone: 'mountain',
+    d: 'M50 100C58 90 66 79 73 69C77 63 81 55 84.5 50C86.5 47.2 89 47 91 49.5C95 55 99 66 102 78C103 84 103.6 92 104 100Z',
+  },
+  {
+    tone: 'hill',
+    d: 'M60 100C67 93 75 88 84 86C92 84.4 99 85.2 104 88V100Z',
+  },
+  {
+    tone: 'hill-near',
+    d: 'M52 100C57 95.5 62.5 93 68 93C73.5 93 77.5 95.5 80 100Z',
+  },
+];
 ---
 
 <div class="collage hero-portrait">
   <Shape name="grid" tone="paper" texture="grid" class="hero-portrait-grid" />
   <Shape name="wave" tone="brand" class="hero-portrait-wave" />
-  <Shape name="arch" tone="indigo" class="hero-portrait-arch" />
-  <Shape name="blob" tone="teal" class="hero-portrait-dot" />
+  <svg class="hero-scene hero-scene-sky" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    <g class="scene-day">
+      <circle class="scene-sun" cx="89" cy="30" r="7" />
+      <path
+        class="scene-cloud"
+        d="M80 35.5C80 33 82.5 32 84.5 33C85 30 89.5 29 91.5 31.5C93 30 96 30.5 96 33.5C98 33.5 99 35.5 97.5 36.8H81.5C80.5 36.8 80 36.3 80 35.5Z"
+      />
+    </g>
+    <g class="scene-night">
+      <path class="scene-moon" d="M90 22A8 8 0 1 0 90 38A10 10 0 0 1 90 22Z" />
+      <circle cx="66" cy="14" r="0.55" />
+      <circle cx="80" cy="12" r="0.45" />
+      <circle cx="97" cy="44" r="0.45" />
+      <circle cx="62" cy="26" r="0.4" />
+      <circle cx="74" cy="4" r="0.4" />
+    </g>
+  </svg>
   {holidays && <HolidayMotifs kind="main" class="hero-portrait-holiday" />}
   <div class="hero-portrait-disc" aria-hidden="true"></div>
+  <!-- One broad mountain with its peak to the right, a far shoulder, two low hills and a pine; in
+       front of the disc, behind the photo. Each piece lies on its own paper shadow. -->
+  <svg class="hero-scene" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    {MOUNTAINS.map(({ tone, d }) => (
+      <>
+        <path class="scene-shadow" d={d} transform="translate(1.1 0.8)" />
+        <path class={`scene-${tone}`} d={d} />
+      </>
+    ))}
+    <g class="scene-pine">
+      <rect x="91.4" y="85" width="1.2" height="5" rx="0.4" />
+      <path d="M88.6 86.6Q92 79.6 95.4 86.6Q92 85.4 88.6 86.6Z" />
+      <path d="M89.3 83.1Q92 77 94.7 83.1Q92 82 89.3 83.1Z" />
+      <path d="M90 79.8Q92 74.6 94 79.8Q92 78.8 90 79.8Z" />
+    </g>
+  </svg>
   {photo ? (
     <Image
       src={photo}

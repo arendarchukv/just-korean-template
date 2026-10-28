@@ -107,6 +107,17 @@
   --shape-indigo: #2b3a7a;
   --shape-paper: #e3e7f4;
   --shape-ink: #1f2a5c;
+  /* Hero landscape (HeroPortrait): cut-paper mountain and hills, far to near, each on a paper
+     shadow; the sun and a cloud by day. */
+  --scene-far: var(--color-brand-200);
+  --scene-mountain: var(--color-brand-300);
+  --scene-hill: var(--color-teal-300);
+  --scene-hill-near: var(--color-teal-500);
+  --scene-pine: var(--color-teal-700);
+  --scene-shadow: #c3cbe0;
+  --scene-cloud: #ffffff;
+  --scene-sun: #ffffff;
+  --scene-line: var(--color-brand-200);
   /* Holiday motifs only (persimmons, berries, knot cord): a muted red, never for text. */
   --shape-red: #c4544e;
   /* 태극기 (광복절 motif): the flag's own colours, the same in both themes. */
@@ -155,6 +166,16 @@
   --shape-indigo: #3a4a8c;
   --shape-paper: #222b55;
   --shape-ink: #0b1029;
+  /* Night: the same landscape in indigo and deep teal, the moon and stars in paper white. */
+  --scene-far: #26326a;
+  --scene-mountain: #2f3d7e;
+  --scene-hill: #2a6663;
+  --scene-hill-near: #1f5552;
+  --scene-pine: #174744;
+  --scene-shadow: #0b1029;
+  --scene-cloud: #222b55;
+  --scene-sun: #e8edfb;
+  --scene-line: #2c3763;
   --shape-red: #a8484a;
   --shape-flag-red: #cd2e3a;
   --shape-flag-blue: #0047a0;

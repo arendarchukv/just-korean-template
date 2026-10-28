@@ -158,8 +158,8 @@
     display: grid;
     gap: 1.25rem;
   }
-  /* Hero picture: grid paper, an arch, a teal dot and a wave around a soft disc; the cut-out photo
-     stands in the disc, which clips it at the bottom while the head rises above its edge. */
+  /* Hero picture: a cut-paper landscape around a soft disc; the cut-out photo stands in the disc,
+     which clips it at the bottom while the head rises above its edge. */
   .hero-portrait {
     position: relative;
     container-type: inline-size;
@@ -181,17 +181,50 @@
     right: 2%;
     width: 22%;
   }
-  .hero-portrait-arch {
+  .hero-scene {
     position: absolute;
-    right: 0;
-    bottom: 4%;
-    width: 30%;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
   }
-  .hero-portrait-dot {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 18%;
+  .scene-far {
+    fill: var(--scene-far);
+  }
+  .scene-mountain {
+    fill: var(--scene-mountain);
+  }
+  .scene-hill {
+    fill: var(--scene-hill);
+  }
+  .scene-hill-near {
+    fill: var(--scene-hill-near);
+  }
+  .scene-shadow {
+    fill: var(--scene-shadow);
+  }
+  .scene-pine {
+    fill: var(--scene-pine);
+  }
+  .scene-cloud {
+    fill: var(--scene-cloud);
+    stroke: var(--scene-line);
+    stroke-width: 0.5;
+  }
+  .scene-sun {
+    fill: var(--scene-sun);
+    stroke: var(--scene-line);
+    stroke-width: 0.7;
+  }
+  .scene-night {
+    display: none;
+    fill: var(--scene-sun);
+  }
+  :root[data-theme='dark'] .scene-day {
+    display: none;
+  }
+  :root[data-theme='dark'] .scene-night {
+    display: inline;
   }
   .hero-portrait-disc {
     position: absolute;

@@ -32,8 +32,8 @@
     white-space: nowrap;
   }
 
-  /* Motifs: the main one stands in the hero collage where the wave and the sun or moon are (they
-     step aside). */
+  /* Motifs: the main one stands in the hero collage where the sun or moon is (it steps
+     aside). */
   .holiday-motif .shape {
     width: 100%;
     height: auto;
@@ -44,7 +44,6 @@
     right: -6%;
     width: 40%;
   }
-  :root[data-holiday] .hero-portrait-wave,
   :root[data-holiday] .hero-scene-sky {
     display: none;
   }

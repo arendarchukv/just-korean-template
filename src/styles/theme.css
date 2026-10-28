@@ -116,7 +116,7 @@
   --scene-hill: var(--color-teal-300);
   --scene-hill-shade: var(--color-teal-500);
   --scene-snow: #ffffff;
-  --scene-pine: var(--color-teal-700);
+  --scene-snow-shade: var(--color-brand-100);
   --scene-shadow: #c3cbe0;
   --scene-cloud: #ffffff;
   --scene-sun: #ffffff;
@@ -177,7 +177,7 @@
   --scene-hill: #2a6663;
   --scene-hill-shade: #1f5552;
   --scene-snow: #a9b6dd;
-  --scene-pine: #174744;
+  --scene-snow-shade: #7d8cc4;
   --scene-shadow: #0b1029;
   --scene-cloud: #222b55;
   --scene-sun: #e8edfb;

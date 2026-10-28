@@ -175,12 +175,6 @@
     width: 50%;
     rotate: -4deg;
   }
-  .hero-portrait-wave {
-    position: absolute;
-    top: 6%;
-    right: 2%;
-    width: 22%;
-  }
   .hero-scene {
     position: absolute;
     inset: 0;
@@ -209,14 +203,14 @@
   .scene-snow {
     fill: var(--scene-snow);
   }
+  .scene-snow-shade {
+    fill: var(--scene-snow-shade);
+  }
   .scene-mist {
     fill: var(--scene-cloud);
   }
   .scene-shadow {
     fill: var(--scene-shadow);
-  }
-  .scene-pine {
-    fill: var(--scene-pine);
   }
   .scene-cloud {
     fill: var(--scene-cloud);

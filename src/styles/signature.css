@@ -654,3 +654,8 @@ header {
   animation: none;
   mix-blend-mode: normal;
 }
+/* Hidden from the first frame, before the script's animation starts, so the new theme never
+   flashes whole. */
+[data-ink]::view-transition-new(root) {
+  mask: radial-gradient(closest-side, #000 80%, transparent) no-repeat 0 0 / 0 0;
+}
